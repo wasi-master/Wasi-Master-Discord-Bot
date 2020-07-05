@@ -178,7 +178,7 @@ async def synonyms(ctx, *, args):
 			embed.add_field(name="No synonyms found", value="‌Command Aborted")
 	await ctx.send(embed=embed)
 
-@client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
+
 @client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
 async def urban(ctx, *, args):
 	if not ctx.channel.is_nsfw():
