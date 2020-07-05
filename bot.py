@@ -397,6 +397,95 @@ async def servers(ctx):
     	servers = len(serverlist)
     	members = len(memberlist)
     	average = round(int(members) / int(servers))
-    	await ctx.send(f"I\'m in {servers} servers and there are {members} members total an")
+    	await ctx.send(f"I\'m in {servers} servers and there are {members} members total d there are {members} members total and {average}  on average in each server")
+
+@client.command(aliases=['8ball', 'eightball', 'eight ball', 'ask', 'question','answer', '8b'])
+async def _8ball(ctx, *, question):
+    answers = ['It is certain', 'It is decidedly so', 'Without a doubt', 'Yes – definitely', 'You may rely on it',
+               'As I see it, yes', 'Most likely', 'Outlook good', 'Yes Signs point to yes', 'Reply hazy', 'try again',
+               'Ask again later', 'Better not tell you now', 'Cannot predict now', 'Concentrate and ask again',
+               'Dont count on it', 'My reply is no', 'My sources say no', 'Outlook not so good', 'Very doubtful']
+    await ctx.send(f'`Question:` {question}\n`Answer:` {random.choice(answers)}')
+
+@client.command(aliases=['wiki', 'searchwiki'])
+async def wikipedia(ctx, *, args):
+	async with ctx.typing():
+		result = wikimodule.summary(args)
+		if len(result) < 1997:
+			await ctx.send(result)
+		else:
+			await ctx.send(result[0:1997] + "...")
+
+@client.command(aliases=['remove', 'delete', 'erase', 'clear', 'c'])
+@has_permissions(manage_messages=True)
+async def clear_messages(ctx, amount : int):
+    amount += 1
+    deleted = await ctx.channel.purge(limit=amount)
+    message = await ctx.send(f"deleted `{len(deleted)}`' messages")
+    time.sleep(4)
+    await client.purge(message=message)
+    
+@clear_messages.error
+async def clear_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Please specify the amount of messag esto delete')
+
+@client.command()
+@has_permissions(kick_members=True)
+async def kick(ctx, member : discord.Member, *, reason=None):
+     await member.kick(reason=reason)
+     await ctx.send(f'Kicked {member.mention}')
+
+@client.command(aliases=['setnick', 'setnickname', 'nickname','changenickname', 'chnick'])
+@has_permissions(manage_nicknames=True)
+async def nick(ctx, member: discord.Member, *, nick):
+    await member.edit(nick=nick)
+    await ctx.send(f'Nickname was changed for {member.mention} ')
+    
+@client.command()
+@has_permissions(ban_members=True)
+async def ban(ctx, member : discord.Member, *, reason=None):
+        await member.ban(reason=reason)
+        await ctx.send(f'Banned {member.mention}')
+        
+@client.command()
+@has_permissions(ban_members=True)
+async def unban(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_discriminator = member.split('#')
+    for ban_entry in banned_users:
+        user = ban_entry.user
+
+        if (user.name, user.discriminator) == (member_name, member_discriminator):
+            await ctx.guild.unban(user)
+            await ctx.send(f'Unbanned {user.mention}')
+            return
+
+@client.command()
+async def invite(ctx):
+    await ctx.send('https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640')
+    
+@client.command(aliases=['ui', 'whois', 'wi'])
+async def userinfo(ctx, member: discord.Member):
+
+    roles = [role for role in member.roles]
+
+    embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
+    embed.set_author(name=f"User Info - {member}")
+    embed.set_footer(text=f"Requested by {ctx.author}")
+
+    embed.add_field(name="ID: ", value=member.id)
+    embed.add_field(name="Guild name:", value=member.display_name)
+
+    embed.add_field(name="Created at", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
+
+    embed.add_field(name="Joined at:", value=member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S"))
+
+    embed.add_field(name=f"Roles ({len(roles)})", value="".join([role.mention for role in roles]))
+    embed.add_field(name="Top role:", value=member.top_role.mention)
+
+    embed.add_field(name="Is a bot?", value=member.bot)
+
+    await ctx.send(embed=embed)
 
 client.run(os.environ['token'])
