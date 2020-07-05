@@ -411,7 +411,7 @@ async def _8ball(ctx, *, question):
 async def wikipedia(ctx, *, args):
 	async with ctx.typing():
 		result = wikimodule.summary(args)
-		if result < 1997:
+		if len(result) < 1997:
 			await ctx.send(result)
 		else:
 			await ctx.send(result[0:1997] + "...")
