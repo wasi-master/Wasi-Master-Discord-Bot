@@ -179,26 +179,30 @@ async def synonyms(ctx, *, args):
 	await ctx.send(embed=embed)
 
 @client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
+@client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
 async def urban(ctx, *, args):
-	params = {"term": args}
-	headers ={"x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com","x-rapidapi-key": "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d"}
-	num = 0
-	embed = discord.Embed(timestamp=ctx.message.created_at)
-	embed.set_footer(text="From Urban Dictionary")
-	async with ctx.typing():
-		response = requests.get("https://mashape-community-urban-dictionary.p.rapidapi.com/define", params=params, headers=headers);
-		try:
-			parsed_json = json.loads(response.text)
-			data = parsed_json.get("list")
-			for i in data:
-				num += 1
-				if not len(i.get("definition")) > 1024:
-					embed.add_field(name=f"Definition {num}", value=i.get("definition").replace("[", "**").replace("]", "**"))
-				else:
-					embed.add_field(name=i.get("definition")[0:1024], value="‌")
-		except:
-			embed.add_field(name="Error Occured", value="Command Aborted")
-		await ctx.send(embed=embed)
+	if ctx.channel.is_nsfw():
+	    ctx.send("U can use this only in nsfw channels because the results may include nsfw content")
+	else:
+		params = {"term": args}
+		headers ={"x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com","x-rapidapi-key": "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d"}
+		num = 0
+		embed = discord.Embed(timestamp=ctx.message.created_at)
+		embed.set_footer(text="From Urban Dictionary")
+		async with ctx.typing():
+			response = requests.get("https://mashape-community-urban-dictionary.p.rapidapi.com/define", params=params, headers=headers);
+			try:
+				parsed_json = json.loads(response.text)
+				data = parsed_json.get("list")
+				for i in data:
+					num += 1
+					if not len(i.get("definition")) > 1024:
+						embed.add_field(name=f"Definition {num}", value=i.get("definition").replace("[", "**").replace("]", "**"))
+					else:
+						embed.add_field(name=definition[0:1024], value="‌")
+			except:
+				embed.add_field(name="Error Occured", value="Command Aborted")
+			await ctx.send(embed=embed)
 
 @client.command()  
 async def getusers(ctx, role: discord.Role):
