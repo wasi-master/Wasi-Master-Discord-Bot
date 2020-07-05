@@ -181,8 +181,8 @@ async def synonyms(ctx, *, args):
 @client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
 @client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
 async def urban(ctx, *, args):
-	if ctx.channel.is_nsfw():
-	    ctx.send("U can use this only in nsfw channels because the results may include nsfw content")
+	if not ctx.channel.is_nsfw():
+	    await ctx.send("You can use this only in nsfw channels because the results may include nsfw content")
 	else:
 		params = {"term": args}
 		headers ={"x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com","x-rapidapi-key": "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d"}
