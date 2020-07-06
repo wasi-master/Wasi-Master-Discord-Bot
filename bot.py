@@ -433,7 +433,10 @@ async def avatar(ctx, *,  avamember : discord.Member=None,):
 async def help(ctx):	
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
-		prefix = prefixes[str(ctx.message.guild.id)]
+		try:
+			prefix = prefixes[str(ctx.message.guild.id)]
+		except:
+			prefix = ","
 	embed = discord.Embed(colour=ctx.guild.me.color, timestamp=ctx.message.created_at)
 	embed.set_author(name='Help')
 	embed.set_footer(text=f"Requested by {ctx.author}")
