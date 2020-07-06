@@ -141,7 +141,7 @@ async def randomcolour(ctx):
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
-	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex, 16))
+	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#" ""), 16))
 	embed.set_author(name=color_name)
 	embed.set_image(url=link)
 	embed.set_thumbnail(url=link)
