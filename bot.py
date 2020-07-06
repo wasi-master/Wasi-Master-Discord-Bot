@@ -60,8 +60,6 @@ async def on_command_error(ctx, error):
 		await ctx.send('I can\'t do that')
 	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send('Something is missing')
-	elif isinstance(error, commands.CommandNotFound):
-		await ctx.send("Invalid Command")
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
