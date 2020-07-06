@@ -1,2 +1,5 @@
 
 .vscode/settings.json
+.vscode
+dictionary.json
+Procfile
