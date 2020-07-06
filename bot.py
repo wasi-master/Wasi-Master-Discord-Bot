@@ -74,14 +74,6 @@ async def debug(ctx):
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
-Program:
-
-import discord
-from discord.ext import commands
-
-TOKEN=""
-
-client=commands.Bot(command_prefix=".")
 
 @client.command()
 async def embedpages():
