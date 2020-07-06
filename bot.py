@@ -75,7 +75,7 @@ async def debug(ctx):
 
 @client.command()
 async def dm(ctx, *, args):
-	await client.send_message(ctx.message.author, args)
+	await ctx.message.author.send(args)
 	
 @client.command()
 async def paginator(ctx):
