@@ -54,7 +54,7 @@ async def on_command_error(ctx, error):
 	if isinstance(error, commands.CheckFailure):
 		await ctx.send("You don\'t have the permission")
 	elif isinstance(error, commands.MissingPermissions):
-		await ctx.send('You can\'t do that')
+		await ctx.send('I can\'t do that')
 	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send('Something is missing')
 	elif isinstance(error, commands.CommandNotFound):
@@ -62,6 +62,16 @@ async def on_command_error(ctx, error):
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
+@client.command()
+async def debug(ctx):
+  guild_number = 0
+  for guild in client.guilds:
+    guild_number += 1
+  await ctx.send(f"in {guild_number} guilds)
+  with open("prefixes.json", "r") as f:
+		prefixes = json.load(f)
+		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
+  
 @client.command(aliases=['randcolor', 'randomcol', 'randcol', 'randomcolor', 'rc'])
 async def randomcolour(ctx):
 	async with ctx.typing():
