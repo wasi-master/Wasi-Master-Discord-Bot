@@ -461,6 +461,8 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}translate `<language>` `<text>`", value='Returns the translation of a text found in Yandex')
 	embed.add_field(name=f"{prefix}quiz", value='Used to get a quiz (not fully made)')
 	embed.add_field(name=f"{prefix}link", value='Used to get a link to the message')
+	embed.add_field(name=f"{prefix}dm `<text>`", value='Used to send the person writing this command a dm which can be used to remember something')
+	embed.add_field(name=f"{prefix}getusers `<@role>`", value="used to get users that have a specefic oile")
 	await ctx.send(embed=embed)
     
 @client.command()
