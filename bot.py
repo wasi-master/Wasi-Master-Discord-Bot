@@ -76,7 +76,7 @@ async def debug(ctx):
 		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
 
 @client.command()
-async def embedpages():
+async def paginator(ctx):
     page1=discord.Embed(
         title='Page 1/3',
         description='Description',
