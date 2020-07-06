@@ -64,11 +64,11 @@ async def on_command_error(ctx, error):
 
 @client.command()
 async def debug(ctx):
-  guild_number = 0
-  for guild in client.guilds:
-    guild_number += 1
-  await ctx.send(f"in {guild_number} guilds")
-  with open("prefixes.json", "r") as f:
+	guild_number = 0
+	for guild in client.guilds:
+		guild_number += 1
+	await ctx.send(f"in {guild_number} guilds")
+	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
   
