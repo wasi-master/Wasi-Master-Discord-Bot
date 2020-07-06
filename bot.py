@@ -74,7 +74,69 @@ async def debug(ctx):
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
-  
+Program:
+
+import discord
+from discord.ext import commands
+
+TOKEN=""
+
+client=commands.Bot(command_prefix=".")
+
+@client.command()
+async def embedpages():
+    page1=discord.Embed(
+        title='Page 1/3',
+        description='Description',
+        colour=discord.Colour.orange()
+    )
+    page2=discord.Embed(
+        title='Page 2/3',
+        description='Description',
+        colour=discord.Colour.orange()
+    )
+    page3=discord.Embed(
+        title='Page 3/3',
+        description='Description',
+        colour=discord.Colour.orange()
+    )
+
+    pages=[page1,page2,page3]
+
+    message=await client.say(embed=page1)
+
+    await client.add_reaction(message,'\u23ee')
+    await client.add_reaction(message,'\u25c0')
+    await client.add_reaction(message,'\u25b6')
+    await client.add_reaction(message,'\u23ed')
+
+    i=0
+    emoji=''
+
+    while True:
+        if emoji=='\u23ee':
+            i=0
+            await client.edit_message(message,embed=pages[i])
+        if emoji=='\u25c0':
+            if i>0:
+                i-=1
+                await client.edit_message(message,embed=pages[i])
+        if emoji=='\u25b6':
+            if i<2:
+                i+=1
+                await client.edit_message(message,embed=pages[i])
+        if emoji=='\u23ed':
+            i=2
+            await client.edit_message(message,embed=pages[i])
+
+        res=await client.wait_for_reaction(message=message,timeout=30)
+        if res==None:
+            break
+        if str(res[1])!='Wasi Master#5154': #Example: 'MyBot#1111'
+            emoji=str(res[0].emoji)
+            await client.remove_reaction(message,res[0].emoji,res[1])
+
+    await client.clear_reactions(message)
 @client.command(aliases=['randcolor', 'randomcol', 'randcol', 'randomcolor', 'rc'])
 async def randomcolour(ctx):
 	async with ctx.typing():
