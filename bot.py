@@ -72,7 +72,7 @@ async def music(ctx, *, args):
 	    'x-rapidapi-host': "deezerdevs-deezer.p.rapidapi.com",
 	    'x-rapidapi-key': "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d"
 	    }
-	await with ctx.typing():
+	async with ctx.typing():
 		response = requests.get(url, headers=headers, params=querystring)
 		formatted_response = json.loads(response.text)
 	
