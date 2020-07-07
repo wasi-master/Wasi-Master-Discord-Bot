@@ -92,9 +92,10 @@ async def music(ctx, *, args):
 	
 	embed = discord.Embed()
 	embed.set_author(name=name, icon_url=album_cover)
-	embed.add_field(name='Song Name', value=name)
-	embed.add_field(name='Artist', value=artist_name)
-	embed.add_field(name='Album', value=album_name)
+	embed.add_field(name='Song Name', value=name, inline=True)
+	embed.add_field(name='Artist', value=artist_name, inline=True)
+	embed.add_field(name='Album', value=album_name, inline=True)
+	embed.set_image(url=artist=name)
 	await ctx.send(embed=embed)
 	
 @client.command()
