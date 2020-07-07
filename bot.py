@@ -74,7 +74,7 @@ async def debug(ctx):
 		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
 
 @client.command()
-async def dm(ctx, member: discord.Member=ctx.None, *, args):
+async def dm(ctx, member: discord.Member=None, *, args):
 	if member:
 		await member.send(args)
 	else:
