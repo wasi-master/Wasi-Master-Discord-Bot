@@ -90,8 +90,8 @@ async def music(ctx, *, args):
 	album_name = album.get("title")
 	album_cover = album.get("cover_xl")
 	
-	embed = discord.Embed
-	embed.set_author(name=name,icon_url=album_cover)
+	embed = discord.Embed()
+	embed.set_author(name=name, icon_url=album_cover)
 	embed.add_field(name='Song Name', value=name)
 	embed.add_field(name='Artist', value=artist_name)
 	embed.add_field(name='Album', value=album_name)
