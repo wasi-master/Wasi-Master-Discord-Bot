@@ -74,11 +74,8 @@ async def debug(ctx):
 		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
 
 @client.command()
-async def dm(ctx, member: discord.Member=None, *, args):
-	if member:
-		await member.send(args)
-	else:
-		await ctx.message.author.send(args)
+async def dm(ctx, *, args):
+	await ctx.message.author.send(args)
 	
 @client.command()
 async def paginator(ctx):
