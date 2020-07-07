@@ -63,11 +63,8 @@ async def on_command_error(ctx, error):
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
-import requests
-import json
-
 @client.command()
-async def music(ctx, *, args)
+async def music(ctx, *, args):
 	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
 	querystring = {"q":args}
 	
