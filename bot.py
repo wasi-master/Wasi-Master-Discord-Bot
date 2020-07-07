@@ -63,6 +63,43 @@ async def on_command_error(ctx, error):
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
+import requests
+import json
+
+@client.command()
+async def music(ctx, *, args)
+	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
+	querystring = {"q":args}
+	
+	headers = {
+	    'x-rapidapi-host': "deezerdevs-deezer.p.rapidapi.com",
+	    'x-rapidapi-key': "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d"
+	    }
+	await with ctx.typing():
+		response = requests.get(url, headers=headers, params=querystring)
+		formatted_response = json.loads(response.text)
+	
+	data = formatted_response.get("data")[0]
+	
+	#song
+	name = data.get("title")
+	explict = data.get("explicit_lyrics")
+	#artist
+	artist = data.get("artist")
+	artist_name = artist.get("name")
+	artist_picture = artist.get("picture_xl")
+	#album
+	album = data.get("album")
+	album_name = album.get("title")
+	album_cover = album.get("cover_xl")
+	
+	embed = discord.Embed
+	embed.set_author(name=name,icon_url=album_cover)
+	embed.add_field(name='Song Name', value=name)
+	embed.add_field(name='Artist', value=artist_name)
+	embed.add_field(name='Album', value=album_name)
+	await ctx.send(embed=embed)
+	
 @client.command()
 async def debug(ctx):
 	guild_number = 0
