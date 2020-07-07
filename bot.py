@@ -95,7 +95,7 @@ async def music(ctx, *, args):
 	embed.add_field(name='Song Name', value=name, inline=True)
 	embed.add_field(name='Artist', value=artist_name, inline=True)
 	embed.add_field(name='Album', value=album_name, inline=True)
-	embed.set_image(url=artist_name)
+	embed.set_image(url=artist_picture)
 	await ctx.send(embed=embed)
 	
 @client.command()
