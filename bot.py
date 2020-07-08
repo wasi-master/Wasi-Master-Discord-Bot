@@ -316,7 +316,7 @@ async def urban(ctx, *, args):
 					if not len(i.get("definition")) > 1024:
 						embed.add_field(name=f"Definition {num}", value=i.get("definition").replace("[", "**").replace("]", "**"))
 					else:
-						embed.add_field(name=definition[0:1024], value="‌")
+						embed.add_field(name=i.get("definition")[0:1024], value="‌")
 			except:
 				embed.add_field(name="Error Occured", value="Command Aborted")
 			await ctx.send(embed=embed)
@@ -439,7 +439,7 @@ async def messagelink(ctx):
 	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{ctx.message.id}")
 
 @client.command()
-@has_permissions(manage_rolesl=True)
+@has_permissions(manage_roles=True)
 async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
     role = discord.utils.get(ctx.guild.roles, name="Muted") # retrieves muted role returns none if there isn't 
     hell = discord.utils.get(ctx.guild.text_channels, name="🔥hell🔥") # retrieves channel named hell returns none if there isn't
