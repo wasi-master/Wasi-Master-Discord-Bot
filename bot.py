@@ -426,6 +426,7 @@ async def translate(ctx, lang, *, args):
 @client.command(aliases=['link', 'message'])
 async def messagelink(ctx):
 	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{ctx.message.id}")
+
 @client.command()
 async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
     role = discord.utils.get(ctx.guild.roles, name="Muted") # retrieves muted role returns none if there isn't 
@@ -461,8 +462,9 @@ async def botinvite(ctx):
 
 @client.command(aliases=['av', 'profilepicture', 'pp', 'profile'])
 async def avatar(ctx, *,  avamember : discord.Member=None,):
-    userAvatarUrl = avamember.avatar_url
-    await ctx.send(userAvatarUrl)
+	avamember = avamember or ctx.message.author
+	userAvatarUrl = avamember.avatar_url
+	await ctx.send(userAvatarUrl)
 
 
 @client.command(aliases=['halp'])
