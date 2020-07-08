@@ -107,7 +107,7 @@ await ctx.send(embed = embed)
 
 @client.command(aliases = ['message_count', 'mc'])
 async def messagecount(ctx, channel: discord.TextChannel = None):
-channel = channel or ctx.message.channel
+channel = channel or ctx.channel
 count = 0
 async for _ in channel.history(limit = None):
 count += 1
