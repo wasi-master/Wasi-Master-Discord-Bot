@@ -103,8 +103,9 @@ async def music(ctx, *, args):
 async def messagecount(ctx, channel: discord.TextChannel=None):
     channel = channel or ctx.message.channel
     count = 0
-    async for i in channel.history(limit=None):
-        count += 1
+    async with ctx.typing():
+    	async for i in channel.history(limit=None):
+        	count += 1
     await ctx.send(f"There were {count} messages in {channel.mention}")
 
 @client.command()
