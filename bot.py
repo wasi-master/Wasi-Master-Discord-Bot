@@ -198,7 +198,7 @@ async def randomcolour(ctx):
 	await ctx.send(embed=embed)
  
 @client.command(aliases=["setprefix"])
-@has_permissions(manage_server=True)
+@has_permissions(manage_roles=True)
 async def prefix(ctx, prefix):
 	with open("prefixes.json", "r") as f:
 		  prefixes = json.load(f)
