@@ -98,7 +98,16 @@ async def music(ctx, *, args):
 	embed.add_field(name='Album', value=album_name, inline=True)
 	embed.set_image(url=artist_picture)
 	await ctx.send(embed=embed)
-	
+
+@client.command(aliases=['mc'])
+async def messagecount(ctx, channel: discord.TextChannel=None):
+    channel = channel or ctx.message.channel
+    count = 0
+    async with ctx.typing():
+    	async for i in channel.history(limit=None):
+        	count += 1
+    await ctx.send(f"There were {count} messages in {channel.mention}")
+
 @client.command()
 async def debug(ctx):
 	guild_number = 0
