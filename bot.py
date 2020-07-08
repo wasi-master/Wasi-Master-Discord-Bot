@@ -216,7 +216,7 @@ async def say(ctx, *args):
 
 
 @client.command()
-@has_permissions(manage_roles=Trye)
+@has_permissions(manage_roles=True)
 async def role(ctx, member: discord.Member, role: discord.Role):
         if role in member.roles: #checks all roles the member has
             await member.remove_roles(role)
@@ -439,7 +439,7 @@ async def messagelink(ctx):
 	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{ctx.message.id}")
 
 @client.command()
-@has_permissions(manage_server=True)
+@has_permissions(manage_rolesl=True)
 async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
     role = discord.utils.get(ctx.guild.roles, name="Muted") # retrieves muted role returns none if there isn't 
     hell = discord.utils.get(ctx.guild.text_channels, name="🔥hell🔥") # retrieves channel named hell returns none if there isn't
