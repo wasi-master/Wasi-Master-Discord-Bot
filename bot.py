@@ -502,7 +502,7 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}choose `<items separated by commas>`", value='chooses an item from the items you say and separate by commas after ,choose')
 	embed.add_field(name=f"{prefix}invite", value='sends the bot invite lnk')
 	embed.add_field(name=f"{prefix}howgay `<@mention>`", value='shows how gay a user is')
-	embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')	embed.add_field(name=f"{prefix}prefix `<prefix>`", value='Used to set a custom prefix')
+	embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')
 	embed.add_field(name=f"{prefix}synonyms `<word>`", value='Returns the synonyms of a word')
 	embed.add_field(name=f"{prefix}urbandictionary `<word>`", value='Retyrns the definitions of a word found in urban dictionary')
 	embed.add_field(name=f"{prefix}define `<word>`", value='Returns the definitions of a word found in merriam webster')
