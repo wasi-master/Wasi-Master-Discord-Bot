@@ -33,6 +33,7 @@ async def on_ready():
 
 @client.event
 async def on_guild_join(guild):
+	print(f"Bot added to {guild.name})
 
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
@@ -43,6 +44,7 @@ async def on_guild_join(guild):
 		
 @client.event
 async def on_guild_remove(guild):
+	print(f"Kicked From {guild.name})
 
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
