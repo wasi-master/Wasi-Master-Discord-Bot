@@ -198,7 +198,7 @@ async def randomcolour(ctx):
 	await ctx.send(embed=embed)
  
 @client.command(aliases=["setprefix"])
-@has_permissions(manage_roles=True)
+@has_permissions(manage_server=True)
 async def prefix(ctx, prefix):
 	with open("prefixes.json", "r") as f:
 		  prefixes = json.load(f)
@@ -316,7 +316,7 @@ async def urban(ctx, *, args):
 					if not len(i.get("definition")) > 1024:
 						embed.add_field(name=f"Definition {num}", value=i.get("definition").replace("[", "**").replace("]", "**"))
 					else:
-						embed.add_field(name=i.get("definition")[0:1024], value="‌")
+						embed.add_field(name=definition[0:1024], value="‌")
 			except:
 				embed.add_field(name="Error Occured", value="Command Aborted")
 			await ctx.send(embed=embed)
@@ -439,7 +439,7 @@ async def messagelink(ctx):
 	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{ctx.message.id}")
 
 @client.command()
-@has_permissions(manage_roles=True)
+@has_permissions(manage_rolesl=True)
 async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
     role = discord.utils.get(ctx.guild.roles, name="Muted") # retrieves muted role returns none if there isn't 
     hell = discord.utils.get(ctx.guild.text_channels, name="🔥hell🔥") # retrieves channel named hell returns none if there isn't
@@ -502,9 +502,7 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}choose `<items separated by commas>`", value='chooses an item from the items you say and separate by commas after ,choose')
 	embed.add_field(name=f"{prefix}invite", value='sends the bot invite lnk')
 	embed.add_field(name=f"{prefix}howgay `<@mention>`", value='shows how gay a user is')
-	embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')
-	embed.add_field(name=f"{prefix}prefix `<prefix>`", value='Used to set a custom prefix')
-	embed.add_field(name=f"{prefix}google `<query>`", value='Used to search google without having to open google and search manually')
+	embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')	embed.add_field(name=f"{prefix}prefix `<prefix>`", value='Used to set a custom prefix')
 	embed.add_field(name=f"{prefix}synonyms `<word>`", value='Returns the synonyms of a word')
 	embed.add_field(name=f"{prefix}urbandictionary `<word>`", value='Retyrns the definitions of a word found in urban dictionary')
 	embed.add_field(name=f"{prefix}define `<word>`", value='Returns the definitions of a word found in merriam webster')
