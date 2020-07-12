@@ -64,10 +64,6 @@ async def on_command_error(ctx, error):
 		await ctx.send('Something is missing')
 	else:
 		await ctx.send(f"Error occured:\n {error}")
-@client.command()
-async def ip(ctx):
-	response = requests.get('https://api.ipify.org')
-	await ctx.send(response.text)
 
 @client.command()
 async def music(ctx, *, args):
