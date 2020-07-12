@@ -63,7 +63,7 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send('Something is missing')
 	else:
-		await ctx.send(f"error occured:\n {error}")
+		await ctx.send(f"Error occured:\n {error}")
 @client.command()
 async def ip(ctx):
 	response = requests.get('https://api.ipify.org')
