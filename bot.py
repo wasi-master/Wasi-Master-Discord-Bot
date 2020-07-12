@@ -64,6 +64,9 @@ async def on_command_error(ctx, error):
 		await ctx.send('Something is missing')
 	else:
 		await ctx.send(f"error occured:\n {error}")
+@client.command()
+async def ip(ctx):
+	await ctx.send(requests.get('https://api.ipify.org').text))
 
 @client.command()
 async def music(ctx, *, args):
@@ -598,7 +601,6 @@ async def invite(ctx):
 async def userinfo(ctx, member: discord.Member):
 
     roles = [role for role in member.roles]
-
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
