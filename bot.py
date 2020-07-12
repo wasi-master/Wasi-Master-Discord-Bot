@@ -66,7 +66,8 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"error occured:\n {error}")
 @client.command()
 async def ip(ctx):
-	await ctx.send(requests.get('https://api.ipify.org').text))
+	response = requests.get('https://api.ipify.org')
+	await ctx.send(response.text)
 
 @client.command()
 async def music(ctx, *, args):
