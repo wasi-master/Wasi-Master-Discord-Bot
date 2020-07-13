@@ -550,9 +550,9 @@ async def wikipedia(ctx, *, args):
 async def clear_messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
-    message = await ctx.send(f"deleted `{len(deleted)}`' messages")
-    time.sleep(4)
-    await ctx.channel.purge(message=message)
+    message = await ctx.send(f"deleted `{len(deleted)}` messages")
+    time.sleep(0.3)
+    await ctx.channel.purge(limit=1)
     
 @clear_messages.error
 async def clear_error(ctx, error):
