@@ -67,7 +67,8 @@ async def on_command_error(ctx, error):
 
 @client.command()
 async def hello(ctx):
-	await ctx.send("Hi, Bot is working")
+	await ctx.send("Hi, The bot is working fine :)")
+	
 @client.command()
 async def music(ctx, *, args):
 	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
@@ -209,7 +210,10 @@ async def color(ctx, args):
 		hex = color.replace('#', '')
 		response = requests.get(f"http://www.thecolorapi.com/id?hex={hex}")
 		data = json.loads(response.text)
-		color_name = data.get("name").get("value")
+		try:
+			color_name = data.get("name").get("value")
+		except:
+			await ctx.send(f" Error Occured, Response was:```response.text```")
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
