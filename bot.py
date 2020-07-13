@@ -210,17 +210,14 @@ async def color(ctx, args):
 		hex = color.replace('#', '')
 		response = requests.get(f"http://www.thecolorapi.com/id?hex={hex}")
 		data = json.loads(response.text)
-		try:
-			color_name = data.get("name").get("value")
-		except:
-			await ctx.send(f" Error Occured, Response was:```response.text```")
+		color_name = data.get("name").get("value")
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
 		hsl = data.get("hsl").get("value")
 		hsv = data.get("hsv").get("value")
 		cmyk = data.get("cmyk").get("value")
-		xyz = data.get("xyz").get("value")
+		xyz = data.get("XYZ").get("value")
 	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
 	embed.set_author(name=color_name)
 	embed.set_image(url=link)
