@@ -199,6 +199,34 @@ async def randomcolour(ctx):
 	embed.add_field(name="RGB", value=rgb)
 	await ctx.send(embed=embed)
  
+@client.command(aliases=['clrr', 'col', 'colour', 'clor', 'cl'])
+async def color(ctx, args):
+	async with ctx.typing():
+		color = args.replace("#", "")
+		hex = color.replace('#', '')
+		response = requests.get(f"http://www.thecolorapi.com/id?hex={hex}")
+		data = json.loads(response.text)
+		color_name = data.get("name").get("value")
+		link = f"http://singlecolorimage.com/get/{hex}/1x1"
+		rgb = data.get("rgb").get("value")
+		hex = data.get("hex").get("value")
+		hsl = data.get("hsl").get("value")
+		hsv = data.get("hsv").get("value")
+		cmyk = data.get("cmyk").get("value")
+		xyz = data.get("xyz").get("value")
+	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
+	embed.set_author(name=color_name)
+	embed.set_image(url=link)
+	embed.set_thumbnail(url=link)
+	embed.set_footer(text=f"Made for {ctx.author}")
+	embed.add_field(name="Hex", value=hex)
+	embed.add_field(name="RGB", value=rgb)
+	embed.add_field(name="HSL", value=hsl)
+	embed.add_field(name="HSV", value=hsv)
+	embed.add_field(name="CMYK", value=cmyk)
+	embed.add_field(name="XYZ", value=xyz)
+	await ctx.send(embed=embed)
+ 
 @client.command(aliases=["setprefix"])
 @has_permissions(manage_roles=True)
 async def prefix(ctx, prefix):
