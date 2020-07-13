@@ -66,6 +66,9 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"Error occured:\n {error}")
 
 @client.command()
+async def hello(ctx):
+	await ctx.send("Hi, Bot is working")
+@client.command()
 async def music(ctx, *, args):
 	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
 	querystring = {"q":args}
