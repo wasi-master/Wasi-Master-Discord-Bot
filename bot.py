@@ -33,7 +33,6 @@ async def on_ready():
 
 @client.event
 async def on_guild_join(guild):
-	print(f"Bot added to {guild.name}")
 
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
@@ -44,7 +43,6 @@ async def on_guild_join(guild):
 		
 @client.event
 async def on_guild_remove(guild):
-	print(f"Kicked From {guild.name}")
 
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
@@ -63,12 +61,13 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send('Something is missing')
 	else:
-		await ctx.send(f"Error occured:\n {error}")
+		await ctx.send(f"error occured:\n {error}")
 
 @client.command()
-async def hello(ctx):
-	await ctx.send("Hi, The bot is working fine :)")
-	
+async def info(ctx):
+	await ctx.send(f"Just a simple bot made by <@538332632535007244>)
+
+
 @client.command()
 async def music(ctx, *, args):
 	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
@@ -104,16 +103,7 @@ async def music(ctx, *, args):
 	embed.add_field(name='Album', value=album_name, inline=True)
 	embed.set_image(url=artist_picture)
 	await ctx.send(embed=embed)
-
-@client.command(aliases=['mc'])
-async def messagecount(ctx, channel: discord.TextChannel=None):
-    channel = channel or ctx.message.channel
-    count = 0
-    async with ctx.typing():
-    	async for i in channel.history(limit=None):
-        	count += 1
-    await ctx.send(f"There were {count} messages in {channel.mention}")
-
+	
 @client.command()
 async def debug(ctx):
 	guild_number = 0
@@ -203,36 +193,7 @@ async def randomcolour(ctx):
 	embed.add_field(name="RGB", value=rgb)
 	await ctx.send(embed=embed)
  
-@client.command(aliases=['clrr', 'col', 'colour', 'clor', 'cl'])
-async def color(ctx, args):
-	async with ctx.typing():
-		color = args.replace("#", "")
-		hex = color.replace('#', '')
-		response = requests.get(f"http://www.thecolorapi.com/id?hex={hex}")
-		data = json.loads(response.text)
-		color_name = data.get("name").get("value")
-		link = f"http://singlecolorimage.com/get/{hex}/1x1"
-		rgb = data.get("rgb").get("value")
-		hex = data.get("hex").get("value")
-		hsl = data.get("hsl").get("value")
-		hsv = data.get("hsv").get("value")
-		cmyk = data.get("cmyk").get("value")
-		xyz = data.get("XYZ").get("value")
-	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
-	embed.set_author(name=color_name)
-	embed.set_image(url=link)
-	embed.set_thumbnail(url=link)
-	embed.set_footer(text=f"Made for {ctx.author}")
-	embed.add_field(name="Hex", value=hex)
-	embed.add_field(name="RGB", value=rgb)
-	embed.add_field(name="HSL", value=hsl)
-	embed.add_field(name="HSV", value=hsv)
-	embed.add_field(name="CMYK", value=cmyk)
-	embed.add_field(name="XYZ", value=xyz)
-	await ctx.send(embed=embed)
- 
 @client.command(aliases=["setprefix"])
-@has_permissions(manage_roles=True)
 async def prefix(ctx, prefix):
 	with open("prefixes.json", "r") as f:
 		  prefixes = json.load(f)
@@ -250,7 +211,6 @@ async def say(ctx, *args):
 
 
 @client.command()
-@has_permissions(manage_roles=True)
 async def role(ctx, member: discord.Member, role: discord.Role):
         if role in member.roles: #checks all roles the member has
             await member.remove_roles(role)
@@ -471,9 +431,7 @@ async def translate(ctx, lang, *, args):
 @client.command(aliases=['link', 'message'])
 async def messagelink(ctx):
 	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{ctx.message.id}")
-
 @client.command()
-@has_permissions(manage_roles=True)
 async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
     role = discord.utils.get(ctx.guild.roles, name="Muted") # retrieves muted role returns none if there isn't 
     hell = discord.utils.get(ctx.guild.text_channels, name="🔥hell🔥") # retrieves channel named hell returns none if there isn't
@@ -508,9 +466,8 @@ async def botinvite(ctx):
 
 @client.command(aliases=['av', 'profilepicture', 'pp', 'profile'])
 async def avatar(ctx, *,  avamember : discord.Member=None,):
-	avamember = avamember or ctx.message.author
-	userAvatarUrl = avamember.avatar_url
-	await ctx.send(userAvatarUrl)
+    userAvatarUrl = avamember.avatar_url
+    await ctx.send(userAvatarUrl)
 
 
 @client.command(aliases=['halp'])
@@ -537,6 +494,8 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}invite", value='sends the bot invite lnk')
 	embed.add_field(name=f"{prefix}howgay `<@mention>`", value='shows how gay a user is')
 	embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')
+	embed.add_field(name=f"{prefix}prefix `<prefix>`", value='Used to set a custom prefix')
+	embed.add_field(name=f"{prefix}google `<query>`", value='Used to search google without having to open google and search manually')
 	embed.add_field(name=f"{prefix}synonyms `<word>`", value='Returns the synonyms of a word')
 	embed.add_field(name=f"{prefix}urbandictionary `<word>`", value='Retyrns the definitions of a word found in urban dictionary')
 	embed.add_field(name=f"{prefix}define `<word>`", value='Returns the definitions of a word found in merriam webster')
@@ -582,9 +541,9 @@ async def wikipedia(ctx, *, args):
 async def clear_messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
-    message = await ctx.send(f"deleted `{len(deleted)}` messages")
-    time.sleep(0.3)
-    await ctx.channel.purge(limit=1)
+    message = await ctx.send(f"deleted `{len(deleted)}`' messages")
+    time.sleep(4)
+    await ctx.channel.purge(message=message)
     
 @clear_messages.error
 async def clear_error(ctx, error):
@@ -630,6 +589,7 @@ async def invite(ctx):
 async def userinfo(ctx, member: discord.Member):
 
     roles = [role for role in member.roles]
+
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
