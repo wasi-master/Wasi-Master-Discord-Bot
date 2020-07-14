@@ -67,7 +67,11 @@ async def on_command_error(ctx, error):
 async def info(ctx):
 	await ctx.send(f"Just a simple bot made by <@538332632535007244>)
 
-
+@client.command()
+async def leaveserver(ctx):
+    await ctx.send("Bye Bye")
+    ctx.message.guild.leave()
+    
 @client.command()
 async def music(ctx, *, args):
 	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
