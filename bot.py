@@ -68,10 +68,13 @@ async def info(ctx):
 	await ctx.send(f"Just a simple bot made by <@538332632535007244>)
 
 @client.command()
-@has_permissions(manage_server=True)
+@has_permissions()
 async def leaveserver(ctx):
-    await ctx.send("Bye Bye")
-    ctx.message.guild.leave()
+	if ctx.message.author.id == 538332632535007244:
+		await ctx.send("Bye Bye")
+		ctx.message.guild.leave()
+	else:
+		await ctx.send("You are not the owner :grin:")
     
 @client.command()
 async def music(ctx, *, args):
