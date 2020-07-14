@@ -65,7 +65,7 @@ async def on_command_error(ctx, error):
 
 @client.command()
 async def info(ctx):
-	await ctx.send(f"Just a simple bot made by <@538332632535007244>)
+	await ctx.send(f"Just a simple bot made by <@538332632535007244>")
 
 @client.command()
 @has_permissions()
