@@ -68,6 +68,7 @@ async def info(ctx):
 	await ctx.send(f"Just a simple bot made by <@538332632535007244>)
 
 @client.command()
+@has_permissions(manage_server=True)
 async def leaveserver(ctx):
     await ctx.send("Bye Bye")
     ctx.message.guild.leave()
