@@ -18,7 +18,7 @@ def get_prefix(client, message):
 	except:
 		return ","
 	'''
-client = commands.Bot(command_prefix = ['@Wasi Master#5154 ', ','])
+client = commands.Bot(command_prefix = commands.when_mentioned_or(','))
 client.remove_command('help')
 memberlist = []
 serverlist = []
