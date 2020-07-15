@@ -474,6 +474,7 @@ async def botinvite(ctx):
 
 @client.command(aliases=['av', 'profilepicture', 'pp', 'profile'])
 async def avatar(ctx, *,  avamember : discord.Member=None,):
+    avamember = avamember or ctx.message.author
     userAvatarUrl = avamember.avatar_url
     await ctx.send(userAvatarUrl)
 
