@@ -597,12 +597,15 @@ async def invite(ctx):
 @client.command(aliases=['ui', 'whois', 'wi'])
 async def userinfo(ctx, member: discord.Member=None):
     member = member or ctx.message.author
+ 
+    
     roles = [role for role in member.roles]
 
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
-
+    if member.id == 538332632535007244:
+        embed.add_field(name="Fun Fact:", value="He is the owner and the only person that developed this bot")
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
 
