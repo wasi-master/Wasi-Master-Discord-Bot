@@ -9,6 +9,7 @@ import time
 import os
 import wikipedia as wikimodule
 
+'''
 def get_prefix(client, message):
 	try:
 		with open("prefixes.json", "r") as f:
@@ -16,8 +17,8 @@ def get_prefix(client, message):
 		return prefixes[str(message.guild.id)]
 	except:
 		return ","
-	
-client = commands.Bot(command_prefix = get_prefix)
+	'''
+client = commands.Bot(command_prefix = ['@Wasi Master#5154 ', ','])
 client.remove_command('help')
 memberlist = []
 serverlist = []
