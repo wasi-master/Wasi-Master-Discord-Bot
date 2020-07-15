@@ -595,8 +595,8 @@ async def invite(ctx):
     await ctx.send('https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640')
     
 @client.command(aliases=['ui', 'whois', 'wi'])
-async def userinfo(ctx, member: discord.Member):
-
+async def userinfo(ctx, member: discord.Member=None):
+    member = member or ctx.message.author
     roles = [role for role in member.roles]
 
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
