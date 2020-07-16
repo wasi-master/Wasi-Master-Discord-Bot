@@ -81,7 +81,13 @@ async def spotify(ctx, member: discord.Member=None):
 	activity = ctx.message.guild.get_member(member.id)
 	for activity in activity.activities:
 		if isinstance(activity, discord.Spotify):
-			await ctx.send(f'yep they\'re listening to {activity.title} on spotify')
+			embed = discord.Embed()
+			embed.set_image(url=activity.album_cover_url)
+			embed.add_field(name="Song Name", value=activity.title)
+			embed.add_field(name="Artist", value=activity.artist)
+			embed.add_field(name="Album", value= activity.album)
+			embed.add_field(name="Duration", value=activity.duration)
+			await ctx.send(embed=embed)
 		else:
 			await ctx.send('He is not listening to spotify :(')
 
