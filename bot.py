@@ -77,7 +77,7 @@ async def info(ctx):
 
 @client.command(aliases=['spt'])
 async def spotify(ctx, member: discord.Member=None):
-	message = member or ctx.message.author
+	member = member or ctx.message.author
 	activity = ctx.message.guild.get_member(member.id)
 	for activity in activity.activities:
 		if isinstance(activity, discord.Spotify):
