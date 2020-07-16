@@ -88,8 +88,8 @@ async def spotify(ctx, member: discord.Member=None):
 			embed.add_field(name="Artist", value=activity.artist)
 			embed.add_field(name="Album", value= activity.album)
 			embed.add_field(name="Duration", value=str(activity.duration)[2:-7])
-			#embed.add_field(name="Time Left", value=(datetime.utcnow - activity.end).total_seconds)
-			embed.set_footer(text=activity.track_id)
+			embed.add_field(name="Time Left", value=(datetime.utcnow - activity.end).total_seconds)
+			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
 		else:
 			await ctx.send('He is not listening to spotify :(')
