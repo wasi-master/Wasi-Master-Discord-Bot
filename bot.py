@@ -77,14 +77,13 @@ async def info(ctx):
 
 @client.command(aliases=['spt'])
 async def spotify(ctx, m: discord.Member=None):
-  m = m or ctx.author
-  a = ctx.message.guild.get_member(m.id)
-  for activity in a.activities:
-      if isinstance(activity, discord.Spotify):
-          return await ctx.send('yep they're listening to spotify')
-      else:
-          continue
-  return await ctx.send('no spotify :(')
+	m = m or ctx.author
+	a = ctx.message.guild.get_member(m.id)
+	for activity in a.activities:
+		if isinstance(activity, discord.Spotify):
+			await ctx.send('yep they're listening to spotify')
+		else:
+			await ctx.send('He is not listening to spotify :(')
 
 @client.command()
 @has_permissions()
