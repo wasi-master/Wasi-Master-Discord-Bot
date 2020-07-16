@@ -21,12 +21,13 @@ def get_prefix(client, message):
 
 client = commands.Bot(command_prefix = commands.when_mentioned_or(","))
 client.remove_command('help')
-memberlist = []
-serverlist = []
+
 
     
 @tasks.loop(seconds=3600)
 async def update_server_count():
+	memberlist = []
+	serverlist = []
 	for guild in client.guilds:
 		serverlist.append(guild)
 		for member in guild.members:
