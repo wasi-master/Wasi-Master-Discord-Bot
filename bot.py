@@ -85,10 +85,13 @@ async def spotify(ctx, member: discord.Member=None):
 			embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg")
 			embed.set_image(url=activity.album_cover_url)
 			embed.add_field(name="Song Name", value=activity.title)
-			embed.add_field(name="Artist", value=activity.artist)
+			if len(activity.artists) == 0:
+				embed.add_field(name="Artist", value=activity.artist)
+			else:
+				embed.add_field(name="Artists", value=activity.artist)
 			embed.add_field(name="Album", value= activity.album)
 			embed.add_field(name="Duration", value=str(activity.duration)[2:-7])
-			embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
+			#embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
 		else:
