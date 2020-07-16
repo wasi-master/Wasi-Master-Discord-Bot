@@ -19,7 +19,7 @@ def get_prefix(client, message):
 	except:
 		return ","
 
-client = commands.Bot(command_prefix = commands.when_mentioned_or(get_prefix))
+client = commands.Bot(command_prefix = commands.when_mentioned_or(","))
 client.remove_command('help')
 memberlist = []
 serverlist = []
