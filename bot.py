@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext import tasks
 from discord.ext.commands import has_permissions
 import json
 import random
@@ -26,6 +27,8 @@ serverlist = []
 @client.event
 async def on_ready():
     print("Bot is online")
+    
+@tasks.loop(seconds=3600)
     for guild in client.guilds:
     	serverlist.append(guild)
     	for member in guild.members:
