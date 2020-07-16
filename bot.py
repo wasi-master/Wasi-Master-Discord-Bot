@@ -9,7 +9,7 @@ import requests
 import time
 import os
 import wikipedia as wikimodule
-
+import datetime
 
 def get_prefix(client, message):
 	try:
@@ -81,12 +81,14 @@ async def spotify(ctx, member: discord.Member=None):
 	activity = ctx.message.guild.get_member(member.id)
 	for activity in activity.activities:
 		if isinstance(activity, discord.Spotify):
-			embed = discord.Embed()
+			embed = discord.Embed(color=activity.color)
 			embed.set_image(url=activity.album_cover_url)
 			embed.add_field(name="Song Name", value=activity.title)
 			embed.add_field(name="Artist", value=activity.artist)
 			embed.add_field(name="Album", value= activity.album)
-			embed.add_field(name="Duration", value=activity.duration)
+			embed.add_field(name="Duration", value=activity.duration[:-7])
+			embed.add_field(name="Time Left", value=(datetime.utcnow - activity.end).total_seconds)
+			embed.set_footer(text=activity.track.id)
 			await ctx.send(embed=embed)
 		else:
 			await ctx.send('He is not listening to spotify :(')
