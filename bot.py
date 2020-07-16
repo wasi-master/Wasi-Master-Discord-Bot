@@ -75,6 +75,17 @@ async def on_command_error(ctx, error):
 async def info(ctx):
 	await ctx.send(f"Just a simple bot made by <@538332632535007244>")
 
+@client.command(aliases=['spt'])
+async def spotify(ctx, m: discord.Member=None):
+  m = m or ctx.author
+  a = ctx.message.guild.get_member(m.id)
+  for activity in a.activities:
+      if isinstance(activity, discord.Spotify):
+          return await ctx.send('yep they're listening to spotify')
+      else:
+          continue
+  return await ctx.send('no spotify :(')
+
 @client.command()
 @has_permissions()
 async def leaveserver(ctx):
