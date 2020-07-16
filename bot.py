@@ -24,16 +24,19 @@ client.remove_command('help')
 memberlist = []
 serverlist = []
 
+    
+@tasks.loop(seconds=3600)
+async def update_server_count():
+	for guild in client.guilds:
+		serverlist.append(guild)
+		for member in guild.members:
+			memberlist.append(member)
+	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(memberlist)} members in {len(serverlist)} servers"))
+
 @client.event
 async def on_ready():
     print("Bot is online")
-    
-@tasks.loop(seconds=3600)
-for guild in client.guilds:
-	serverlist.append(guild)
-	for member in guild.members:
-		memberlist.append(member)
-	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(memberlist)} members in {len(serverlist)} servers"))
+    update_server_count.start()
 
 @client.event
 async def on_guild_join(guild):
