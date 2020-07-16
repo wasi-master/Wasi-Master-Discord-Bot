@@ -76,13 +76,12 @@ async def info(ctx):
 	await ctx.send(f"Just a simple bot made by <@538332632535007244>")
 
 @client.command(aliases=['spt'])
-async def spotify(ctx, m: discord.Member=None):
-	m = m or ctx.author
-	a = ctx.message.guild.get_member(m.id)
-	for activity in a.activities:
+async def spotify(ctx, member: discord.Member=None):
+	message = member or ctx.message.author
+	activity = ctx.message.guild.get_member(membed.id)
+	for activity in activity.activities:
 		if isinstance(activity, discord.Spotify):
-			
-			await ctx.send(f'yep they\'re listening to {activity.name} on spotify')
+			await ctx.send(f'yep they\'re listening to {activity.title} on spotify')
 		else:
 			await ctx.send('He is not listening to spotify :(')
 
