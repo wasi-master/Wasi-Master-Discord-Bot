@@ -81,7 +81,8 @@ async def spotify(ctx, m: discord.Member=None):
 	a = ctx.message.guild.get_member(m.id)
 	for activity in a.activities:
 		if isinstance(activity, discord.Spotify):
-			await ctx.send('yep they're listening to spotify')
+			
+			await ctx.send(f'yep they\'re listening to {activity.name} on spotify')
 		else:
 			await ctx.send('He is not listening to spotify :(')
 
