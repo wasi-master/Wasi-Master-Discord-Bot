@@ -94,8 +94,11 @@ async def spotify(ctx, member: discord.Member=None):
 			#embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
+			succesfull = True
 		else:
-			await ctx.send('He is not listening to spotify :(')
+			succesfull = False
+	if not succesfull:
+		await ctx.send("Not listening to spotify :(")
 
 @client.command()
 @has_permissions()
