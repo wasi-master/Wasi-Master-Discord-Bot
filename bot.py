@@ -655,7 +655,7 @@ async def userinfo(ctx, member: discord.Member=None):
     
     roles = [role for role in member.roles]
 
-    embed = discord.Embed(colour=member., timestamp=ctx.message.created_at)
+    embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
     if member.id == 538332632535007244:
