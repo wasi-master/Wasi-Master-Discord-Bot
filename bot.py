@@ -234,7 +234,7 @@ async def randomcolour(ctx):
 	embed.add_field(name="RGB", value=rgb)
 	await ctx.send(embed=embed)
  
-@client.command(aliases=['colour', 'col'])
+@client.command(aliases=[ 'col'])
 async def colour(ctx, color: str):
 	async with ctx.typing():
 		generated_color = color
