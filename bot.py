@@ -10,7 +10,7 @@ import time
 import os
 import wikipedia as wikimodule
 import datetime
-
+import asyncio
 def get_prefix(client, message):
 	try:
 		with open("prefixes.json", "r") as f:
@@ -584,8 +584,8 @@ async def clear_messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
     message = await ctx.send(f"deleted `{len(deleted)}`' messages")
-    time.sleep(4)
-    await ctx.channel.purge(message=message)
+    asyncio.sleep(4)
+    await message.delete()
     
 @clear_messages.error
 async def clear_error(ctx, error):
