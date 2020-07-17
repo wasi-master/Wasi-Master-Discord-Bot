@@ -234,6 +234,27 @@ async def randomcolour(ctx):
 	embed.add_field(name="RGB", value=rgb)
 	await ctx.send(embed=embed)
  
+@client.command(aliases=['colour', 'col', 'colr', 'whatscolor', 'clr'])
+async def colour(ctx, color: str):
+	async with ctx.typing():
+		generated_color = color
+		hex = generated_color.replace('#', '')
+		response = requests.get(f"http://www.thecolorapi.com/id?hex={hex}")
+		data = json.loads(response.text)
+		color_name = data.get("name").get("value")
+		link = f"http://singlecolorimage.com/get/{hex}/1x1"
+		rgb = data.get("rgb").get("value")
+		hex = data.get("hex").get("value")
+	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
+	embed.set_author(name=color_name)
+	embed.set_image(url=link)
+	embed.set_thumbnail(url=link)
+	embed.set_footer(text=f"Made for {ctx.author}")
+	embed.add_field(name="Hex", value=hex)
+	embed.add_field(name="RGB", value=rgb)
+	await ctx.send(embed=embed)
+ 
+ 
 @client.command(aliases=["setprefix"])
 async def prefix(ctx, prefix):
 	with open("prefixes.json", "r") as f:
