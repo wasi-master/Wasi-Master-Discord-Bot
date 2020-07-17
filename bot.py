@@ -541,7 +541,7 @@ async def help(ctx):
 			prefix = prefixes[str(ctx.message.guild.id)]
 		except:
 			prefix = ","
-	embed = discord.Embed(colour=ctx.guild.me., timestamp=ctx.message.created_at)
+	embed = discord.Embed(colour=ctx.guild.me.color, timestamp=ctx.message.created_at)
 	embed.set_author(name='Help')
 	embed.set_footer(text=f"Requested by {ctx.author}")
 	embed.add_field(name=f"{prefix}help", value='shows this help message')
