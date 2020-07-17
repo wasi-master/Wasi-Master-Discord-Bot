@@ -578,7 +578,7 @@ async def wikipedia(ctx, *, args):
 		else:
 			await ctx.send(result[0:1997] + "...")
 
-@client.command(aliases=['remove', 'delete', 'erase', '', 'c'])
+@client.command(aliases=['remove', 'delete', 'erase', '', 'c', 'clear'])
 @has_permissions(manage_messages=True)
 async def clear_messages(ctx, amount : int):
     amount += 1
