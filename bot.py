@@ -234,7 +234,7 @@ async def randomcolour(ctx):
 	embed.add_field(name="RGB", value=rgb)
 	await ctx.send(embed=embed)
  
-@client.command(aliases=['colour', 'col', 'colr', 'whatscolor', 'clr'])
+@client.command(aliases=['colour', 'col'])
 async def colour(ctx, color: str):
 	async with ctx.typing():
 		generated_color = color
@@ -541,7 +541,7 @@ async def help(ctx):
 			prefix = prefixes[str(ctx.message.guild.id)]
 		except:
 			prefix = ","
-	embed = discord.Embed(colour=ctx.guild.me.color, timestamp=ctx.message.created_at)
+	embed = discord.Embed(colour=ctx.guild.me., timestamp=ctx.message.created_at)
 	embed.set_author(name='Help')
 	embed.set_footer(text=f"Requested by {ctx.author}")
 	embed.add_field(name=f"{prefix}help", value='shows this help message')
@@ -655,7 +655,7 @@ async def userinfo(ctx, member: discord.Member=None):
     
     roles = [role for role in member.roles]
 
-    embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
+    embed = discord.Embed(colour=member., timestamp=ctx.message.created_at)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
     if member.id == 538332632535007244:
