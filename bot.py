@@ -212,7 +212,7 @@ async def paginator(ctx):
             emoji=str(res[0].emoji)
             await client.remove_reaction(message,res[0].emoji,res[1])
 
-    await client.clear_reactions(message)
+    await client._reactions(message)
 @client.command(aliases=['randcolor', 'randomcol', 'randcol', 'randomcolor', 'rc'])
 async def randomcolour(ctx):
 	async with ctx.typing():
@@ -526,7 +526,7 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}help", value='shows this help message')
 	embed.add_field(name=f"{prefix}ping", value='shows the latency of the bot')
 	embed.add_field(name=f"{prefix}8ball `<question>`", value='genarates a answer to a question')
-	embed.add_field(name=f"{prefix}clear `<amount>`", value='clears a amount of messages')
+	embed.add_field(name=f"{prefix} `<amount>`", value='s a amount of messages')
 	embed.add_field(name=f"{prefix}kick `<@mention>`", value='kicks a member')
 	embed.add_field(name=f"{prefix}ban `<@mention>`", value='bans a member')
 	embed.add_field(name=f"{prefix}userinfo `<@mention>`", value='shows info about a user')
@@ -578,17 +578,17 @@ async def wikipedia(ctx, *, args):
 		else:
 			await ctx.send(result[0:1997] + "...")
 
-@client.command(aliases=['remove', 'delete', 'erase', 'clear', 'c'])
+@client.command(aliases=['remove', 'delete', 'erase', '', 'c'])
 @has_permissions(manage_messages=True)
-async def clear_messages(ctx, amount : int):
+async def _messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
-    message = await ctx.send(f"deleted `{len(deleted)}`' messages")
+    message = await ctx.send(f"deleted `{len(deleted)}` messages")
     asyncio.sleep(4)
     await message.delete()
     
-@clear_messages.error
-async def clear_error(ctx, error):
+@_messages.error
+async def _error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Please specify the amount of messag esto delete')
 
