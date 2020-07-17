@@ -587,7 +587,7 @@ async def clear_messages(ctx, amount : int):
     asyncio.sleep(4)
     await message.delete()
     
-@_messages.error
+@clear_messages.error
 async def _error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Please specify the amount of messag esto delete')
