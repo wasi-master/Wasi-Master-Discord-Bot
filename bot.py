@@ -580,7 +580,7 @@ async def wikipedia(ctx, *, args):
 
 @client.command(aliases=['remove', 'delete', 'erase', '', 'c'])
 @has_permissions(manage_messages=True)
-async def _messages(ctx, amount : int):
+async def clear_messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
     message = await ctx.send(f"deleted `{len(deleted)}` messages")
