@@ -584,7 +584,7 @@ async def clear_messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
     message = await ctx.send(f"deleted `{len(deleted)}` messages")
-    asyncio.sleep(4)
+    await asyncio.sleep(4)
     await message.delete()
     
 @clear_messages.error
