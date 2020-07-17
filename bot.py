@@ -505,7 +505,7 @@ async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
 async def botinvite(ctx):
     await ctx.send("https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640")
 
-@client.command(aliases=['av', 'profilepicture', 'pp', 'profile'])
+@client.command(aliases=['pfp', 'av', 'profilepicture', 'pp', 'profile'])
 async def avatar(ctx, *,  avamember : discord.Member=None,):
     avamember = avamember or ctx.message.author
     userAvatarUrl = avamember.avatar_url
