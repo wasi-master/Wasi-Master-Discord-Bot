@@ -11,6 +11,10 @@ import os
 import wikipedia as wikimodule
 import datetime
 import asyncio
+import codecs
+import os
+import pathlib
+
 def get_prefix(client, message):
 	try:
 		with open("prefixes.json", "r") as f:
@@ -75,7 +79,19 @@ async def on_command_error(ctx, error):
 
 @client.command()
 async def info(ctx):
-	await ctx.send(f"Just a simple bot made by <@538332632535007244>")
+total = 0
+file_amount = 0
+for path, subdirs, files in os.walk('.'):
+    for name in files:
+            if name.endswith('.py'):
+                file_amount += 1
+                with codecs.open('./' + str(pathlib.PurePath(path, name)), 'r', 'utf-8') as f:
+                    for i, l in enumerate(f):
+                        if l.strip().startswith('#') or len(l.strip()) == 0:  # skip commented lines.
+                            pass
+                        else:
+                            total += 1
+	await ctx.send(f'I am made of {total:,} lines of Python, spread across  {file_amount:,} files And I\'m just  a simple bot made by <@538332632535007244>')
 
 @client.command(aliases=['spt'])
 async def spotify(ctx, member: discord.Member=None):
