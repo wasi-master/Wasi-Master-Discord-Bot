@@ -79,6 +79,7 @@ async def info(ctx):
 async def spotify(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	activity = ctx.message.guild.get_member(member.id)
+	successfull= False
 	for activity in activity.activities:
 		if isinstance(activity, discord.Spotify):
 			embed = discord.Embed(color=activity.color)
@@ -97,9 +98,9 @@ async def spotify(ctx, member: discord.Member=None):
 			#embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
-			succesfull = True
+			successfull = True
 		else:
-			succesfull = False
+			successfull = False
 	if not succesfull:
 		await ctx.send("Not listening to spotify :(")
 
