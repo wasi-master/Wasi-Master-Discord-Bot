@@ -89,7 +89,10 @@ async def spotify(ctx, member: discord.Member=None):
 				embed.add_field(name="Artist", value=activity.artist)
 			else:
 				embed.add_field(name="Artists", value=activity.artist)
-			embed.add_field(name="Album", value= activity.album)
+			try:
+				embed.add_field(name="Album", value=activity.album)
+			except:
+				embed.add_field(name="Album", value="None")
 			embed.add_field(name="Duration", value=str(activity.duration)[2:-7])
 			#embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
 			embed.set_footer(text="Track ID:" + activity.track_id)
