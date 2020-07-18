@@ -80,7 +80,7 @@ async def on_command_error(ctx, error):
 @client.command()
 async def info(ctx):
 	total = 0
-	with codecs.open('bot.py' + str(pathlib.PurePath(path, name)), 'r', 'utf-8') as f:
+	with codecs.open('bot.py', 'r', 'utf-8') as f:
 		for i, l in enumerate(f):
 			if l.strip().startswith('#') or len(l.strip()) == 0:  # skip commented lines.
 				pass
