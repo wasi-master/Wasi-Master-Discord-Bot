@@ -42,7 +42,7 @@ async def on_ready():
 @client.event
 async def on_guild_join(guild):
 	owner = client.get(538332632535007244)
-	owner.send(f"Added to {guild.name}")
+	await owner.send(f"Added to {guild.name}")
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 	prefixes[str(guild.id)] = ','
@@ -53,7 +53,7 @@ async def on_guild_join(guild):
 @client.event
 async def on_guild_remove(guild):
 	owner = client.get(538332632535007244)
-	owner.send(f"Removed from {guild.name}")
+	await owner.send(f"Removed from {guild.name}")
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 	prefixes.pop(str(guild.id))
