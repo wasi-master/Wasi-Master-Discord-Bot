@@ -85,7 +85,7 @@ async def info(ctx):
 			if l.strip().startswith('#') or len(l.strip()) == 0:  # skip commented lines.
 				pass
 			else:
-			total += 1
+				total += 1
 	await ctx.send(f'{ctx.message.author.mention}, I am made of {total:,} lines of Python, And I\'m just  a simple bot made by Wasi Master#4245')
 
 @client.command(aliases=['spt'])
