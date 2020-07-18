@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext import tasks
-from discord.ext.commands import has_permissions
+from discord.ext.commands import commands.has_permissions
 import json
 import random
 import randomcolor
@@ -118,7 +118,7 @@ async def spotify(ctx, member: discord.Member=None):
 		await ctx.send("Not listening to spotify :(")
 
 @client.command()
-@has_permissions()
+@commands.has_permissions()
 async def leaveserver(ctx):
 	if ctx.message.author.id == 538332632535007244:
 		await ctx.send("Bye Bye")
@@ -617,7 +617,7 @@ async def wikipedia(ctx, *, args):
 			await ctx.send(result[0:1997] + "...")
 
 @client.command(aliases=['remove', 'delete', 'erase', '', 'c', 'clear'])
-@has_permissions(manage_messages=True)
+@commands.has_permissions(manage_messages=True)
 async def clear_messages(ctx, amount : int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
@@ -631,25 +631,25 @@ async def _error(ctx, error):
         await ctx.send('Please specify the amount of messag esto delete')
 
 @client.command()
-@has_permissions(kick_members=True)
+@commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member, *, reason=None):
      await member.kick(reason=reason)
      await ctx.send(f'Kicked {member.mention}')
 
 @client.command(aliases=['setnick', 'setnickname', 'nickname','changenickname', 'chnick'])
-@has_permissions(manage_nicknames=True)
+@commands.has_permissions(manage_nicknames=True)
 async def nick(ctx, member: discord.Member, *, nick):
     await member.edit(nick=nick)
     await ctx.send(f'Nickname was changed for {member.mention} ')
     
 @client.command()
-@has_permissions(ban_members=True)
+@commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, *, reason=None):
         await member.ban(reason=reason)
         await ctx.send(f'Banned {member.mention}')
         
 @client.command()
-@has_permissions(ban_members=True)
+@commands.has_permissions(ban_members=True)
 async def unban(ctx, *, member):
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
