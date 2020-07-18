@@ -101,7 +101,7 @@ async def spotify(ctx, member: discord.Member=None):
 			successfull = True
 		else:
 			successfull = False
-	if not succesfull:
+	if not successfull:
 		await ctx.send("Not listening to spotify :(")
 
 @client.command()
