@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext import tasks
-from discord.ext.commands import commands.has_permissions
+from discord.ext.commands import has_permissions
 import json
 import random
 import randomcolor
