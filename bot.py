@@ -134,7 +134,16 @@ async def youtube(ctx, *, args):
 	embed.add_field(name="Duration", value=videos[0]['duration'])
 	embed.add_field(name="Views", value=videos[0]['views'])
 	embed.add_field(name="Watch", value=f"[Click Here](https://youtube.com/{videos[0]['url_suffix']})")
-	embed.set_image(url=videos[0]['thumbnails'][0])
+	try:
+		embed.set_image(url=videos[0]['thumbnails'][4])
+	except:
+		try:
+			embed.set_image(url=videos[0]['thumbnails'][3])
+		except:
+			try:
+				embed.set_image(url=videos[0]['thumbnails'][2])
+			except:
+				embed.set_image(url=videos[0]['thumbnails'][1])
 	await ctx.send(embed=embed)
 @client.command()
 async def info(ctx):
