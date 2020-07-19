@@ -135,7 +135,7 @@ async def youtube(ctx, *, args):
 	embed.add_field(name="Views", value=videos[0]['views'])
 	embed.add_field(name="Watch", value=f"[Click Here to open or long press to copy](https://youtube.com/{videos[0]['url_suffix']})")
 	try:
-		embed.set_image(url=videos[0]['thumbnails'][0])
+		embed.set_image(url=f"https://img.youtube.com/vi/{videos[0]['id']}/hqdefault.jpg")
 	except:
 		try:
 			embed.set_image(url=videos[0]['thumbnails'][1])
