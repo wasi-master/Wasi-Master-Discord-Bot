@@ -71,9 +71,9 @@ async def on_guild_remove(guild):
 async def on_command_error(ctx, error):
 	if "CheckFailure" in str(error):
 		await ctx.send("You don\'t have the permission")
-	elif isinstance(error, commands.MissingPermissions):
+	elif "MissingPermissions" in str(error):
 		await ctx.send('I can\'t do that')
-	elif isinstance(error, commands.MissingRequiredArgument):
+	elif "MissingRequiredArgument" in str(error):
 		await ctx.send('Something is missing')
 	else:
 		await ctx.send(f"error occured:\n {error}")
