@@ -129,7 +129,12 @@ async def youtube(ctx, *, args):
 	        return results[: max_results]
 	    return results
 	videos = search()
-	
+	embed = discord.Embed(title=videos[0]['title'])
+	embed.add_field(name="Channel", value=videos[0]['channel'])
+	embed.add_field(name="Duration", value=videos[0]['duration'])
+	embed.add_field(name="Views", value=videos[0]['views'])
+	embed.add_field(name="Watch", value=f"[Click Here](https://youtube.com/{videos[0]['url_suffix']})")
+	embed.set_image(url=videos[0]['thumbnails'][0])
 	await ctx.send(search())
 @client.command()
 async def info(ctx):
