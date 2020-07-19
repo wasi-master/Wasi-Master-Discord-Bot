@@ -108,7 +108,7 @@ async def spotify(ctx, member: discord.Member=None):
 			except:
 				embed.add_field(name="Album", value="None")
 			embed.add_field(name="Duration", value=str(activity.duration)[2:-7])
-			embed.add_field(name="Link", value=f"(Click Here)[https://open.apotify.com/track/{activity.track_id}]")
+			embed.add_field(name="Link", value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})")
 			#embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
