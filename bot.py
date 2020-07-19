@@ -14,6 +14,7 @@ import asyncio
 import codecs
 import os
 import pathlib
+import urllib.parse
 
 def get_prefix(client, message):
 	try:
@@ -77,6 +78,59 @@ async def on_command_error(ctx, error):
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
+@client.command(aliases=['yt'])
+async def youtube(ctx, *, args):
+	search_terms = args
+	max_results = 1
+	results = []
+	def parse_html(response):
+	    results = []
+	    start = (
+	        response.index('window["ytInitialData"]')
+	        + len('window["ytInitialData"]')
+	        + 3
+	    )
+	    end = response.index("};", start) + 1
+	    json_str = response[start:end]
+	    data = json.loads(json_str)
+	
+	    videos = data["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"][
+	        "sectionListRenderer"
+	    ]["contents"][0]["itemSectionRenderer"]["contents"]
+	
+	    for video in videos:
+	        res = {}
+	        if "videoRenderer" in video.keys():
+	            video_data = video["videoRenderer"]
+	            res["id"] = video_data["videoId"]
+	            res["thumbnails"] = [
+	                thumb["url"] for thumb in video_data["thumbnail"]["thumbnails"]
+	            ]
+	            res["title"] = video_data["title"]["runs"][0]["text"]
+	            #res["long_desc"] = video_data["descriptionSnippet"]["runs"][0]["text"]
+	            res["channel"] = video_data["longBylineText"]["runs"][0]["text"]
+	            res["duration"] = video_data.get("lengthText", {}).get("simpleText", 0)
+	            res["views"] = video_data.get("viewCountText", {}).get("simpleText", 0)
+	            res["url_suffix"] = video_data["navigationEndpoint"]["commandMetadata"][
+	                "webCommandMetadata"
+	            ]["url"]
+	            results.append(res)
+	    return results
+	    
+	def search():
+	    encoded_search = urllib.parse.quote(search_terms)
+	    BASE_URL = "https://youtube.com"
+	    url = f"{BASE_URL}/results?search_query={encoded_search}"
+	    response = requests.get(url).text
+	    while 'window["ytInitialData"]' not in response:
+	        response = requests.get(url).text
+	    results = parse_html(response)
+	    if max_results is not None and len(results) > max_results:
+	        return results[: max_results]
+	    return results
+	videos = search()
+	
+	await ctx.send(search())
 @client.command()
 async def info(ctx):
 	total = 0
