@@ -387,7 +387,7 @@ async def howgay(ctx, member: discord.Member):
      
 @client.command(aliases=['search'])
 async def google(ctx, *, args):
-    result = "http://www.google.com/search?q=" + args.replace(" ", "+") + "safe=active"
+    result = "http://www.google.com/search?q=" + args.replace(" ", "+") + "&safe=active"
     await ctx.send(result)
     	
 @client.command(aliases=['pick', 'choice', 'ch']) 
