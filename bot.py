@@ -135,7 +135,7 @@ async def youtube(ctx, *, args):
 	embed.add_field(name="Views", value=videos[0]['views'])
 	embed.add_field(name="Watch", value=f"[Click Here](https://youtube.com/{videos[0]['url_suffix']})")
 	embed.set_image(url=videos[0]['thumbnails'][0])
-	await ctx.send(search())
+	await ctx.send(embed=embed)
 @client.command()
 async def info(ctx):
 	total = 0
