@@ -62,7 +62,7 @@ async def on_guild_remove(guild):
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 	prefixes.pop(str(guild.id))
-	
+
 	with open("prefixes.json", "w") as f:
 		json.dump(prefixes, f,  indent=4)
 		
@@ -518,6 +518,9 @@ async def define(ctx, *, args):
 @client.command()
 async def quiz(ctx):
 	quiz = True
+	 def check(reaction, user):
+            return user == message.author and str(reaction.emoji) == needed_emoji
+	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
 	embed.set_footer(text="From Open Trivia DB")
@@ -533,30 +536,54 @@ async def quiz(ctx):
 		
 		category = data.get('results')[0].get('category').replace("Entertainment: ", "")
 		embed.add_field(name="Category", value=category)
-		
+		needed_emoji = ""
 		randomint = random.randint(0, 4)
 		if randomint == 1:
+			needed_emoji = "🇦"
 			embed.add_field(name="A", value=data.get("results")[0].get("correct_answer").replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[0].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[1].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 2:
+			needed_emoji = "🇧"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("correct_answer").replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[1].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 3:
+			needed_emoji = "🇨"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[1].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("correct_answer").replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 4:
+			needed_emoji = "🇩"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[1].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[2].replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("correct_answer").replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 	await ctx.send(embed=embed)
-    		
+	try:
+            reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+        except asyncio.TimeoutError:
+            await channel.send('👎')
+        else:
+            await channel.send('👍')
+
+@bot.command()
+async def lol(ctx):
+  await ctx.send("send your name in 69 seconds")
+
+  def check(m):
+    return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
+  try:
+    name = await bot.wait_for('message', check=check, timeout=69)
+  except asyncio.TimeoutError:
+    await ctx.send(f"you didnt respond :( {ctx.author}!")
+  else:
+    await ctx.send(f"i see {ctx.author} your name is {name.content}")
+    		      
 @client.command()
 async def translate(ctx, lang, *, args):
 	embed = discord.Embed(timestamp=ctx.message.created_at)
