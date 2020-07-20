@@ -564,11 +564,11 @@ async def quiz(ctx):
 			embed.add_field(name="D", value=data.get("results")[0].get("correct_answer").replace("&%39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 	await ctx.send(embed=embed)
 	try:
-            reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
-        except asyncio.TimeoutError:
-            await channel.send('👎')
-        else:
-            await channel.send('👍')
+		reaction, user = await client.wait_for('reaction_add', timeout=20.0, check=check)
+	except asyncio.TimeoutError:
+		await channel.send('👎')
+	else:
+		await channel.send('👍')
 
 @bot.command()
 async def lol(ctx):
