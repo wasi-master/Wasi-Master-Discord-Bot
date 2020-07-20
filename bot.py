@@ -77,6 +77,8 @@ async def on_command_error(ctx, error):
 		await ctx.send('Something is missing')
 	elif "You are missing" in str(error):
 		pass
+	elif "unknown command"command in str(error).lower():
+		pass
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
