@@ -637,7 +637,7 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}help", value='shows this help message')
 	embed.add_field(name=f"{prefix}ping", value='shows the latency of the bot')
 	embed.add_field(name=f"{prefix}8ball `<question>`", value='genarates a answer to a question')
-	embed.add_field(name=f"{prefix} `<amount>`", value='s a amount of messages')
+	embed.add_field(name=f"{prefix}clear `<amount>`", value='clears a amount of messages')
 	embed.add_field(name=f"{prefix}kick `<@mention>`", value='kicks a member')
 	embed.add_field(name=f"{prefix}ban `<@mention>`", value='bans a member')
 	embed.add_field(name=f"{prefix}userinfo `<@mention>`", value='shows info about a user')
