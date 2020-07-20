@@ -66,7 +66,7 @@ async def on_guild_remove(guild):
 	with open("prefixes.json", "w") as f:
 		json.dump(prefixes, f,  indent=4)
 		
-
+'''
 @client.event
 async def on_command_error(ctx, error):
 	if "CheckFailure" in str(error):
@@ -81,7 +81,7 @@ async def on_command_error(ctx, error):
 		pass
 	else:
 		await ctx.send(f"error occured:\n {error}")
-
+'''
 @client.command(aliases=['yt'])
 async def youtube(ctx, *, args):
 	search_terms = args
