@@ -570,7 +570,7 @@ async def quiz(ctx):
 	else:
 		await channel.send('👍')
 
-@bot.command()
+@client.command()
 async def lol(ctx):
   await ctx.send("send your name in 69 seconds")
 
