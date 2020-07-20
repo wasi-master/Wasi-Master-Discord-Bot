@@ -149,6 +149,19 @@ async def youtube(ctx, *, args):
 			except:
 				embed.set_image(url=videos[0]['thumbnails'][3])
 	await ctx.send(embed=embed)
+	
+@client.command()
+aaync def guildinfo(ctx):
+	guild = ctx.message.guild
+	embed=discord.Embed()
+	embed.set_author(name=guild.name)
+	embed.add_field(name='ID:', value=guild.id)
+	embed.add_field(name="Region", value=guild.region)
+	embed.add_field(name="Emojis", value=len(guild.emojis))
+	embed.set_thumbnail(url=guild.icon_url)
+	embed.add_field(name="Owners ID", value=guild.owner_id)
+	embed.add_field(name="Veilrifacation Level", value=guild.verifacation_level)
+	await ctx.send(embed=embed)
 @client.command()
 async def info(ctx):
 	total = 0
