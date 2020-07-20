@@ -519,8 +519,8 @@ async def define(ctx, *, args):
 async def quiz(ctx):
 	quiz = True
 	def check(reaction, user):
-		if not user.bot
-		return user == ctx.message.author and str(reaction.emoji) == needed_emoji
+		if not user.bot:
+			return user == ctx.message.author and str(reaction.emoji) == needed_emoji
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
