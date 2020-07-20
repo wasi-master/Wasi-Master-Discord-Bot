@@ -24,7 +24,7 @@ def get_prefix(client, message):
 	except:
 		return ","
 
-client = commands.Bot(command_prefix = get_prefix
+client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
 
 
