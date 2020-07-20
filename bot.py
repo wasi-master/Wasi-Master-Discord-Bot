@@ -518,9 +518,9 @@ async def define(ctx, *, args):
 @client.command()
 async def quiz(ctx):
 	quiz = True
-	def check(reaction, user):
-		if not user.bot:
-			return user == ctx.message.author and str(message.content).strip().lower() == correct_answer
+	def check(message = discord.Message):
+		if not message.author.bot:
+			return message.author == ctx.message.author and str(message.content).strip().lower() == correct_answer
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
@@ -565,7 +565,7 @@ async def quiz(ctx):
 			embed.add_field(name="D", value=data.get("results")[0].get("correct_answer").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 	await ctx.send(embed=embed)
 	try:
-		reaction, user = await client.wait_for('reaction_add', timeout=20.0, check=check)
+		reaction, user = await client.wait_for('message', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
 		await ctx.message.channel.send('You didn’tanswer in time ')
 	else:
