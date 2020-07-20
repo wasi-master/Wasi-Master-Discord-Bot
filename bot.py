@@ -156,11 +156,11 @@ async def serverinfo(ctx):
 	embed=discord.Embed()
 	embed.set_author(name=guild.name)
 	embed.add_field(name='ID:', value=guild.id)
-	embed.add_field(name="Region", value=guild.region.capitalize())
+	embed.add_field(name="Region", value=str(guild.region).capitalize())
 	embed.add_field(name="Emojis", value=len(guild.emojis))
 	embed.set_thumbnail(url=guild.icon_url)
 	embed.add_field(name="Owners ID", value=guild.owner_id)
-	embed.add_field(name="Verification Level", value=guild.verification_level.capitalize())
+	embed.add_field(name="Verification Level", value=str(guild.verification_level).capitalize())
 	await ctx.send(embed=embed)
 @client.command()
 async def info(ctx):
