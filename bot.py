@@ -520,7 +520,7 @@ async def quiz(ctx):
 	quiz = True
 	def check(reaction, user):
 		if not user.bot:
-			return user == ctx.message.author and str(reaction.emoji) == needed_emoji
+			return user == ctx.message.author and str(message.content).strip().lower() == correct_answer
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
@@ -537,28 +537,28 @@ async def quiz(ctx):
 		
 		category = data.get('results')[0].get('category').replace("Entertainment: ", "")
 		embed.add_field(name="Category", value=category)
-		needed_emoji = ""
+		correct_answer = ""
 		randomint = random.randint(0, 4)
 		if randomint == 1:
-			needed_emoji = "🇦"
+			correct_answer = "a"
 			embed.add_field(name="A", value=data.get("results")[0].get("correct_answer").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[0].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[1].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 2:
-			needed_emoji = "🇧"
+			correct_answer = "b"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("correct_answer").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[1].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 3:
-			needed_emoji = "🇨"
+			correct_answer = "c"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[1].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("correct_answer").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 4:
-			needed_emoji = "🇩"
+			correct_annswer = "d"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[1].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[2].replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
@@ -567,10 +567,11 @@ async def quiz(ctx):
 	try:
 		reaction, user = await client.wait_for('reaction_add', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
-		await ctx.message.channel.send('👎')
+		await ctx.message.channel.send('You didn’tanswer in time ')
 	else:
-		await ctx.message.channel.send('👍')
-
+		await ctx.message.channel.send('Correct you big brain')
+	finally:
+		await ctx.send("Stopped listeming to that message\'s reactions")
 @client.command()
 async def lol(ctx):
   await ctx.send("send your name in 69 seconds")
