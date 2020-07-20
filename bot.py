@@ -153,6 +153,7 @@ async def youtube(ctx, *, args):
 @client.command(aliases=['guildinfo', 'si', 'gi'])
 async def serverinfo(ctx):
 	guild = ctx.message.guild
+	owner = client.get_user(guild.owner_id)
 	embed=discord.Embed()
 	embed.set_author(name=guild.name)
 	embed.add_field(name='ID:', value=guild.id)
@@ -160,6 +161,7 @@ async def serverinfo(ctx):
 	embed.add_field(name="Emojis", value=len(guild.emojis))
 	embed.set_thumbnail(url=guild.icon_url)
 	embed.add_field(name="Owners ID", value=guild.owner_id)
+	embed.add_field(name="Owners Name", value=owner.name)
 	embed.add_field(name="Verification Level", value=str(guild.verification_level).capitalize())
 	await ctx.send(embed=embed)
 @client.command()
