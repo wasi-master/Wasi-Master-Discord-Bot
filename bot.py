@@ -519,7 +519,11 @@ async def define(ctx, *, args):
 async def quiz(ctx):
 	quiz = True
 	def check(reaction, user):
-		return user == ctx.message.author and str(reaction.emoji) == needed_emoji
+		if user == ctx.message.author:
+			if str(reaction.emoji) == needed_emoji:
+				await ctx.send("Correct you big brain")
+			else:
+				await ctx.send("Wrong hehehehe")
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
@@ -566,9 +570,9 @@ async def quiz(ctx):
 	try:
 		reaction, user = await client.wait_for('reaction_add', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
-		await channel.send('👎')
+		await ctx.message.channel.send('👎')
 	else:
-		await channel.send('👍')
+		await ctx.message.channel.send('👍')
 
 @client.command()
 async def lol(ctx):
