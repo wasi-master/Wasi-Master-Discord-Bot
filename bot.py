@@ -518,8 +518,8 @@ async def define(ctx, *, args):
 @client.command()
 async def quiz(ctx):
 	quiz = True
-	 def check(reaction, user):
-            return user == message.author and str(reaction.emoji) == needed_emoji
+	def check(reaction, user):
+		return user == message.author and str(reaction.emoji) == needed_emoji
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
