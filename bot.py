@@ -520,7 +520,7 @@ async def quiz(ctx):
 	quiz = True
 	def check(message = discord.Message):
 		if not message.author.bot:
-			return message.author == ctx.message.author and message.content.strip().lower() == correct_answer
+			return message.author == ctx.message.author and str(message.content).strip().lower() == correct_answer
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
@@ -571,7 +571,7 @@ async def quiz(ctx):
 	else:
 		await ctx.message.channel.send('Correct you big brain')
 	finally:
-		await ctx.send("Stopped listening to that message\'s reactions")
+		await ctx.message.channel.send("Stopped listening to that message\'s reactions")
 @client.command()
 async def lol(ctx):
   await ctx.send("send your name in 69 seconds")
