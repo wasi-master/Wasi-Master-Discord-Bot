@@ -699,7 +699,7 @@ async def servers(ctx):
     	servers = len(serverlist)
     	members = len(memberlist)
     	average = round(int(members) / int(servers))
-    	await ctx.send(f"I\'m in {servers} servers and there are {members} members total d there are {members} members total and {average}  on average in each server")
+    	await ctx.send(f"I\'m in {servers:3,} servers and there are {members:3,} members total d there are {members:3,} members total and {average}  on average in each server")
 
 @client.command(aliases=['8ball', 'eightball', 'eight ball', 'ask', 'question','answer', '8b'])
 async def _8ball(ctx, *, question):
