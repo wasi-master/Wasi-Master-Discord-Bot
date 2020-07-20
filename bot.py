@@ -519,7 +519,7 @@ async def define(ctx, *, args):
 async def quiz(ctx):
 	quiz = True
 	def check(reaction, user):
-		if not message.author.bot
+		if not user.bot
 		return user == ctx.message.author and str(reaction.emoji) == needed_emoji
 	
 	embed = discord.Embed()
