@@ -151,7 +151,7 @@ async def youtube(ctx, *, args):
 	await ctx.send(embed=embed)
 	
 @client.command()
-aaync def guildinfo(ctx):
+async def guildinfo(ctx):
 	guild = ctx.message.guild
 	embed=discord.Embed()
 	embed.set_author(name=guild.name)
