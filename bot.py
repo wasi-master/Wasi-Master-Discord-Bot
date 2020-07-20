@@ -519,11 +519,8 @@ async def define(ctx, *, args):
 async def quiz(ctx):
 	quiz = True
 	def check(reaction, user):
-		if user == ctx.message.author:
-			if str(reaction.emoji) == needed_emoji:
-				await ctx.send("Correct you big brain")
-			else:
-				await ctx.send("Wrong hehehehe")
+		if notmessage.author.bot
+		return user == ctx.message.author and str(reaction.emoji) == needed_emoji
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
