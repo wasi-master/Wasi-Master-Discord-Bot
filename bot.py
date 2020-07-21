@@ -82,6 +82,21 @@ async def on_command_error(ctx, error):
 	else:
 		await ctx.send(f"error occured:\n {error}")
 
+@client.command(aliases=["makememe"])
+async def meme(ctx, template: str=None, *, text):
+	base_url = "https://memegen.link/api/templates"
+	text = text.strip().replace(" ", "_").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
+	textlist = text.split("||")
+	template = template.strip().lower().replace(" ", "-")
+	url = f"{base_url}/{template}/{textlist[0]/textlist[1]}"
+	response = requests.get(url)
+	response_json = json.loads(response.text)
+	masked_url = response.json['direct']['masked']
+	embed = discord.Embed()
+	embed.set_author(template)
+	embed.set_image(url=masked_url)
+	await ctx.send(embed=embed)
+	
 @client.command(aliases=['yt'])
 async def youtube(ctx, *, args):
 	search_terms = args
