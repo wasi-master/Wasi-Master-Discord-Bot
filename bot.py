@@ -420,16 +420,12 @@ async def prefix(ctx, prefix):
 		json.dump(prefixes, f,  indent=4)
 		
 @client.command(aliases=['speak', 'echo', 's'])
-async def say(ctx, channel: discord.TextChannel=None, *args): 
+async def say(ctx, *, args): 
     mesg = args
-    try:
-    	channel = channel
-    except:
-    	channel = ctx.message.channel
+    channel = ctx.message.channel
     if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
         await ctx.message.channel.purge(limit=1)
     await channel.send(mesg)
-
 
 @client.command()
 async def role(ctx, member: discord.Member, role: discord.Role):
