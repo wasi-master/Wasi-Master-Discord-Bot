@@ -502,12 +502,21 @@ async def emoji(ctx):
   
 @client.command(aliases=['p'])
 async def ping(ctx):
+	start = time.perf_counter()
     embed = discord.Embed(timestamp=ctx.message.created_at)
     embed.set_author(name='Ping')
     embed.set_footer(text=f"Asked by {ctx.author}")
-    embed.add_field(name="Ping", value=f'Pong! I got your message after {round(client.latency * 1000)}ms')
-    await ctx.send(embed=embed)
-
+    embed.add_field(name="Websocket Latency", value=f'{round(client.latency * 1000)}ms')
+    message = await ctx.send(embed=embed)
+    end = time.perf_counter()
+    message_ping = (end - start) * 1000
+    embed.set_author(name='Ping')
+    embed.set_footer(text=f"Asked by {ctx.author}")
+    embed.add_field(name="Websocket Latency", value=f"{round(client.latency * 1000)}ms")
+    embed.add_field(name="Bot latency", value=f"{message_ping}ms")
+    await message.edit(embed=embed)
+    
+	
 @client.command(aliases=['synonym'])
 async def synonyms(ctx, *, args):
 	api_key = "dict.1.1.20200701T101603Z.fe245cbae2db542c.ecb6e35d1120ee008541b7c1f962a6d964df61dd"
