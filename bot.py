@@ -182,8 +182,57 @@ async def spotify(ctx, member: discord.Member=None):
 	successfull= False
 	for activity in activity.activities:
 		if isinstance(activity, discord.Spotify):
+			search_terms = activity.artist + " - " + activity.title
+			max_results = 1
+			results = []
+			def parse_html(response):
+			    results = []
+			    start = (
+			        response.index('window["ytInitialData"]')
+			        + len('window["ytInitialData"]')
+			        + 3
+			    )
+			    end = response.index("};", start) + 1
+			    json_str = response[start:end]
+			    data = json.loads(json_str)
+			
+			    videos = data["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"][
+			        "sectionListRenderer"
+			    ]["contents"][0]["itemSectionRenderer"]["contents"]
+			
+			    for video in videos:
+			        res = {}
+			        if "videoRenderer" in video.keys():
+			            video_data = video["videoRenderer"]
+			            res["id"] = video_data["videoId"]
+			            res["thumbnails"] = [
+			                thumb["url"] for thumb in video_data["thumbnail"]["thumbnails"]
+			            ]
+			            res["title"] = video_data["title"]["runs"][0]["text"]
+			            #res["long_desc"] = video_data["descriptionSnippet"]["runs"][0]["text"]
+			            res["channel"] = video_data["longBylineText"]["runs"][0]["text"]
+			            res["duration"] = video_data.get("lengthText", {}).get("simpleText", 0)
+			            res["views"] = video_data.get("viewCountText", {}).get("simpleText", 0)
+			            res["url_suffix"] = video_data["navigationEndpoint"]["commandMetadata"][
+			                "webCommandMetadata"
+			            ]["url"]
+			            results.append(res)
+			    return results
+			    
+			def search():
+			    encoded_search = urllib.parse.quote(search_terms)
+			    BASE_URL = "https://youtube.com"
+			    url = f"{BASE_URL}/results?search_query={encoded_search}"
+			    response = requests.get(url).text
+			    while 'window["ytInitialData"]' not in response:
+			        response = requests.get(url).text
+			    results = parse_html(response)
+			    if max_results is not None and len(results) > max_results:
+			        return results[: max_results]
+			    return results
+			videos = search()
 			embed = discord.Embed(color=activity.color)
-			embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg")
+			Embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg")
 			embed.set_image(url=activity.album_cover_url)
 			embed.add_field(name="Song Name", value=activity.title)
 			if len(activity.artists) == 0:
@@ -195,7 +244,8 @@ async def spotify(ctx, member: discord.Member=None):
 			except:
 				embed.add_field(name="Album", value="None")
 			embed.add_field(name="Duration", value=str(activity.duration)[2:-7])
-			embed.add_field(name="Link", value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})")
+			embed.add_field(name="Spotify Link", value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})")
+			embed.add_field(name="Youtube Link", value=f"[Click Here](https://youtube.com/{videos[0]['url_suffix']})")
 			#embed.add_field(name="Time Left", value=(datetime.utcnow() - activity.end).total_seconds)
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
