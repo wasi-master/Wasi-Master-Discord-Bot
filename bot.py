@@ -422,7 +422,10 @@ async def prefix(ctx, prefix):
 @client.command(aliases=['speak', 'echo', 's'])
 async def say(ctx, channel: discord.TextChannel=None, *args): 
     mesg = args
-    channel = channel or ctx.message.channel
+    try:
+    	channel = channel
+    except:
+    	channel = ctx.message.channel
     if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
         await ctx.message.channel.purge(limit=1)
     await channel.send(mesg)
