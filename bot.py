@@ -88,8 +88,9 @@ async def meme(ctx, template: str=None, *, text):
 	text = text.strip().replace(" ", "_").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
 	textlist = text.split("||")
 	template = template.strip().lower().replace(" ", "-")
-	url = f"{base_url}/{template}/{textlist[0]/textlist[1]}"
-	response = requests.get(url)
+	url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
+	async with ctx.typing():
+		response = requests.get(url)
 	response_json = json.loads(response.text)
 	masked_url = response.json['direct']['masked']
 	embed = discord.Embed()
