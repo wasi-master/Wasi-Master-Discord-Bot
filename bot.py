@@ -81,6 +81,7 @@ async def on_command_error(ctx, error):
 		pass
 	else:
 		await ctx.send(f"error occured:\n {error}")
+		raise error
 
 @client.command(aliases=["makememe"])
 async def meme(ctx, template: str=None, *, text):
