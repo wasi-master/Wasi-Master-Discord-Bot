@@ -232,7 +232,7 @@ async def spotify(ctx, member: discord.Member=None):
 			    return results
 			videos = search()
 			embed = discord.Embed(color=activity.color)
-			Embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg")
+			embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg")
 			embed.set_image(url=activity.album_cover_url)
 			embed.add_field(name="Song Name", value=activity.title)
 			if len(activity.artists) == 0:
