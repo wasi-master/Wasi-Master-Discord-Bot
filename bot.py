@@ -86,7 +86,7 @@ async def on_command_error(ctx, error):
 @client.command(aliases=["makememe"])
 async def meme(ctx, *, text):
 	base_url = "https://memegen.link/api/templates"
-	text = text.split(":")[1].strip().replace(" ", "_").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
+	text = text.strip().replace(" ", "_").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
 	textlist = text.split("||")
 	template = text.split(":")[0].strip().lower().replace(" ", "-")
 	url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
@@ -96,8 +96,7 @@ async def meme(ctx, *, text):
 	try:
 		masked_url = response_json['direct']['masked']
 	except:
-		await ctx.send(response.text)
-		await ctx.send(f"{template}")
+		await ctx.send(response_json['message'])
 	embed = discord.Embed()
 	embed.set_author(name=template.title())
 	embed.set_image(url=masked_url)
