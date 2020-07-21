@@ -502,7 +502,7 @@ async def emoji(ctx):
   
 @client.command(aliases=['p'])
 async def ping(ctx):
-	start = time.perf_counter()
+    start = time.perf_counter()
     embed = discord.Embed(timestamp=ctx.message.created_at)
     embed.set_author(name='Ping')
     embed.set_footer(text=f"Asked by {ctx.author}")
