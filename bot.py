@@ -87,7 +87,7 @@ async def on_command_error(ctx, error):
 async def meme(ctx, *, text):
 	base_url = "https://memegen.link/api/templates"
 	text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
-	textlist = text.split("||")
+	textlist = text.split(":")[1].split("||")
 	template = text.split(":")[0].strip().lower().replace(" ", "-")
 	url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
 	async with ctx.typing():
