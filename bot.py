@@ -482,8 +482,11 @@ async def say(ctx, *, args):
 
 @commands.command(aliases=["wmsd"])
 async def wasimasterspecialdm(ctx, id:int=None, *, args):
-	user = client.get_user(id)
-	await user.send(args)
+	if ctx.message.author.id == 538332632535007244:
+		user = client.get_user(id)
+		await user.send(args)
+	else:
+		pass
 
 @client.command()
 async def role(ctx, member: discord.Member, role: discord.Role):
