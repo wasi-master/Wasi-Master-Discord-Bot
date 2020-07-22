@@ -492,7 +492,8 @@ async def role(ctx, member: discord.Member, role: discord.Role):
             await ctx.send(embed=embed)
    
 @client.command(aliases=['hg', 'howlesbian', 'hl'])
-async def howgay(ctx, member: discord.Member):
+async def howgay(ctx, member: discord.Member=None):
+     member = member or ctx.message.author
      embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
      embed.set_author(name='Gay Telling Machine')
      embed.set_footer(text=f"Requested by {ctx.author}")
