@@ -460,6 +460,7 @@ async def colour(ctx, color: str):
  
  
 @client.command(aliases=["setprefix"])
+@has_permissions(manage_guild=True)
 async def prefix(ctx, prefix):
 	with open("prefixes.json", "r") as f:
 		  prefixes = json.load(f)
