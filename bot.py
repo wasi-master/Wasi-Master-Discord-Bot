@@ -78,6 +78,9 @@ async def on_command_error(ctx, error):
 		pass
 	elif "is not found" in str(error).lower():
 		pass
+	elif "Cannot send messages to this user" in str(error):
+		pass
+	
 	else:
 		await ctx.send(f"error occured:\n {error}")
 		raise error
