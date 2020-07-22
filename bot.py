@@ -745,7 +745,8 @@ async def avatar(ctx, *,  avamember : discord.Member=None,):
 
 
 @client.command(aliases=['halp'])
-async def help(ctx):	
+async def help(ctx):
+	user = ctx.message.author
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 		try:
@@ -778,7 +779,8 @@ async def help(ctx):
 	embed.add_field(name=f"{prefix}link", value='Used to get a link to the message')
 	embed.add_field(name=f"{prefix}dm `<text>`", value='Used to send the person writing this command a dm which can be used to remember something')
 	embed.add_field(name=f"{prefix}getusers `<@role>`", value="used to get users that have a specefic oile")
-	await ctx.send(embed=embed)
+	await ctx.send("Help has been sent to your dm")
+	await user.send(embed=embed)
     
 @client.command()
 async def servers(ctx):
