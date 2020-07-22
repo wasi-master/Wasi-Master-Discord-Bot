@@ -84,6 +84,7 @@ async def on_command_error(ctx, error):
 
 @client.command(aliases=["sui"])
 async def secretuserinfo(ctx, id: int=None):
+	id = id or ctx.message.author.id
 	member = client.get_user(id)
 	embed = discord.Embed()
 	embed.set_author(name=member.name)
