@@ -88,8 +88,10 @@ async def message_count(ctx, channel: discord.TextChannel=None):
     count = 0
     async for _ in channel.history(limit=None):
         count += 1
-    await ctx.send(f"There are {count} messages in {channel.mention}")
-
+    try:
+    	await ctx.send(f"There are {count} messages in {channel.mention}")
+    except:
+    	await ctx.send(f"There are {count} messages)
 @client.command(aliases=["makememe"])
 async def meme(ctx, *, text):
 	base_url = "https://memegen.link/api/templates"
