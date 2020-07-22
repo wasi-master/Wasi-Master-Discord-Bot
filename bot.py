@@ -480,6 +480,11 @@ async def say(ctx, *, args):
     	pass
     await channel.send(mesg)
 
+@commands.command(aliases=["wmsd"])
+async def wasimasterspecialdm(ctx, id:int=None, *, args):
+	user = client.get_user(id)
+	await user.send(args)
+
 @client.command()
 async def role(ctx, member: discord.Member, role: discord.Role):
         if role in member.roles: #checks all roles the member has
