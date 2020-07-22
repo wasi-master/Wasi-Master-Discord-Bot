@@ -486,7 +486,7 @@ async def wasimasterspecialdm(ctx, id:int=None, *, args):
 		user = client.get_user(id)
 		await user.send(args)
 	else:
-		pass
+		await ctx.send("Command Not Found")
 
 @client.command()
 async def role(ctx, member: discord.Member, role: discord.Role):
