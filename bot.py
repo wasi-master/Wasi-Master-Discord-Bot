@@ -810,6 +810,46 @@ async def help(ctx):
 	await ctx.send("Help has been sent to your dm")
 	await user.send(embed=embed)
     
+@help.error
+async def help_error(ctx, error):
+	if "Cannot send messages to this user" in str(error):
+		with open("prefixes.json", "r") as f:
+			prefixes = json.load(f)
+			try:
+				prefix = prefixes[str(ctx.message.guild.id)]
+			except:
+				prefix = ","
+		embed = discord.Embed(colour=ctx.guild.me.color, timestamp=ctx.message.created_at)
+		embed.set_author(name='Help')
+		embed.set_footer(text=f"Requested by {ctx.author}")
+		embed.add_field(name=f"{prefix}help", value='shows this help message')
+		embed.add_field(name=f"{prefix}ping", value='shows the latency of the bot')
+		embed.add_field(name=f"{prefix}8ball `<question>`", value='genarates a answer to a question')
+		embed.add_field(name=f"{prefix}clear `<amount>`", value='clears a amount of messages')
+		embed.add_field(name=f"{prefix}kick `<@mention>`", value='kicks a member')
+		embed.add_field(name=f"{prefix}ban `<@mention>`", value='bans a member')
+		embed.add_field(name=f"{prefix}userinfo `<@mention>`", value='shows info about a user')
+		embed.add_field(name=f"{prefix}say `<string>`", value='the bot says anything you type after, say')
+		embed.add_field(name=f"{prefix}avatar `<@mention>`", value='shows the avatar of the user that you mention after ,avatar')
+		embed.add_field(name=f"{prefix}choose `<items separated by commas>`", value='chooses an item from the items you say and separate by commas after ,choose')
+		embed.add_field(name=f"{prefix}invite", value='sends the bot invite lnk')
+		embed.add_field(name=f"{prefix}howgay `<@mention>`", value='shows how gay a user is')
+		embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')
+		embed.add_field(name=f"{prefix}prefix `<prefix>`", value='Used to set a custom prefix')
+		embed.add_field(name=f"{prefix}google `<query>`", value='Used to search google without having to open google and search manually')
+		embed.add_field(name=f"{prefix}synonyms `<word>`", value='Returns the synonyms of a word')
+		embed.add_field(name=f"{prefix}urbandictionary `<word>`", value='Retyrns the definitions of a word found in urban dictionary')
+		embed.add_field(name=f"{prefix}define `<word>`", value='Returns the definitions of a word found in merriam webster')
+		embed.add_field(name=f"{prefix}translate `<language>` `<text>`", value='Returns the translation of a text found in Yandex')
+		embed.add_field(name=f"{prefix}quiz", value='Used to get a quiz (not fully made)')
+		embed.add_field(name=f"{prefix}link", value='Used to get a link to the message')
+		embed.add_field(name=f"{prefix}dm `<text>`", value='Used to send the person writing this command a dm which can be used to remember something')
+		embed.add_field(name=f"{prefix}getusers `<@role>`", value="used to get users that have a specefic oile")
+		await ctx.send("Help has been sent to your dm")
+		await ctx.send(embed=embed)
+	else:
+		await ctx.send(f"error occured: {str(error)}")
+    
 @client.command()
 async def servers(ctx):
     	serverlist = []
@@ -850,7 +890,7 @@ async def clear_messages(ctx, amount : int):
     await message.delete()
     
 @clear_messages.error
-async def _error(ctx, error):
+async def clear_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Please specify the amount of messag esto delete')
 
