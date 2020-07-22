@@ -2,3 +2,4 @@ discord
 randomcolor
 wikipedia
 requests
+jishaku
