@@ -82,6 +82,14 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"error occured:\n {error}")
 		raise error
 
+@client.command()
+async def message_count(ctx, channel: discord.TextChannel=None):
+    channel = channel or ctx.message.channel
+    count = 0
+    async for _ in channel.history(limit=None):
+        count += 1
+    await ctx.send(f"There were {count} messages in {channel.mention}")
+
 @client.command(aliases=["makememe"])
 async def meme(ctx, *, text):
 	base_url = "https://memegen.link/api/templates"
