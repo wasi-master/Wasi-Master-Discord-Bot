@@ -36,7 +36,7 @@ async def update_server_count():
 		serverlist.append(guild)
 		for member in guild.members:
 			memberlist.append(member)
-	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{round(len(memberlist)/2)} members in {round(len(serverlist)/2)} servers"))
+	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(memberlist)} members in {len(serverlist)} servers"))
 
 @client.event
 async def on_ready():
@@ -90,8 +90,8 @@ async def secretuserinfo(ctx, id: int=None):
 	embed.set_author(name=member.name)
 	embed.set_image(url=member.avatar_url)
 	embed.add_field(name="Account Created At", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
-	embed.add_field(name="Bot?", value=member.bot)
-	embed.add_field(name="Online Status", value=f"Desktop: {member.desktop_status}\nWeb: {member.web_status}\nMobile: {member.mobile_status}")
+	embed.add_field(name="Bot?", value=member.
+	embed.add_field(name="Online Status", value=f"Web: {member.web_status}\nMobile: {member.mobile_status}")
 	embed.add_field(name="Has Animated Avatar?", value=member.is_avatar_animated())
 	await ctx.send(embed=embed)
 	
