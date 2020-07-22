@@ -99,7 +99,12 @@ async def meme(ctx, *, text):
 	text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
 	textlist = text.split(":")[1].split("||")
 	template = text.split(":")[0].strip().replace(" ", "").lower()
-	url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
+	if len(textlist) == 2:
+		url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
+	elif len(textlist) == 1:
+		url = f"{base_url}/{template}/{textlist[0]}"
+	else:
+		await ctx.send("invalid format")
 	async with ctx.typing():
 		response = requests.get(url)
 	response_json = json.loads(response.text)
