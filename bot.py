@@ -14,6 +14,7 @@ import codecs
 import os
 import pathlib
 import urllib.parse
+import jishaku
 
 def get_prefix(client, message):
 	try:
