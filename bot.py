@@ -383,7 +383,7 @@ async def paginator(ctx):
 
     pages=[page1,page2,page3]
 
-    message=await client.say(embed=page1)
+    message=await client.send(embed=page1)
 
     await client.add_reaction(message,'\u23ee')
     await client.add_reaction(message,'\u25c0')
@@ -473,8 +473,11 @@ async def prefix(ctx, prefix):
 async def say(ctx, *, args): 
     mesg = args
     channel = ctx.message.channel
-    if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
-        await ctx.message.channel.purge(limit=1)
+    try:
+    	if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
+    		await ctx.message.channel.purge(limit=1)
+    except:
+    	pass
     await channel.send(mesg)
 
 @client.command()
