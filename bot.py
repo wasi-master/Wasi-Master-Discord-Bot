@@ -86,8 +86,9 @@ async def on_command_error(ctx, error):
 async def message_count(ctx, channel: discord.TextChannel=None):
     channel = channel or ctx.message.channel
     count = 0
-    async for _ in channel.history(limit=None):
-        count += 1
+    async with ctx.typing():
+    	async for _ in channel.history(limit=None):
+    		count += 1
     try:
     	await ctx.send(f"There are {count} messages in {channel.mention}")
     except:
