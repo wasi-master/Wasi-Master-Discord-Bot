@@ -903,7 +903,7 @@ async def userinfo(ctx, member: discord.Member=None):
         embed.add_field(name="Fun Fact:", value="He is the owner and the only person that developed this bot")
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
-    embed add_field(name="Online Status", value=f"Desktop: {member.desktop_status}\nWeb: {member.web_status}\Mobile:{member.mobile_status}")
+    embed.add_field(name="Online Status", value=f"Desktop: {member.desktop_status}\nWeb: {member.web_status}\Mobile:{member.mobile_status}")
     embed.add_field(name="Created at", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 
     embed.add_field(name="Joined at:", value=member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S"))
