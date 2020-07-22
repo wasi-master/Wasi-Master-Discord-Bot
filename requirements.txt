@@ -1,4 +1,3 @@
-discord
 randomcolor
 wikipedia
 requests
