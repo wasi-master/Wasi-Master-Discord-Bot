@@ -92,7 +92,6 @@ async def secretuserinfo(ctx, id: int=None):
 	embed.add_field(name="Account Created At", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	embed.add_field(name="Bot?", value=member.
 	embed.add_field(name="Online Status", value=f"Web: {member.web_status}\nMobile: {member.mobile_status}")
-	embed.add_field(name="Has Animated Avatar?", value=member.is_avatar_animated())
 	await ctx.send(embed=embed)
 	
 @client.command(aliases=["messagecount", "mc", "countmessages"])
