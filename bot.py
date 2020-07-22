@@ -82,6 +82,14 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"error occured:\n {error}")
 		raise error
 
+@client.command(aliases=["sui"])
+async def secretuserinfo(ctx, id: int=None):
+	member = client.get_user(id)
+	embed = discord.Embed()
+	embed.set_author(name=member.name)
+	embed.add_field(name="Account Created At", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
+	embed.add_field(name="Bot?", value=member.bot)
+	await ctx.send(embed=embed)
 @client.command(aliases=["messagecount", "mc", "countmessages"])
 async def message_count(ctx, channel: discord.TextChannel=None):
     channel = channel or ctx.message.channel
