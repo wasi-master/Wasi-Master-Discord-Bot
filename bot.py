@@ -42,6 +42,7 @@ async def update_server_count():
 async def on_ready():
     print("Bot is online")
     update_server_count.start()
+    client.load_extension('jishaku')
 
 @client.event
 async def on_guild_join(guild):
