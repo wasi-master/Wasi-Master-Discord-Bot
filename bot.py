@@ -36,7 +36,7 @@ async def update_server_count():
 		serverlist.append(guild)
 		for member in guild.members:
 			memberlist.append(member)
-	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(memberlist)/2} members in {len(serverlist)/2} servers"))
+	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{round(len(memberlist)/2)} members in {round(len(serverlist)/2)} servers"))
 
 @client.event
 async def on_ready():
