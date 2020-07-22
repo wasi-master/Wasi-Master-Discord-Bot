@@ -95,7 +95,7 @@ async def meme(ctx, *, text):
 	try:
 		masked_url = response_json['direct']['masked']
 	except:
-		await ctx.send(template)
+		await ctx.send(response.text)
 	embed = discord.Embed()
 	embed.set_author(name=template.title())
 	embed.set_image(url=masked_url)
