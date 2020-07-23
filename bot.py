@@ -96,7 +96,7 @@ async def remind(ctx, text):
 	textlist = text.strip.split("|")
 	texttosend = str(textlist[1])
 	timetowait = int(textlist[0].strip)
-	await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds)
+	await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds")
 	asyncio.sleep(timetowait)
 	await user.send(texttosend)
 	
