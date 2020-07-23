@@ -8,7 +8,7 @@ import randomcolor
 import requests
 import time
 import wikipedia as wikimodule
-import datetime
+import datetime from datetime
 import asyncio
 import codecs
 import os
