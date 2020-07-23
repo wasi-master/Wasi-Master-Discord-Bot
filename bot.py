@@ -14,6 +14,8 @@ import codecs
 import os
 import pathlib
 import urllib.parse
+import base64
+
 def get_prefix(client, message):
 	try:
 		with open("prefixes.json", "r") as f:
@@ -85,10 +87,27 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"error occured:\n {error}")
 		raise error
 
+
+
 @client.command()
 async def ip(ctx):
 	ip = requests.get("https://api.ipify.org").text
 	await ctx.message.author.send(ip)
+
+@client.command()
+async def base64(ctx, task, *, text):
+	if task.strip().lower() == 'encode':
+		data = text
+		encodedBytes = base64.b64encode(data.encode("utf-8")) 
+		encodedStr = str(encodedBytes, "utf-8") 
+		await ctx.send(encodedStr)
+	elif task.strip().lower() == 'decode':
+		data = text
+		encodedBytes = base64.b64decode(data.decode("utf-8")) 
+		encodedStr = str(encodedBytes, "utf-8") 
+		await ctx.send(encodedStr)
+	else:
+		await ctx.send("Must have either encode or decode")
 
 @client.command()
 async def remind(ctx, *, text):
