@@ -91,7 +91,7 @@ async def ip(ctx):
 	await ctx.message.author.send(ip)
 
 @client.command()
-async def remind(ctx, text):
+async def remind(ctx, *, text):
 	user = ctx.message.author
 	textlist = text.strip().split("|")
 	texttosend = str(textlist[1])
