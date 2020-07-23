@@ -108,7 +108,11 @@ async def base64(ctx, task, *, text):
 		await ctx.send(message)
 	else:
 		await ctx.send("Must have either encode or decode")
-
+		
+@client.command()
+async def support(ctx):
+	await ctx.send("https://discord.gg/5jn3bQX")
+	
 @client.command()
 async def remind(ctx, *, text):
 	user = ctx.message.author
