@@ -338,7 +338,7 @@ async def spotify(ctx, member: discord.Member=None):
 			embed.add_field(name="Duration", value=str(activity.duration)[2:-7])
 			embed.add_field(name="Spotify Link", value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})")
 			embed.add_field(name="Youtube Link", value=f"[Click Here](https://youtube.com/{videos[0]['url_suffix']})")
-			embed.add_field(name="Time Left", value=convert_sec_to_min((datetime.now() - activity.end).total_seconds()))
+			embed.add_field(name="Time Left", value=convert_sec_to_min((datetime.now() - activity.start).total_seconds()))
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
 			successfull = True
