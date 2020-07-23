@@ -14,8 +14,6 @@ import codecs
 import os
 import pathlib
 import urllib.parse
-import jishaku
-
 def get_prefix(client, message):
 	try:
 		with open("prefixes.json", "r") as f:
@@ -86,6 +84,11 @@ async def on_command_error(ctx, error):
 	else:
 		await ctx.send(f"error occured:\n {error}")
 		raise error
+
+@client.command()
+async def ip(ctx):
+	ip = requests.get("https://api.ipify.org").text
+	await ctx.message.author.send(ip)
 
 @client.command(aliases=["sui"])
 async def secretuserinfo(ctx, id: int=None):
