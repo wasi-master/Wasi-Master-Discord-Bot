@@ -93,9 +93,9 @@ async def ip(ctx):
 @client.command()
 async def remind(ctx, text):
 	user = ctx.message.author
-	textlist = text.strip.split("|")
+	textlist = text.strip().split("|")
 	texttosend = str(textlist[1])
-	timetowait = int(textlist[0].strip)
+	timetowait = int(textlist[0].strip())
 	await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds")
 	asyncio.sleep(timetowait)
 	await user.send(texttosend)
