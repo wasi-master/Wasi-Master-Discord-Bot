@@ -14,7 +14,7 @@ import codecs
 import os
 import pathlib
 import urllib.parse
-import base64
+import base64 as base64module
 
 def get_prefix(client, message):
 	try:
@@ -98,12 +98,12 @@ async def ip(ctx):
 async def base64(ctx, task, *, text):
 	if task.strip().lower() == 'encode':
 		data = text
-		encodedBytes = base64.b64encode(data.encode("utf-8")) 
+		encodedBytes = base64module.b64encode(data.encode("utf-8")) 
 		encodedStr = str(encodedBytes, "utf-8") 
 		await ctx.send(encodedStr)
 	elif task.strip().lower() == 'decode':
 		data = text
-		encodedBytes = base64.b64decode(data.decode("utf-8")) 
+		encodedBytes = base64module.b64decode(data.decode("utf-8")) 
 		encodedStr = str(encodedBytes, "utf-8") 
 		await ctx.send(encodedStr)
 	else:
