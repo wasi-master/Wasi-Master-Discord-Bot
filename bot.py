@@ -90,6 +90,16 @@ async def ip(ctx):
 	ip = requests.get("https://api.ipify.org").text
 	await ctx.message.author.send(ip)
 
+@client.command()
+async def remind(ctx, text):
+	user = ctx.message.author
+	textlist = text.strip.split("|")
+	texttosend = str(textlist[1])
+	timetowait = int(textlist[0].strip)
+	await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds)
+	asyncio.sleep(timetowait)
+	await user.send(texttosend)
+	
 @client.command(aliases=["sui"])
 async def secretuserinfo(ctx, id: int=None):
 	id = id or ctx.message.author.id
