@@ -103,8 +103,8 @@ async def base64(ctx, task, *, text):
 		await ctx.send(encodedStr)
 	elif task.strip().lower() == 'decode':
 		data = text
-		encodedBytes = base64module.b64decode(data.decode("ascii")) 
-		encodedStr = str(encodedBytes, "utf-8") 
+		message_bytes = base64.b64decode(data)
+		message = message_bytes.decode('ascii')
 		await ctx.send(encodedStr)
 	else:
 		await ctx.send("Must have either encode or decode")
