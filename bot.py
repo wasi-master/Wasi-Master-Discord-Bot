@@ -28,6 +28,16 @@ def convert_sec_to_min(seconds):
     min, sec = divmod(seconds, 60)
     return "%02d:%02d" % (min, sec)
 
+def get_p(prog, num=0):
+	numlist = list(range(0, 101, 5))
+	text= ""
+	for i in numlist:
+		num +=1
+		if prog > i and numlist[num] > prog:
+			text += "•"
+		else:
+			text += "—"
+	return text
 		
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
