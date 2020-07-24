@@ -37,7 +37,7 @@ def get_p(prog, num=0):
 			text += "⬤"
 		else:
 			text += "—"
-	return text
+	return f"```{text}```"
 		
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
