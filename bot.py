@@ -34,7 +34,7 @@ def get_p(prog, num=0):
 	for i in numlist:
 		num +=1
 		if prog > i and numlist[num] > prog:
-			text += "•"
+			text += "⬤"
 		else:
 			text += "—"
 	return text
