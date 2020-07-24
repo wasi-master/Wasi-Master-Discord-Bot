@@ -102,7 +102,9 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"error occured:\n {error}")
 		raise error
 
-
+@client.command()
+async def progress(ctx, p: int):
+	await ctx.send(get_p(p))
 
 @client.command()
 async def ip(ctx):
