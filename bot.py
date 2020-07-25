@@ -33,7 +33,7 @@ def get_p(prog, num=0):
 	text= ""
 	for i in numlist:
 		num +=1
-		if prog > i and numlist[num] > prog:
+		if prog >= i and numlist[num] > prog:
 			text += "⬤"
 		else:
 			text += "—"
