@@ -112,7 +112,7 @@ async def gif(ctx, *, query: str):
 	lmt = 1
 	search_term = query
 	async with ctx.typing():
-		r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (search_term, apikey, lmt))
+		r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&contentfilter=high&limit=%s" % (search_term, apikey, lmt))
 		gifs = json.loads(r.text)
 		gif: str = gifs['results'][0]['media'][0]['gif']['url']
 	await ctx.send(gif)
