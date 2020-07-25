@@ -106,6 +106,16 @@ async def on_command_error(ctx, error):
 async def progress(ctx, p: int):
 	await ctx.send(get_p(p))
 
+@client.command(aliases=['tenor'])
+async def gif(ctx, query):
+	apikey= "8ZQV38KW9TWP"
+	lmt = 1
+	search_term = query
+	async with ctx.typing():
+		r = requests.get("https://api.tenor.com/v1/search?q=" % (search_term, apikey, lmt))
+		gifs = json.loads(r.text)
+		gif = gifs['results'][0]['media'][0]['gif']['url']
+		await ctx.send(gifs)
 @client.command()
 async def ip(ctx):
 	ip = requests.get("https://api.ipify.org").text
