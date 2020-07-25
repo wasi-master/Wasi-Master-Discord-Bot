@@ -103,6 +103,13 @@ async def on_command_error(ctx, error):
 		raise error
 
 @client.command()
+async def boosters(ctx):
+	peoples = ""
+	for i in ctx.message.guild.premium_subscribers:
+		peoples += "\n" + i.name
+	embed = discord.Embed(title="Server Boosters", description=peoples)
+
+@client.command()
 async def invert(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
