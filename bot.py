@@ -135,6 +135,14 @@ async def pixelate(ctx, member: discord.Member=None):
 	await ctx.send(embed=e)
 
 @client.command()
+async def gay(ctx, member: discord.Member=None):
+	member = member or ctx.message.author
+	url = f"https://api.alexflipnote.dev/filter/gay?image={member.avatar_url}"
+	e = discord.Embed()
+	e.set_image(url=url)
+	await ctx.send(embed=e)
+
+@client.command()
 async def progress(ctx, p: int):
 	await ctx.send(get_p(p))
 
