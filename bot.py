@@ -108,7 +108,7 @@ async def boosters(ctx):
 	for i in ctx.message.guild.premium_subscribers:
 		peoples += "\n" + i.name
 	embed = discord.Embed(title="Server Boosters", description=peoples)
-	await ctx.send(embed=embed)ge
+	await ctx.send(embed=embed)
 
 @client.command()
 async def invert(ctx, member: discord.Member=None):
