@@ -110,7 +110,29 @@ async def invert(ctx, member: discord.Member=None):
 	e.set_image(url=url)
 	await ctx.send(embed=e)
 
+@client.command()
+async def blur(ctx, member: discord.Member=None):
+	member = member or ctx.message.author
+	url = f"https://api.alexflipnote.dev/filter/blur?image={member.avatar_url}"
+	e = discord.Embed()
+	e.set_image(url=url)
+	await ctx.send(embed=e)
 
+@client.command(aliases=['b&w', 'blackandwhite'])
+async def bw(ctx, member: discord.Member=None):
+	member = member or ctx.message.author
+	url = f"https://api.alexflipnote.dev/filter/b&w?image={member.avatar_url}"
+	e = discord.Embed()
+	e.set_image(url=url)
+	await ctx.send(embed=e)
+
+@client.command()
+async def pixelate(ctx, member: discord.Member=None):
+	member = member or ctx.message.author
+	url = f"https://api.alexflipnote.dev/filter/pixelate?image={member.avatar_url}"
+	e = discord.Embed()
+	e.set_image(url=url)
+	await ctx.send(embed=e)
 
 @client.command()
 async def progress(ctx, p: int):
