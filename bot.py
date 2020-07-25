@@ -108,7 +108,7 @@ async def boosters(ctx):
 	for i in ctx.message.guild.premium_subscribers:
 		peoples += "\n" + i.name
 	embed = discord.Embed(title="Server Boosters", description=peoples)
-	await ctx.send(embed=embed)
+	await ctx.send(embed=embed)ge
 
 @client.command()
 async def invert(ctx, member: discord.Member=None):
@@ -163,7 +163,10 @@ async def gif(ctx, *, query: str):
 		r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&contentfilter=high&limit=%s" % (search_term, apikey, lmt))
 		gifs = json.loads(r.text)
 		gif: str = gifs['results'][0]['media'][0]['gif']['url']
-	await ctx.send(gif)
+	embed = discord.Embed
+	embed.set_image(url=gif)
+	embed.add_field(name="Link (click to see or long press to copy)", value=f"[click here]({gif})")
+	await ctx.send(embed=embed)
 		
 @client.command()
 async def ip(ctx):
