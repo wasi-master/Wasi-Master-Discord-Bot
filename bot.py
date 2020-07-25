@@ -105,7 +105,7 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@commands.command()
+@client.command()
 async def parsetoken(ctx, *, token: str):
     try:
         user_id, timestamp, _ = [base64module.b64decode(pad(split)) for split in token.split(".")]
