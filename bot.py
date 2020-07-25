@@ -103,6 +103,14 @@ async def on_command_error(ctx, error):
 		raise error
 
 @client.command()
+async def invert(ctx, member: discord.Member=None):
+	member = member or ctx.message.author
+	url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
+
+
+
+
+@client.command()
 async def progress(ctx, p: int):
 	await ctx.send(get_p(p))
 
