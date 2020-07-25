@@ -102,19 +102,19 @@ async def on_command_error(ctx, error):
 		await ctx.send(f"error occured:\n {error}")
 		raise error
 
-    def pad(to_pad):
-        return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+def pad(to_pad):
+    return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-    @commands.command()
-    async def parsetoken(ctx, *, token: str):
-        try:
-            user_id, timestamp, _ = [base64module.b64decode(pad(split)) for split in token.split(".")]
-            time = datetime.datetime.fromtimestamp(int.from_bytes(timestamp, 'big') + 1293840000)
-            embed = discord.Embed(title="Token Parser", color=ctx.guild.me.color, description=f"Mention: <@{user_id}>\nID: {user_id}\nCreated At:{time.strftime('%c')}")
-            embed.set_footer(text=f"Requested By: {ctx.author}")
-            await ctx.send(embed=embed)
-        except:
-            await ctx.send("Invalid Token")
+@commands.command()
+async def parsetoken(ctx, *, token: str):
+    try:
+        user_id, timestamp, _ = [base64module.b64decode(pad(split)) for split in token.split(".")]
+        time = datetime.datetime.fromtimestamp(int.from_bytes(timestamp, 'big') + 1293840000)
+        embed = discord.Embed(title="Token Parser", color=ctx.guild.me.color, description=f"Mention: <@{user_id}>\nID: {user_id}\nCreated At:{time.strftime('%c')}")
+        embed.set_footer(text=f"Requested By: {ctx.author}")
+        await ctx.send(embed=embed)
+    except:
+        await ctx.send("Invalid Token")
 
 
 @client.command()
