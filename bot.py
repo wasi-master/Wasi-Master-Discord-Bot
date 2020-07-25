@@ -110,7 +110,7 @@ async def on_command_error(ctx, error):
         try:
             user_id, timestamp, _ = [base64.b64decode(pad(split)) for split in token.split(".")]
             time = datetime.datetime.fromtimestamp(int.from_bytes(timestamp, 'big') + 1293840000)
-            embed = discord.Embed(title="Token Parser", color=client.bot.color, description=f"Mention: <@{user_id}>\nID: {user_id}\nCreated At:{time.strftime('%c')}")
+            embed = discord.Embed(title="Token Parser", color=ctx.guild.me.color, description=f"Mention: <@{user_id}>\nID: {user_id}\nCreated At:{time.strftime('%c')}")
             embed.set_footer(text=f"Requested By: {ctx.author}")
             await ctx.send(embed=embed)
         except:
