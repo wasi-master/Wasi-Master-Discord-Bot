@@ -163,7 +163,7 @@ async def gif(ctx, *, query: str):
 		r = requests.get("https://api.tenor.com/v1/search?q=%s&key=%s&contentfilter=high&limit=%s" % (search_term, apikey, lmt))
 		gifs = json.loads(r.text)
 		gif: str = gifs['results'][0]['media'][0]['gif']['url']
-	embed = discord.Embed
+	embed = discord.Embed()
 	embed.set_image(url=gif)
 	embed.add_field(name="Link (click to see or long press to copy)", value=f"[click here]({gif})")
 	await ctx.send(embed=embed)
