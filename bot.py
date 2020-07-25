@@ -106,7 +106,9 @@ async def on_command_error(ctx, error):
 async def invert(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
-
+	e = discord.Embed()
+	e.set_image(url=url)
+	await ctx.send(embed=e)
 
 
 
