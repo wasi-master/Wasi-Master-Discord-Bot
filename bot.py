@@ -107,14 +107,14 @@ async def progress(ctx, p: int):
 	await ctx.send(get_p(p))
 
 @client.command(aliases=['tenor'])
-async def gif(ctx, query):
+async def gif(ctx, *, query: str):
 	apikey= "8ZQV38KW9TWP"
 	lmt = 1
 	search_term = query
 	async with ctx.typing():
 		r = requests.get("https://api.tenor.com/v1/search?q=" % (search_term, apikey, lmt))
 		gifs = json.loads(r.text)
-		gif = gifs['results'][0]['media'][0]['gif']['url']
+		gif: str = gifs['results'][0]['media'][0]['gif']['url']
 		await ctx.send(gifs)
 @client.command()
 async def ip(ctx):
