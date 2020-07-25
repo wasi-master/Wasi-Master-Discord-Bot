@@ -90,9 +90,9 @@ async def on_command_error(ctx, error):
 	elif "MissingPermissions" in str(error):
 		await ctx.send('I can\'t do that')
 	elif "MissingRequiredArgument" in str(error):
-		await ctx.send('Something is missing')
+		await ctx.send('Some argument is missing')
 	elif "You are missing" in str(error):
-		pass
+		await ctx.send("hehehe, no permission 😁😁😁")
 	elif "is not found" in str(error).lower():
 		pass
 	elif "Cannot send messages to this user" in str(error):
