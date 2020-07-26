@@ -356,7 +356,7 @@ async def serverinfo(ctx):
 	for i in guild.features:
 		features += "\n" + i.title().replace("_", " ")
 	embed=discord.Embed(title=f"Server Information for {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
-	embed set_thumbnail(url=guild.icon_url)
+	embed.set_thumbnail(url=guild.icon_url)
 	await ctx.send(embed=embed)
 @client.command()
 async def info(ctx):
