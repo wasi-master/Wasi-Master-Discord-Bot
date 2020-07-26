@@ -122,14 +122,15 @@ async def parsetoken(ctx, *, token: str):
 @client.command(name="cleverbot", aliases=["cb"])
 async def cleverbot_(ctx, *, query: str):
     """Ask Cleverbot a question!"""
-    try:
-        r = await cleverbot.ask(query, ctx.author.id) # the ID is for context
-    except ac.InvalidKey:
-        return await ctx.send("An error has occurred. The API key provided was not valid.")
-    except ac.APIDown:
-        return await ctx.send("I have to sleep sometimes. Please ask me later!")
-    else:
-        await ctx.send("{}, {}".format(ctx.author.mention, r.text))
+	    try:
+	        async with ctx.typing():
+	            r = await cleverbot.ask(query, ctx.author.id) # the ID is for context
+	    except ac.InvalidKey:
+	        return await ctx.send("An error has occurred. The API key provided was not valid.")
+	    except ac.APIDown:
+	        return await ctx.send("I have to sleep sometimes. Please ask me later!")
+	    else:
+	        await ctx.send("{}, {}".format(ctx.author.mention, r.text))
 
 
 
