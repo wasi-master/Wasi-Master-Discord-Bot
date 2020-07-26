@@ -43,7 +43,7 @@ def get_p(prog, num=0):
 		
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
-cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV.", context=ac.DictContext())
+cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 
 
     
