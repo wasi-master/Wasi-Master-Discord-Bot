@@ -10,6 +10,7 @@ import time
 import wikipedia as wikimodule
 from datetime import datetime
 import asyncio
+import aiohttp
 import codecs
 import os
 import pathlib
@@ -120,9 +121,12 @@ async def parsetoken(ctx, *, token: str):
 async def cb(ctx, *, text: str):
     if not (3 <= len(text) <= 60):
         return await ctx.send("Text must be longer than 3 chars and shorter than 60.")
+    session = aiohttp.ClientSession()
     payload = {"text": text} #the optional context should be archived somewhere up to you to provide some chat history from the user
-    async with ctx.channel.typing(), ctx.bot.session.post("https://public-api.travitia.xyz/talk", json=payload, headers={"authorization": "G[zm^mG5oOVS[J.Y?^YV"}) as req:
+    async with ctx.channel.typing(), session.post("https://public-api.travitia.xyz/talk", json=payload, headers={"authorization": "G[zm^mG5oOVS[J.Y?^YV"}) as req:
         await ctx.send((await req.json())["response"])
+    await session.close()
+
 
 @client.command()
 async def boosters(ctx):
