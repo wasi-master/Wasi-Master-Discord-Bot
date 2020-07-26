@@ -8,6 +8,7 @@ import randomcolor
 import requests
 import time
 import wikipedia as wikimodule
+import async_cleverbot as ac
 from datetime import datetime
 import asyncio
 import aiohttp
@@ -42,6 +43,7 @@ def get_p(prog, num=0):
 		
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
+cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV.", context=ac.DictContext())
 
 
     
@@ -117,15 +119,18 @@ async def parsetoken(ctx, *, token: str):
     except:
         await ctx.send("Invalid Token")
 
-@client.command(aliases=["askmaster", "ask", "chatbot", "cleverbot"])
-async def cb(ctx, *, text: str):
-    if not (3 <= len(text) <= 60):
-        return await ctx.send("Text must be longer than 3 chars and shorter than 60.")
-    session = aiohttp.ClientSession()
-    payload = {"text": text} #the optional context should be archived somewhere up to you to provide some chat history from the user
-    async with ctx.channel.typing(), session.post("https://public-api.travitia.xyz/talk", json=payload, headers={"authorization": "G[zm^mG5oOVS[J.Y?^YV"}) as req:
-        await ctx.send((await req.json())["response"])
-    await session.close()
+@client.command(name="cleverbot", aliases=["cb"])
+async def cleverbot_(ctx, *, query: str):
+    """Ask Cleverbot a question!"""
+    try:
+        r = await cleverbot.ask(query, ctx.author.id) # the ID is for context
+    except ac.InvalidKey:
+        return await ctx.send("An error has occurred. The API key provided was not valid.")
+    except ac.APIDown:
+        return await ctx.send("I have to sleep sometimes. Please ask me later!")
+    else:
+        await ctx.send("{}, {}".format(ctx.author.mention, r.text))
+
 
 
 @client.command()
