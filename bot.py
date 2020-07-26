@@ -1017,7 +1017,7 @@ async def servers(ctx):
     	average = round(int(members) / int(servers))
     	await ctx.send(f"I\'m in {servers:3,} servers and there are {members:3,} members total d there are {members:3,} members total and {average:3,}  on average in each server")
 
-@client.command(aliases=['8ball', 'eightball', 'eight ball', 'ask', 'question','answer', '8b'])
+@client.command(aliases=['8ball', 'eightball', 'eight ball', 'question','answer', '8b'])
 async def _8ball(ctx, *, question):
     answers = ['It is certain', 'It is decidedly so', 'Without a doubt', 'Yes – definitely', 'You may rely on it',
                'As I see it, yes', 'Most likely', 'Outlook good', 'Yes Signs point to yes', 'Reply hazy', 'try again',
