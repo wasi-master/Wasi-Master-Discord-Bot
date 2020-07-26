@@ -3,3 +3,4 @@ randomcolor
 wikipedia
 requests
 jishaku
+async_cleverbot
