@@ -284,7 +284,7 @@ async def message_count(ctx, channel: discord.TextChannel=None):
     except:
     	await ctx.send(f"There are {count} messages")
 @client.command(aliases=["makememe"])
-async def meme(ctx, *, text):
+async def meme(ctx, *, text: str=None):
 	base_url = "https://memegen.link/api/templates"
 	text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
 	textlist = text.split(":")[1].split("||")
