@@ -294,7 +294,11 @@ async def meme(ctx, *, text):
 	elif len(textlist) == 1:
 		url = f"{base_url}/{template}/{textlist[0]}"
 	else:
-		await ctx.send("invalid format")
+		r = requests.get("https://meme-api.herokuapp.com/gimme")
+		fj = json.loads(r.text)
+		embed=discord.Embed(title=fj['title'], url=fj['postLink'])
+		embed.set_image(url=fj['url'])
+		await ctx.send(embed=embed)
 	async with ctx.typing():
 		response = requests.get(url)
 	response_json = json.loads(response.text)
