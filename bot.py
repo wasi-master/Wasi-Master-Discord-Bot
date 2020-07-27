@@ -122,14 +122,16 @@ async def covid(ctx, area: str="Global"):
 				break
 			else:
 				continue
+	else:
+		formatted_json = formatted_json['Global']
 	
 	embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})")
-	embed.add_field(name="New Cases", value=f"{formatted_json['Global']['NewConfirmed']:,}")
-	embed.add_field(name="Total Cases",value=f"{formatted_json['Global']['TotalConfirmed']:,}")
-	embed.add_field(name="New Deaths",value=f"{formatted_json['Global']['NewDeaths']:,}")
-	embed.add_field(name="Total Deaths",value=f"{formatted_json['Global']['TotalDeaths']:,}")
-	embed.add_field(name="New Recovered",value=f"{formatted_json['Global']['NewRecovered']:,}")
-	embed.add_field(name="Total Recovered",value=f"{formatted_json['Global']['TotalRecovered']:,}")
+	embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
+	embed.add_field(name="Total Cases",value=f"{formatted_json['TotalConfirmed']:,}")
+	embed.add_field(name="New Deaths",value=f"{formatted_json['NewDeaths']:,}")
+	embed.add_field(name="Total Deaths",value=f"{formatted_json['TotalDeaths']:,}")
+	embed.add_field(name="New Recovered",value=f"{formatted_json['NewRecovered']:,}")
+	embed.add_field(name="Total Recovered",value=f"{formatted_json['TotalRecovered']:,}")
 	await ctx.send(embed=embed)
 
 
