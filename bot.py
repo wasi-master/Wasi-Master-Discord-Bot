@@ -109,6 +109,21 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 @client.command()
+async def covid(ctx):
+	async with ctx.typing():
+		r = requests.get("https://api.covid19api.com/summary")
+	formatted_json = json.loads(r.text)
+	embed = discord.Embed(title="Covid 19 Stats")
+	embed.add_field(name="New Cases", value=formatted_json['Global']['NewConfirmed'])
+	embed.add_field(name="Total Cases",value=formatted_json['Global']['TotalConfirmed'])
+	embed.add_field(name="New Deaths",value=formatted_json['Global']['NewDeaths'])
+	embed.add_field(name="Total Deaths",value=formatted_json['Global']['TotalDeaths'])
+	embed.add_field(name="New Recovered",value=formatted_json['Global']['NewRecovered'])
+	embed.add_field(name="Total Recovered",value=formatted_json['Global']['TotalRecovered'])
+	await ctx.send(embed=embed)
+
+
+@client.command()
 async def parsetoken(ctx, *, token: str):
     try:
         user_id, timestamp, _ = [base64module.b64decode(pad(split)) for split in token.split(".")]
