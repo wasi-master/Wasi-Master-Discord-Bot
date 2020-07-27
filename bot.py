@@ -119,6 +119,7 @@ async def covid(ctx, area: str="Global"):
 			num += 1
 			if i["Slug"] == area:
 				formatted_json = i[num]
+				await ctx.send(formatted_json)
 				break
 			else:
 				continue
