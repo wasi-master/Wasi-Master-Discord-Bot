@@ -296,7 +296,7 @@ async def meme(ctx, *, text: str=None):
 		url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
 	elif len(textlist) == 1:
 		url = f"{base_url}/{template}/{textlist[0]}"
-	else
+	else:
 		Make = False
 		r = requests.get("https://meme-api.herokuapp.com/gimme")
 		fj = json.loads(r.text)
