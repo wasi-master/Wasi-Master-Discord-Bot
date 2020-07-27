@@ -109,11 +109,20 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 @client.command()
-async def covid(ctx):
+async def covid(ctx, area: str="Global"):
+	num = 0
 	async with ctx.typing():
 		r = requests.get("https://api.covid19api.com/summary")
 	formatted_json = json.loads(r.text)
-	embed = discord.Embed(title="Covid 19 Stats")
+	if not area.lower() == "global":
+		for i in formatted_json['Countries']:
+			num += 1
+			if i["slug"] == area:
+				formatted_json = i[num]
+			else:
+				continue
+	
+	embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})")
 	embed.add_field(name="New Cases", value=f"{formatted_json['Global']['NewConfirmed']:,}")
 	embed.add_field(name="Total Cases",value=f"{formatted_json['Global']['TotalConfirmed']:,}")
 	embed.add_field(name="New Deaths",value=f"{formatted_json['Global']['NewDeaths']:,}")
