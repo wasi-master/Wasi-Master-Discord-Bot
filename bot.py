@@ -288,7 +288,7 @@ async def meme(ctx, *, text: str=None):
 	Make = True
 	if not text is None:
 		base_url = "https://memegen.link/api/templates"
-		text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
+		text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'\'", "\"")
 		textlist = text.split(":")[1].split("||")
 		template = text.split(":")[0].strip().replace(" ", "").lower()
 	else:
