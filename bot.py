@@ -291,7 +291,8 @@ async def meme(ctx, *, text: str=None):
 		text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
 		textlist = text.split(":")[1].split("||")
 		template = text.split(":")[0].strip().replace(" ", "").lower()
-		
+	else:
+		textlist = []
 	if len(textlist) == 2:
 		url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
 	elif len(textlist) == 1:
