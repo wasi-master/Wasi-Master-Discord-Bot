@@ -285,31 +285,36 @@ async def message_count(ctx, channel: discord.TextChannel=None):
     	await ctx.send(f"There are {count} messages")
 @client.command(aliases=["makememe"])
 async def meme(ctx, *, text: str=None):
-	base_url = "https://memegen.link/api/templates"
-	text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
-	textlist = text.split(":")[1].split("||")
-	template = text.split(":")[0].strip().replace(" ", "").lower()
+	Make = True
+	if not text is None:
+		base_url = "https://memegen.link/api/templates"
+		text = text.strip().replace(" ", "-").replace("?", "~q").replace("#", "~h").replace("%", "~p").replace("/", "~s").replace("\'", "\"")
+		textlist = text.split(":")[1].split("||")
+		template = text.split(":")[0].strip().replace(" ", "").lower()
+		
 	if len(textlist) == 2:
 		url = f"{base_url}/{template}/{textlist[0]}/{textlist[1]}"
 	elif len(textlist) == 1:
 		url = f"{base_url}/{template}/{textlist[0]}"
-	else:
+	else
+		Make = False
 		r = requests.get("https://meme-api.herokuapp.com/gimme")
 		fj = json.loads(r.text)
 		embed=discord.Embed(title=fj['title'], url=fj['postLink'])
 		embed.set_image(url=fj['url'])
 		await ctx.send(embed=embed)
-	async with ctx.typing():
-		response = requests.get(url)
-	response_json = json.loads(response.text)
-	try:
-		masked_url = response_json['direct']['masked']
-	except:
-		await ctx.send(response.text)
-	embed = discord.Embed()
-	embed.set_author(name=template.title())
-	embed.set_image(url=masked_url)
-	await ctx.send(embed=embed)
+	if Make:
+		async with ctx.typing():
+			response = requests.get(url)
+		response_json = json.loads(response.text)
+		try:
+			masked_url = response_json['direct']['masked']
+		except:
+			await ctx.send(response.text)
+		embed = discord.Embed()
+		embed.set_author(name=template.title())
+		embed.set_image(url=masked_url)
+		await ctx.send(embed=embed)
 	
 @client.command(aliases=['yt'])
 async def youtube(ctx, *, args):
