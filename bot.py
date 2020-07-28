@@ -662,7 +662,7 @@ async def say(ctx, *, args):
     	pass
     await channel.send(mesg)
 
-@commands.command(aliases=["wmsd"])
+@client.command(aliases=["wmsd"])
 async def wasimasterspecialdm(ctx, id:int=None, *, args):
 	if ctx.message.author.id == 538332632535007244:
 		user = client.get_user(id)
