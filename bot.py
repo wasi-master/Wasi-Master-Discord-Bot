@@ -405,7 +405,7 @@ async def info(ctx):
 	await ctx.send(f'{ctx.message.author.mention}, I am made of {total:,} lines of Python, And I\'m just  a simple bot made by Wasi Master#4245')
 
 @client.command(aliases=['spt'])
-async def spotify(ctx, member: discord.Member=None):
+async def spotify(ctx, *, member: discord.Member=None):
 	member = member or ctx.message.author
 	activity = ctx.message.guild.get_member(member.id)
 	successfull= False
