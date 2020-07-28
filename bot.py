@@ -39,7 +39,7 @@ def get_p(prog, num=0):
 			text += "⬤"
 		else:
 			text += "—"
-	return f"```{text}```"
+	return text
 		
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
@@ -475,7 +475,7 @@ async def spotify(ctx, *, member: discord.Member=None):
 			embed.add_field(name="Song Duration", value=str(activity.duration)[2:-7])
 			embed.add_field(name="Spotify Link", value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})")
 			embed.add_field(name="Youtube Link", value=f"[Click Here](https://youtube.com/{videos[0]['url_suffix']})")
-			embed.add_field(name="Time", value=f"{convert_sec_to_min((datetime.now() - activity.start).total_seconds())}/{str(activity.duration)[2:-7]}\n{get_p((abs((datetime.now() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))}")
+			embed.add_field(name="Time", value=f"{convert_sec_to_min((datetime.now() - activity.start).total_seconds())}`{get_p((abs((datetime.now() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))}`{str(activity.duration)[2:-7]}")
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
 			successfull = True
