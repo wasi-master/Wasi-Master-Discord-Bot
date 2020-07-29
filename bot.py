@@ -123,7 +123,7 @@ async def truthordate(ctx, questype: str= "random"):
 @client.command()
 async def wanted(ctx, menber: discord.Member=None):
 	member = ctx.message.author or member
-	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': ctx.message.author.avatar_url}
+	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(ctx.message.author.avatar_url)}
 	response = requests.post("https://dagpi.tk/api/wanted", headers=headers)
 	formatted_json = json.loads(response.text)
 	if formatted_json['succes']:
@@ -131,7 +131,7 @@ async def wanted(ctx, menber: discord.Member=None):
 		embed.set_image(url=response)
 		await ctx.send(embed=embed)
 	else:
-		await ctx.send("Errie")
+		await ctx.send("Error")
 	
 @client.command()
 async def covid(ctx, area: str="Global"):
