@@ -104,6 +104,22 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+@client.command(aliases=['tod'])
+async def truthordate(ctx, questype: str= "random"):
+	levels = ["Disgusting", "Stupid", "Normal", "Soft", "Sexy", "Hot"]
+	r = requests.get("https://raw.githubusercontent.com/sylhare/Truth-or-Dare/master/src/output.json")
+	fj = json.loads(r.text)
+	number = random.randint(0, 553)
+	picked = fj[number]
+	level = levels[int(picked['level'])]
+	sum = picked["summary"]
+	type = picked["type"]
+	embed = discord.Embed()
+	embed.set_author(name=sum)
+	embed.add_field(name="Level", value=level)
+	embed.add_field(name="Type", value=typr)
+	aeait ctx.send(embed=embed)
+
 @client.command()
 async def wanted(ctx, menber: discord.Member=None):
 	member = ctx.message.author or member
