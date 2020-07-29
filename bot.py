@@ -122,7 +122,7 @@ async def truthordate(ctx, questype: str= "random"):
 
 @client.command()
 async def wanted(ctx, menber: discord.Member=None):
-	member = ctx.message.author or member
+	member = member or ctx.message.author
 	session = aiohttp.ClientSession()
 	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(ctx.message.author.avatar_url)}
 	await with ctx.typing():
