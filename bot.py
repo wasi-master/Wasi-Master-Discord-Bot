@@ -129,7 +129,7 @@ async def wanted(ctx, menber: discord.Member=None):
 	await ctx.send(formatted_json)
 	if formatted_json['succes']:
 		embed = discord.Embed(title=f"{ctx.message.author.name} Wanted")
-		embed.set_image(url=response)
+		embed.set_image(url=formatted_json["url"])
 		await ctx.send(embed=embed)
 	else:
 		await ctx.send("Error")
