@@ -9,7 +9,6 @@ import requests
 import time
 import wikipedia as wikimodule
 import async_cleverbot as ac
-import asyncdagpi
 from datetime import datetime
 import asyncio
 import aiohttp
@@ -45,8 +44,6 @@ def get_p(prog, num=0):
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
-dagpi = asyncdagpi.Client('VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB')
-
     
 @tasks.loop(seconds=3600)
 async def update_server_count():
@@ -110,10 +107,15 @@ def pad(to_pad):
 @client.command()
 async def wanted(ctx, menber: discord.Member=None):
 	member = ctx.message.author or member
-	response = await dagpi.staticimage('wanted', ctx.message.author.avatar_url)
-	embed = discord.Embed(title=f"{ctx.message.author.name} Wanted")
-	embed.set_image(url=response)
-	await ctx.send(embed=embed)
+	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': ctx.message.author.avatar_url}
+	response = requests.post("https://dagpi.tk/api/wanted", headers=headers)
+	formatted_json = json.loads(response.text)
+	if formatted_json['succes']:
+		embed = discord.Embed(title=f"{ctx.message.author.name} Wanted")
+		embed.set_image(url=response)
+		await ctx.send(embed=embed)
+	else:
+		await ctx.send("Errie")
 	
 @client.command()
 async def covid(ctx, area: str="Global"):
