@@ -31,7 +31,7 @@ def convert_sec_to_min(seconds):
     return "%02d:%02d" % (min, sec)
 
 def get_p(prog, num=0):
-	numlist = list(range(0, 100, 4))
+	numlist = list(range(0, 101, 4))
 	text= ""
 	for i in numlist:
 		num +=1
