@@ -127,7 +127,8 @@ async def wanted(ctx, member: discord.Member=None):
 	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(ctx.message.author.avatar_url)}
 	async with ctx.typing():
 		async with session.post("https://dagpi.tk/api/wanted", headers=headers) as response:
-			formatted_json = json.loads(await response.text)
+			loaded_response = await response.text()
+		formatted_json = json.loads(loaded_response)
 		session.close()
 	if formatted_json['succes']:
 		embed = discord.Embed(title=f"{ctx.message.author.name} Wanted")
