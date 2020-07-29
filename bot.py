@@ -121,7 +121,7 @@ async def truthordate(ctx, questype: str= "random"):
 	await ctx.send(embed=embed)
 
 @client.command()
-async def wanted(ctx, menber: discord.Member=None):
+async def wanted(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	session = aiohttp.ClientSession()
 	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(ctx.message.author.avatar_url)}
