@@ -123,9 +123,12 @@ async def truthordate(ctx, questype: str= "random"):
 @client.command()
 async def wanted(ctx, menber: discord.Member=None):
 	member = ctx.message.author or member
+	session = aiohttp.ClientSession()
 	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(ctx.message.author.avatar_url)}
-	response = requests.post("https://dagpi.tk/api/wanted", headers=headers)
-	formatted_json = json.loads(response.text)
+	await with ctx.typing():
+		async with session.post("https://dagpi.tk/api/wanted", headers=headers) as response:
+			formatted_json = json.loads(response.text)
+		session.close()
 	if formatted_json['succes']:
 		embed = discord.Embed(title=f"{ctx.message.author.name} Wanted")
 		embed.set_image(url=formatted_json["url"])
