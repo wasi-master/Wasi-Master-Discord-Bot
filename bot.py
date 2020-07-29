@@ -125,7 +125,7 @@ async def wanted(ctx, menber: discord.Member=None):
 	member = member or ctx.message.author
 	session = aiohttp.ClientSession()
 	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(ctx.message.author.avatar_url)}
-	await with ctx.typing():
+	async with ctx.typing():
 		async with session.post("https://dagpi.tk/api/wanted", headers=headers) as response:
 			formatted_json = json.loads(response.text)
 		session.close()
