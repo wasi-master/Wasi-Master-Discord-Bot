@@ -309,7 +309,7 @@ async def message_count(ctx, channel: discord.TextChannel=None):
     	async for _ in channel.history(limit=None):
     		if count > 25000:
     			break
-    		await ctx.send("Too many messages")
+    			await ctx.send("Too many messages")
     		else:
     			count += 1
     try:
