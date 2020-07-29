@@ -4,4 +4,3 @@ wikipedia
 requests
 jishaku
 async_cleverbot
-asyncdagpi
