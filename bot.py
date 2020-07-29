@@ -118,7 +118,7 @@ async def truthordate(ctx, questype: str= "random"):
 	embed.set_author(name=sum)
 	embed.add_field(name="Level", value=level)
 	embed.add_field(name="Type", value=typr)
-	aeait ctx.send(embed=embed)
+	await ctx.send(embed=embed)
 
 @client.command()
 async def wanted(ctx, menber: discord.Member=None):
