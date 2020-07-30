@@ -153,7 +153,23 @@ async def hitler(ctx, member: discord.Member=None):
 		await ctx.send(embed=embed)
 	else:
 		await ctx.send("Error")
-	
+@client.command()
+async def w(ctx, member: discord.Member=None, *, text):
+	member = member or ctx.message.author
+	username = member.name
+	session = aiohttp.ClientSession()
+	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(member.avatar_url), 'name': name, 'text': text}
+	async with ctx.typing():
+		async with session.post("https://dagpi.tk/api/wanted", headers=headers) as response:
+			loaded_response = await response.text()
+		formatted_json = json.loads(loaded_response)
+		session.close()
+	if formatted_json['succes']:
+		embed = discord.Embed(title=f"{member.name} Wanted")
+		embed.set_image(url=formatted_json["url"])
+		await ctx.send(embed=embed)
+	else:
+		await ctx.send("Error")
 @client.command()
 async def covid(ctx, area: str="Global"):
 	num = 0
