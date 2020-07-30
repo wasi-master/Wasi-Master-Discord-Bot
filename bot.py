@@ -154,11 +154,11 @@ async def hitler(ctx, member: discord.Member=None):
 	else:
 		await ctx.send("Error")
 @client.command()
-async def w(ctx, member: discord.Member=None, *, text):
+async def tweet(ctx, member: discord.Member=None, *, text):
 	member = member or ctx.message.author
 	username = member.name
 	session = aiohttp.ClientSession()
-	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(member.avatar_url), 'name': name, 'text': text}
+	headers = {'token':'VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB', 'url': str(member.avatar_url), 'name': username, 'text': text}
 	async with ctx.typing():
 		async with session.post("https://dagpi.tk/api/wanted", headers=headers) as response:
 			loaded_response = await response.text()
