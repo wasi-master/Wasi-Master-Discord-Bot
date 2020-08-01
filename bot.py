@@ -956,7 +956,7 @@ async def help(ctx, command: str=None):
 			for i in command_for_use.aliases:
 				aliases += f"`{i}`, "
 			embed = discord.Embed()
-			embed.set_author(command)
+			embed.set_author(name=str(command))
 			embed.add_field(name="Name", value=command_for_use.name)
 			embed.add_field(name="Aliases", value=aliases)
 			embed.add_field(name="Cooldown", value="None")
