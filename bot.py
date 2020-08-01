@@ -1050,10 +1050,13 @@ async def help(ctx, command: str=None):
 	all_commands = ""
 	if command is None:
 		for i in client.commands:
-			all_commands += (f"{i.name}, "")
+			all_commands += (f"{i.name}, ")
 		embed = discord.Embed(colour=ctx.guild.me.color, title="All Commands", description=all_commands)
 	else:
-		if command in client.commands:
+		all_commands_list = []
+		for i in client.commands:
+			all_commands_list.append(i.name)
+		if command in all_commands_list:
 			pass
 		else:
 			embed = discord.Embed(title=f'Command "{command}" was not found, try using the command name instead of it\'s alias')
