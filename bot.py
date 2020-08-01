@@ -60,17 +60,19 @@ async def update_server_count():
 @client.event
 async def on_ready():
     print("Bot is online")
+	owner = client.get_user(538332632535007244)
+	await owner.send("Bot Online")
     update_server_count.start()
     client.load_extension('jishaku')
 
 @client.event
 async def on_guild_join(guild):
 	owner = client.get_user(538332632535007244)
-	owner = client.get_user(guild.owner_id)
+	guild_owner = client.get_user(guild.owner_id)
 	features = ""
 	for i in guild.features:
 		features += "\n" + i.title().replace("_", " ")
-	embed=discord.Embed(title=f"Bot Added To {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
+	embed=discord.Embed(title=f"Bot Added To {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
 	embed.set_thumbnail(url=guild.icon_url)
 	await owner.send(embed=embed)
 	with open("prefixes.json", "r") as f:
@@ -83,11 +85,11 @@ async def on_guild_join(guild):
 @client.event
 async def on_guild_remove(guild):
 	owner = client.get_user(538332632535007244)
-	owner = client.get_user(guild.owner_id)
+	guild_owner = client.get_user(guild.owner_id)
 	features = ""
 	for i in guild.features:
 		features += "\n" + i.title().replace("_", " ")
-	embed=discord.Embed(title=f"Bot Removed From {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
+	embed=discord.Embed(title=f"Bot Removed From {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
 	embed.set_thumbnail(url=guild.icon_url)
 	await owner.send(embed=embed)
 	with open("prefixes.json", "r") as f:
