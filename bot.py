@@ -639,7 +639,7 @@ async def colour(ctx, color: str):
 		hsl = data["hsl"]["value"]
 		hsv = data["hsv"]["value"]
 		cmyk = data["cmyk"]["value"]
-		xyz = data["XYZ"]["valuel"]
+		xyz = data["XYZ"]["value"]
 		
 	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
 	embed.set_author(name=color_name)
