@@ -1053,12 +1053,15 @@ async def help(ctx, command: str=None):
 		await ctx.send(embed=embed)
 	else:
 		all_commands_list = []
+		all_commands_name_list = []
 		for i in client.commands:
-			all_commands_list.append(i.name)
-		if command in all_commands_list:
+			all_commands_name_list.append(i.name)
+			all_commands_list.append(i)
+		if command in all_commands_name_list:
 			pass
 		else:
 			embed = discord.Embed(title=f'Command "{command}" was not found, try using the command name instead of it\'s alias')
+			await ctx.send(embed=embed)
     
 @help.error
 async def help_error(ctx, error):
