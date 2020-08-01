@@ -950,7 +950,7 @@ async def help(ctx, command: str=None):
 		for i in client.commands:
 			all_commands_name_list.append(i.name)
 			all_commands_list.append(i)
-		if command in all_commands_name_list:
+		if command.strip().lower() in all_commands_name_list:
 			command_for_use = all_commands_list[all_commands_name_list.index(command)]
 			aliases = ""
 			for i in command_for_use.aliases:
