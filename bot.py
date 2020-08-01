@@ -1053,10 +1053,11 @@ async def help(ctx, command: str=None):
 			all_commands += (f"{i.name}, "")
 		embed = discord.Embed(colour=ctx.guild.me.color, title="All Commands", description=all_commands)
 	else:
-		pass
-	
-	await ctx.send("Help has been sent to your dm")
-	await user.send(embed=embed)
+		if command in client.commands:
+			pass
+		else:
+			embed = discord.Embed(title=f'Command "{command}" was not found, try using the command name instead of it\'s alias')
+	await ctx.send(embed=embed)
     
 @help.error
 async def help_error(ctx, error):
