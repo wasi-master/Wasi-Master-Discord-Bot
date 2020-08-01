@@ -59,11 +59,11 @@ async def update_server_count():
 
 @client.event
 async def on_ready():
-    print("Bot is online")
+	print("Bot is online")
 	owner = client.get_user(538332632535007244)
 	await owner.send("Bot Online")
-    update_server_count.start()
-    client.load_extension('jishaku')
+	update_server_count.start()
+	client.load_extension('jishaku')
 
 @client.event
 async def on_guild_join(guild):
