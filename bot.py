@@ -968,7 +968,7 @@ async def help(ctx, command: str=None):
 			except:
 				pass
 			try:
-			embed.add_field(name="Aliases", value=aliases[:-2])
+				embed.add_field(name="Aliases", value=aliases[:-2])
 			except:
 				pass
 			embed.add_field(name="Cooldown", value="None")
