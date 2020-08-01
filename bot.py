@@ -1037,7 +1037,7 @@ async def avatar(ctx, *,  avamember : discord.Member=None,):
 
 
 @client.command(aliases=['halp'])
-async def help(ctx):
+async def help(ctx, command: str=None):
 	user = ctx.message.author
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
@@ -1045,13 +1045,16 @@ async def help(ctx):
 			prefix = prefixes[str(ctx.message.guild.id)]
 		except:
 			prefix = ","
-	embed = discord.Embed(colour=ctx.guild.me.color, timestamp=ctx.message.created_at)
 	embed.set_author(name='Help')
 	embed.set_footer(text=f"Requested by {ctx.author}")
-	for i in client.commands:
-		embed.add_field(name=f"{prefix}{i.name}", value=i.description)
-	embed.add_field(name=f"{prefix}dm `<text>`", value='Used to send the person writing this command a dm which can be used to remember something')
-	embed.add_field(name=f"{prefix}getusers `<@role>`", value="used to get users that have a specefic oile")
+	all_commands = ""
+	if command is None:
+		for i in client.commands:
+			all_commands += (f"{i.name}, "")
+		embed = discord.Embed(colour=ctx.guild.me.color, title="All Commands", description=all_commands)
+	else:
+		pass
+	
 	await ctx.send("Help has been sent to your dm")
 	await user.send(embed=embed)
     
