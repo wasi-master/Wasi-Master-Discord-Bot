@@ -18,6 +18,8 @@ import pathlib
 import urllib.parse
 import base64 as base64module
 
+
+
 def get_prefix(client, message):
 	try:
 		with open("prefixes.json", "r") as f:
@@ -64,7 +66,13 @@ async def on_ready():
 @client.event
 async def on_guild_join(guild):
 	owner = client.get_user(538332632535007244)
-	await owner.send(f"Added to {guild.name}")
+	owner = client.get_user(guild.owner_id)
+	features = ""
+	for i in guild.features:
+		features += "\n" + i.title().replace("_", " ")
+	embed=discord.Embed(title=f"Bot Added To {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
+	embed.set_thumbnail(url=guild.icon_url)
+	await owner.send(embed=embed)
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 	prefixes[str(guild.id)] = ','
@@ -75,7 +83,13 @@ async def on_guild_join(guild):
 @client.event
 async def on_guild_remove(guild):
 	owner = client.get_user(538332632535007244)
-	await owner.send(f"Removed from {guild.name}")
+	owner = client.get_user(guild.owner_id)
+	features = ""
+	for i in guild.features:
+		features += "\n" + i.title().replace("_", " ")
+	embed=discord.Embed(title=f"Bot Removed From {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
+	embed.set_thumbnail(url=guild.icon_url)
+	await owner.send(embed=embed)
 	with open("prefixes.json", "r") as f:
 		prefixes = json.load(f)
 	prefixes.pop(str(guild.id))
@@ -104,23 +118,49 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@client.command(aliases=['tod'])
+@client.command(description="Reverses a text")
+async def reverse(ctx, string: str):
+	for i in reversed(list(string)):
+		result += i
+	embed = discord.Embed(title="Reverse", description=f"**Original**:\n{string}\n**Reversed**\n{result}")
+	await ctx.send(result, embed=embed)
+
+@client.command(aliases=['tod'], description="Truth Or Dare")
 async def truthordate(ctx, questype: str= "random"):
 	levels = ["Disgusting", "Stupid", "Normal", "Soft", "Sexy", "Hot"]
 	r = requests.get("https://raw.githubusercontent.com/sylhare/Truth-or-Dare/master/src/output.json")
 	fj = json.loads(r.text)
-	number = random.randint(0, 553)
-	picked = fj[number]
-	level = levels[int(picked['level'])]
-	sum = picked["summary"]
-	type = picked["type"]
+	if questype == "random":
+		number = random.randint(0, 553)
+		picked = fj[number]
+		level = levels[int(picked['level'])]
+		sum = picked["summary"]
+		type = picked["type"]
+	elif questype == "truth":
+		type = None
+		while type != "truth":
+			number = random.randint(0, 553)
+			picked = fj[number]
+			level = levels[int(picked['level'])]
+			sum = picked["summary"]
+			type = picked["type"]
+	elif questype == "dare":
+			type = None
+			while type != "dare":
+				number = random.randint(0, 553)
+				picked = fj[number]
+				level = levels[int(picked['level'])]
+				sum = picked["summary"]
+				type = picked["type"]
+	else:
+		return
 	embed = discord.Embed()
 	embed.set_author(name=sum)
 	embed.add_field(name="Level", value=level)
 	embed.add_field(name="Type", value=type)
 	await ctx.send(embed=embed)
 
-@client.command()
+@client.command(description="Generates a wanted poster")
 async def wanted(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	session = aiohttp.ClientSession()
@@ -137,7 +177,7 @@ async def wanted(ctx, member: discord.Member=None):
 	else:
 		await ctx.send("Error")
 
-@client.command()
+@client.command(description="Generates a \"Worse than hitler\" image")
 async def hitler(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	session = aiohttp.ClientSession()
@@ -153,7 +193,8 @@ async def hitler(ctx, member: discord.Member=None):
 		await ctx.send(embed=embed)
 	else:
 		await ctx.send("Error")
-@client.command()
+		
+@client.command(description="Tweets a text")
 async def tweet(ctx, member: discord.Member=None, *, text):
 	member = member or ctx.message.author
 	username = member.name
@@ -170,7 +211,8 @@ async def tweet(ctx, member: discord.Member=None, *, text):
 		await ctx.send(embed=embed)
 	else:
 		await ctx.send("Error")
-@client.command()
+		
+@client.command(description="Coronavirus Stats")
 async def covid(ctx, area: str="Global"):
 	num = 0
 	async with ctx.typing():
@@ -197,18 +239,7 @@ async def covid(ctx, area: str="Global"):
 	await ctx.send(embed=embed)
 
 
-@client.command()
-async def parsetoken(ctx, *, token: str):
-    try:
-        user_id, timestamp, _ = [base64module.b64decode(pad(split)) for split in token.split(".")]
-        time = datetime.datetime.fromtimestamp(int.from_bytes(timestamp, 'big') + 1293840000)
-        embed = discord.Embed(title="Token Parser", color=ctx.guild.me.color, description=f"Mention: <@{user_id}>\nID: {user_id}\nCreated At:{time.strftime('%c')}")
-        embed.set_footer(text=f"Requested By: {ctx.author}")
-        await ctx.send(embed=embed)
-    except:
-        await ctx.send("Invalid Token")
-
-@client.command(name="cleverbot", aliases=["cb"])
+@client.command(name="chatbot", aliases=["cb"], description=" Talk with a chat bot")
 async def cleverbot_(ctx, *, query: str):
     """Ask Cleverbot a question!"""
     try:
@@ -223,7 +254,7 @@ async def cleverbot_(ctx, *, query: str):
 
 
 
-@client.command()
+@client.command(description="See all the boosters of this server")
 async def boosters(ctx):
 	peoples = ""
 	for i in ctx.message.guild.premium_subscribers:
@@ -231,7 +262,7 @@ async def boosters(ctx):
 	embed = discord.Embed(title="Server Boosters", description=peoples)
 	await ctx.send(embed=embed)
 
-@client.command()
+@client.command(description="Invert your or another users profile picture")
 async def invert(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
@@ -239,7 +270,7 @@ async def invert(ctx, member: discord.Member=None):
 	e.set_image(url=url)
 	await ctx.send(embed=e)
 
-@client.command()
+@client.command(description="Blur your or another users profile picture")
 async def blur(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/blur?image={member.avatar_url}"
@@ -247,7 +278,7 @@ async def blur(ctx, member: discord.Member=None):
 	e.set_image(url=url)
 	await ctx.send(embed=e)
 
-@client.command(aliases=['b&w', 'blackandwhite'])
+@client.command(aliases=['b&w', 'blackandwhite'], description="Convert to Black And White your or another users profile picture")
 async def bw(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/b&w?image={member.avatar_url}"
@@ -255,7 +286,7 @@ async def bw(ctx, member: discord.Member=None):
 	e.set_image(url=url)
 	await ctx.send(embed=e)
 
-@client.command()
+@client.command(description="Pixelate your or another users profile picture")
 async def pixelate(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/pixelate?image={member.avatar_url}"
@@ -263,7 +294,7 @@ async def pixelate(ctx, member: discord.Member=None):
 	e.set_image(url=url)
 	await ctx.send(embed=e)
 
-@client.command()
+@client.command(description="See a gay version of your or another users profile picture")
 async def gay(ctx, member: discord.Member=None):
 	member = member or ctx.message.author
 	url = f"https://api.alexflipnote.dev/filter/gay?image={member.avatar_url}"
@@ -271,11 +302,8 @@ async def gay(ctx, member: discord.Member=None):
 	e.set_image(url=url)
 	await ctx.send(embed=e)
 
-@client.command()
-async def progress(ctx, p: int):
-	await ctx.send(get_p(p))
 
-@client.command(aliases=['tenor'])
+@client.command(aliases=['tenor'], description="Search for a gif")
 async def gif(ctx, *, query: str):
 	apikey= "8ZQV38KW9TWP"
 	lmt = 1
@@ -289,19 +317,14 @@ async def gif(ctx, *, query: str):
 	embed.add_field(name="Link (click to see or long press to copy)", value=f"[click here]({gif})")
 	await ctx.send(embed=embed)
 		
-@client.command()
-async def ip(ctx):
-	ip = requests.get("https://api.ipify.org").text
-	await ctx.message.author.send(ip)
-
-@client.command()
+@client.command(aliases=["b64"],description="Encode or decode text to base64")
 async def base64(ctx, task, *, text):
-	if task.strip().lower() == 'encode':
+	if task.strip().lower() == 'encode' or task.strip().lower == 'e':
 		data = text
 		encodedBytes = base64module.b64encode(data.encode("utf-8")) 
 		encodedStr = str(encodedBytes, "utf-8") 
 		await ctx.send(encodedStr)
-	elif task.strip().lower() == 'decode':
+	elif task.strip().lower() == 'decode' or task.strip().lower == 'd':
 		data = text
 		message_bytes = base64module.b64decode(data)
 		message = message_bytes.decode('ascii')
@@ -309,48 +332,21 @@ async def base64(ctx, task, *, text):
 	else:
 		await ctx.send("Must have either encode or decode")
 		
-@client.command()
+@client.command(description="Get a invite link to the bots support server")
 async def support(ctx):
 	await ctx.send("https://discord.gg/5jn3bQX")
 	
-@client.command()
+@client.command(description="Reminds you something")
 async def remind(ctx, *, text):
 	user = ctx.message.author
-	textlist = text.strip().split("|")
+	textlist = text.strip().split(" ")
 	texttosend = str(textlist[1])
 	timetowait = int(textlist[0].strip())
 	await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds")
 	await asyncio.sleep(timetowait)
 	await user.send(texttosend)
 	
-@client.command(aliases=["sui"])
-async def secretuserinfo(ctx, id: int=None):
-	id = id or ctx.message.author.id
-	member = client.get_user(id)
-	embed = discord.Embed()
-	embed.set_author(name=member.name)
-	embed.set_image(url=member.avatar_url)
-	embed.add_field(name="Account Created At", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
-	embed.add_field(name="Bot?", value=member.bot)
-	await ctx.send(embed=embed)
-	
-@client.command(aliases=["messagecount", "mc", "countmessages"])
-async def message_count(ctx, channel: discord.TextChannel=None):
-    channel = channel or ctx.message.channel
-    count = 0
-    async with ctx.typing():
-    	async for _ in channel.history(limit=None):
-    		if count > 12500:
-    			return
-    			break
-    			await ctx.send("Too many messages")
-    		else:
-    			count += 1
-    try:
-    	await ctx.send(f"There are {count} messages in {channel.mention}")
-    except:
-    	await ctx.send(f"There are {count} messages")
-@client.command(aliases=["makememe"])
+@client.command(aliases=["makememe"], description="See or make a meme")
 async def meme(ctx, *, text: str=None):
 	Make = True
 	if not text is None:
@@ -384,7 +380,7 @@ async def meme(ctx, *, text: str=None):
 		embed.set_image(url=masked_url)
 		await ctx.send(embed=embed)
 	
-@client.command(aliases=['yt'])
+@client.command(aliases=['yt'], description="Search youtube for stuff")
 async def youtube(ctx, *, args):
 	search_terms = args
 	max_results = 1
@@ -452,7 +448,7 @@ async def youtube(ctx, *, args):
 				embed.set_image(url=videos[0]['thumbnails'][3])
 	await ctx.send(embed=embed)
 	
-@client.command(aliases=['guildinfo', 'si', 'gi'])
+@client.command(aliases=['guildinfo', 'si', 'gi'], description="See details of a server")
 async def serverinfo(ctx):
 	guild = ctx.message.guild
 	owner = client.get_user(guild.owner_id)
@@ -462,7 +458,8 @@ async def serverinfo(ctx):
 	embed=discord.Embed(title=f"Server Information for {guild.name}", description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}")
 	embed.set_thumbnail(url=guild.icon_url)
 	await ctx.send(embed=embed)
-@client.command()
+	
+@client.command(description="See info about the bot")
 async def info(ctx):
 	total = 0
 	with codecs.open('bot.py', 'r', 'utf-8') as f:
@@ -473,7 +470,7 @@ async def info(ctx):
 				total += 1
 	await ctx.send(f'{ctx.message.author.mention}, I am made of {total:,} lines of Python, And I\'m just  a simple bot made by Wasi Master#4245')
 
-@client.command(aliases=['spt'])
+@client.command(aliases=['spt'], description="See your or another users spotify info")
 async def spotify(ctx, *, member: discord.Member=None):
 	member = member or ctx.message.author
 	activity = ctx.message.guild.get_member(member.id)
@@ -553,8 +550,7 @@ async def spotify(ctx, *, member: discord.Member=None):
 	if not successfull:
 		await ctx.send("Not listening to spotify :(")
 
-@client.command()
-@commands.has_permissions()
+@client.command(description="The bot leaves the server (bot owner only)")
 async def leaveserver(ctx):
 	if ctx.message.author.id == 538332632535007244:
 		await ctx.send("Bye Bye")
@@ -562,7 +558,7 @@ async def leaveserver(ctx):
 	else:
 		await ctx.send("You are not the owner :grin:")
     
-@client.command()
+@client.command(description="Find details about a music")
 async def music(ctx, *, args):
 	url = "https://deezerdevs-deezer.p.rapidapi.com/search"
 	querystring = {"q":args}
@@ -598,75 +594,12 @@ async def music(ctx, *, args):
 	embed.set_image(url=album_cover)
 	await ctx.send(embed=embed)
 	
-@client.command()
-async def debug(ctx):
-	guild_number = 0
-	for guild in client.guilds:
-		guild_number += 1
-	await ctx.send(f"in {guild_number} guilds")
-	with open("prefixes.json", "r") as f:
-		prefixes = json.load(f)
-		await ctx.send(f"The prefixes file has {len(prefixes)} servers")
-
-@client.command()
+@client.command(description="Sends you stuff")
 async def dm(ctx, *, args):
 	await ctx.message.author.send(args)
 	
-@client.command()
-async def paginator(ctx):
-    page1=discord.Embed(
-        title='Page 1/3',
-        description='Description',
-        colour=discord.Colour.orange()
-    )
-    page2=discord.Embed(
-        title='Page 2/3',
-        description='Description',
-        colour=discord.Colour.orange()
-    )
-    page3=discord.Embed(
-        title='Page 3/3',
-        description='Description',
-        colour=discord.Colour.orange()
-    )
 
-    pages=[page1,page2,page3]
-
-    message=await client.send(embed=page1)
-
-    await client.add_reaction(message,'\u23ee')
-    await client.add_reaction(message,'\u25c0')
-    await client.add_reaction(message,'\u25b6')
-    await client.add_reaction(message,'\u23ed')
-
-    i=0
-    emoji=''
-
-    while True:
-        if emoji=='\u23ee':
-            i=0
-            await client.edit_message(message,embed=pages[i])
-        if emoji=='\u25c0':
-            if i>0:
-                i-=1
-                await client.edit_message(message,embed=pages[i])
-        if emoji=='\u25b6':
-            if i<2:
-                i+=1
-                await client.edit_message(message,embed=pages[i])
-        if emoji=='\u23ed':
-            i=2
-            await client.edit_message(message,embed=pages[i])
-
-        res=await client.wait_for_reaction(message=message,timeout=30)
-        if res==None:
-            break
-        if str(res[1])!='Wasi Master#5154': #Example: 'MyBot#1111'
-            emoji=str(res[0].emoji)
-            await client.remove_reaction(message,res[0].emoji,res[1])
-
-    await client._reactions(message)
-@client.command(aliases=['randcolor', 'randomcol', 'randcol', 'randomcolor', 'rc'])
+@client.command(aliases=['randcolor', 'randomcol', 'randcol', 'randomcolor', 'rc'], description="Generates a random color")
 async def randomcolour(ctx):
 	async with ctx.typing():
 		rand_color = randomcolor.RandomColor()
@@ -685,9 +618,11 @@ async def randomcolour(ctx):
 	embed.set_footer(text=f"Made for {ctx.author}")
 	embed.add_field(name="Hex", value=hex)
 	embed.add_field(name="RGB", value=rgb)
+	embed.set_footer(text=f"You can use the color command to get more details")
 	await ctx.send(embed=embed)
+	
  
-@client.command(aliases=[ 'col'])
+@client.command(aliases=[ 'col'], description="Sends info about a color")
 async def colour(ctx, color: str):
 	async with ctx.typing():
 		generated_color = color
@@ -698,6 +633,11 @@ async def colour(ctx, color: str):
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
+		hsl = data["hsl"]["value"]
+		hsv = data["hsv"]["value"]
+		cmyk = data["cmyk"]["value"]
+		xyz = data["xyz"]["valuel"]
+		
 	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
 	embed.set_author(name=color_name)
 	embed.set_image(url=link)
@@ -705,10 +645,14 @@ async def colour(ctx, color: str):
 	embed.set_footer(text=f"Made for {ctx.author}")
 	embed.add_field(name="Hex", value=hex)
 	embed.add_field(name="RGB", value=rgb)
+	embed.add_field(name="HSL", value=hsl)
+	embed.add_field(name="HSV", value=hsv)
+	embed.add_field(name="XMYK", value=xmyk)
+	embed.add_field(name="XYZ", value=xyz)
 	await ctx.send(embed=embed)
  
  
-@client.command(aliases=["setprefix"])
+@client.command(aliases=["setprefix"], description="Sets a prefix for a server but doesn’t work always :(")
 @has_permissions(manage_guild=True)
 async def prefix(ctx, prefix):
 	with open("prefixes.json", "r") as f:
@@ -718,7 +662,7 @@ async def prefix(ctx, prefix):
 	with open("prefixes.json", "w") as f:
 		json.dump(prefixes, f,  indent=4)
 		
-@client.command(aliases=['speak', 'echo', 's'])
+@client.command(aliases=['speak', 'echo', 's'], description="Sends a message")
 async def say(ctx, *, args): 
     mesg = args
     channel = ctx.message.channel
@@ -729,15 +673,7 @@ async def say(ctx, *, args):
     	pass
     await channel.send(mesg)
 
-@client.command(aliases=["wmsd"])
-async def wasimasterspecialdm(ctx, id:int=None, *, args):
-	if ctx.message.author.id == 538332632535007244:
-		user = client.get_user(id)
-		await user.send(args)
-	else:
-		await ctx.send("Command Not Found")
-
-@client.command()
+@client.command(description="Changes role for a user (removes if he has the role, adds the role if he doesn't)")
 async def role(ctx, member: discord.Member, role: discord.Role):
         if role in member.roles: #checks all roles the member has
             await member.remove_roles(role)
@@ -754,21 +690,25 @@ async def role(ctx, member: discord.Member, role: discord.Role):
             embed.add_field(name="Added Role", value=f'@{role}')
             await ctx.send(embed=embed)
    
-@client.command(aliases=['hg', 'howlesbian', 'hl'])
+@client.command(aliases=['hg', 'howlesbian', 'hl'], description="Check how gay a person is (random)")
 async def howgay(ctx, member: discord.Member=None):
      member = member or ctx.message.author
      embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
      embed.set_author(name='Gay Telling Machine')
      embed.set_footer(text=f"Requested by {ctx.author}")
-     embed.add_field(name="How Gay?", value=f"{member.name} is {random.randint(0, 100)}% gay")
+     if ctx.message.author.id == 538332632535007244:
+     	gay = 0
+     else:
+     	gay = random.randint(0, 100)
+     embed.add_field(name="How Gay?", value=f"{member.name} is {gay}% gay")
      await ctx.send(embed=embed)
      
-@client.command(aliases=['search'])
+@client.command(aliases=['search'], description="Generates a link to search google")
 async def google(ctx, *, args):
     result = "http://www.google.com/search?q=" + args.replace(" ", "+") + "&safe=active"
     await ctx.send(result)
     	
-@client.command(aliases=['pick', 'choice', 'ch']) 
+@client.command(aliases=['pick', 'choice', 'ch'], description="makes desicions for you :)") 
 async def choose(ctx, *, args): 
     mesg = args
     mesglist = mesg.split(",")
@@ -782,16 +722,8 @@ async def choose(ctx, *, args):
     embed.add_field(name="‌", value="‌")
     embed.add_field(name=f"**Chosen**", value=f"{random.choice(mesglist)}")
     await ctx.send(embed=embed)
-    
-@client.command()
-async def emoji(ctx):
-    msg = await ctx.send("working")
-    reactions = ['joy']
-    for emoji in reactions: 
-        await ctx.add_reaction(msg, emoji)
-             
   
-@client.command(aliases=['p'])
+@client.command(aliases=['p'], description="Shows the bot's speed")
 async def ping(ctx):
     start = time.perf_counter()
     embed = discord.Embed(timestamp=ctx.message.created_at)
@@ -807,7 +739,7 @@ async def ping(ctx):
     await message.edit(embed=embed)
     
 	
-@client.command(aliases=['synonym'])
+@client.command(aliases=['synonym'], description="Sends synomyms for a word")
 async def synonyms(ctx, *, args):
 	api_key = "dict.1.1.20200701T101603Z.fe245cbae2db542c.ecb6e35d1120ee008541b7c1f962a6d964df61dd"
 	async with ctx.typing():
@@ -826,7 +758,7 @@ async def synonyms(ctx, *, args):
 	await ctx.send(embed=embed)
 
 
-@client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'])
+@client.command(aliases=['urbandict', 'urbandefine', 'urbandefinition', 'ud', 'urbandictionary'], description="Searches The Urban Dictionary (nsfw only)")
 async def urban(ctx, *, args):
 	if not ctx.channel.is_nsfw():
 	    await ctx.send("You can use this only in nsfw channels because the results may include nsfw content")
@@ -851,7 +783,7 @@ async def urban(ctx, *, args):
 				embed.add_field(name="Error Occured", value="Command Aborted")
 			await ctx.send(embed=embed)
 
-@client.command()  
+@client.command(aliases = ["members"], description="Get who are in a certain role")  
 async def getusers(ctx, role: discord.Role):
 	embed = discord.Embed()
 	embed.set_footer(text=f"Asked by {ctx.author}")
@@ -859,30 +791,14 @@ async def getusers(ctx, role: discord.Role):
 	    empty = True
 	    for member in ctx.message.guild.members:
 	        if role in member.roles:
-	            embed.add_field(name="{0.name}".format(member), value="{0.id}".format(member))
+	            embed.add_field(name=member, value=member.id)
 	            empty = False
 	if empty:
 	    await ctx.send("Nobody has the role {}".format(role.mention))
 	else:
 	    await ctx.send(embed=embed)
-  
-@client.command()
-async def allnickname(ctx, role: discord.Role, *, args):
-	embed = discord.Embed()
-	embed.set_footer(text=f"Asked by {ctx.author}")
-	async with ctx.typing():
-	    empty = True
-	    for member in ctx.message.guild.members:
-	    	try:
-	    		name = member.name
-	    		await member.edit(nick=f"{name}{args}")
-	    		embed.add_field(name=name, value="succes")
-	    	except:
-	    		name = member.name
-	    		embed.add_field(name=name, value="failure")
-	    
-	    await ctx.send(embed=embed)
-     			
+ 
+'''			
 @client.command()
 async def define(ctx, *, args):
 	embed = discord.Embed(timestamp=ctx.message.created_at)
@@ -898,8 +814,8 @@ async def define(ctx, *, args):
 			await ctx.send("Definition too long")
 	else:
 		await ctx.send("No definition found")
-		
-@client.command()
+'''
+@client.command(aliases=['q'], description="Sends a quiz for you to answer")
 async def quiz(ctx):
 	quiz = True
 	def check(message = discord.Message):
@@ -954,23 +870,8 @@ async def quiz(ctx):
 		await ctx.message.channel.send('You didn\’t answer in time ')
 	else:
 		await ctx.message.channel.send('Correct you big brain')
-	finally:
-		await ctx.message.channel.send("Stopped listening to that message\'s reactions")
-@client.command()
-async def lol(ctx):
-  await ctx.send("send your name in 69 seconds")
-
-  def check(m):
-    return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
-
-  try:
-    name = await bot.wait_for('message', check=check, timeout=69)
-  except asyncio.TimeoutError:
-    await ctx.send(f"you didnt respond :( {ctx.author}!")
-  else:
-    await ctx.send(f"i see {ctx.author} your name is {name.content}")
-    		      
-@client.command()
+		    		      
+@client.command(description="Translate a text")
 async def translate(ctx, lang, *, args):
 	embed = discord.Embed(timestamp=ctx.message.created_at)
 	embed.set_footer(text="From Yandex")
@@ -993,13 +894,14 @@ async def translate(ctx, lang, *, args):
 			embed.add_field(name="Languages", value=languages)
 	await ctx.send(embed=embed)
 
-@client.command(aliases=['link', 'message'])
-async def messagelink(ctx):
-	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{ctx.message.id}")
+@client.command(aliases=['link', 'message'], description="Generates a link to a message (usefull in mobile)")
+async def messagelink(ctx, id:int = None):
+	id = id or ctx.message.id
+	await ctx.send(f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{id}")
+
 @client.command()
 async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
     role = discord.utils.get(ctx.guild.roles, name="Muted") # retrieves muted role returns none if there isn't 
-    hell = discord.utils.get(ctx.guild.text_channels, name="🔥hell🔥") # retrieves channel named hell returns none if there isn't
     if not role: # checks if there is muted role
         try: # creates muted role 
             muted = await ctx.guild.create_role(name="Muted", reason="To use for muting")
@@ -1010,33 +912,23 @@ async def mute(ctx, user : discord.Member, reason="No Reason Specified"):
         except discord.Forbidden:
             return await ctx.send("I have no permissions to make a muted role") # self-explainatory
         await user.add_roles(muted) # adds newly created muted role
-        await ctx.send(f"{user.mention} has been sent to hell for {reason}")
+        await ctx.send(f"{user.mention} has been muted for {reason}")
     else:
         await user.add_roles(role) # adds already existing muted role
-        await ctx.send(f"{user.mention} has been sent to hell for {reason}")
-       
-    if not hell: # checks if there is a channel named hell
-        overwrites = {ctx.guild.default_role: discord.PermissionOverwrite(read_message_history=False),
-                      ctx.guild.me: discord.PermissionOverwrite(send_messages=True),
-                      muted: discord.PermissionOverwrite(read_message_history=True)} # permissions for the channel
-        try: # creates the channel and sends a message
-            channel = await ctx.create_channel('🔥hell🔥', overwrites=overwrites)
-            await channel.send("Welcome to hell.. You will spend your time here until you get unmuted. Enjoy the silence.")
-        except discord.Forbidden:
-            return await ctx.send("I have no permissions to make 🔥hell🔥")
-            
-@client.command(aliases=['bi'])
-async def botinvite(ctx):
+        await ctx.send(f"{user.mention} has been muted for {reason}")
+                 
+@client.command(aliases=['botinvite', 'inv'], description="Sends the invite link for the bot")
+async def invite(ctx):
     await ctx.send("https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640")
 
-@client.command(aliases=['pfp', 'av', 'profilepicture', 'pp', 'profile'])
+@client.command(aliases=['pfp', 'av', 'profilepicture', 'pp', 'profile'], description="Sends your or another users avatar")
 async def avatar(ctx, *,  avamember : discord.Member=None,):
     avamember = avamember or ctx.message.author
     userAvatarUrl = avamember.avatar_url
     await ctx.send(userAvatarUrl)
 
 
-@client.command(aliases=['halp'])
+@client.command(aliases=['halp', 'h'], description="Sends help :)")
 async def help(ctx, command: str=None):
 	user = ctx.message.author
 	with open("prefixes.json", "r") as f:
@@ -1048,7 +940,7 @@ async def help(ctx, command: str=None):
 	all_commands = ""
 	if command is None:
 		for i in client.commands:
-			all_commands += (f"{i.name}, ")
+			all_commands += (f"`{i.name}`, ")
 		embed = discord.Embed(colour=ctx.guild.me.color, title="All Commands", description=all_commands)
 		await ctx.send(embed=embed)
 	else:
@@ -1058,52 +950,21 @@ async def help(ctx, command: str=None):
 			all_commands_name_list.append(i.name)
 			all_commands_list.append(i)
 		if command in all_commands_name_list:
-			pass
+			command_for_use = all_commands_list[all_commands_name_list.index(command)]
+			aliases = ""
+			for i in command_for_use.aliases:
+				aliases += f"`{i}`, "
+			embed = discord.Embed()
+			embed.set_author(command)
+			embed.add_field(name="Name", value=command_for_use.name)
+			embed.add_field(name="Aliases", value=aliases)
+			embed.add_field(name="Cooldown", value="None")
+			await ctx.send(embed=embed)
 		else:
 			embed = discord.Embed(title=f'Command "{command}" was not found, try using the command name instead of it\'s alias')
 			await ctx.send(embed=embed)
     
-@help.error
-async def help_error(ctx, error):
-	if "Cannot send messages to this user" in str(error):
-		with open("prefixes.json", "r") as f:
-			prefixes = json.load(f)
-			try:
-				prefix = prefixes[str(ctx.message.guild.id)]
-			except:
-				prefix = ","
-		embed = discord.Embed(colour=ctx.guild.me.color, timestamp=ctx.message.created_at)
-		embed.set_author(name='Help')
-		embed.set_footer(text=f"Requested by {ctx.author}")
-		embed.add_field(name=f"{prefix}help", value='shows this help message')
-		embed.add_field(name=f"{prefix}ping", value='shows the latency of the bot')
-		embed.add_field(name=f"{prefix}8ball `<question>`", value='genarates a answer to a question')
-		embed.add_field(name=f"{prefix}clear `<amount>`", value='clears a amount of messages')
-		embed.add_field(name=f"{prefix}kick `<@mention>`", value='kicks a member')
-		embed.add_field(name=f"{prefix}ban `<@mention>`", value='bans a member')
-		embed.add_field(name=f"{prefix}userinfo `<@mention>`", value='shows info about a user')
-		embed.add_field(name=f"{prefix}say `<string>`", value='the bot says anything you type after, say')
-		embed.add_field(name=f"{prefix}avatar `<@mention>`", value='shows the avatar of the user that you mention after ,avatar')
-		embed.add_field(name=f"{prefix}choose `<items separated by commas>`", value='chooses an item from the items you say and separate by commas after ,choose')
-		embed.add_field(name=f"{prefix}invite", value='sends the bot invite lnk')
-		embed.add_field(name=f"{prefix}howgay `<@mention>`", value='shows how gay a user is')
-		embed.add_field(name=f"{prefix}role `<@mention>`", value='Changes role for a user')
-		embed.add_field(name=f"{prefix}prefix `<prefix>`", value='Used to set a custom prefix')
-		embed.add_field(name=f"{prefix}google `<query>`", value='Used to search google without having to open google and search manually')
-		embed.add_field(name=f"{prefix}synonyms `<word>`", value='Returns the synonyms of a word')
-		embed.add_field(name=f"{prefix}urbandictionary `<word>`", value='Retyrns the definitions of a word found in urban dictionary')
-		embed.add_field(name=f"{prefix}define `<word>`", value='Returns the definitions of a word found in merriam webster')
-		embed.add_field(name=f"{prefix}translate `<language>` `<text>`", value='Returns the translation of a text found in Yandex')
-		embed.add_field(name=f"{prefix}quiz", value='Used to get a quiz (not fully made)')
-		embed.add_field(name=f"{prefix}link", value='Used to get a link to the message')
-		embed.add_field(name=f"{prefix}dm `<text>`", value='Used to send the person writing this command a dm which can be used to remember something')
-		embed.add_field(name=f"{prefix}getusers `<@role>`", value="used to get users that have a specefic oile")
-		await ctx.send("Help has been sent to your dm")
-		await ctx.send(embed=embed)
-	else:
-		await ctx.send(f"error occured: {str(error)}")
-    
-@client.command()
+@client.command(description="Shows information about the bots server")
 async def servers(ctx):
     	serverlist = []
     	memberlist = []
@@ -1116,7 +977,7 @@ async def servers(ctx):
     	average = round(int(members) / int(servers))
     	await ctx.send(f"I\'m in {servers:3,} servers and there are {members:3,} members total d there are {members:3,} members total and {average:3,}  on average in each server")
 
-@client.command(aliases=['8ball', 'eightball', 'eight ball', 'question','answer', '8b'])
+@client.command(aliases=['8ball', 'eightball', 'eight ball', 'question','answer', '8b'], description="Sends a yes/no type answer to a question")
 async def _8ball(ctx, *, question):
     answers = ['It is certain', 'It is decidedly so', 'Without a doubt', 'Yes – definitely', 'You may rely on it',
                'As I see it, yes', 'Most likely', 'Outlook good', 'Yes Signs point to yes', 'Reply hazy', 'try again',
@@ -1133,12 +994,12 @@ async def wikipedia(ctx, *, args):
 		else:
 			await ctx.send(result[0:1997] + "...")
 
-@client.command(aliases=['remove', 'delete', 'erase', '', 'c', 'clear'])
+@client.command(aliases=['remove', 'delete', 'erase', '', 'c', 'clear'], description=" clears a certain amount of messages")
 @commands.has_permissions(manage_messages=True)
-async def clear_messages(ctx, amount : int):
+async def clear_messages(ctx, amount: int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
-    message = await ctx.send(f"deleted `{len(deleted)}` messages")
+    message = await ctx.send(f"Deleted `{len(deleted)}` messages")
     await asyncio.sleep(2)
     await message.delete()
     
@@ -1147,27 +1008,27 @@ async def clear_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Please specify the amount of messag esto delete')
 
-@client.command()
+@client.command(description="Kicks a user ")
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member, *, reason=None):
      await member.kick(reason=reason)
      await ctx.send(f'Kicked {member.mention}')
 
-@client.command(aliases=['setnick', 'setnickname', 'nickname','changenickname', 'chnick'])
+@client.command(aliases=['setnick', 'setnickname', 'nickname','changenickname', 'chnick'], description="Sets a users nickname")
 @commands.has_permissions(manage_nicknames=True)
 async def nick(ctx, member: discord.Member, *, nick):
     await member.edit(nick=nick)
     await ctx.send(f'Nickname was changed for {member.mention} ')
     
-@client.command()
+@client.command(description="Bans a user")
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, *, reason=None):
         await member.ban(reason=reason)
         await ctx.send(f'Banned {member.mention}')
         
-@client.command()
+@client.command(description="Unbans a previously banned user with their name and discriminator ")
 @commands.has_permissions(ban_members=True)
-async def unban(ctx, *, member):
+async def unban(ctx, *, member: str):
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
     for ban_entry in banned_users:
@@ -1175,17 +1036,16 @@ async def unban(ctx, *, member):
 
         if (user.name, user.discriminator) == (member_name, member_discriminator):
             await ctx.guild.unban(user)
-            await ctx.send(f'Unbanned {user.mention}')
-            return
+            success = True
+    if success:
+    	await ctx.send(f'Unbanned {user.mention}')
+    else:
+        await ctx.send(f"User not found")
+        
 
-@client.command()
-async def invite(ctx):
-    await ctx.send('https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640')
-    
-@client.command(aliases=['ui', 'whois', 'wi'])
+@client.command(aliases=['ui', 'whois', 'wi'], description="Shows info about a user")
 async def userinfo(ctx, member: discord.Member=None):
     member = member or ctx.message.author
- 
     
     roles = [role for role in member.roles]
 
