@@ -612,12 +612,13 @@ async def randomcolour(ctx):
 		data = json.loads(response.text)
 		color_name = data.get("name").get("value")
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
+		thumb = f"http://singlecolorimage.com/get/{hex}/100x100"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
 	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
 	embed.set_author(name=color_name)
 	embed.set_image(url=link)
-	embed.set_thumbnail(url=link)
+	embed.set_thumbnail(url=thumb)
 	embed.set_footer(text=f"Made for {ctx.author}")
 	embed.add_field(name="Hex", value=hex)
 	embed.add_field(name="RGB", value=rgb)
@@ -634,17 +635,18 @@ async def colour(ctx, color: str):
 		data = json.loads(response.text)
 		color_name = data.get("name").get("value")
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
+		thumb =  f"http://singlecolorimage.com/get/{hex}/100x100"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
 		hsl = data["hsl"]["value"]
 		hsv = data["hsv"]["value"]
 		cmyk = data["cmyk"]["value"]
 		xyz = data["XYZ"]["value"]
-		
+	
 	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
 	embed.set_author(name=color_name)
 	embed.set_image(url=link)
-	embed.set_thumbnail(url=link)
+	embed.set_thumbnail(url=thumb)
 	embed.set_footer(text=f"Made for {ctx.author}")
 	embed.add_field(name="Hex", value=hex)
 	embed.add_field(name="RGB", value=rgb)
