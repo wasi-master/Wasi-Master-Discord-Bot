@@ -941,7 +941,7 @@ async def help(ctx, command: str=None):
 	if command is None:
 		for i in client.commands:
 			all_commands += (f"`{i.name}`, ")
-		embed = discord.Embed(colour=ctx.guild.me.color, title="All Commands", description=all_commands)
+		embed = discord.Embed(colour=ctx.guild.me.color or None, title="All Commands", description=all_commands)
 		await ctx.send(embed=embed)
 	else:
 		all_commands_list = []
