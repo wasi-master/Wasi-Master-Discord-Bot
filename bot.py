@@ -120,6 +120,7 @@ def pad(to_pad):
 
 @client.command(description="Reverses a text")
 async def reverse(ctx, string: str):
+	result = ""
 	for i in reversed(list(string)):
 		result += i
 	embed = discord.Embed(title="Reverse", description=f"**Original**:\n{string}\n**Reversed**\n{result}")
