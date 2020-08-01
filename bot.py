@@ -961,8 +961,12 @@ async def help(ctx, command: str=None):
 				aliases += f"`{i}`, "
 			embed = discord.Embed()
 			embed.set_author(name=str(command))
+			
 			embed.add_field(name="Name", value=command_for_use.name)
-			embed.add_field(name="Description", value=command_for_use.description)
+			try:
+				embed.add_field(name="Description", value=command_for_use.description)
+			except:
+				pass
 			embed.add_field(name="Aliases", value=aliases[:-2])
 			embed.add_field(name="Cooldown", value="None")
 			await ctx.send(embed=embed)
