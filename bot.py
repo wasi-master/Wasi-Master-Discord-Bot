@@ -123,7 +123,7 @@ async def reverse(ctx, string: str):
 	result = ""
 	for i in reversed(list(string)):
 		result += i
-	embed = discord.Embed(title="Reverse", description=f"**Original**:\n{string}\n**Reversed**\n{result}")
+	embed = discord.Embed(title="Reverse", description=f"**Original**:\n{string}\n**Reversed**:\n{result}")
 	await ctx.send(result, embed=embed)
 
 @client.command(aliases=['tod'], description="Truth Or Dare")
