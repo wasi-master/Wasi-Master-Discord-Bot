@@ -1045,8 +1045,6 @@ async def help(ctx, command: str=None):
 			prefix = prefixes[str(ctx.message.guild.id)]
 		except:
 			prefix = ","
-	embed.set_author(name='Help')
-	embed.set_footer(text=f"Requested by {ctx.author}")
 	all_commands = ""
 	if command is None:
 		for i in client.commands:
