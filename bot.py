@@ -928,7 +928,7 @@ async def avatar(ctx, *,  avamember : discord.Member=None,):
     userAvatarUrl = avamember.avatar_url
     await ctx.send(userAvatarUrl)
 
-'''
+
 @client.command(aliases=['halp', 'h'], description="Sends help :)")
 async def help(ctx, command: str=None):
 	user = ctx.message.author
@@ -964,7 +964,7 @@ async def help(ctx, command: str=None):
 		else:
 			embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias')
 			await ctx.send(embed=embed)
-    '''
+    
 @client.command(description="Shows information about the bots server")
 async def servers(ctx):
     	serverlist = []
