@@ -650,7 +650,7 @@ async def colour(ctx, color: str):
 	embed.add_field(name="RGB", value=rgb)
 	embed.add_field(name="HSL", value=hsl)
 	embed.add_field(name="HSV", value=hsv)
-	embed.add_field(name="XMYK", value=xmyk)
+	embed.add_field(name="XMYK", value=cmyk)
 	embed.add_field(name="XYZ", value=xyz)
 	await ctx.send(embed=embed)
  
