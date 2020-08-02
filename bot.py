@@ -1019,7 +1019,7 @@ async def help(ctx, command: str=None):
 				embed.add_field(name="Aliases", value=aliases[:-2])
 			else:
 				pass
-			if not len(command_for_use.usage) == 0:
+			if not command_for_use.usage is None:
 				embed.add_field(name="Usage", value=command_for_use.usage)
 			else:
 				pass
