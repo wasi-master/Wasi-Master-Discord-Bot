@@ -1069,7 +1069,7 @@ async def help(ctx, command: str=None):
 			await ctx.send(embed=embed)
 		else:
 			try:
-				embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list)[0], n=1, cutoff=0.2}`")
+				embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list n=1, cutoff=0.2)[0]}`")
 			except IndexError:
 				embed = discord.Embed(titlee=f'Command "{str(command)}" was not found')
 			await ctx.send(embed=embed)
