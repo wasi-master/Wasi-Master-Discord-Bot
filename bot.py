@@ -122,7 +122,7 @@ def pad(to_pad):
 
 @client.command()
 async def emoji(ctx, *, name:str): 
-	await ctx.send(f"```{discord.utils.get(_ctx.guild.emojis, name=name)}```")
+	await ctx.send(f"```{discord.utils.get(ctx.guild.emojis, name=name)}```")
 
 @client.command(description="See your or other peoples permissions", aliases=["permissions"])
 async def perms(ctx, member:discord.Member=None):
