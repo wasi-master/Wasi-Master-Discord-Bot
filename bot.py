@@ -126,11 +126,12 @@ async def emoji(ctx, *, name:str):
 	await ctx.send(f"```{discord.utils.get(ctx.guild.emojis, name=name)}```")
 
 @client.command(description="See your or other peoples permissions", aliases=["permissions"], usage="perms `[@mention]`\n\nperms\nperms @Wasi Master")
-async def perms(ctx, member:discord.Member=None):
-	member = member or ctx.message.author
+async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=None):
+	member = member or ctx.author
+	channel = channel or ctx.channel
 	perms = []
 	permstr = ""
-	for i in member.permissions_in(ctx.channel):
+	for i in member.permissions_in(channel):
 	    perms.append(i)
 	perms = dict(perms)
 	for i in perms:
@@ -146,7 +147,7 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
 	async for i in channel.history(oldest_first=True):
 		if i.is_system:
-			pass
+			continue
 		else:
 			fmo = i
 			break
