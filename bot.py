@@ -1077,8 +1077,8 @@ async def purge(ctx, amount: int):
     await asyncio.sleep(2)
     await message.delete()
     
-@clear_messages.error
-async def clear_error(ctx, error):
+@purge.error
+async def purge_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Please specify the amount of messag esto delete')
 
