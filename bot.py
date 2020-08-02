@@ -146,7 +146,7 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
 	async for i in channel.history(oldest_first=True):
 		if i.is_system:
-			continue
+			pass
 		else:
 			fmo = i
 			break
@@ -159,7 +159,7 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	if not fmo.edited_at is None:
 		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	embed.add_field(name="Url", value=fmo.jump_url)
-	embed.set_footer(text="Times are in UTC, It doesn’t show a system message such as a member join/leave or server boost ")
+	embed.set_footer(text="Times are in UTC\nIt doesn’t show a system message such as a member join/leave or server boost ")
 	await ctx.send(embed=embed)
 
 
