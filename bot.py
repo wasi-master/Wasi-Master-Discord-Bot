@@ -981,7 +981,7 @@ async def avatar(ctx, *,  avamember : discord.Member=None,):
     await ctx.send(userAvatarUrl)
 
 
-@client.command(aliases=['halp', 'h'], description="Sends help :)")
+@client.command(aliases=['halp', 'h'], description="Sends help :)", usage="help `[command]`\n\nhelp\nhelp userinfo")
 async def help(ctx, command: str=None):
 	user = ctx.message.author
 	with open("prefixes.json", "r") as f:
@@ -1017,6 +1017,10 @@ async def help(ctx, command: str=None):
 				pass
 			if not len(aliases) == 0:
 				embed.add_field(name="Aliases", value=aliases[:-2])
+			else:
+				pass
+			if not len(command_for_use.usage) == 0:
+				embed.add_field(name"Usage", value=command_for_use.usage)
 			else:
 				pass
 			embed.add_field(name="Cooldown", value="None")
