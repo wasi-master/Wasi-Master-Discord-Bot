@@ -10,10 +10,12 @@ import time
 import wikipedia as wikimodule
 import async_cleverbot as ac
 from datetime import datetime
+from bs4 import BeautifulSoup
 import asyncio
 import aiohttp
 import codecs
 import os
+import ast
 import pathlib
 import difflib
 import urllib.parse
@@ -120,6 +122,17 @@ async def on_command_error(ctx, error):
 
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+
+@client.command(description="Sends a waifu")
+async def waifu(ctx):
+	response = requests.get('https://mywaifulist.moe/random')
+	soup = BeautifulSoup(response.text, 'html.parser')
+	image_url = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[3].split(',')[0] + '}')['image']
+	name = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[4].split(',')[0] + '}')['name']
+	gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
+	embed = discord.Embed()
+	embed.set_image(url=image_url)
+	await ctx.send(embed=embed)
 
 @client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
 async def emoji(ctx, *, name:str): 
@@ -1069,9 +1082,9 @@ async def help(ctx, command: str=None):
 			await ctx.send(embed=embed)
 		else:
 			try:
-				embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list, n=1, cutoff=0.2)[0]}`")
+				embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list)[0], n=1, cutoff=0.2}`")
 			except IndexError:
-				embed = discord.Embed(titlee=f'Command "{str(command)}" was not found')
+				embed = discord.Embed(title"Not Found")
 			await ctx.send(embed=embed)
     
 @client.command(description="Shows information about the bots server")
