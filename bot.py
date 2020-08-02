@@ -395,7 +395,7 @@ async def gif(ctx, *, query: str):
 	embed = discord.Embed()
 	embed.set_image(url=gif)
 	embed.add_field(name="Link (click to see or long press to copy)", value=f"[click here]({gif})")
-	e.set_footer(text=f"Asked by {ctx.message.author}")
+	embed.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=embed)
 		
 @client.command(aliases=["b64"],description="Encode or decode text to base64")
