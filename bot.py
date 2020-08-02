@@ -47,7 +47,7 @@ client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
     
-@tasks.loop(seconds=3600)
+@tasks.loop(seconds=86400)
 async def update_server_count():
 	memberlist = []
 	serverlist = []
