@@ -123,7 +123,7 @@ def pad(to_pad):
 @client.command(aliases=["fm"],description="Shows the first message in a channel")
 async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
-	for i in channel.history(oldest_first=True):
+	async for i in channel.history(oldest_first=True):
 		fmo = i
 		break
 	embed = discord.Embed(title=f"First message in {channel.name}")
@@ -134,6 +134,7 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	embed.add_field(name="Message sent at", value=fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	if not fmo.edited_at is None:
 		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
+	embed.add_field(name="Url", value=fmo.jump_url)
 	embed.set_footer(text="Times are in UTC")
 	await ctx.send(embed=embed)
 
