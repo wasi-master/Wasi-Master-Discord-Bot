@@ -773,7 +773,7 @@ async def choose(ctx, *, args):
 @client.command(aliases=['p'], description="Shows the bot's speed")
 async def ping(ctx):
     start = time.perf_counter()
-    embed = discord.Embed(description="Websocket Latency = Time it takes to recive data from the discord API\nResponse Time = Time it takes between seeing your message then sending a response\nBot Latency = Time needed to send/edit messages")
+    embed = discord.Embed(description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it takes between seeing your message then sending a response\n**Bot Latency** = Time needed to send/edit messages")
     embed.set_author(name='Ping')
     embed.set_footer(text=f"Asked by {ctx.author}")
     embed.add_field(name="Websocket Latency", value=f'{round(client.latency * 1000)}ms')
