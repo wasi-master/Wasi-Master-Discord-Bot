@@ -120,6 +120,21 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+@client.command(aliases=["fm"],description="Shows the first message in a channel")
+async def firstmessage(ctx, channel: discord.TextChannel=None):
+	channel = channel or ctx.channel
+	fmo = channel.history(oldest_first=True)[0]
+	embed = discord.Embed(title=f"First message in {channel.name}")
+	embed.add_field(name='Message Author', value=fmo.author)
+	embed.add_field(name="Message Content", value=fmo.content)
+	if len(fmo.attatchments) > 0:
+		embed.add_field(name="Attatchments", value="".join(fmo.attatchments))
+	embed.add_field(name="Message sent at", value=fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
+	if not fmo.edited_at is None:
+		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
+	embed.set_footer(text="Times are in UTC")
+	await ctx.send(embed=embed)
+
 
 
 @client.command(aliases=["stop"], description="Stops the bot, only for the bot owner")
