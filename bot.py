@@ -148,6 +148,15 @@ async def shutdown(ctx):
 		await ctx.send("You are not the bot owner :grin::grin::grin:")
 
 
+@client.command(description="Custom Slow Mode"):
+@has_permissions("manage_channels"=True)
+async def slowmode(ctx, slowmode: int):
+	if slowmode > 21600:
+		await ctx.send("Slow Mode too long")
+	else:
+		await ctx.channel.edit(slowmode_delay=slowmode)
+		await ctx.send(f"Slow Mode set to {slowmode} seconds for {ctx.channel.mention}")
+
 @client.command(description="Lick a user")
 async def lick(ctx, member: discord.Member=None):
 	if not member:
