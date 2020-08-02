@@ -782,7 +782,7 @@ async def ping(ctx):
     message_ping = (end - start) * 1000
     embed.set_author(name='Ping')
     embed.set_footer(text=f"Asked by {ctx.author}")
-    embed.add_field(name="Response Time", value=f"{(message.created_at - ctx.message.created_at).total_seconds()/1000}ms")
+    embed.add_field(name="Response Time", value=f"{round((message.created_at - ctx.message.created_at).total_seconds()/1000, 4)}ms")
     embed.add_field(name="Bot Latency", value=f"{round(message_ping)}ms")
     await message.edit(embed=embed)
     
