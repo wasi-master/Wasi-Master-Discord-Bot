@@ -145,8 +145,11 @@ async def perms(ctx, member:discord.Member=None):
 async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
 	async for i in channel.history(oldest_first=True):
-		fmo = i
-		break
+		if i.is_system:
+			continue
+		else:
+			fmo = i
+			break
 	embed = discord.Embed(title=f"First message in {channel.name}")
 	embed.add_field(name='Message Author', value=fmo.author)
 	embed.add_field(name="Message Content", value=fmo.content)
@@ -156,7 +159,7 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	if not fmo.edited_at is None:
 		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	embed.add_field(name="Url", value=fmo.jump_url)
-	embed.set_footer(text="Times are in UTC")
+	embed.set_footer(text="Times are in UTC, It doesn’t show a system message such as a member join/leave or server boost ")
 	await ctx.send(embed=embed)
 
 
