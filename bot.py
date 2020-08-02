@@ -152,7 +152,7 @@ async def shutdown(ctx):
 async def lick(ctx, member: discord.Member=None):
 	if not member:
 		embed = discord.Embed(title="Error", description="Please Mention a User to lick If you do not mention a user, the command will not work!", color=discord.Color.red())
-		embed.set_footer(text="Ping Command Error 404")
+		embed.set_footer(text="Command Error")
 		return await ctx.send(embed=embed)	
 	
 	if member == ctx.author:
@@ -773,7 +773,7 @@ async def choose(ctx, *, args):
 @client.command(aliases=['p'], description="Shows the bot's speed")
 async def ping(ctx):
     start = time.perf_counter()
-    embed = discord.Embed(timestamp=ctx.message.created_at)
+    embed = discord.Embed(description="Websocket Latency = Time it takes to recive data from the discord API\nResponse Time = Time it takes between seeing your message then sending a response\nResponse Latency = Time needed to ssend messages)
     embed.set_author(name='Ping')
     embed.set_footer(text=f"Asked by {ctx.author}")
     embed.add_field(name="Websocket Latency", value=f'{round(client.latency * 1000)}ms')
@@ -782,7 +782,8 @@ async def ping(ctx):
     message_ping = (end - start) * 1000
     embed.set_author(name='Ping')
     embed.set_footer(text=f"Asked by {ctx.author}")
-    embed.add_field(name="Response latency", value=f"{round(message_ping)}ms")
+    embed.add_field(name="Response Time"Latency, value=f"{(ctx.message.created_at - message).total_seconds()/1000}ms")
+    embed.add_field(name="Bot Latency", value=f"{round(message_ping)}ms")
     await message.edit(embed=embed)
     
 	
