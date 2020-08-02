@@ -155,7 +155,10 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	
 	embed = discord.Embed(title=f"First message in {channel.name}")
 	embed.add_field(name='Message Author', value=fmo.author)
-	embed.add_field(name="Message Content", value=fmo.content)
+	try:
+		embed.add_field(name="Message Content", value=fmo.content)
+	except:
+		embed.add_field(name="Message Content", value="Failed to get the content") 
 	if len(fmo.attachments) > 0:
 		for i in fmo.attachments:
 			num += 1
