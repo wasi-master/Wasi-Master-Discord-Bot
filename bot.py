@@ -115,7 +115,7 @@ async def on_command_error(ctx, error):
 		pass
 	
 	else:
-		await ctx.send(f"error occured:\n {error}")
+		await ctx.send(f"Welp, The command was unsuccessful for this reason:\n```{error}```\nIf you can't understand why this happens, ask Wasi Master#4245 ")
 		raise error
 
 def pad(to_pad):
