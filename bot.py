@@ -1010,9 +1010,9 @@ async def help(ctx, command: str=None):
 				embed.add_field(name="Description", value=command_for_use.description)
 			except:
 				pass
-			try:
+			if not len(aliases) == 0
 				embed.add_field(name="Aliases", value=aliases[:-2])
-			except:
+			else:
 				pass
 			embed.add_field(name="Cooldown", value="None")
 			await ctx.send(embed=embed)
