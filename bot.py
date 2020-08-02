@@ -1068,9 +1068,9 @@ async def wikipedia(ctx, *, args):
 		else:
 			await ctx.send(result[0:1997] + "...")
 
-@client.command(name="clear", aliases=['remove', 'delete', 'erase', 'purge', 'c', 'clear'], description=" clears a certain amount of messages")
+@client.command(name="clear", aliases=['remove', 'delete', 'erase', 'c'], description=" clears a certain amount of messages")
 @commands.has_permissions(manage_messages=True)
-async def clear_messages(ctx, amount: int):
+async def purge(ctx, amount: int):
     amount += 1
     deleted = await ctx.channel.purge(limit=amount)
     message = await ctx.send(f"Deleted `{len(deleted)}` messages")
