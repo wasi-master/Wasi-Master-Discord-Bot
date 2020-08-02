@@ -120,6 +120,19 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+@client.command(description="See your or other peoples permissions", aliases=["permissions"])
+async def perms(ctx, member:discord.Member=None):
+	member = member or ctx.message.author
+	perms = []
+	permstr = ""
+	for i in member.permissions_in(ctx.channel):
+	    perms.append(i)
+	perms = dict(perms)
+	for i in perms:
+		permstr += f"{i}   `{perms[i]}`\n"
+	embed = discord.Embed(title=f"{member}'s Permissions", description=permstr)
+	await ctx.send(embed=embed)
+
 @client.command(aliases=["fm"],description="Shows the first message in a channel")
 async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
@@ -729,7 +742,7 @@ async def say(ctx, *, args):
     channel = ctx.message.channel
     try:
     	if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
-    		await ctx.message.channel.purge(limit=1)
+    		await ctx.message.delete()
     except:
     	pass
     await channel.send(mesg)
