@@ -129,8 +129,11 @@ async def perms(ctx, member:discord.Member=None):
 	    perms.append(i)
 	perms = dict(perms)
 	for i in perms:
-		permstr += f"{i.replace('_', ' ' ).title()}   `{perms[i]}`\n"
-	embed = discord.Embed(title=f"{member}'s Permissions", description=permstr)
+		if perms[i]:
+			permstr += f"{i.replace('_', ' ' ).title()}\n"
+		else:
+			continue
+	embed = discord.Embed(title=f"{member}'s Available Permissions", description=permstr)
 	await ctx.send(embed=embed)
 
 @client.command(aliases=["fm"],description="Shows the first message in a channel")
