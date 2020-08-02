@@ -145,15 +145,22 @@ async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=Non
 @client.command(aliases=["fm"],description="Shows the first message in a channel")
 async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
+	attachments = ""
+	num = 0
+	
 	async for i in channel.history(oldest_first=True):
 		if i.is_system:
 			fmo = i
 			break
+	
 	embed = discord.Embed(title=f"First message in {channel.name}")
 	embed.add_field(name='Message Author', value=fmo.author)
 	embed.add_field(name="Message Content", value=fmo.content)
 	if len(fmo.attachments) > 0:
-		embed.add_field(name="Attatchments", value=str(fmo.attachments[0])))
+		for i in fmo.attachments:
+			num += 1
+			attatchments += f"[{i.fimename}](i.url)\n"
+		embed.add_field(name="Attatchments", value=attatchments)
 	embed.add_field(name="Message sent at", value=fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	if not fmo.edited_at is None:
 		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
