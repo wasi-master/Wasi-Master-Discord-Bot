@@ -159,8 +159,8 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	if len(fmo.attachments) > 0:
 		for i in fmo.attachments:
 			num += 1
-			attatchments += f"[{i.fimename}](i.url)\n"
-		embed.add_field(name="Attatchments", value=attatchments)
+			attachments += f"[{i.fimename}](i.url)\n"
+		embed.add_field(name="Attatchments", value=attachments)
 	embed.add_field(name="Message sent at", value=fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	if not fmo.edited_at is None:
 		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
