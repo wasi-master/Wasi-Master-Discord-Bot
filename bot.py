@@ -123,7 +123,9 @@ def pad(to_pad):
 @client.command(aliases=["fm"],description="Shows the first message in a channel")
 async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
-	fmo = channel.history(oldest_first=True)[0]
+	for i in channel.history(oldest_first=True):
+		fmo = i
+		break
 	embed = discord.Embed(title=f"First message in {channel.name}")
 	embed.add_field(name='Message Author', value=fmo.author)
 	embed.add_field(name="Message Content", value=fmo.content)
