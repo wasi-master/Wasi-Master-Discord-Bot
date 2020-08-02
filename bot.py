@@ -1020,7 +1020,7 @@ async def help(ctx, command: str=None):
 			else:
 				pass
 			if not len(command_for_use.usage) == 0:
-				embed.add_field(name"Usage", value=command_for_use.usage)
+				embed.add_field(name="Usage", value=command_for_use.usage)
 			else:
 				pass
 			embed.add_field(name="Cooldown", value="None")
