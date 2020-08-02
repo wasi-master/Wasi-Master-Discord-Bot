@@ -129,7 +129,7 @@ async def perms(ctx, member:discord.Member=None):
 	    perms.append(i)
 	perms = dict(perms)
 	for i in perms:
-		permstr += f"{i}   `{perms[i]}`\n"
+		permstr += f"{i.replace('_', ' ' ).title()}   `{perms[i]}`\n"
 	embed = discord.Embed(title=f"{member}'s Permissions", description=permstr)
 	await ctx.send(embed=embed)
 
