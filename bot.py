@@ -121,6 +121,7 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+
 @client.command(aliases=["stop"], description="Stops the bot, only for the bot owner")
 async def shutdown(ctx):
 	if ctx.message.author.id == 538332632535007244:
@@ -129,7 +130,19 @@ async def shutdown(ctx):
 		await ctx.send("You are not the bot owner :grin::grin::grin:")
 
 
-
+@client.command(description="Lick a user")
+async def lick(ctx, member: discord.Member=None):
+	if not member:
+		embed = discord.Embed(title="Error", description="Please Mention a User to lick If you do not mention a user, the command will not work!", color=discord.Color.red())
+		embed.set_footer(text="Ping Command Error 404")
+		return await ctx.send(embed=embed)	
+	
+	if member == ctx.author:
+		embed = discord.Embed(title="Lick", description=f"{ctx.author.mention} has licked themselves")
+		await ctx.send(embed=embed)
+	else:
+		embed = discord.Embed(title="Lick", description=f"{ctx.author.mention} has licked {member.mention}")
+		await ctx.send(embed=embed)
 
 @client.command(description="Reverses a text")
 async def reverse(ctx, string: str):
