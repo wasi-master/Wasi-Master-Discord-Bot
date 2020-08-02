@@ -313,6 +313,7 @@ async def invert(ctx, member: discord.Member=None):
 	url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
 	e = discord.Embed()
 	e.set_image(url=url)
+	e.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=e)
 
 @client.command(description="Blur your or another users profile picture")
@@ -321,6 +322,7 @@ async def blur(ctx, member: discord.Member=None):
 	url = f"https://api.alexflipnote.dev/filter/blur?image={member.avatar_url}"
 	e = discord.Embed()
 	e.set_image(url=url)
+	e.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=e)
 
 @client.command(aliases=['b&w', 'blackandwhite'], description="Convert to Black And White your or another users profile picture")
@@ -329,6 +331,7 @@ async def bw(ctx, member: discord.Member=None):
 	url = f"https://api.alexflipnote.dev/filter/b&w?image={member.avatar_url}"
 	e = discord.Embed()
 	e.set_image(url=url)
+	e.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=e)
 
 @client.command(description="Pixelate your or another users profile picture")
@@ -337,6 +340,7 @@ async def pixelate(ctx, member: discord.Member=None):
 	url = f"https://api.alexflipnote.dev/filter/pixelate?image={member.avatar_url}"
 	e = discord.Embed()
 	e.set_image(url=url)
+	e.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=e)
 
 @client.command(description="See a gay version of your or another users profile picture")
@@ -345,6 +349,7 @@ async def gay(ctx, member: discord.Member=None):
 	url = f"https://api.alexflipnote.dev/filter/gay?image={member.avatar_url}"
 	e = discord.Embed()
 	e.set_image(url=url)
+	e.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=e)
 
 
@@ -360,6 +365,7 @@ async def gif(ctx, *, query: str):
 	embed = discord.Embed()
 	embed.set_image(url=gif)
 	embed.add_field(name="Link (click to see or long press to copy)", value=f"[click here]({gif})")
+	e.set_footer(text=f"Asked by {ctx.message.author}")
 	await ctx.send(embed=embed)
 		
 @client.command(aliases=["b64"],description="Encode or decode text to base64")
