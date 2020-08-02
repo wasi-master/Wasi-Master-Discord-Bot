@@ -121,11 +121,11 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@client.command()
+@client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
 async def emoji(ctx, *, name:str): 
 	await ctx.send(f"```{discord.utils.get(ctx.guild.emojis, name=name)}```")
 
-@client.command(description="See your or other peoples permissions", aliases=["permissions"])
+@client.command(description="See your or other peoples permissions", aliases=["permissions"], usage="perms `[@mention]`\n\nperms\nperms @Wasi Master")
 async def perms(ctx, member:discord.Member=None):
 	member = member or ctx.message.author
 	perms = []
