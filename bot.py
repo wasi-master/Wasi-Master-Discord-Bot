@@ -120,6 +120,10 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+@client.command()
+async def emoji(ctx, *, name:str): 
+	await ctx.send(f"```{discord.utils.get(_ctx.guild.emojis, name=name)}```")
+
 @client.command(description="See your or other peoples permissions", aliases=["permissions"])
 async def perms(ctx, member:discord.Member=None):
 	member = member or ctx.message.author
