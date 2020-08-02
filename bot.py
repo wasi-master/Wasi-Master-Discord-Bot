@@ -149,7 +149,7 @@ async def shutdown(ctx):
 
 
 @client.command(description="Custom Slow Mode")
-@has_permissions("manage_channels"=True)
+@has_permissions(manage_channels=True)
 async def slowmode(ctx, slowmode: int):
 	if slowmode > 21600:
 		await ctx.send("Slow Mode too long")
