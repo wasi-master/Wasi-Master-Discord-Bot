@@ -388,11 +388,10 @@ async def support(ctx):
 	await ctx.send("https://discord.gg/5jn3bQX")
 	
 @client.command(description="Reminds you something")
-async def remind(ctx, *, text):
+async def remind(ctx, time: int, *, text: str):
 	user = ctx.message.author
-	textlist = text.strip().split(" ")
-	texttosend = str(textlist[1])
-	timetowait = int(textlist[0].strip())
+	texttosend = text
+	timetowait = time
 	await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds")
 	await asyncio.sleep(timetowait)
 	await user.send(texttosend)
