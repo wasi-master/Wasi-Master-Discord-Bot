@@ -1068,7 +1068,7 @@ async def help(ctx, command: str=None):
 			embed.add_field(name="Cooldown", value="None")
 			await ctx.send(embed=embed)
 		else:
-			embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean {difflib.get_close_matches(command.strip().lower(), all_commands_name_list, n=1, cutoff=1)[0]}")
+			embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean {difflib.get_close_matches(command.strip().lower(), all_commands_name_list)[0]}")
 			await ctx.send(embed=embed)
     
 @client.command(description="Shows information about the bots server")
