@@ -1084,7 +1084,7 @@ async def help(ctx, command: str=None):
 			try:
 				embed = discord.Embed(title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias', description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list)[0], n=1, cutoff=0.2}`")
 			except IndexError:
-				embed = discord.Embed(title"Not Found")
+				embed = discord.Embed(title="Not Found")
 			await ctx.send(embed=embed)
     
 @client.command(description="Shows information about the bots server")
