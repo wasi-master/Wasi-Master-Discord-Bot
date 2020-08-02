@@ -120,6 +120,17 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+
+@client.command(aliases=["stop"], description="Stops the bot, only for the bot owner")
+async def shutdown(ctx):
+	if ctx.message.author.id == 538332632535007244:
+		await client.close()
+	else:
+		await ctx.send("You are not the bot owner :grin::grin::grin:")
+
+
+
+
 @client.command(description="Reverses a text")
 async def reverse(ctx, string: str):
 	result = ""
