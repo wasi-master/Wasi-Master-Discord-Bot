@@ -193,7 +193,7 @@ async def lick(ctx, member: discord.Member=None):
 		await ctx.send(embed=embed)
 
 @client.command(description="Reverses a text")
-async def reverse(ctx, string: str):
+async def reverse(ctx, *, string: str):
 	result = ""
 	for i in reversed(list(string)):
 		result += i
@@ -1024,7 +1024,7 @@ async def help(ctx, command: str=None):
 	if command is None:
 		for i in client.commands:
 			all_commands += (f"`{i.name}`, ")
-		embed = discord.Embed(colour=ctx.guild.me.color or None, title=f"All Commands {len(client.commands)}", description=all_commands)
+		embed = discord.Embed(colour=ctx.guild.me.color or None, title=f"All Commands ({len(client.commands)})", description=all_commands)
 		await ctx.send(embed=embed)
 	else:
 		all_commands_list = []
