@@ -147,8 +147,6 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
 	async for i in channel.history(oldest_first=True):
 		if i.is_system:
-			continue
-		else:
 			fmo = i
 			break
 	embed = discord.Embed(title=f"First message in {channel.name}")
