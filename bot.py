@@ -740,7 +740,7 @@ async def prefix(ctx, prefix):
 		json.dump(prefixes, f,  indent=4)
 		
 @client.command(aliases=['speak', 'echo', 's'], description="Sends a message")
-async def say(ctx, *, args): 
+async def say(ctx, *, args: commands.clean_content): 
     mesg = args
     channel = ctx.message.channel
     try:
