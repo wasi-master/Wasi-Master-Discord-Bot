@@ -153,7 +153,7 @@ async def firstmessage(ctx, channel: discord.TextChannel=None):
 	embed.add_field(name='Message Author', value=fmo.author)
 	embed.add_field(name="Message Content", value=fmo.content)
 	if len(fmo.attachments) > 0:
-		embed.add_field(name="Attatchments", value="".join(fmo.attachments))
+		embed.add_field(name="Attatchments", value=str(fmo.attachments[0])))
 	embed.add_field(name="Message sent at", value=fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	if not fmo.edited_at is None:
 		embed.add_field(name="Edited", value=fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S"))
