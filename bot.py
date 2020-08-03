@@ -136,30 +136,6 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-######## MESSAGE ########
-
-@bot.command()
-async def lol(ctx):
-    await ctx.send("send your name in 69 seconds")
-
-    def check(m):  # m = discord.Message.
-        return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
-
-    try:
-        name = await bot.wait_for('message', check = check, timeout = 69)
-    except asyncio.TimeoutError:
-        await ctx.send(f"you didnt respond in 69 seconds :( {ctx.author}!")
-        return
-    else:
-        await ctx.send(f"i see {ctx.author} your name is {name.content}")
-        return
-
-
-######## REACTION ########
-
-@bot.command()
-async def lol(ctx):
-    await ctx.send("react with :white_check_mark: or :x: in 69 seconds")
 @client.command(description="Sends a waifu")
 async def waifu(ctx):
 	session = aiohttp.ClientSession()
