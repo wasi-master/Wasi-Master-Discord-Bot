@@ -101,7 +101,9 @@ async def on_guild_remove(guild):
 
 	with open("prefixes.json", "w") as f:
 		json.dump(prefixes, f,  indent=4)
-		
+	
+	
+	
 
 @client.event
 async def on_command_error(ctx, error):
@@ -126,7 +128,7 @@ async def on_command_error(ctx, error):
 		embed.add_field(name="Guild", value=ctx.guild.name)
 		embed.add_field(name="Message", value=ctx.message.content)
 		embed.add_field(name="Error", value=f"```{str(error)}```")
-		embed.add_field(name="Links", value=f"[User Message]({ctx.message.jump_url})\n[Bot Message]({botmsg.jump_url})")
+		embed.add_field(name="Message Links", value=f"[User Message]({ctx.message.jump_url})\n[Bot Message]({botmsg.jump_url})")
 		await channel.send(embed = embed)
 		
 		raise error
@@ -146,7 +148,7 @@ async def waifu(ctx):
 		gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
 		embed = discord.Embed()
 		embed.set_image(url=image_url)
-	session.close()
+	await session.close()
 	await ctx.send(embed=embed)
 
 @client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
@@ -241,12 +243,12 @@ async def reverse(ctx, *, string: str):
 	await ctx.send(result, embed=embed)
 
 @client.command(aliases=['tod'], description="Truth Or Dare")
-async def truthordate(ctx, questype: str= "random"):
+async def truthordare(ctx, questype: str= "random"):
 	levels = ["Disgusting", "Stupid", "Normal", "Soft", "Sexy", "Hot"]
 	session = aiohttp.ClientSession()
 	async with session.get("https://raw.githubusercontent.com/sylhare/Truth-or-Dare/master/src/output.json") as r:
 		fj = json.loads(await r.text())
-	session.close()
+	await session.close()
 	if questype == "random":
 		number = random.randint(0, 553)
 		picked = fj[number]
@@ -286,7 +288,7 @@ async def wanted(ctx, member: discord.Member=None):
 		async with session.post("https://dagpi.tk/api/wanted", headers=headers) as response:
 			loaded_response = await response.text()
 		formatted_json = json.loads(loaded_response)
-		session.close()
+		await session.close()
 	if formatted_json['succes']:
 		embed = discord.Embed(title=f"{member.name} Wanted")
 		embed.set_image(url=formatted_json["url"])
@@ -303,7 +305,7 @@ async def hitler(ctx, member: discord.Member=None):
 		async with session.post("https://dagpi.tk/api/hitler", headers=headers) as response:
 			loaded_response = await response.text()
 		formatted_json = json.loads(loaded_response)
-		session.close()
+		await session.close()
 	if formatted_json['succes']:
 		embed = discord.Embed(title=f"{member.name} is Worse Than Hitler")
 		embed.set_image(url=formatted_json["url"])
@@ -321,7 +323,7 @@ async def tweet(ctx, member: discord.Member=None, *, text):
 		async with session.post("https://dagpi.tk/api/tweet", headers=headers) as response:
 			loaded_response = await response.text()
 		formatted_json = json.loads(loaded_response)
-		session.close()
+		await session.close()
 	if formatted_json['succes']:
 		embed = discord.Embed(title=f"{member.name} Posted a new tweet")
 		embed.set_image(url=formatted_json["url"])
@@ -336,7 +338,7 @@ async def covid(ctx, area: str="Global"):
 	async with ctx.typing():
 		async with session.get("https://api.covid19api.com/summary") as r:
 			formatted_json = json.loads(await r.text())
-	session.close()
+	await session.close()
 	if not area.lower() == "global":
 		for i in formatted_json['Countries']:
 			num += 1
@@ -437,7 +439,7 @@ async def gif(ctx, *, query: str):
 		async with session.get("https://api.tenor.com/v1/search?q=%s&key=%s&contentfilter=high&limit=%s" % (search_term, apikey, lmt)) as r:
 			gifs = json.loads(await r.text())
 			gif: str = gifs['results'][0]['media'][0]['gif']['url']
-	session.close()
+	await session.close()
 	embed = discord.Embed()
 	embed.set_image(url=gif)
 	embed.add_field(name="Link (click to see or long press to copy)", value=f"[click here]({gif})")
@@ -497,7 +499,7 @@ async def meme(ctx, *, text: str=None):
 		async with ctx.typing():
 			async with session.get(url) as response:
 				response_json = json.loads(await response.text())
-		session.close()
+		await session.close()
 		try:
 			masked_url = response_json['direct']['masked']
 		except:
@@ -672,7 +674,7 @@ async def spotify(ctx, *, member: discord.Member=None):
 			embed.set_footer(text="Track ID:" + activity.track_id)
 			await ctx.send(embed=embed)
 			successfull = True
-			session.close()
+			await session.close()
 		else:
 			successfull = False
 	if not successfull:
@@ -698,7 +700,7 @@ async def music(ctx, *, args):
 	async with ctx.typing():
 		async with session.get(url, headers=headers, params=querystring) as response:
 			formatted_response = json.loads(await response.text())
-	session.close()
+	await session.close()
 	data = formatted_response.get("data")[0]
 	
 	#song
@@ -760,7 +762,7 @@ async def colour(ctx, color: str):
 		hex = generated_color.replace('#', '')
 		async with session.get(f"http://www.thecolorapi.com/id?hex={hex}") as response:
 			data = json.loads(await response.text())
-		session.close()
+		await session.close()
 		color_name = data.get("name").get("value")
 		link = f"http://singlecolorimage.com/get/{hex}/1x1"
 		thumb =  f"http://singlecolorimage.com/get/{hex}/100x100"
@@ -882,7 +884,7 @@ async def synonyms(ctx, *, args):
 		embed.set_author(name=f"Synonyms for {args}")
 		async with session.get(f"https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key={api_key}&lang=en-en&text={args.lower()}") as response:
 			data = await response.json()
-		session.close()
+		await session.close()
 		num = 0
 		try:
 			synonyms = data.get("def")[0].get("tr")
@@ -908,7 +910,7 @@ async def urban(ctx, *, args):
 		async with ctx.typing():
 			async with session.get("https://mashape-community-urban-dictionary.p.rapidapi.com/define", params=params, headers=headers) as response:
 				parsed_json = json.loads(await response.text())
-			session.close()
+			await session.close()
 			try:
 				data = parsed_json.get("list")
 				for i in data:
@@ -967,7 +969,7 @@ async def quiz(ctx):
 	async with ctx.typing():
 		async with session.get("https://opentdb.com/api.php?amount=1&type=multiple") as response:
 			data = json.loads(await response.text())
-		session.close()
+		await session.close()
 		question = data.get("results")[0].get("question").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é")
 		embed.add_field(name=question, value="‌")
 		
@@ -1023,7 +1025,7 @@ async def translate(ctx, lang:str ="en", *, args):
 			try:
 				async with session.get(f"https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T062446Z.1e5abaa65939d784.390d015d69abbe56445b9ba840e7b556c709efd2&text={args}&lang={lang}") as response:
 					parsed_json = json.loads(await response.text())
-				session.close()
+				await session.close()
 				translation = parsed_json.get('text')[0]
 				embed.add_field(name=f"Translation of {args}", value=translation)
 			except:
@@ -1032,7 +1034,7 @@ async def translate(ctx, lang:str ="en", *, args):
 		else:
 			async with session.get(f"https://translate.yandex.net/api/v1.5/tr.json/getLangs?ui=en&key=trnsl.1.1.20200414T062446Z.1e5abaa65939d784.390d015d69abbe56445b9ba840e7b556c709efd2&") as response:
 				parsed_json = json.loads(await response.text())
-			session.close()
+			await session.close()
 			for i in parsed_json.get("langs"):
 				parsed_langs = parsed_json.get("langs")[i]
 				languages = f"{i}  --->  {parsed_langs} \n" 
