@@ -162,7 +162,6 @@ async def waifu(ctx):
 	except asyncio.TimeoutError:
 		return
 	else:
-		await ctx.send(f"\\{str(reaction.emoji)}")
 		if str(reaction.emoji) == "\u2764\ufe0f":
 			return await ctx.send(f"{ctx.author.mention} is now married with {name}")
 
@@ -975,7 +974,7 @@ async def quiz(ctx):
 	session = aiohttp.ClientSession() 
 	def check(message = discord.Message):
 		if not message.author.bot:
-			return message.author == ctx.message.author and messagr.channel.id == ctx.channel.id and str(message.content).strip().lower() == correct_answer
+			return message.author == ctx.message.author and message.channel.id == ctx.channel.id
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
@@ -1020,13 +1019,16 @@ async def quiz(ctx):
 			embed.add_field(name="D", value=data.get("results")[0].get("correct_answer").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 	await ctx.send(embed=embed)
 	try:
-		reaction, user = await client.wait_for('message', timeout=20.0, check=check)
+		message, user = await client.wait_for('message', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
 		if not answered:
 			await ctx.message.channel.send('You didn\’t answer in time')
 	else:
 		if not answered:
-			await ctx.message.channel.send('Correct you big brain')
+			if str(message.content).strip().lower() == correct_answer:
+				await ctx.message.channel.send('Correct you big brain')
+			else:
+				await ctx.send(f"Poo Poo Brain xD, Correct amswer was {correct_answer.upper()}")
 			answered = True
 		    		      
 @client.command(description="Translate a text")
