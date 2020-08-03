@@ -149,7 +149,6 @@ async def waifu(ctx):
 			name = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[4].split(',')[0] + '}')['name']
 			gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
 		embed = discord.Embed(title=name)
-		embed.set_footer(text=gender)
 		embed.set_image(url=image_url)
 	await session.close()
 	message = await ctx.send(embed=embed)
@@ -163,7 +162,7 @@ async def waifu(ctx):
 		return
 	else:
 		if str(reaction.emoji) == "\u2764\ufe0f":
-			embed.set_footer(icon_url=ctx.author.icon_url, text=f"Taken by {ctx.author.name}")
+			embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Taken by {ctx.author.name}")
 			await message.edit(embed=embed)
 			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name}** :couple_with_heart:")
 
