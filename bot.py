@@ -153,7 +153,7 @@ async def waifu(ctx):
 		embed.set_image(url=image_url)
 	await session.close()
 	message = await ctx.send(embed=embed)
-	await message.add_reaction("heart")
+	await message.add_reaction("\u2764")
 	def check(r, u):  # r = discord.Reaction, u = discord.Member or discord.User.
 		return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id and \
 			str(r.emoji) == ":heart:"  # only fire when detect those reactions.
