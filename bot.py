@@ -155,15 +155,14 @@ async def waifu(ctx):
 	message = await ctx.send(embed=embed)
 	await message.add_reaction("\u2764\ufe0f")
 	def check(r, u):  # r = discord.Reaction, u = discord.Member or discord.User.
-		return True #u.id == ctx.author.id and r.message.channel.id == ctx.channel.id #and \
-			#str(r.emoji) == ":heart:"  # only fire when detect those reactions.
+		return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id
 
 	try:
 		reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
 	except asyncio.TimeoutError:
 		return
 	else:
-		await ctx.send(f"```{str(reaction.emoji)}```")
+		await ctx.send(f"\\{str(reaction.emoji)}")
 		if str(reaction.emoji) == "\u2764\ufe0f":
 			return await ctx.send(f"{ctx.author.mention} is now married with {name}")
 
