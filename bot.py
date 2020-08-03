@@ -139,13 +139,15 @@ def pad(to_pad):
 @client.command(description="Sends a waifu")
 async def waifu(ctx):
 	session = aiohttp.ClientSession()
+	gender = "male"
 	async with ctx.typing():
-		async with session.get('https://mywaifulist.moe/random') as resp:
-			response = await resp.text()
-		soup = BeautifulSoup(response, 'html.parser')
-		image_url = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[3].split(',')[0] + '}')['image']
-		name = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[4].split(',')[0] + '}')['name']
-		gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
+		while gender == "male":
+			async with session.get('https://mywaifulist.moe/random') as resp:
+				response = await resp.text()
+			soup = BeautifulSoup(response, 'html.parser')
+			image_url = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[3].split(',')[0] + '}')['image']
+			name = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[4].split(',')[0] + '}')['name']
+			gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
 		embed = discord.Embed(title=name)
 		embed.set_footer(text=gender)
 		embed.set_image(url=image_url)
