@@ -122,6 +122,7 @@ async def on_command_error(ctx, error):
 		channel = guild.get_channel(739673341388128266)
 		embed = discord.Embed()
 		embed.set_author(name="Error")
+		embed.add_field(name="User", value=ctx.message.author)
 		embed.add_field(name="Guild", value=ctx.guild.name)
 		embed.add_field(name="Message", value=ctx.message.content)
 		embed.add_field(name="Error", value=f"```{str(error)}```")
