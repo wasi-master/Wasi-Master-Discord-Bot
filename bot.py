@@ -146,7 +146,8 @@ async def waifu(ctx):
 		image_url = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[3].split(',')[0] + '}')['image']
 		name = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[4].split(',')[0] + '}')['name']
 		gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
-		embed = discord.Embed()
+		embed = discord.Embed(title=name)
+		embed.set_footer(text=gender)
 		embed.set_image(url=image_url)
 	await session.close()
 	await ctx.send(embed=embed)
