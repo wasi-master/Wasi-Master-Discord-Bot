@@ -117,20 +117,30 @@ async def on_command_error(ctx, error):
 		pass
 	elif "Cannot send messages to this user" in str(error):
 		pass
-	
 	else:
-		botmsg = await ctx.send(f"Welp, The command was unsuccessful for this reason:\n```{error}```\nIf you can't understand why this happens, ask Wasi Master#4245 or join the bot support server (you can get the invite with the support command)")
-		guild = client.get_guild(576016234152198155)
-		channel = guild.get_channel(739673341388128266)
-		embed = discord.Embed()
-		embed.set_author(name="Error")
-		embed.add_field(name="User", value=ctx.message.author)
-		embed.add_field(name="Guild", value=ctx.guild.name)
-		embed.add_field(name="Message", value=ctx.message.content)
-		embed.add_field(name="Error", value=f"```{str(error)}```")
-		embed.add_field(name="Message Links", value=f"[User Message]({ctx.message.jump_url})\n[Bot Message]({botmsg.jump_url})")
-		await channel.send(embed = embed)
-		
+		botembed = discord.Embed(description=f"Welp, The command was unsuccessful for this reason:\n```{error}```\nReact with :white_check_mark: to report the error to the support server\nIf you can't understand why this happens, ask Wasi Master#4245 or join the bot support server (you can get the invite with the support command)")
+		message = await ctx.send(embed=botembed)
+		await message.add_reaction("\u2705")
+		def check(r, u):  # r = discord.Reaction, u = discord.Member or discord.User.
+			return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id
+		try:
+			reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
+		except asyncio.TimeoutError:
+			return
+		else:
+			if str(reaction.emoji) == "\u2705":
+				botembed.set_footer(icon_url=ctx.author.avatar_url, text="Reported to The Support Server")
+				await message.edit(embed=embed)
+				guild = client.get_guild(576016234152198155)
+				channel = guild.get_channel(739673341388128266)
+				embed = discord.Embed()
+				embed.set_author(name="Error")
+				embed.add_field(name="User", value=ctx.message.author)
+				embed.add_field(name="Guild", value=ctx.guild.name)
+				embed.add_field(name="Message", value=ctx.message.content)
+				embed.add_field(name="Error", value=f"```{str(error)}```")
+				embed.add_field(name="Message Links", value=f"[User Message]({ctx.message.jump_url})\n[Bot Message]({botmsg.jump_url})")
+				await channel.send(embed = embed)
 		raise error
 
 def pad(to_pad):
