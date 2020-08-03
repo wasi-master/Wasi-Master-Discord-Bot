@@ -136,6 +136,30 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+######## MESSAGE ########
+
+@bot.command()
+async def lol(ctx):
+    await ctx.send("send your name in 69 seconds")
+
+    def check(m):  # m = discord.Message.
+        return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
+    try:
+        name = await bot.wait_for('message', check = check, timeout = 69)
+    except asyncio.TimeoutError:
+        await ctx.send(f"you didnt respond in 69 seconds :( {ctx.author}!")
+        return
+    else:
+        await ctx.send(f"i see {ctx.author} your name is {name.content}")
+        return
+
+
+######## REACTION ########
+
+@bot.command()
+async def lol(ctx):
+    await ctx.send("react with :white_check_mark: or :x: in 69 seconds")
 @client.command(description="Sends a waifu")
 async def waifu(ctx):
 	session = aiohttp.ClientSession()
@@ -152,7 +176,20 @@ async def waifu(ctx):
 		embed.set_footer(text=gender)
 		embed.set_image(url=image_url)
 	await session.close()
-	await ctx.send(embed=embed)
+	message = await ctx.send(embed=embed)
+	await message.add_reaction("heart")
+		def check(r, u):  # r = discord.Reaction, u = discord.Member or discord.User.
+		return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id and \
+			str(r.emoji) == ":heart:"  # only fire when detect those reactions.
+
+	try:
+		reaction, user = await bot.wait_for('reaction_add', check = check, timeout = 10)
+	except asyncio.TimeoutError:
+		return
+	else:
+		if str(reaction.emoji) == ":heart:":
+			return await ctx.send(f"{ctx.author.mention} is now married with {name}")
+
 
 @client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
 async def emoji(ctx, *, name:str): 
