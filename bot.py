@@ -169,7 +169,7 @@ async def waifu(ctx):
 			image_url = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[3].split(',')[0] + '}')['image']
 			name = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[4].split(',')[0] + '}')['name']
 			gender = ast.literal_eval('{' + str(soup.find("script", type="application/ld+json")).split('\n      ')[5].split(',')[0] + '}')['gender']
-		embed = discord.Embed(title=name)
+		embed = discord.Embed(title=name.replace("&quot;", "\""))
 		embed.set_image(url=image_url)
 	await session.close()
 	message = await ctx.send(embed=embed)
@@ -180,12 +180,12 @@ async def waifu(ctx):
 	try:
 		reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
 	except asyncio.TimeoutError:
-		return
+		return await message.clear_reactions()
 	else:
 		if str(reaction.emoji) == "\u2764\ufe0f":
 			embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Claimed by {ctx.author.name}")
 			await message.edit(embed=embed)
-			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name}** :couple_with_heart:")
+			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name.replace('&quot;', '\"')}** :couple_with_heart:")
 
 
 @client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
