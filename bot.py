@@ -136,6 +136,17 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+
+
+@client.command(aliases=["randomfact", "rf", " f"], description="Get a random fact")
+async def fact(ctx):
+	session = aiohttp.ClientSession()
+	async with session.get("https://uselessfacts.jsph.pl/random.json?language=en") as resp:
+		fj = json.loads(await resp.text())
+	embed=discord.Embed(title="Random Fact", value=fj["text"])
+	await ctx.send(embed=embed)
+	await session.close()
+
 @client.command(description="Sends a waifu")
 async def waifu(ctx):
 	session = aiohttp.ClientSession()
@@ -162,7 +173,7 @@ async def waifu(ctx):
 		return
 	else:
 		if str(reaction.emoji) == "\u2764\ufe0f":
-			embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Taken by {ctx.author.name}")
+			embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Claimed by {ctx.author.name}")
 			await message.edit(embed=embed)
 			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name}** :couple_with_heart:")
 
