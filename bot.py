@@ -160,7 +160,7 @@ async def emoji(ctx, *, name:str):
 
 @client.command(description="See your or other peoples permissions", aliases=["permissions"], usage="perms `[@mention]`\n\nperms\nperms @Wasi Master")
 async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=None):
-	mod = member.permissions_in(ctx.channel)["manage_roles"]
+	mod = ctx.author.permissions_in(ctx.channel)["manage_roles"]
 	if mod:
 		member = member or ctx.author
 	else:
