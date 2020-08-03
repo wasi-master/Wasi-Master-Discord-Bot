@@ -169,11 +169,10 @@ async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=Non
 	perms = dict(perms)
 	for i in perms:
 		if perms[i]:
-			permstr += f"{i.replace('_', ' ' ).title()}  <:enableonx:723926397869097072><:enableonx:723926397869097072>\n"
+			permstr += f"{i.replace('_', ' ' ).title()}  <:greenTick:596576670815879169>\n"
 		else:
-			pass
-			#permstr += f"{i.replace('_', ' ' ).title()}  <:disableonx:723926397642473534><:disableont:723926397784948809>\n"
-	embed = discord.Embed(title=f"{member}'s Available Permissions", description=permstr)
+			permstr += f"{i.replace('_', ' ' ).title()}  <:redTick:596576672149667840>\n"
+	embed = discord.Embed(title=f"{member}'s Permissions", description=permstr)
 	await ctx.send(embed=embed)
 
 @client.command(aliases=["fm"],description="Shows the first message in a channel")
