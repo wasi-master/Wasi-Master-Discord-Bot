@@ -130,7 +130,7 @@ async def on_command_error(ctx, error):
 		else:
 			if str(reaction.emoji) == "\u2705":
 				botembed.set_footer(icon_url=ctx.author.avatar_url, text="Reported to The Support Server")
-				await message.edit(embed=embed)
+				await message.edit(embed=botembed)
 				guild = client.get_guild(576016234152198155)
 				channel = guild.get_channel(739673341388128266)
 				embed = discord.Embed()
