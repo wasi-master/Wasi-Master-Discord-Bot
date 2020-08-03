@@ -255,22 +255,6 @@ async def truthordare(ctx, questype: str= "random"):
 		level = levels[int(picked['level'])]
 		sum = picked["summary"]
 		type = picked["type"]
-	elif questype == "truth":
-		type = None
-		while type != "truth":
-			number = random.randint(0, 553)
-			picked = fj[number]
-			level = levels[int(picked['level'])]
-			sum = picked["summary"]
-			type = picked["type"]
-	elif questype == "dare":
-			type = None
-			while type != "dare":
-				number = random.randint(0, 553)
-				picked = fj[number]
-				level = levels[int(picked['level'])]
-				sum = picked["summary"]
-				type = picked["type"]
 	else:
 		return
 	embed = discord.Embed()
