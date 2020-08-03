@@ -1207,7 +1207,7 @@ async def unban(ctx, *, member: str):
         
 
 @client.command(aliases=['ui', 'whois', 'wi'], description="Shows info about a user")
-async def userinfo(ctx, member: discord.Member=None):
+async def userinfo(ctx, *, member: discord.Member=None):
     member = member or ctx.message.author
     
     roles = [role for role in member.roles]
