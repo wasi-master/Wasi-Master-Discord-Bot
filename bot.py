@@ -143,7 +143,7 @@ async def fact(ctx):
 	session = aiohttp.ClientSession()
 	async with session.get("https://uselessfacts.jsph.pl/random.json?language=en") as resp:
 		fj = json.loads(await resp.text())
-	embed=discord.Embed(title="Random Fact", value=fj["text"])
+	embed=discord.Embed(title="Random Fact", description=fj["text"])
 	await ctx.send(embed=embed)
 	await session.close()
 
