@@ -163,7 +163,7 @@ async def waifu(ctx):
 	except asyncio.TimeoutError:
 		return
 	else:
-		if str(reaction.emoji) == ":heart:":
+		if str(reaction.emoji) == "\u2764\ufe0f":
 			return await ctx.send(f"{ctx.author.mention} is now married with {name}")
 
 
