@@ -117,7 +117,7 @@ async def on_command_error(ctx, error):
 		pass
 	
 	else:
-		await ctx.send(f"Welp, The command was unsuccessful for this reason:\n```{error}```\nIf you can't understand why this happens, ask Wasi Master#4245 or join the bot support server (you can get the invite with the support command)")
+		botmsg = await ctx.send(f"Welp, The command was unsuccessful for this reason:\n```{error}```\nIf you can't understand why this happens, ask Wasi Master#4245 or join the bot support server (you can get the invite with the support command)")
 		guild = client.get_guild(576016234152198155)
 		channel = guild.get_channel(739673341388128266)
 		embed = discord.Embed()
@@ -126,6 +126,7 @@ async def on_command_error(ctx, error):
 		embed.add_field(name="Guild", value=ctx.guild.name)
 		embed.add_field(name="Message", value=ctx.message.content)
 		embed.add_field(name="Error", value=f"```{str(error)}```")
+		embed.add_field(name="Links"Links, value=f"[User Message]({ctx.message.jump_url}\n[Bot Message]({botmsg.jump_url})")
 		await channel.send(embed = embed)
 		
 		raise error
