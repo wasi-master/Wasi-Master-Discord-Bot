@@ -169,9 +169,9 @@ async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=Non
 	perms = dict(perms)
 	for i in perms:
 		if perms[i]:
-			permstr += f"{i.replace('_', ' ' ).title()}\n"
+			permstr += f"{i.replace('_', ' ' ).title()}  <:enableonx:723926397869097072><:enableonx:723926397869097072>\n"
 		else:
-			continue
+			permstr += f"{i.replace('_', ' ' ).title()}  <:disableonx:723926397642473534><:disableont:723926397784948809>\n"
 	embed = discord.Embed(title=f"{member}'s Available Permissions", description=permstr)
 	await ctx.send(embed=embed)
 
