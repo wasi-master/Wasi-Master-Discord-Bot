@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext import tasks
 from discord.ext.commands import has_permissions
+from discord.ext.commands.cooldowns import BucketType
 import json
 import random
 import randomcolor
@@ -146,7 +147,15 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-
+@client.command()
+@commands.cooldown(1, 3600, type=BucketType.default)
+async def upscale(ctx, *, member:discord.Member):
+	session = aiohttp.ClientSession()
+	async with ctx.typing():
+		async with session.post("https://api.deepai.org/api/torch-srgan",data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
+			fj = json.loads(await resp.text())
+		url = fj["output_url"]
+	await ctx.send(url)
 
 @client.command(aliases=["randomfact", "rf", " f"], description="Get a random fact")
 async def fact(ctx):
