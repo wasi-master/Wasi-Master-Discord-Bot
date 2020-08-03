@@ -163,7 +163,9 @@ async def waifu(ctx):
 		return
 	else:
 		if str(reaction.emoji) == "\u2764\ufe0f":
-			return await ctx.send(f"{ctx.author.mention} is now married with {name}")
+			embed.set_footer(f"Taken by {ctx.author.name}")
+			await message.edit(embed=embed)
+			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name}** :couple_with_heart:")
 
 
 @client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
