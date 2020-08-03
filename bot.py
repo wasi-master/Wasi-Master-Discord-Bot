@@ -185,7 +185,7 @@ async def waifu(ctx):
 		if str(reaction.emoji) == "\u2764\ufe0f":
 			embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Claimed by {ctx.author.name}")
 			await message.edit(embed=embed)
-			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name.replace('&quot;', '\"')}** :couple_with_heart:")
+			return await ctx.send(f":couple_with_heart: {ctx.author.mention} is now married with **{name.replace('&quot;', '')}** :couple_with_heart:")
 
 
 @client.command(description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`", usage="emoji `<name>`\n\nemoji hyper_pinged")
