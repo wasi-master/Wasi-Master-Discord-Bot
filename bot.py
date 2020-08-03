@@ -147,16 +147,17 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@client.command()
+@client.command(aliases=["upscaled"], description="Upscales a users profile picture")
 @commands.cooldown(1, 3600, type=BucketType.default)
 async def upscale(ctx, *, member:discord.Member=None):
 	member = member or ctx.author
 	session = aiohttp.ClientSession()
-	async with ctx.typing():
-		async with session.post("https://api.deepai.org/api/torch-srgan",data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
-			fj = json.loads(await resp.text())
+	message = await ctx.send("May take up to 15 seconds, Wait till then")
+	async with session.post("https://api.deepai.org/api/torch-srgan",data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
+		fj = json.loads(await resp.text())
 		url = fj["output_url"]
-		await session.close()
+	await session.close()
+	await message.delete()
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author.name}'s Profile Picture Upscaled")
 	embed.set_image(url=url)
