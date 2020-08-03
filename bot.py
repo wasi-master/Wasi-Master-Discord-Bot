@@ -155,7 +155,7 @@ async def waifu(ctx):
 	message = await ctx.send(embed=embed)
 	await message.add_reaction("\u2764\ufe0f")
 	def check(r, u):  # r = discord.Reaction, u = discord.Member or discord.User.
-		return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id #and \
+		return True #u.id == ctx.author.id and r.message.channel.id == ctx.channel.id #and \
 			#str(r.emoji) == ":heart:"  # only fire when detect those reactions.
 
 	try:
@@ -976,7 +976,7 @@ async def quiz(ctx):
 	session = aiohttp.ClientSession() 
 	def check(message = discord.Message):
 		if not message.author.bot:
-			return message.author == ctx.message.author and str(message.content).strip().lower() == correct_answer
+			return message.author == ctx.message.author and messagr.channel.id == ctx.channel.id and str(message.content).strip().lower() == correct_answer
 	
 	embed = discord.Embed()
 	embed.set_author(name=f"{ctx.author}\'s Quiz")
@@ -1024,7 +1024,7 @@ async def quiz(ctx):
 		reaction, user = await client.wait_for('message', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
 		if not answered:
-			await ctx.message.channel.send('You didn\’t answer in time ')
+			await ctx.message.channel.send('You didn\’t answer in time')
 	else:
 		if not answered:
 			await ctx.message.channel.send('Correct you big brain')
