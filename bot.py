@@ -159,7 +159,7 @@ async def waifu(ctx):
 			str(r.emoji) == ":heart:"  # only fire when detect those reactions.
 
 	try:
-		reaction, user = await bot.wait_for('reaction_add', check = check, timeout = 10)
+		reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
 	except asyncio.TimeoutError:
 		return
 	else:
