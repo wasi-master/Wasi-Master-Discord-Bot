@@ -160,8 +160,15 @@ async def emoji(ctx, *, name:str):
 
 @client.command(description="See your or other peoples permissions", aliases=["permissions"], usage="perms `[@mention]`\n\nperms\nperms @Wasi Master")
 async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=None):
-	member = member or ctx.author
-	channel = channel or ctx.channel
+	mod = member.permissions_in(ctx.channel)["manage_roles"]
+	if mod:
+		member = member or ctx.author
+	else:
+		member = ctx.author
+	if mod:
+		channel = channel or ctx.channel
+	else:
+		channel = ctx.channel
 	perms = []
 	permstr = ""
 	for i in member.permissions_in(channel):
@@ -169,9 +176,10 @@ async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=Non
 	perms = dict(perms)
 	for i in perms:
 		if perms[i]:
-			permstr += f"{i.replace('_', ' ' ).title()}  <:greenTick:596576670815879169>\n"
+			permstr += f"<:greenTick:596576670815879169> {i.replace('_', ' ' ).title()}\n"
 		else:
-			permstr += f"{i.replace('_', ' ' ).title()}  <:redTick:596576672149667840>\n"
+			continue 
+			#permstr += f"{i.replace('_', ' ' ).title()}  <:redTick:596576672149667840>\n"
 	embed = discord.Embed(title=f"{member}'s Permissions", description=permstr)
 	await ctx.send(embed=embed)
 
