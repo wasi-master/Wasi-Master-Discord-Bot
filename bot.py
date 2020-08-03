@@ -164,7 +164,13 @@ async def perms(ctx, member:discord.Member=None, channel:discord.TextChannel=Non
 	if mod:
 		member = member or ctx.author
 	else:
-		member = ctx.author
+		if not member is None:
+			if member.bot:
+				member = member
+			else:
+				pass
+		else:
+			member = ctx.author
 	if mod:
 		channel = channel or ctx.channel
 	else:
