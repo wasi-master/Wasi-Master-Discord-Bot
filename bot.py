@@ -149,13 +149,18 @@ def pad(to_pad):
 
 @client.command()
 @commands.cooldown(1, 3600, type=BucketType.default)
-async def upscale(ctx, *, member:discord.Member):
+async def upscale(ctx, *, member:discord.Member=None):
+	member = member or ctx.author
 	session = aiohttp.ClientSession()
 	async with ctx.typing():
 		async with session.post("https://api.deepai.org/api/torch-srgan",data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
 			fj = json.loads(await resp.text())
 		url = fj["output_url"]
-	await ctx.send(url)
+		await session.close()
+	embed = discord.Embed()
+	embed.set_author(name=f"{ctx.author.name}'s Profile Picture Upscaled")
+	embed.set_image(url=url)
+	await ctx.send(embed=embed)
 
 @client.command(aliases=["randomfact", "rf", " f"], description="Get a random fact")
 async def fact(ctx):
