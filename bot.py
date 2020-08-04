@@ -1192,7 +1192,7 @@ async def quiz(ctx):
 		
 		category = data.get('results')[0].get('category').replace("Entertainment: ", "").replace("Science: ", "")
 		embed.add_field(name="Category", value=category)
-		correct_answer = ""
+		correct_answer = "not found"
 		randomint = random.randint(0, 4)
 		if randomint == 1:
 			correct_answer = "a"
@@ -1229,7 +1229,7 @@ async def quiz(ctx):
 			if str(message.content).strip().lower() == correct_answer:
 				await ctx.message.channel.send('Correct you big brain')
 			else:
-				await ctx.send(f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()}")
+				await ctx.send(f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({randomint}th)")
 			answered = True
 		    		      
 @client.command(description="Translate a text")
