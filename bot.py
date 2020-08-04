@@ -147,6 +147,19 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+@client.command()
+async def suggest(ctx, *, suggestion: str):
+	guild = client.get_guild(576016234152198155)
+	channel = guild.get_channel(740071107041689631)
+	embed = discord.Embed()
+	embed.set_author(name="Suggestion Added")
+	embed.add_field(name="User", value=ctx.message.author)
+	embed.add_field(name="Guild", value=ctx.guild.name)
+	embed.add_field(name="Suggestion", value=f"```{str(suggestion)}```")
+	msg = await channel.send(embed=embed)
+	msg.add_reaction("\u1f53c")
+	msg.add_reaction("\u1f53d")
+
 @client.command(aliases=["upscaled"], description="Upscales a users profile picture")
 @commands.cooldown(1, 3600, type=BucketType.default)
 async def upscale(ctx, scaletype, *, member:discord.Member=None):
