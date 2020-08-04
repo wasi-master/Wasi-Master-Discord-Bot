@@ -212,6 +212,7 @@ async def screenshot(ctx, website:str):
             embed = discord.Embed(title=data["website"], url=website)
             embed.set_image(url=data["snapshot"])
         await ctx.send(embed=embed)
+        session.close()
 
 
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
