@@ -196,6 +196,22 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(
+    aliases=["ss"],
+    description="Takes a sceenshit of a website"
+)
+async def screenshot(ctx, website:str):
+    session = aiohttp.ClientSession()
+    async with session.get(
+        "https://magmafuck.herokuapp.com/api/v1",
+        headers={"website": website}
+    ) as response:
+        data = await response.json()
+        embed = discord.Embed(title=data["website"], url=website)
+        embed.set_image(url=data["snapshot"])
+        await ctx.send(embed=embed)
+
+
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
 async def channelinfo(ctx, channel: discord.TextChannel = None):
     channel = channel or ctx.channel
