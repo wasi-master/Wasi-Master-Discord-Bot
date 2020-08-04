@@ -142,7 +142,10 @@ async def on_command_error(ctx, error):
 		try:
 			reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
 		except asyncio.TimeoutError:
-			return await message.clear_reactions()
+			try:
+				return await message.clear_reactions()
+			except:
+				return await message.remove_reaction("\u2705", ctx.guild.me)
 		else:
 			if str(reaction.emoji) == "\u2705":
 				botembed.set_footer(icon_url=ctx.author.avatar_url, text="Reported to The Support Server")
@@ -330,7 +333,10 @@ async def waifu(ctx):
 	try:
 		reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
 	except asyncio.TimeoutError:
-		return await message.clear_reactions()
+		try:
+			return await message.clear_reactions()
+		except:
+			return await message.remove_reaction("\u2764\ufe0f", ctx.guild.me)
 	else:
 		if str(reaction.emoji) == "\u2764\ufe0f":
 			embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Claimed by {ctx.author.name}")
