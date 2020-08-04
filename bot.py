@@ -574,7 +574,7 @@ async def boosters(ctx):
 	peoples = []
 	for i in ctx.message.guild.premium_subscribers:
 		peoples.append(i.name)
-	await paginator()
+	await paginator(ctx, peoples)
 	
 
 @client.command(description="Invert your or another users profile picture")
