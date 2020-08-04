@@ -1029,7 +1029,7 @@ async def ping(ctx):
 @client.command(aliases=['synonym'], description="Sends synomyms for a word")
 async def synonyms(ctx, *, args):
 	api_key = "dict.1.1.20200701T101603Z.fe245cbae2db542c.ecb6e35d1120ee008541b7c1f962a6d964df61dd"
-	session = aiohttp.ClientSession
+	session = aiohttp.ClientSession()
 	async with ctx.typing():
 		embed = discord.Embed(timestamp=ctx.message.created_at)
 		embed.set_author(name=f"Synonyms for {args}")
