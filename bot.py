@@ -28,13 +28,13 @@ def get_prefix(client, message):
         with open("prefixes.json", "r") as f:
             prefixes = json.load(f)
         return prefixes[str(message.guild.id)]
-    except:
+    except KeyError:
         return ","
 
 
 def convert_sec_to_min(seconds):
-    min, sec = divmod(seconds, 60)
-    return "%02d:%02d" % (min, sec)
+    minutes, sec = divmod(seconds, 60)
+    return "%02d:%02d" % (minutes, sec)
 
 
 def get_p(prog, num=0):
@@ -192,52 +192,6 @@ async def on_command_error(ctx, error):
 
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
-
-
-async def paginator(ctx, entries, limit=5):
-    pages = []
-    my_list = []
-    for i in entries:
-        my_list.append(i)
-    for i in range(0, (len(my_list)), int(limit)):
-        pages.append(tuple(my_list[i : i + int(limit)]))
-    c = pages
-
-    content = ""
-    for i in c[0]:
-        content += str(i) + "\n"
-    k = await ctx.send(content)
-
-    def check(reaction, user):
-        return user == ctx.author and reaction.message.id == k.id
-
-    reactions = ["\u25c0\ufe0f", "\u25b6\ufe0f"]
-    next, prev = reactions
-    for i in reactions:
-        await k.add_reaction(i)
-    pages = 0
-    while True:
-        try:
-            a = await ctx.bot.wait_for("reaction_add", timeout=15, check=check)
-        except asyncio.TimeoutError:
-            try:
-                await k.clear_reactions()
-            except:
-                await k.remove_reaction(ctx.guild.me, "\u25c0\ufe0f")
-                await k.remove_reaction(ctx.guild.me, "\u25b6\ufe0f")
-        if str(a[0]) == next:
-            pages += 1
-            content = ""
-            for i in c[pages]:
-                content += str(i) + "\n"
-            await k.edit(content=content)
-            continue
-        if str(a[0]) == prev:
-            pages -= 1
-            content = ""
-            for i in c[pages]:
-                content += str(i) + "\n"
-            await k.edit(content=content)
 
 
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
@@ -590,14 +544,14 @@ async def truthordare(ctx, questype: str = "random"):
         number = secureRandom.randint(0, 553)
         picked = fj[number]
         level = levels[int(picked["level"])]
-        sum = picked["summary"]
-        type = picked["type"]
+        summary = picked["summary"]
+        quesiontype = picked["type"]
     else:
         return
     embed = discord.Embed()
-    embed.set_author(name=sum)
+    embed.set_author(name=summary)
     embed.add_field(name="Level", value=level)
-    embed.add_field(name="Type", value=type)
+    embed.add_field(name="Type", value=questiontype)
     await ctx.send(embed=embed)
 
 
@@ -991,7 +945,7 @@ async def info(ctx):
         value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total)))*100}",
     )
     with codecs.open("bot.py", "r", "utf-8") as f:
-        for i, l in enumerate(f):
+        for l in enumerate(f):
             if (
                 l.strip().startswith("#") or len(l.strip()) == 0
             ):  # skip commented lines.
@@ -1061,10 +1015,10 @@ async def spotify(ctx, *, member: discord.Member = None):
                 while 'window["ytInitialData"]' not in response:
                     response = requests.get(url).text
 
-            results = parse_html(response)
-            if max_results is not None and len(results) > max_results:
-                return results[:max_results]
-            return results
+                results = parse_html(response)
+                if max_results is not None and len(results) > max_results:
+                    return results[:max_results]
+                return results
             videos = search()
             embed = discord.Embed(color=activity.color)
             embed.set_thumbnail(
