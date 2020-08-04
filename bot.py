@@ -200,15 +200,17 @@ def pad(to_pad):
     aliases=["ss"],
     description="Takes a sceenshit of a website"
 )
+@commands.cooldown(1, 30, BucketType.default)
 async def screenshot(ctx, website:str):
-    session = aiohttp.ClientSession()
-    async with session.get(
-        "https://magmafuck.herokuapp.com/api/v1",
-        headers={"website": website}
-    ) as response:
-        data = await response.json()
-        embed = discord.Embed(title=data["website"], url=website)
-        embed.set_image(url=data["snapshot"])
+    async with ctx.typing():
+        session = aiohttp.ClientSession()
+        async with session.get(
+            "https://magmafuck.herokuapp.com/api/v1",
+            headers={"website": website}
+        ) as response:
+            data = await response.json()
+            embed = discord.Embed(title=data["website"], url=website)
+            embed.set_image(url=data["snapshot"])
         await ctx.send(embed=embed)
 
 
