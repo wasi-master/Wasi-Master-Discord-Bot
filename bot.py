@@ -147,8 +147,8 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@client.command()
-async def suggest(ctx, *, suggestion: str):
+@client.command(aliases=["sug"], description="Suggest a thing to be added to the bot")
+async def suggest(ctx, *, suggestion: commands.clean_content):
 	guild = client.get_guild(576016234152198155)
 	channel = guild.get_channel(740071107041689631)
 	embed = discord.Embed()
