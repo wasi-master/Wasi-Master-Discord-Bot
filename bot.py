@@ -1319,7 +1319,7 @@ async def userinfo(ctx, *, member: discord.Member=None):
     	member_type = ':blond_haired_man: Human'
     else:
     	member_type = ':robot: Robot'
-    embed.add_field(name="Type", value=member_type})
+    embed.add_field(name="Type", value=member_type)
 
     await ctx.send(embed=embed)
 
