@@ -188,13 +188,40 @@ async def nuke(ctx, channel:discord.TextChannel=None):
 	else:
 		if name.content == "yes":
 			message = await ctx.send(f"Okay, Nuking {channel.name}...")
-			await channel.clone(reason=f"Nuked by {ctx.author}")
+			position = channel.position
+			await channel.delete()
+			newchannel = await channel.clone(reason=f"Nuked by {ctx.author}")
 			await message.delete()
+			newchannel.edit(position=position)
 			await ctx.send("Channel Nuked")
 		elif name.content == "no":
 			return await ctx.send("Okay then")
 		else:
 			return await ctx.send("I was hoping for `yes` or `no` but you said something else :(")
+
+@client.command(aliases=["cln"], description="Clone a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ")
+@has_permissions(manage_channels=True)
+async def clone(ctx, channel:discord.TextChannel=None):
+	channel = channel or ctx.channel
+	await ctx.send("Are you sure you want to clone this channel?\n type `yes` to confirm or `no` to decline")
+	def check(m):  # m = discord.Message.
+		return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+	try:
+		name = await client.wait_for('message', check = check, timeout = 20)
+	except asyncio.TimeoutError:
+		await ctx.send(f"You didnt respond in 30 seconds :(\n{ctx.author.mention}!")
+		return
+	else:
+		if name.content == "yes":
+			message = await ctx.send(f"Okay, cloning {channel.name}...")
+			await channel.clone(reason=f"Cloned by {ctx.author}")
+			await message.delete()
+			await ctx.send("Channel Cloned")
+		elif name.content == "no":
+			return await ctx.send("Okay then")
+		else:
+			return await ctx.send("I was hoping for `yes` or `no` but you said something else :(")
+
 
 @client.command(aliases=["sug", "suggestion"], description="Suggest a thing to be added to the bot")
 async def suggest(ctx, *, suggestion: commands.clean_content):
