@@ -156,9 +156,10 @@ async def suggest(ctx, *, suggestion: commands.clean_content):
 	embed.add_field(name="User", value=ctx.message.author)
 	embed.add_field(name="Guild", value=ctx.guild.name)
 	embed.add_field(name="Suggestion", value=f"```{str(suggestion)}```")
-	msg = await channel.send(embed=embed)
-	msg.add_reaction("\u2b06\ufe0f")
-	msg.add_reaction("\u2b07\ufe0f")
+	message = await channel.send(embed=embed)
+	await ctx.send("Suggestion sent")
+	message.add_reaction("\u2b06\ufe0f")
+	#message.add_reaction("\u2b07\ufe0f")
 
 @client.command(aliases=["upscaled"], description="Upscales a users profile picture")
 @commands.cooldown(1, 3600, type=BucketType.default)
