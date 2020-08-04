@@ -209,11 +209,9 @@ async def screenshot(ctx, website:str):
             headers={"website": website}
         ) as response:
             data = await response.json()
-            text = await response.text()
             embed = discord.Embed(title=data["website"], url=website)
             embed.set_image(url=data["snapshot"])
         await ctx.send(embed=embed)
-        await ctx.send(text)
         session.close()
 
 
