@@ -159,7 +159,7 @@ async def on_command_error(ctx, error):
             return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id
 
         try:
-            reaction, user = await client.wait_for(
+            reaction = await client.wait_for(
                 "reaction_add", check=check, timeout=10
             )
         except asyncio.TimeoutError:
@@ -377,11 +377,11 @@ async def waifu(ctx):
         return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id
 
     try:
-        reaction, user = await client.wait_for("reaction_add", check=check, timeout=10)
+        reaction = await client.wait_for("reaction_add", check=check, timeout=10)
     except asyncio.TimeoutError:
         try:
             return await message.clear_reactions()
-        except:
+        except commands.MissingPermissions:
             return await message.remove_reaction("\u2764\ufe0f", ctx.guild.me)
     else:
         if str(reaction.emoji) == "\u2764\ufe0f":
@@ -1143,13 +1143,13 @@ async def colour(ctx, color: str):
     session = aiohttp.ClientSession()
     async with ctx.typing():
         generated_color = color
-        hex = generated_color.replace("#", "")
-        async with session.get(f"http://www.thecolorapi.com/id?hex={hex}") as response:
+        hexcol = generated_color.replace("#", "")
+        async with session.get(f"http://www.thecolorapi.com/id?hex={hexcol}") as response:
             data = json.loads(await response.text())
         await session.close()
         color_name = data.get("name").get("value")
-        link = f"http://singlecolorimage.com/get/{hex}/1x1"
-        thumb = f"http://singlecolorimage.com/get/{hex}/100x100"
+        link = f"http://singlecolorimage.com/get/{hexcol}/1x1"
+        thumb = f"http://singlecolorimage.com/get/{hexcol}/100x100"
         rgb = data.get("rgb").get("value")
         hex = data.get("hex").get("value")
         hsl = data["hsl"]["value"]
@@ -1165,7 +1165,7 @@ async def colour(ctx, color: str):
     embed.set_image(url=link)
     embed.set_thumbnail(url=thumb)
     embed.set_footer(text=f"Made for {ctx.author}")
-    embed.add_field(name="Hex", value=hex)
+    embed.add_field(name="Hex", value=hexcol)
     embed.add_field(name="RGB", value=rgb)
     embed.add_field(name="INT", value=intcol)
     embed.add_field(name="HSL", value=hsl)
@@ -1713,10 +1713,7 @@ async def helpcommand(ctx, command: str = None):
             embed.set_author(name=str(command))
 
             embed.add_field(name="Name", value=command_for_use.name)
-            try:
-                embed.add_field(name="Description", value=command_for_use.description)
-            except:
-                pass
+            embed.add_field(name="Description", value=command_for_use.description)
             if not len(aliases) == 0:
                 embed.add_field(name="Aliases", value=aliases[:-2])
             else:
