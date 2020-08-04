@@ -18,7 +18,6 @@ import aiohttp
 import codecs
 import os
 import ast
-import pathlib
 import difflib
 import urllib.parse
 import base64 as base64module
@@ -224,7 +223,8 @@ async def paginator(ctx, entries, limit=5):
             try:
                 await k.clear_reactions()
             except:
-                pass
+                await k.remove_reaction(ctx.guild.me, "\u25c0\ufe0f")
+                await k.remove_reaction(ctx.guild.me, "\u25b6\ufe0f")
         if str(a[0]) == next:
             pages += 1
             content = ""
@@ -350,7 +350,7 @@ async def upscale(ctx, scaletype, *, member: discord.Member = None):
     member = member or ctx.author
     if scaletype.lower() == "anime":
         url = "https://api.deepai.org/api/waifu2x"
-    elif scaletypr.lower() == "normal":
+    elif scaletype.lower() == "normal":
         url = "https://api.deepai.org/api/torch-srgan"
     else:
         await ctx.send("Invalid Format")
@@ -888,7 +888,6 @@ async def meme(ctx, *, text: str = None):
 async def youtube(ctx, *, args):
     search_terms = args
     max_results = 1
-    results = []
 
     def parse_html(response):
         results = []
@@ -1097,7 +1096,6 @@ async def spotify(ctx, *, member: discord.Member = None):
             embed.set_footer(text="Track ID:" + activity.track_id)
             await ctx.send(embed=embed)
             successfull = True
-            await session.close()
         else:
             successfull = False
     if not successfull:
@@ -1182,7 +1180,7 @@ async def randomcolour(ctx):
     embed.add_field(name="RGB", value=rgb)
     embed.add_field(name="INT", value=intcol)
     embed.set_footer(
-        text=f"You can use the color command to get more details about the color"
+        text="You can use the color command to get more details about the color"
     )
     await ctx.send(embed=embed)
 
@@ -1301,14 +1299,14 @@ async def choose(ctx, *, args):
     num = 0
     choices = ""
     embed = discord.Embed(timestamp=ctx.message.created_at)
-    embed.set_author(name=f"Choice Machine")
+    embed.set_author(name="Choice Machine")
     embed.set_footer(text=f"Asked by {ctx.author}")
     for i in mesglist:
         num += 1
         choices += f"`{i}`, "
-    embed.add_field(name=f"Choice {num}", value=f"{choices[:-2]}")
+    embed.add_field(name="Choice {num}", value=f"{choices[:-2]}")
     embed.add_field(name="‌", value="‌")
-    embed.add_field(name=f"**Chosen**", value=f"{random.choice(mesglist)}")
+    embed.add_field(name="**Chosen**", value=f"{random.choice(mesglist)}")
     await ctx.send(embed=embed)
 
 
@@ -1396,7 +1394,7 @@ async def urban(ctx, *, args):
                             .replace("]", "**"),
                         )
                     else:
-                        embed.add_field(name=definition[0:1024], value="‌")
+                        embed.add_field(name=i.get("definition")[0:1024], value="‌")
             except:
                 embed.add_field(name="Error Occured", value="Command Aborted")
             await ctx.send(embed=embed)
@@ -1674,7 +1672,7 @@ async def translate(ctx, lang: str = "en", *, args):
                     )
         else:
             async with session.get(
-                f"https://translate.yandex.net/api/v1.5/tr.json/getLangs?ui=en&key=trnsl.1.1.20200414T062446Z.1e5abaa65939d784.390d015d69abbe56445b9ba840e7b556c709efd2&"
+                "https://translate.yandex.net/api/v1.5/tr.json/getLangs?ui=en&key=trnsl.1.1.20200414T062446Z.1e5abaa65939d784.390d015d69abbe56445b9ba840e7b556c709efd2&"
             ) as response:
                 parsed_json = json.loads(await response.text())
             await session.close()
@@ -1689,10 +1687,10 @@ async def translate(ctx, lang: str = "en", *, args):
     aliases=["link", "message"],
     description="Generates a link to a message (usefull in mobile)",
 )
-async def messagelink(ctx, id: int = None):
-    id = id or ctx.message.id
+async def messagelink(ctx, messageid: int = None):
+    messageid = messageid or ctx.message.id
     await ctx.send(
-        f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{id}"
+        f"https://discord.com/channels/{ctx.message.guild.id}/{ctx.message.channel.id}/{messageid}"
     )
 
 
@@ -1755,13 +1753,6 @@ async def avatar(
     usage="help `[command]`\n\nhelp\nhelp userinfo",
 )
 async def help(ctx, command: str = None):
-    user = ctx.message.author
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-        try:
-            prefix = prefixes[str(ctx.message.guild.id)]
-        except:
-            prefix = ","
     all_commands = ""
     if command is None:
         for i in client.commands:
@@ -1928,7 +1919,7 @@ async def unban(ctx, *, member: str):
     if success:
         await ctx.send(f"Unbanned {user.mention}")
     else:
-        await ctx.send(f"User not found")
+        await ctx.send("User not found")
 
 
 @client.command(aliases=["ui", "whois", "wi"], description="Shows info about a user")
