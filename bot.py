@@ -1202,7 +1202,7 @@ async def quiz(ctx):
 			if str(message.content).strip().lower() == correct_answer:
 				await ctx.message.channel.send('Correct you big brain')
 			else:
-				await ctx.send(f"Poo Poo Brain xD, Correct amswer was {correct_answer.upper()}")
+				await ctx.send(f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()}")
 			answered = True
 		    		      
 @client.command(description="Translate a text")
