@@ -165,7 +165,7 @@ async def on_command_error(ctx, error):
         except asyncio.TimeoutError:
             try:
                 return await message.clear_reactions()
-            except:
+            except MissingPermissions:
                 return await message.remove_reaction("\u2705", ctx.guild.me)
         else:
             if str(reaction.emoji) == "\u2705":
@@ -545,7 +545,7 @@ async def truthordare(ctx, questype: str = "random"):
         picked = fj[number]
         level = levels[int(picked["level"])]
         summary = picked["summary"]
-        quesiontype = picked["type"]
+        questiontype = picked["type"]
     else:
         return
     embed = discord.Embed()
@@ -679,7 +679,7 @@ async def boosters(ctx):
     peoples = []
     for i in ctx.message.guild.premium_subscribers:
         peoples.append(i.name)
-    await paginator(ctx, peoples)
+    await ctx.send("\n".join(peoples))
 
 
 @client.command(description="Invert your or another users profile picture")
@@ -964,7 +964,6 @@ async def spotify(ctx, *, member: discord.Member = None):
         if isinstance(activity, discord.Spotify):
             search_terms = activity.artist + " - " + activity.title
             max_results = 1
-            results = []
 
             def parse_html(response):
                 results = []
@@ -1116,21 +1115,21 @@ async def randomcolour(ctx):
     async with ctx.typing():
         rand_color = randomcolor.RandomColor()
         generated_color = rand_color.generate()[0]
-        hex = generated_color.replace("#", "")
+        hexcol = generated_color.replace("#", "")
         async with session.get(f"http://www.thecolorapi.com/id?hex={hex}") as response:
             data = json.loads(await response.text())
         color_name = data.get("name").get("value")
         link = f"http://singlecolorimage.com/get/{hex}/1x1"
         thumb = f"http://singlecolorimage.com/get/{hex}/100x100"
         rgb = data.get("rgb").get("value")
-        hex = data.get("hex").get("value")
+        hexcol = data.get("hex").get("value")
         intcol = int(hex.replace("#", ""), 16)
     embed = discord.Embed(timestamp=ctx.message.created_at, color=intcol)
     embed.set_author(name=color_name)
     embed.set_image(url=link)
     embed.set_thumbnail(url=thumb)
     embed.set_footer(text=f"Made for {ctx.author}")
-    embed.add_field(name="Hex", value=hex)
+    embed.add_field(name="Hex", value=hexcol)
     embed.add_field(name="RGB", value=rgb)
     embed.add_field(name="INT", value=intcol)
     embed.set_footer(
@@ -1197,7 +1196,7 @@ async def say(ctx, *, args: commands.clean_content):
     try:
         if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
             await ctx.message.delete()
-    except:
+    except MissingPermissions:
         pass
     await channel.send(mesg)
 
@@ -1368,25 +1367,6 @@ async def getusers(ctx, role: discord.Role):
         await ctx.send("Nobody has the role {}".format(role.mention))
     else:
         await ctx.send(embed=embed)
-
-
-"""			
-@client.command()
-async def define(ctx, *, args):
-	embed = discord.Embed(timestamp=ctx.message.created_at)
-	embed.set_footer(text="From Merriam Webster")
-	async with ctx.typing():
-		with open("dictionary.json", "r" ) as f:
-			parsed_json = json.load(f)
-			definition = parsed_json.get(args.lower())
-	if not definition == None:
-		if not len(definition) > 1024:
-			await ctx.send(embed=embed)
-		else:
-			await ctx.send("Definition too long")
-	else:
-		await ctx.send("No definition found")
-"""
 
 
 @client.command(aliases=["q"], description="Sends a quiz for you to answer")
@@ -1702,11 +1682,12 @@ async def avatar(
 
 
 @client.command(
+    name="help",
     aliases=["halp", "h"],
     description="Sends help :)",
     usage="help `[command]`\n\nhelp\nhelp userinfo",
 )
-async def help(ctx, command: str = None):
+async def helpcommand(ctx, command: str = None):
     all_commands = ""
     if command is None:
         for i in client.commands:
