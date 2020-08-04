@@ -943,14 +943,16 @@ async def randomcolour(ctx):
 		thumb = f"http://singlecolorimage.com/get/{hex}/100x100"
 		rgb = data.get("rgb").get("value")
 		hex = data.get("hex").get("value")
-	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
+		intcol = int(hex.replace("#", ""), 16)
+	embed = discord.Embed(timestamp=ctx.message.created_at, color=intcol)
 	embed.set_author(name=color_name)
 	embed.set_image(url=link)
 	embed.set_thumbnail(url=thumb)
 	embed.set_footer(text=f"Made for {ctx.author}")
 	embed.add_field(name="Hex", value=hex)
 	embed.add_field(name="RGB", value=rgb)
-	embed.set_footer(text=f"You can use the color command to get more details")
+	embed.add_field(name="INT", value=intcol)
+	embed.set_footer(text=f"You can use the color command to get more details about the color")
 	await ctx.send(embed=embed)
 	
  
@@ -972,6 +974,7 @@ async def colour(ctx, color: str):
 		hsv = data["hsv"]["value"]
 		cmyk = data["cmyk"]["value"]
 		xyz = data["XYZ"]["value"]
+		intcol = int(hex.replace("#", ""), 16)
 	
 	embed = discord.Embed(timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16))
 	embed.set_author(name=color_name)
@@ -980,9 +983,10 @@ async def colour(ctx, color: str):
 	embed.set_footer(text=f"Made for {ctx.author}")
 	embed.add_field(name="Hex", value=hex)
 	embed.add_field(name="RGB", value=rgb)
+	embed.add_field(name="INT", value=intcol)
 	embed.add_field(name="HSL", value=hsl)
 	embed.add_field(name="HSV", value=hsv)
-	embed.add_field(name="XMYK", value=cmyk)
+	embed.add_field(name="CMYK", value=cmyk)
 	embed.add_field(name="XYZ", value=xyz)
 	await ctx.send(embed=embed)
  
