@@ -956,7 +956,7 @@ async def randomcolour(ctx):
 	await ctx.send(embed=embed)
 	
  
-@client.command(aliases=[ 'col'], description="Sends info about a color")
+@client.command(aliases=['col', 'color'], description="Sends info about a color")
 async def colour(ctx, color: str):
 	session = aiohttp.ClientSession()
 	async with ctx.typing():
