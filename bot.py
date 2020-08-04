@@ -165,7 +165,7 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-async def paginator(ctx , entries , limit=5 ):
+async def paginator(ctx , entries , limit=5):
     pages = []
     my_list = []
     for i in entries :
@@ -200,6 +200,8 @@ async def paginator(ctx , entries , limit=5 ):
                   for i in c[pages]:
                          content += str(i) + "\n"
                   await k.edit(content = content)
+
+
 
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
 async def channelinfo(ctx, channel: discord.TextChannel=None):
@@ -569,11 +571,11 @@ async def cleverbot_(ctx, *, query: str):
 
 @client.command(description="See all the boosters of this server")
 async def boosters(ctx):
-	peoples = ""
+	peoples = []
 	for i in ctx.message.guild.premium_subscribers:
-		peoples += "\n" + i.name
-	embed = discord.Embed(title="Server Boosters", description=peoples)
-	await ctx.send(embed=embed)
+		peoples.append(i.name)
+	await paginate(ctx, peoples)
+	
 
 @client.command(description="Invert your or another users profile picture")
 async def invert(ctx, member: discord.Member=None):
