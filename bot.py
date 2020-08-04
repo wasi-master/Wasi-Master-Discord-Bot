@@ -540,12 +540,15 @@ async def meme(ctx, *, text: str=None):
 		url = f"{base_url}/{template}/{textlist[0]}"
 	else:
 		Make = False
+		session  = aiohttp.ClientSession
 		async with session.get("https://meme-api.herokuapp.com/gimme") as r:
 			fj = json.loads(await r.text())
 		embed=discord.Embed(title=fj['title'], url=fj['postLink'])
 		embed.set_image(url=fj['url'])
 		await ctx.send(embed=embed)
+		await session.close()
 	if Make:
+		session = aiohttp.ClientSession()
 		async with ctx.typing():
 			async with session.get(url) as response:
 				response_json = json.loads(await response.text())
