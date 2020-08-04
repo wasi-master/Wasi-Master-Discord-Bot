@@ -1213,7 +1213,7 @@ async def quiz(ctx):
 			embed.add_field(name="C", value=data.get("results")[0].get("correct_answer").replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="D", value=data.get("results")[0].get("incorrect_answers")[2].replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 		if randomint == 4:
-			correct_annswer = "d"
+			correct_answer = "d"
 			embed.add_field(name="A", value=data.get("results")[0].get("incorrect_answers")[0].replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="B", value=data.get("results")[0].get("incorrect_answers")[1].replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 			embed.add_field(name="C", value=data.get("results")[0].get("incorrect_answers")[2].replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
