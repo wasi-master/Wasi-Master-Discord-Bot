@@ -1,26 +1,28 @@
+import ast
+import asyncio
+import base64 as base64module
+import codecs
+from datetime import datetime
+import difflib
 import discord
+import json
+import os
+import secrets
+import time
+
+import aiohttp
+import async_cleverbot as ac
+from bs4 import BeautifulSoup
+import psutil
+import randomcolor
+import requests
+import wikipedia as wikimodule
+
 from discord.ext import commands
 from discord.ext import tasks
 from discord.ext.commands import has_permissions
 from discord.ext.commands.cooldowns import BucketType
-import json
-import secrets
-import randomcolor
-import requests
-import psutil
-import time
-import wikipedia as wikimodule
-import async_cleverbot as ac
-from datetime import datetime
-from bs4 import BeautifulSoup
-import asyncio
-import aiohttp
-import codecs
-import os
-import ast
-import difflib
 import urllib.parse
-import base64 as base64module
 
 
 def get_prefix(client, message):
