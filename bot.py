@@ -59,7 +59,8 @@ def get_status(status:str):
 		return '<:status_idle:596576773488115722>'
 	elif status == "offline":
 		return '<:status_offline:596576752013279242>'
-	
+	else:
+		return status
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
