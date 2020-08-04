@@ -165,7 +165,23 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-async def paginator (entries , limit=5):
+$ cat paginate.py
+
+import discord
+from discord.ext import commands
+import random
+import asyncio
+import os 
+import ast
+import requests
+import datetime
+import time
+import aiohttp 
+import dbl
+import asyncpg
+import async_cleverbot as ac
+
+async def paginator(ctx , entries , limit=5 ):
     pages = []
     my_list = []
     for i in entries :
@@ -174,19 +190,19 @@ async def paginator (entries , limit=5):
           pages.append(tuple(my_list[i:i+int(limit)]))
     c = pages
 
-    def check (reaction , user) :
-          return user == ctx.author
     content = ""
     for i in c[0]:
        content += str(i) + "\n"
     k = await ctx.send(content)
-    reactions = ["\u25c0\ufe0f", "\u25b6\ufe0f" ]
+    def check (reaction , user) :
+          return user == ctx.author and reaction.message.id == k.id
+    reactions = [":arrow_backward:", ":arrow_forward:" ]
     next , prev = reactions
     for i in reactions :
          await k.add_reaction(i)
     pages = 0
     while True :
-            a = await  _bot.wait_for("reaction_add" , timeout = 15 , check = check)
+            a = await  ctx.bot.wait_for("reaction_add" , timeout = 15 , check = check)
             if str(a[0]) == next:
                    pages += 1 
                    content = ""
