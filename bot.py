@@ -4,7 +4,6 @@ from discord.ext import tasks
 from discord.ext.commands import has_permissions
 from discord.ext.commands.cooldowns import BucketType
 import json
-import random
 import secrets
 import randomcolor
 import requests
@@ -1307,7 +1306,7 @@ async def choose(ctx, *, args):
         choices += f"`{i}`, "
     embed.add_field(name="Choice {num}", value=f"{choices[:-2]}")
     embed.add_field(name="‌", value="‌")
-    embed.add_field(name="**Chosen**", value=f"{random.choice(mesglist)}")
+    embed.add_field(name="**Chosen**", value=f"{secureRandom.choice(mesglist)}")
     await ctx.send(embed=embed)
 
 
@@ -1847,7 +1846,7 @@ async def _8ball(ctx, *, question):
         "Outlook not so good",
         "Very doubtful",
     ]
-    await ctx.send(f"`Question:` {question}\n`Answer:` {random.choice(answers)}")
+    await ctx.send(f"`Question:` {question}\n`Answer:` {secureRandom.choice(answers)}")
 
 
 @client.command(aliases=["wiki", "searchwiki"])
