@@ -1194,7 +1194,6 @@ async def quiz(ctx):
 		embed.add_field(name="Category", value=category)
 		correct_answer = "not found"
 		randomint = random.randint(1, 4)
-		asyncio.sleep(0.25)
 		if randomint == 1:
 			correct_answer = "a"
 			embed.add_field(name="A", value=data.get("results")[0].get("correct_answer").replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
@@ -1224,7 +1223,7 @@ async def quiz(ctx):
 		message = await client.wait_for('message', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
 		if not answered:
-			await ctx.message.channel.send('You didn\’t answer in time')
+			await ctx.message.channel.send(f'{ctx.author.mention}, You didn\’t answer in time')
 	else:
 		if not answered:
 			if str(message.content).strip().lower() == correct_answer:
