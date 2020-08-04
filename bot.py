@@ -161,6 +161,42 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+async def paginator (entries , limit=5):
+    pages = []
+    my_list = []
+    for i in entries :
+        my_list.append(i)
+    for i in range(0 , (len(my_list)) , int(limit)):
+          pages.append(tuple(my_list[i:i+int(limit)]))
+    c = pages
+
+    def check (reaction , user) :
+          return user == ctx.author
+    content = ""
+    for i in c[0]:
+       content += str(i) + "\n"
+    k = await ctx.send(content)
+    reactions = ["\u25c0\ufe0f", "\u25b6\ufe0f" ]
+    next , prev = reactions
+    for i in reactions :
+         await k.add_reaction(i)
+    pages = 0
+    while True :
+            a = await  _bot.wait_for("reaction_add" , timeout = 15 , check = check)
+            if str(a[0]) == next:
+                   pages += 1 
+                   content = ""
+                   for i in c[pages]:
+                         content += str(i) + "\n"
+                   await k.edit(content = content)
+                   continue
+            if str(a[0]) == prev :
+                  pages -= 1 
+                  content = ""
+                  for i in c[pages]:
+                         content += str(i) + "\n"
+                  await k.edit(content = content)
+
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
 async def channelinfo(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
@@ -1157,7 +1193,7 @@ async def quiz(ctx):
 			embed.add_field(name="D", value=data.get("results")[0].get("correct_answer").replace("&#39;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
 	await ctx.send(embed=embed)
 	try:
-		message, user = await client.wait_for('message', timeout=20.0, check=check)
+		message = await client.wait_for('message', timeout=20.0, check=check)
 	except asyncio.TimeoutError:
 		if not answered:
 			await ctx.message.channel.send('You didn\’t answer in time')
