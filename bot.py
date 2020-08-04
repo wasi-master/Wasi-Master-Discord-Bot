@@ -5,6 +5,7 @@ from discord.ext.commands import has_permissions
 from discord.ext.commands.cooldowns import BucketType
 import json
 import random
+import secrets
 import randomcolor
 import requests
 import psutil
@@ -67,7 +68,7 @@ def get_status(status: str):
 client = commands.Bot(command_prefix=get_prefix)
 client.remove_command("help")
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
-
+secureRandom = secrets.SystemRandom()
 
 @tasks.loop(seconds=86400)
 async def update_server_count():
@@ -587,7 +588,7 @@ async def truthordare(ctx, questype: str = "random"):
         fj = json.loads(await r.text())
     await session.close()
     if questype == "random":
-        number = random.randint(0, 553)
+        number = secureRandom.randint(0, 553)
         picked = fj[number]
         level = levels[int(picked["level"])]
         sum = picked["summary"]
@@ -1279,7 +1280,7 @@ async def howgay(ctx, member: discord.Member = None):
     if ctx.message.author.id == 538332632535007244:
         gay = 0
     else:
-        gay = random.randint(0, 100)
+        gay = secureRandom.randint(0, 100)
     embed.add_field(name="How Gay?", value=f"{member.name} is {gay}% gay")
     await ctx.send(embed=embed)
 
@@ -1477,7 +1478,7 @@ async def quiz(ctx):
         )
         embed.add_field(name="Category", value=category)
         correct_answer = "not found"
-        randomint = random.randint(1, 4)
+        randomint = secureRandom.randint(1, 4)
         if randomint == 1:
             correct_answer = "a"
             embed.add_field(
