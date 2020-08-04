@@ -159,13 +159,13 @@ async def upscale(ctx, scaletype, *, member:discord.Member=None):
 		await ctx.send("Invalid Format")
 	session = aiohttp.ClientSession()
 	message = await ctx.send("May take up to 15 seconds, Wait till then")
-	async with session.post(url,data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
+	async with session.post(url,data={'image': str(member.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
 		fj = json.loads(await resp.text())
 		url = fj["output_url"]
 	await session.close()
 	await message.delete()
 	embed = discord.Embed()
-	embed.set_author(name=f"{ctx.author.name}'s Profile Picture Upscaled")
+	embed.set_author(name=f"{member.name}'s Profile Picture Upscaled")
 	embed.set_image(url=url)
 	await ctx.send(embed=embed)
 
