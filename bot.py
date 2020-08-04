@@ -779,6 +779,10 @@ async def serverinfo(ctx):
 async def info(ctx):
 	total = 0
 	embed = discord.Embed(title="Statistics")
+	embed.add_field(name="Code", value=f"Lines: {total:3,}")
+	ram = psutil.virtual_memory()
+	embed.add_field(name="CPU", value=f"Percentage:{get_p(psutil.cpu_percent())}\nFrequency {psutil.cpu_freq()['current']}Mhz\nCores: {psutil.cpu_count()}")
+	embed.add_field(name="RAM", value=f"Used: {ram['used']}\nAvailable: {ram['available']}Total: {ram['total']}")
 	with codecs.open('bot.py', 'r', 'utf-8') as f:
 		for i, l in enumerate(f):
 			if l.strip().startswith('#') or len(l.strip()) == 0:  # skip commented lines.
