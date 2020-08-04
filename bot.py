@@ -165,7 +165,7 @@ async def on_command_error(ctx, error):
         except asyncio.TimeoutError:
             try:
                 return await message.clear_reactions()
-            except MissingPermissions:
+            except commands.MissingPermissions:
                 return await message.remove_reaction("\u2705", ctx.guild.me)
         else:
             if str(reaction.emoji) == "\u2705":
@@ -1196,7 +1196,7 @@ async def say(ctx, *, args: commands.clean_content):
     try:
         if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
             await ctx.message.delete()
-    except MissingPermissions:
+    except commands.MissingPermissions:
         pass
     await channel.send(mesg)
 
