@@ -574,7 +574,7 @@ async def boosters(ctx):
 	peoples = []
 	for i in ctx.message.guild.premium_subscribers:
 		peoples.append(i.name)
-	await paginate(ctx, peoples)
+	await paginate()
 	
 
 @client.command(description="Invert your or another users profile picture")
@@ -1054,12 +1054,14 @@ async def choose(ctx, *, args):
     mesg = args
     mesglist = mesg.split(",")
     num = 0
+    choices = ""
     embed = discord.Embed(timestamp=ctx.message.created_at)
     embed.set_author(name=f'Choice Machine')
     embed.set_footer(text=f"Asked by {ctx.author}")
     for i in mesglist:
         num += 1
-        embed.add_field(name=f"Choice {num}", value=f"{i}")
+        choices += f"`{i}`, "
+    embed.add_field(name=f"Choice {num}", value=f"{choices[:-2]}")
     embed.add_field(name="‌", value="‌")
     embed.add_field(name=f"**Chosen**", value=f"{random.choice(mesglist)}")
     await ctx.send(embed=embed)
