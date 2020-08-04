@@ -165,22 +165,6 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-$ cat paginate.py
-
-import discord
-from discord.ext import commands
-import random
-import asyncio
-import os 
-import ast
-import requests
-import datetime
-import time
-import aiohttp 
-import dbl
-import asyncpg
-import async_cleverbot as ac
-
 async def paginator(ctx , entries , limit=5 ):
     pages = []
     my_list = []
