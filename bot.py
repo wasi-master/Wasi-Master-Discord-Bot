@@ -47,6 +47,19 @@ def get_p(prog, num=0):
 			text += "—"
 	return f"`{text}`"
 		
+		
+def get_status(status:str):
+	if status == "online":
+		return '<:status_online:596576749790429200>'
+	elif status == "dnd":
+		return '<:status_dnd:596576774364856321>'
+	elif status == "streaming":
+		return '<:status_streaming:596576747294818305>'
+	elif status == "idle":
+		return '<:status_idle:596576773488115722>'
+	elif status == "offline":
+		return '<:status_offline:596576752013279242>'
+	
 client = commands.Bot(command_prefix = get_prefix)
 client.remove_command('help')
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
@@ -147,7 +160,7 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@client.command(aliases=["sug"], description="Suggest a thing to be added to the bot")
+@client.command(aliases=["sug", "suggestion"], description="Suggest a thing to be added to the bot")
 async def suggest(ctx, *, suggestion: commands.clean_content):
 	guild = client.get_guild(576016234152198155)
 	channel = guild.get_channel(740071107041689631)
@@ -159,7 +172,7 @@ async def suggest(ctx, *, suggestion: commands.clean_content):
 	message = await channel.send(embed=embed)
 	await ctx.send("Suggestion sent")
 	message.add_reaction("\u2b06\ufe0f")
-	#message.add_reaction("\u2b07\ufe0f")
+	message.add_reaction("\u2b07\ufe0f")
 
 @client.command(aliases=["upscaled"], description="Upscales a users profile picture")
 @commands.cooldown(1, 3600, type=BucketType.default)
@@ -1294,7 +1307,7 @@ async def userinfo(ctx, *, member: discord.Member=None):
         embed.add_field(name="Fun Fact:", value="He is the owner and the only person that developed this bot")
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
-    embed.add_field(name="Online Status", value=f"Desktop: {member.desktop_status}\nWeb: {member.web_status}\nMobile:{member.mobile_status}")
+    embed.add_field(name="Online Status", value=f"Desktop: {get_status(member.desktop_status)}\nWeb: {get_status(member.web_status)}\nMobile:{get_status(member.mobile_status)}")
     embed.add_field(name="Created at", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 
     embed.add_field(name="Joined at:", value=member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S"))
@@ -1302,7 +1315,11 @@ async def userinfo(ctx, *, member: discord.Member=None):
     embed.add_field(name=f"Roles ({len(roles)})", value="".join([role.mention for role in roles]))
     embed.add_field(name="Top role:", value=member.top_role.mention)
 
-    embed.add_field(name="Is a bot?", value=member.bot)
+    if not member.bot:
+    	member_type = ':blond_haired_man: Human'
+    else:
+    	member_type = ':robot: Robot'
+    embed.add_field(name="Type", value=member_type})
 
     await ctx.send(embed=embed)
 
