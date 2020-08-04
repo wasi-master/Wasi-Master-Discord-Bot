@@ -1125,7 +1125,7 @@ async def randomcolour(ctx):
         thumb = f"http://singlecolorimage.com/get/{hex}/100x100"
         rgb = data.get("rgb").get("value")
         hexcol = data.get("hex").get("value")
-        intcol = int(hex.replace("#", ""), 16)
+        intcol = int(hexcol.replace("#", ""), 16)
     embed = discord.Embed(timestamp=ctx.message.created_at, color=intcol)
     embed.set_author(name=color_name)
     embed.set_image(url=link)
@@ -1161,7 +1161,7 @@ async def colour(ctx, color: str):
         intcol = int(hexcol.replace("#", ""), 16)
 
     embed = discord.Embed(
-        timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16)
+        timestamp=ctx.message.created_at, color=int(hexcol.replace("#", ""), 16)
     )
     embed.set_author(name=color_name)
     embed.set_image(url=link)
