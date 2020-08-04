@@ -7,6 +7,7 @@ import json
 import random
 import randomcolor
 import requests
+import psutil
 import time
 import wikipedia as wikimodule
 import async_cleverbot as ac
