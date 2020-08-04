@@ -1194,6 +1194,7 @@ async def quiz(ctx):
 		embed.add_field(name="Category", value=category)
 		correct_answer = "not found"
 		randomint = random.randint(0, 4)
+		asyncio.sleep(0.25)
 		if randomint == 1:
 			correct_answer = "a"
 			embed.add_field(name="A", value=data.get("results")[0].get("correct_answer").replace("&#039;", "\'").replace("&quot;", "\"").replace("&amp;", " &").replace("&eacute;", "é"))
