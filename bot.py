@@ -108,13 +108,13 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_command_error(ctx, error):
-	if "CheckFailure" in str(error):
+	if isinstance(error, commands.CheckFailure):
 		await ctx.send(f"You don\'t have the permission to use {ctx.command}")
-	elif "MissingPermissions" in str(error):
+	elif isinstance(error, commands.MissingPermissions):
 		await ctx.send('I can\'t do that')
-	elif "MissingRequiredArgument" in str(error):
+	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send('Some argument is missing')
-	elif "is not found" in str(error).lower():
+	elif isinstance(error, commands.CommandNotFound):
 		pass
 	elif "Cannot send messages to this user" in str(error):
 		pass
@@ -127,7 +127,7 @@ async def on_command_error(ctx, error):
 		try:
 			reaction, user = await client.wait_for('reaction_add', check = check, timeout = 10)
 		except asyncio.TimeoutError:
-			return
+			return await message.clear_reactions()
 		else:
 			if str(reaction.emoji) == "\u2705":
 				botembed.set_footer(icon_url=ctx.author.avatar_url, text="Reported to The Support Server")
