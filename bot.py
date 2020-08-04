@@ -49,15 +49,15 @@ def get_p(prog, num=0):
 		
 		
 def get_status(status:str):
-	if status == "online":
+	if str(status) == "online":
 		return '<:status_online:596576749790429200>'
-	elif status == "dnd":
+	elif str(status) == "dnd":
 		return '<:status_dnd:596576774364856321>'
-	elif status == "streaming":
+	elif str(status) == "streaming":
 		return '<:status_streaming:596576747294818305>'
-	elif status == "idle":
+	elif str(status) == "idle":
 		return '<:status_idle:596576773488115722>'
-	elif status == "offline":
+	elif str(status) == "offline":
 		return '<:status_offline:596576752013279242>'
 	else:
 		return status
@@ -1308,7 +1308,7 @@ async def userinfo(ctx, *, member: discord.Member=None):
         embed.add_field(name="Fun Fact:", value="He is the owner and the only person that developed this bot")
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
-    embed.add_field(name="Online Status", value=f"Desktop: {get_status(member.desktop_status)}\nWeb: {get_status(member.web_status)}\nMobile:{get_status(member.mobile_status)}")
+    embed.add_field(name="Online Status", value=f"Desktop: {get_status(member.desktop_status.name)}\nWeb: {get_status(member.web_status.name)}\nMobile:{get_status(member.mobile_status.name)}")
     embed.add_field(name="Created at", value=member.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 
     embed.add_field(name="Joined at:", value=member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S"))
