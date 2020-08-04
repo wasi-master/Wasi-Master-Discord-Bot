@@ -783,7 +783,7 @@ async def info(ctx):
 	embed.add_field(name="Code", value=f"Lines: {total:3,}")
 	ram = psutil.virtual_memory()
 	embed.add_field(name="CPU", value=f"Percentage:{get_p(psutil.cpu_percent())}\nFrequency {psutil.cpu_freq().current}Mhz\nCores: {psutil.cpu_count()}")
-	embed.add_field(name="RAM", value=f"Used: {ram.used/1048576}MB\nAvailable: {ram.available/54316236}MB\nTotal: {ram.total/54316236}MB\nPercentage:{get_p((ram.used/ram.total))*100}")
+	embed.add_field(name="RAM", value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total)))*100}")
 	with codecs.open('bot.py', 'r', 'utf-8') as f:
 		for i, l in enumerate(f):
 			if l.strip().startswith('#') or len(l.strip()) == 0:  # skip commented lines.
