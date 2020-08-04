@@ -778,6 +778,7 @@ async def serverinfo(ctx):
 @client.command(description="See info about the bot")
 async def info(ctx):
 	total = 0
+	embed = discord.Embed(title="Statistics")
 	with codecs.open('bot.py', 'r', 'utf-8') as f:
 		for i, l in enumerate(f):
 			if l.strip().startswith('#') or len(l.strip()) == 0:  # skip commented lines.
