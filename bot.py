@@ -1121,8 +1121,8 @@ async def randomcolour(ctx):
         async with session.get(f"http://www.thecolorapi.com/id?hex={hex}") as response:
             data = json.loads(await response.text())
         color_name = data.get("name").get("value")
-        link = f"http://singlecolorimage.com/get/{hex}/1x1"
-        thumb = f"http://singlecolorimage.com/get/{hex}/100x100"
+        link = f"http://singlecolorimage.com/get/{hexcol}/1x1"
+        thumb = f"http://singlecolorimage.com/get/{hexcol}/100x100"
         rgb = data.get("rgb").get("value")
         hexcol = data.get("hex").get("value")
         intcol = int(hexcol.replace("#", ""), 16)
