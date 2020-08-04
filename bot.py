@@ -457,7 +457,7 @@ async def firstmessage(ctx, channel: discord.TextChannel = None):
     embed.add_field(name="Message Author", value=fmo.author)
     try:
         embed.add_field(name="Message Content", value=fmo.content)
-    except:
+    except AttributeError:
         embed.add_field(name="Message Content", value="Failed to get the content")
     if len(fmo.attachments) > 0:
         for i in fmo.attachments:
@@ -1151,12 +1151,12 @@ async def colour(ctx, color: str):
         link = f"http://singlecolorimage.com/get/{hexcol}/1x1"
         thumb = f"http://singlecolorimage.com/get/{hexcol}/100x100"
         rgb = data.get("rgb").get("value")
-        hex = data.get("hex").get("value")
+        hexcol = data.get("hex").get("value")
         hsl = data["hsl"]["value"]
         hsv = data["hsv"]["value"]
         cmyk = data["cmyk"]["value"]
         xyz = data["XYZ"]["value"]
-        intcol = int(hex.replace("#", ""), 16)
+        intcol = int(hexcol.replace("#", ""), 16)
 
     embed = discord.Embed(
         timestamp=ctx.message.created_at, color=int(hex.replace("#", ""), 16)
