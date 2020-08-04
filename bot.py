@@ -149,11 +149,17 @@ def pad(to_pad):
 
 @client.command(aliases=["upscaled"], description="Upscales a users profile picture")
 @commands.cooldown(1, 3600, type=BucketType.default)
-async def upscale(ctx, *, member:discord.Member=None):
+async def upscale(ctx, scaletype, *, member:discord.Member=None):
 	member = member or ctx.author
+	if scaletype.lower() == "anime":
+		url = "https://api.deepai.org/api/waifu2x"
+	elif scaletypr.lower() == "normal":
+		url = "https://api.deepai.org/api/torch-srgan"
+	else:
+		await ctx.send("Invalid Format")
 	session = aiohttp.ClientSession()
 	message = await ctx.send("May take up to 15 seconds, Wait till then")
-	async with session.post("https://api.deepai.org/api/torch-srgan",data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
+	async with session.post(url,data={'image': str(ctx.author.avatar_url),},headers={'api-key': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}) as resp:
 		fj = json.loads(await resp.text())
 		url = fj["output_url"]
 	await session.close()
