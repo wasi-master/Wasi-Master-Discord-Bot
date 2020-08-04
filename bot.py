@@ -166,6 +166,7 @@ async def channelinfo(ctx, channel: discord.TextChannel=None):
 	channel = channel or ctx.channel
 	embed = discord.Embed()
 	embed.set_author(f"Channel Information for {channel.name}")
+	embed.add_field(name="Created at", value=channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S"))
 	embed.add_field(name="ID", value=channel.id)
 	embed.add_field(name="Position", value=channel.position)
 	embed.add_field(name="Category", value=channel.catergory)
@@ -173,6 +174,7 @@ async def channelinfo(ctx, channel: discord.TextChannel=None):
 		embed.add_field(name="Topic", value=channel.topic)
 	if not channel.slowmode_delay is None:
 		embed.add_field(name="Slowmode", value=f"{channel.slowmode_delay} seconds")
+
 @client.command(aliases=["nk"], description="Nuke a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ")
 @has_permissions(manage_channels=True)
 async def nuke(ctx, channel:discord.TextChannel=None):
