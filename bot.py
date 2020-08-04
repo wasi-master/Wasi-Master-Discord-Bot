@@ -210,7 +210,11 @@ async def screenshot(ctx, website:str):
         ) as response:
             data = await response.json()
             embed = discord.Embed(title=data["website"], url=website)
-            embed.set_image(url=data["snapshot"])
+            r = requests.get(f"https://nsfw-categorize.it/api.php?url={data['snapshot']}").text
+            if int(r["porn_probability"]) > 5 and not channel.is_nsfw():
+                return
+            else:
+                embed.set_image(url=data["snapshot"])
         await ctx.send(embed=embed)
         session.close()
 
