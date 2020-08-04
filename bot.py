@@ -180,7 +180,7 @@ async def paginator(ctx , entries , limit=5):
     k = await ctx.send(content)
     def check (reaction , user) :
           return user == ctx.author and reaction.message.id == k.id
-    reactions = [":arrow_backward:", ":arrow_forward:" ]
+    reactions = ["\u25c0\ufe0f", "\u25b6\ufe0f" ]
     next , prev = reactions
     for i in reactions :
          await k.add_reaction(i)
