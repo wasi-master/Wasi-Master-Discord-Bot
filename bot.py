@@ -181,7 +181,7 @@ async def nuke(ctx, channel:discord.TextChannel=None):
 	def check(m):  # m = discord.Message.
 		return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
 	try:
-	name = await client.wait_for('message', check = check, timeout = 20)
+		name = await client.wait_for('message', check = check, timeout = 20)
 	except asyncio.TimeoutError:
 		await ctx.send(f"You didnt respond in 30 seconds :(\n{ctx.author.mention}!")
 		return
