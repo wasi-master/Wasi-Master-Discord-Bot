@@ -186,7 +186,13 @@ async def paginator(ctx , entries , limit=5):
          await k.add_reaction(i)
     pages = 0
     while True :
-            a = await  ctx.bot.wait_for("reaction_add" , timeout = 15 , check = check)
+            try:
+                a = await  ctx.bot.wait_for("reaction_add" , timeout = 15 , check = check)
+            except asyncio.TimeoutError:
+                try:
+                    await k.clear_reactions()
+                except:
+                    pass
             if str(a[0]) == next:
                    pages += 1 
                    content = ""
