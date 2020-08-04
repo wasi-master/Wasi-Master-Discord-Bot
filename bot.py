@@ -1193,7 +1193,7 @@ async def quiz(ctx):
 		category = data.get('results')[0].get('category').replace("Entertainment: ", "").replace("Science: ", "")
 		embed.add_field(name="Category", value=category)
 		correct_answer = "not found"
-		randomint = random.randint(0, 4)
+		randomint = random.randint(1, 4)
 		asyncio.sleep(0.25)
 		if randomint == 1:
 			correct_answer = "a"
