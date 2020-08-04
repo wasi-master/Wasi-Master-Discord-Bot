@@ -1161,9 +1161,9 @@ async def quiz(ctx):
 		embed.add_field(name=question, value="‌")
 		
 		difficulty =  data.get('results')[0].get('difficulty')
-		embed.add_field(name="difficulty", value=difficulty)
+		embed.add_field(name="Difficulty", value=difficulty.title())
 		
-		category = data.get('results')[0].get('category').replace("Entertainment: ", "")
+		category = data.get('results')[0].get('category').replace("Entertainment: ", "").replace("Science: ", "")
 		embed.add_field(name="Category", value=category)
 		correct_answer = ""
 		randomint = random.randint(0, 4)
