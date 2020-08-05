@@ -215,8 +215,8 @@ async def time(ctx, location: str=None):
 			suggestionstring = ""
 			for i in suggestions:
 				suggestionstring += f"`{i}`\n"
-			embed.set_author("Location Not Found")
-			embed.add_field("Did you mean?", value=suggestionstring)
+			embed.set_author(name="Location Not Found")
+			embed.add_field(name="Did you mean?", value=suggestionstring)
 			await ctx.send(embed=embed)
 	else:
 		time = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
