@@ -1445,6 +1445,8 @@ async def quiz(ctx):
                 and message.channel.id == ctx.channel.id
             )
 
+    ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
+    ordlist = [ordinal(n) for n in range(1,5)]
     embed = discord.Embed()
     embed.set_author(name=f"{ctx.author}'s Quiz")
     embed.set_footer(text="From Open Trivia DB")
@@ -1642,7 +1644,7 @@ async def quiz(ctx):
                 await ctx.message.channel.send("Correct you big brain")
             else:
                 await ctx.send(
-                    f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({randomint}th)"
+                    f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({randomint}{ordlist[randomint-1]} option)"
                 )
             answered = True
 
