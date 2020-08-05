@@ -1644,7 +1644,7 @@ async def quiz(ctx):
                 await ctx.message.channel.send("Correct you big brain")
             else:
                 await ctx.send(
-                    f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({randomint}{ordlist[randomint-1]} option)"
+                    f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({ordlist[randomint-1]} option)"
                 )
             answered = True
 
