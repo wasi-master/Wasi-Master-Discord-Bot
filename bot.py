@@ -210,7 +210,7 @@ async def time(ctx, location: str=None):
 		error = False
 	if error:
 		if fj["error"] == "unknown location":
-			locations = requests.get("http://worldtimeapi.org/api/timezone").json
+			locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
 			suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
 			suggestionstring = ""
 			for i in suggestions:
@@ -228,7 +228,7 @@ async def time(ctx, location: str=None):
 		
 @client.command(
     aliases=["ss"],
-    description="Takes a sceenshit of a website"
+    description="Takes a sceenshot of a website"
 )
 @commands.cooldown(1, 30, BucketType.default)
 async def screenshot(ctx, website:str):
