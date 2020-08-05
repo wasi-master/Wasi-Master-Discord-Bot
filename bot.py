@@ -196,6 +196,36 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(aliases=["tm"], description="See time")
+async def time(ctx, location: str=None):
+	embed = discord.Embed()
+	session = aiohttp.ClientSession()
+	async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
+		fj = json.loads(await r.text())
+	await session.close()
+	try:
+		fj["error"]
+		error = True
+	except:
+		error = False
+	if error:
+		if fj["error"] == "unknown location":
+			locations = requests.get("http://worldtimeapi.org/api/timezone").json
+			suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
+			suggestionstring = ""
+			for i in suggestions:
+				suggestionstring += f"`{i}`\n"
+			embed.set_autor("Location Not Found")
+			embed.add_field("Did you mean?", value=suggestionstring)
+			await ctx.send(embed=embed)
+	else:
+		time = datetime.strptime(fj["datetime"][:-12], "%Y-%m-%dT%H:%M:%S")
+		gmt = fj["utc_offset"]
+		embed.set_author(name="Time")
+		embed.add_field(name="Time", value=time.strftime("%a, %d %B %Y, %H:%M:%S"))
+		embed.add_field(name="UTC Offset", value=gmt)
+		await ctx.send(embed=embed)
+		
 @client.command(
     aliases=["ss"],
     description="Takes a sceenshit of a website"
