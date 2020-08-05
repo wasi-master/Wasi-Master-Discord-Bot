@@ -222,7 +222,7 @@ async def time(ctx, location: str=None):
 		time = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
 		gmt = fj["utc_offset"]
 		embed.set_author(name="Time")
-		embed.add_field(name="Time", value=time.strftime("%a, %d %B %Y, %H:%M:%S"))
+		embed.add_field(name=location, value=time.strftime("%a, %d %B %Y, %H:%M:%S"))
 		embed.add_field(name="UTC Offset", value=gmt)
 		await ctx.send(embed=embed)
 		
