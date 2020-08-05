@@ -219,7 +219,7 @@ async def time(ctx, location: str=None):
 			embed.add_field("Did you mean?", value=suggestionstring)
 			await ctx.send(embed=embed)
 	else:
-		time = datetime.strptime(fj["datetime"][:-12], "%Y-%m-%dT%H:%M:%S")
+		time = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
 		gmt = fj["utc_offset"]
 		embed.set_author(name="Time")
 		embed.add_field(name="Time", value=time.strftime("%a, %d %B %Y, %H:%M:%S"))
