@@ -1492,7 +1492,7 @@ async def quiz(ctx):
             .replace("Science: ", "")
         )
         embed = discord.Embed(title=question, description=f"Category: {category.title()}\nDifficulty: {difficulty.title()}")
-        embed.set_footer(text=f"For {ctx.author}")
+        embed.set_footer(text=f"Trivia/Quiz for {ctx.author}")
         correct_answer = "not found"
         randomint = secureRandom.randint(1, 4)
         if randomint == 1:
