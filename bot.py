@@ -17,6 +17,7 @@ import psutil
 import randomcolor
 import requests
 import wikipedia as wikimodule
+import dbl
 
 from discord.ext import commands
 from discord.ext import tasks
@@ -90,7 +91,7 @@ def get_status(status: str):
 
 
 client = commands.Bot(command_prefix=get_prefix)
-client.remove_command("help")
+dblclient = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs")
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
 
@@ -102,6 +103,7 @@ async def update_server_count():
         serverlist.append(guild)
         for member in guild.members:
             memberlist.append(member)
+    await dblpy.post_guild_count()
     await client.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.watching,
