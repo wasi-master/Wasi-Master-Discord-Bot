@@ -70,6 +70,8 @@ def get_flag(flag: str):
 		return "<:verifiedbotdeveloper:740854331154235444>"
 	elif flag == "verified_bot":
 		return "<:verifiedbot:740855315985072189>"
+	elif flag == "partner":
+		return "<:partner:724588086461202442>"
 
 
 def get_status(status: str):
