@@ -8,7 +8,7 @@ import discord
 import json
 import os
 import secrets
-import time
+import time as timemodule
 
 import aiohttp
 import async_cleverbot as ac
@@ -219,10 +219,10 @@ async def time(ctx, location: str=None):
 			embed.add_field(name="Did you mean?", value=suggestionstring)
 			await ctx.send(embed=embed)
 	else:
-		time = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
+		currenttime = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
 		gmt = fj["utc_offset"]
 		embed.set_author(name="Time")
-		embed.add_field(name=location, value=time.strftime("%a, %d %B %Y, %H:%M:%S"))
+		embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
 		embed.add_field(name="UTC Offset", value=gmt)
 		await ctx.send(embed=embed)
 		
@@ -1329,7 +1329,7 @@ async def choose(ctx, *, args):
 
 @client.command(aliases=["p"], description="Shows the bot's speed")
 async def ping(ctx):
-    start = time.perf_counter()
+    start = timemodule.perf_counter()
     embed = discord.Embed(
         description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it takes between seeing your message then sending a response\n**Bot Latency** = Time needed to send/edit messages"
     )
@@ -1337,7 +1337,7 @@ async def ping(ctx):
     embed.set_footer(text=f"Asked by {ctx.author}")
     embed.add_field(name="Websocket Latency", value=f"{round(client.latency * 1000)}ms")
     message = await ctx.send(embed=embed)
-    end = time.perf_counter()
+    end = timemodule.perf_counter()
     message_ping = (end - start) * 1000
     embed.set_author(name="Ping")
     embed.set_footer(text=f"Asked by {ctx.author}")
