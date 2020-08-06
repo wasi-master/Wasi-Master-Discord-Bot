@@ -1456,7 +1456,7 @@ async def getusers(ctx, role: discord.Role):
         await ctx.send(embed=embed)
 
 
-@client.command(aliases=["q"], description="Sends a quiz for you to answer")
+@client.command(aliases=["q", "triv", " trivia"], description="Sends a quiz for you to answer")
 async def quiz(ctx):
     answered = False
     session = aiohttp.ClientSession()
