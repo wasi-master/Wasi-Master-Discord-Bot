@@ -1471,8 +1471,7 @@ async def quiz(ctx):
     ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
     ordlist = [ordinal(n) for n in range(1,5)]
     embed = discord.Embed()
-    embed.set_author(name=f"{ctx.author}'s Quiz")
-    embed.set_footer(text="From Open Trivia DB")
+    embed.set_footer(text=f"For {ctx.author}")
     async with ctx.typing():
         async with session.get(
             "https://opentdb.com/api.php?amount=1&type=multiple"
@@ -1487,7 +1486,7 @@ async def quiz(ctx):
             .replace("&amp;", " &")
             .replace("&eacute;", "é")
         )
-        embed.add_field(name=question, value="‌")
+        embed.set_author(name=question)
 
         difficulty = data.get("results")[0].get("difficulty")
         embed.add_field(name="Difficulty", value=difficulty.title())
