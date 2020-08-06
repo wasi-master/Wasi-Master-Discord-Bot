@@ -1,5 +1,8 @@
-
 .vscode/settings.json
 .vscode
 dictionary.json
 Procfile
+prefixes.json
+runtime.txt
+requirements.txt
+bot.py
