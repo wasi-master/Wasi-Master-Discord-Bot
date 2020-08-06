@@ -57,7 +57,7 @@ def get_flag(flag: str):
 	elif flag == "hypesquad_bravery":
 		return "<:hypesquadbravery:724328585040625667>"
 	elif flag == "hypesquad_balance":
-		return "<:hypesquadbalance:724328585166454845>"
+		return "<s:hypesquadbalance:724328585166454845>"
 	elif flag == "hypesquad":
 		return "<:hypesquad:724328585237626931>"
 	elif flag == "early_supporter":
@@ -1958,6 +1958,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
 
     roles = [role for role in member.roles]
+    roles = roles[1:]
     flaglist = [flag for flag in member.public_flags.all()]
     flagstr = ""
     for i in flaglist:
