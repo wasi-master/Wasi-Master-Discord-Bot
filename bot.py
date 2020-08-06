@@ -51,6 +51,27 @@ def get_p(prog, num=0):
     return f"`{text}`"
 
 
+def get_flag(flag: str):
+	if flag == "hypesquad_brilliance":
+		return "<:hypesquadbrilliance:724328585363456070>"
+	elif flag == "hypesquad_bravery":
+		return "<:hypesquadbravery:724328585040625667>"
+	elif flag == "hypesquad_balance":
+		return "<:hypesquadbalance:724328585166454845>"
+	elif flag == "hypesquad":
+		return "<:hypesquad:724328585237626931>"
+	elif flag == "early_supporter":
+		return "<:earlysupporter:724588086646014034>"
+	elif flag == "bug_hunter":
+		return "<:bughunt:724588087052861531>"
+	elif flag == "bug_hunter_level_2":
+		return "<:bughunt2:726775007908462653>"
+	elif flag == "verified_bot_developer":
+		return "<:verifiedbotdeveloper:740854331154235444>"
+	elif flag == "verified_bot":
+		return "<:verifiedbot:740855315985072189>"
+
+
 def get_status(status: str):
     if str(status) == "online":
         return "<:status_online:596576749790429200>"
@@ -1925,7 +1946,10 @@ async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
 
     roles = [role for role in member.roles]
-
+    flaglist = [flag for flag in member.public_flags.all()]
+    flagstr = ""
+    for i in flaglist:
+    	flagstr += f"{get_flag(i.name)} "
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
@@ -1936,6 +1960,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
         )
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
+    embed.add_field(name="Badges", values=flagstr)
     embed.add_field(
         name="Online Status",
         value=f"Desktop: {get_status(member.desktop_status.name)}\nWeb: {get_status(member.web_status.name)}\nMobile: {get_status(member.mobile_status.name)}",
