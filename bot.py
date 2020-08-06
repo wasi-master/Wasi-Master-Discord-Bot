@@ -1963,6 +1963,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     for i in flaglist:
     	flagstr += f"{get_flag(i.name)} "
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
+    embed.set_thumbnail(url=member.avatar_url)
     embed.set_author(name=f"User Info - {member}")
     embed.set_footer(text=f"Requested by {ctx.author}")
     if member.id == 538332632535007244:
