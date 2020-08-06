@@ -166,6 +166,8 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_command_error(ctx, error):
+    if hasattr(ctx.command, "on_error"):
+    	return
     if isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command}")
     elif isinstance(error, commands.MissingPermissions):
@@ -1911,7 +1913,7 @@ async def purge(ctx, amount: int):
 @purge.error
 async def purge_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Please specify the amount of messag esto delete")
+        await ctx.send("Please specify the amount of messages to delete")
 
 
 @client.command(description="Kicks a user ")
