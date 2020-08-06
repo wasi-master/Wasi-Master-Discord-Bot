@@ -1470,8 +1470,6 @@ async def quiz(ctx):
 
     ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
     ordlist = [ordinal(n) for n in range(1,5)]
-    embed = discord.Embed()
-    embed.set_footer(text=f"For {ctx.author}")
     async with ctx.typing():
         async with session.get(
             "https://opentdb.com/api.php?amount=1&type=multiple"
@@ -1486,18 +1484,15 @@ async def quiz(ctx):
             .replace("&amp;", " &")
             .replace("&eacute;", "é")
         )
-        embed.set_author(name=question)
-
         difficulty = data.get("results")[0].get("difficulty")
-        embed.add_field(name="Difficulty", value=difficulty.title())
-
         category = (
             data.get("results")[0]
             .get("category")
             .replace("Entertainment: ", "")
             .replace("Science: ", "")
         )
-        embed.add_field(name="Category", value=category)
+        embed = discord.Embed(title=question, description=f"Category: {category}\nDifficulty: {difficulty}")
+        embed.set_footer(text=f"For {ctx.author}")
         correct_answer = "not found"
         randomint = secureRandom.randint(1, 4)
         if randomint == 1:
@@ -1510,6 +1505,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="B",
@@ -1519,6 +1515,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="C",
@@ -1528,6 +1525,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="D",
@@ -1537,6 +1535,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
         if randomint == 2:
             correct_answer = "b"
@@ -1548,6 +1547,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="B",
@@ -1557,6 +1557,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="C",
@@ -1566,6 +1567,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="D",
@@ -1575,6 +1577,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
         if randomint == 3:
             correct_answer = "c"
@@ -1586,6 +1589,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="B",
@@ -1595,6 +1599,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="C",
@@ -1604,6 +1609,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="D",
@@ -1613,6 +1619,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
         if randomint == 4:
             correct_answer = "d"
@@ -1624,6 +1631,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="B",
@@ -1633,6 +1641,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="C",
@@ -1642,6 +1651,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
             embed.add_field(
                 name="D",
@@ -1651,6 +1661,7 @@ async def quiz(ctx):
                 .replace("&quot;", '"')
                 .replace("&amp;", " &")
                 .replace("&eacute;", "é"),
+                inline=False
             )
     await ctx.send(embed=embed)
     try:
