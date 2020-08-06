@@ -1491,7 +1491,7 @@ async def quiz(ctx):
             .replace("Entertainment: ", "")
             .replace("Science: ", "")
         )
-        embed = discord.Embed(title=question, description=f"Category: {category}\nDifficulty: {difficulty}")
+        embed = discord.Embed(title=question, description=f"Category: {category.title()}\nDifficulty: {difficulty.title()}")
         embed.set_footer(text=f"For {ctx.author}")
         correct_answer = "not found"
         randomint = secureRandom.randint(1, 4)
