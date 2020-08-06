@@ -6,3 +6,4 @@ jishaku
 async_cleverbot
 bs4
 psutil
+dblpy
