@@ -1960,7 +1960,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
         )
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
-    embed.add_field(name="Badges", values=flagstr)
+    embed.add_field(name="Badges", value=flagstr)
     embed.add_field(
         name="Online Status",
         value=f"Desktop: {get_status(member.desktop_status.name)}\nWeb: {get_status(member.web_status.name)}\nMobile: {get_status(member.mobile_status.name)}",
