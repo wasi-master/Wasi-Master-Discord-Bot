@@ -94,6 +94,7 @@ client = commands.Bot(command_prefix=get_prefix)
 dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs")
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
+client.remove_command("help")
 
 @tasks.loop(seconds=86400)
 async def update_server_count():
@@ -1262,6 +1263,7 @@ async def colour(ctx, color: str):
     embed.add_field(name="CMYK", value=cmyk)
     embed.add_field(name="XYZ", value=xyz)
     await ctx.send(embed=embed)
+    session.close()
 
 
 @client.command(
