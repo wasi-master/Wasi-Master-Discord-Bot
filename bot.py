@@ -236,7 +236,7 @@ async def movie(ctx, *, query):
 		embed.add_field(name="Released On", value=fj["Released"])
 		embed.add_field(name="Rated", value=fj["Rated"])
 		mins = []
-		embed.add_field(name="Duration", value=f"{fj['Runtime']}  ({convert_sec_to_min(''.join([int(str(letter)) for letter in fj['Runtime'].split() if letter.isdigit()]))})")
+		embed.add_field(name="Duration", value=f"{fj['Runtime']}")
 		embed.add_field(name="Genre", value=fj["Genre"])
 		embed.add_field(name="Credits", value=f"Director: {fj['Director']}\nWriter: {fj['Writer']}\nActors: {fj['Actors']}")
 		embed.add_field(name="Languages", value=fj['Languages'])
