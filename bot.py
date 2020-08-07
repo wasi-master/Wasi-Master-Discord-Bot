@@ -230,12 +230,11 @@ def pad(to_pad):
 async def lock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     channel = ctx.channel
-    if not role:  # checks if there is muted role
-        try:  # creates muted role
-            await channel.set_permissions(role,send_messages=False,read_message_history=True,read_messages=True)
-            await ctx.send("Channel Locked")
-        except discord.Forbidden:
-            return await ctx.send(
+    try:
+        await channel.set_permissions(role,send_messages=False,read_message_history=True,read_messages=True)
+        await ctx.send("Channel Locked")
+    except discord.Forbidden:
+        return await ctx.send(
                 "I have no permissions to lock"
             )
 
@@ -245,12 +244,11 @@ async def lock(ctx, *, role: discord.Role=None):
 async def unlock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     channel = ctx.channel
-    if not role:  # checks if there is muted role
-        try:  # creates muted role
-            await channel.set_permissions(send_messages=True,read_message_history=True,read_messages=True)
-            await ctx.send("Channel Unlocked")
-        except discord.Forbidden:
-            return await ctx.send(
+    try:  # creates muted role
+        await channel.set_permissions(send_messages=True,read_message_history=True,read_messages=True)
+        await ctx.send("Channel Unlocked")
+    except discord.Forbidden:
+        return await ctx.send(
                 "I have no permissions to lock"
             )
 
