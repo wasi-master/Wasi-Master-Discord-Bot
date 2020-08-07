@@ -236,7 +236,7 @@ async def changepfp(ctx):
 		await client.user.edit(avatar=avatar)
 		f.close()
 	file = discord.File(pfp)
-	await ctx.send("Changed Profile picture to:", file=filr)
+	await ctx.send("Changed Profile picture to:", file=file)
 
 
 @client.command()
