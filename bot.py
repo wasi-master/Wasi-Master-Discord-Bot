@@ -229,6 +229,7 @@ def pad(to_pad):
 @has_permissions(manage_channels=True)
 async def lock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
+    channel = ctx.channel
     if not role:  # checks if there is muted role
         try:  # creates muted role
             await channel.set_permissions(
@@ -248,6 +249,7 @@ async def lock(ctx, *, role: discord.Role=None):
 @has_permissions(manage_channels=True)
 async def unlock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
+    channel = ctx.channel
     if not role:  # checks if there is muted role
         try:  # creates muted role
             await channel.set_permissions(
