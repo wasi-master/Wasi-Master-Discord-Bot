@@ -1297,7 +1297,13 @@ async def say(ctx, *, args: commands.clean_content):
 @client.command(
     description="Changes role for a user (removes if he has the role, adds the role if he doesn't)"
 )
-async def role(ctx, member: commands.Greedy[discord.Member], role: commands.Greedy[discord.Role]):
+async def role(ctx):
+    try:
+        member = ctx.message.mentions[0]
+        role = ctx.message.role_mentions[0]
+    except IndexError:
+        await ctx.send("Invalid usage")
+    
     if role in member.roles:  # checks all roles the member has
         await member.remove_roles(role)
         embed = discord.Embed(colour=16711680, timestamp=ctx.message.created_at)
