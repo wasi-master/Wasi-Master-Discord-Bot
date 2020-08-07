@@ -239,7 +239,7 @@ async def movie(ctx, *, query):
 		embed.add_field(name="Duration", value=f"{fj['Runtime']}")
 		embed.add_field(name="Genre", value=fj["Genre"])
 		embed.add_field(name="Credits", value=f"Director: {fj['Director']}\nWriter: {fj['Writer']}\nActors: {fj['Actors']}")
-		embed.add_field(name="Languages", value=fj['Languages'])
+		embed.add_field(name="Language(s)", value=fj['Language'])
 		embed.add_field(name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}")
 		embed.add_field(name="Production", value=f"[{fj['Production']}]({fj['Website']})")
 		await ctx.send(embed=embed)
