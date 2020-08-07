@@ -233,7 +233,7 @@ async def pp(ctx, *, member: discord.Member=None):
 		comment = "Hehe, pp smol"
 	elif ppsize < 9 and ppsize > 6:
 		comment = "okay"
-	elif ppsize > 9 and ppsize > 12:
+	elif ppsize > 9 and ppsize < 12:
 		comment = "normal pp"
 	elif ppsize > 12 and ppsize < 18:
 		comment = "huge pp"
