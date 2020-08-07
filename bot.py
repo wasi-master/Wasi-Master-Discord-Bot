@@ -231,13 +231,8 @@ async def lock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     if not role:  # checks if there is muted role
         try:  # creates muted role
-            for (
-                channel
-            ) in (
-                ctx.guild.channels
-            ):  # removes permission to view and send in the channels
-                await channel.set_permissions(
-                    muted,
+            await channel.set_permissions(
+                    role,
                     send_messages=False,
                     read_message_history=True,
                     read_messages=True,
@@ -255,13 +250,8 @@ async def unlock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     if not role:  # checks if there is muted role
         try:  # creates muted role
-            for (
-                channel
-            ) in (
-                ctx.guild.channels
-            ):  # removes permission to view and send in the channels
-                await channel.set_permissions(
-                    muted,
+            await channel.set_permissions(
+                    role,
                     send_messages=True,
                     read_message_history=True,
                     read_messages=True,
