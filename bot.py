@@ -225,6 +225,26 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl"])
+async def pypi(ctx, package_name:str):
+	session = aiohttp.ClientSession()
+	url = f"https://pypi.org/pypi/{package_name}/json"
+	async with session.get(url) as response:
+		if "We looked everywhere but couldn't find this page" in await response.text():
+			return await ctx.send("Project not found")
+		else:
+			fj = json.loads(await response.text())
+	fj = fj["info"]
+	embed = discord.Embed(title=fj["name"], description=fj["description"])
+	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {fj['author_email']}")
+	embed.add_field(name="Version", value=fj["version"])
+	embed.add_field(name="Summary", value=fj["summary"])
+	embed.add_field(name="Links", value=f"[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+	embed.add_field(name="License", value=fj["license"])
+	embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
+	await ctx.send(embed=embed)
+
+
 @client.command(name="penis", aliases=["pp"], description="See someone's penis size (random)")
 async def pp(ctx, *, member: discord.Member=None):
 	member = member or ctx.author
@@ -246,7 +266,7 @@ async def pp(ctx, *, member: discord.Member=None):
 	await ctx.send(embed=embed)
 
 @client.command(name="gender", description="Get a gender by providing a name")
-@commands.cooldown(3, 60, BucketType.default)
+@commands.cooldown(1, 60, BucketType.default)
 async def gender(ctx, *, name: str):
 	session = aiohttp.ClientSession()
 	url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
@@ -266,7 +286,7 @@ async def gender(ctx, *, name: str):
 	if not gender == "Unknown":
 		text = f"The name {fj['name_sanitized']} has a **{positive}** chance of being a  **{gender}** and a {negative} chance of not being a {gender}"
 	else:
-		text = f"The name fj['name_sanitized'] is not in our database"
+		text = f"The name {fj['name_sanitized']} is not in our database"
 	embed = discord.Embed(title=fj["name_sanitized"], description=text, color=color)
 	await ctx.send(embed=embed)
 
