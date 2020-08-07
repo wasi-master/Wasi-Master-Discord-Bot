@@ -226,7 +226,7 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
-@client.command()
+@client.command(aliases=["chpfp","cp"], description="Change the bots profile picture on random" )
 @commands.cooldown(2, 900, BucketType.default)
 async def changepfp(ctx):
 	pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
@@ -243,7 +243,7 @@ async def changepfp(ctx):
 	embed.set_image(url="attachment://avatar.png")
 	await channel.send(file=file, embed=embed)
 
-@client.command()
+@client.command(aliases=["lck", "lk"],description="Lock a channel")
 @has_permissions(manage_channels=True)
 async def lock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
@@ -257,7 +257,7 @@ async def lock(ctx, *, role: discord.Role=None):
             )
 
 
-@client.command()
+@client.command(aliases=["unlck", "ulk"], description=" Unlocks a channel")
 @has_permissions(manage_channels=True)
 async def unlock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
