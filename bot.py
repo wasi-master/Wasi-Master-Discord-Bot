@@ -287,7 +287,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
     )
     embed.add_field(name="ID", value=channel.id)
     embed.add_field(name="Position", value=channel.position)
-    embed.add_field(name="Category", value=channel.catergory)
+    embed.add_field(name="Category", value=channel.category.name)
     if not channel.topic is None:
         embed.add_field(name="Topic", value=channel.topic)
     if not channel.slowmode_delay is None:
