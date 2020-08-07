@@ -227,7 +227,7 @@ def pad(to_pad):
 
 
 @client.command()
-@commands.cooldown(1, 900, BucketType.default)
+@commands.cooldown(2, 900, BucketType.default)
 async def changepfp(ctx):
 	pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
 	pfp = random.choice(pfps)
@@ -235,9 +235,13 @@ async def changepfp(ctx):
 		avatar = f.read()
 		await client.user.edit(avatar=avatar)
 		f.close()
-	file = discord.File(pfp)
+	file = discord.File(pfp, filename="avatar.png")
 	await ctx.send("Changed Profile picture to:", file=file)
-
+	server = clienr.get_guild(576016234152198155)
+	channek = server.get_channel(741371556277518427)
+	embed = discord.Embed(title=f"Avatar was changed by {ctx.author}")
+	embed.set_image(url="attachment://avatar.png")
+	await channel.send(file=file, embed=embed)
 
 @client.command()
 @has_permissions(manage_channels=True)
