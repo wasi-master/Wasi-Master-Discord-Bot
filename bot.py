@@ -224,6 +224,31 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(name="gender", description="Get a gender by providing a name")
+async def gender(ctx, *, name: str):
+	session = aiohttp.ClientSession()
+	url = f"https://gender-api.com/get?name={name}&key=tKYMESVFrAEhpCpuwz"
+	async with session.get(url) as r:
+		fj = json.loads(await r.text())
+	if fj['gender'] == "male":
+		gender = "Male"
+		color = 2929919
+	elif fj["gender"] == "female":
+		gender = "Female"
+		color = 16723124
+	else:
+		gender = "Unknown"
+		color = 6579300
+	positive = str(fj[accuracy]) + "%"
+	negative = str(100 - fj[accuracy]) + "%"
+	if not gender == "Unknown"
+		text = f"The name {fj['name_sanitized']} has a **{positive}** chance of being a  **{gender}** and a {negative} chance of not being a {gender}"
+	else:
+		text = f"The name fj['name_sanitized'] is not in our database"
+	embed = discord.Embed(title=fj["name_sanitized"], description=text, color=color)
+	await ctx.send(embed=embed)
+
+
 @client.command(description="See details about a movie")
 async def movie(ctx, *, query):
 	session = aiohttp.ClientSession()
@@ -243,6 +268,7 @@ async def movie(ctx, *, query):
 		embed.add_field(name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}")
 		embed.add_field(name="Production", value=f"[{fj['Production']}]({fj['Website']})")
 		await ctx.send(embed=embed)
+		await session.close()
 	else:
 		await ctx.send("Movie Not Found")
 
