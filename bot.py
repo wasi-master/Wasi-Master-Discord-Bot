@@ -9,6 +9,7 @@ import json
 import os
 import secrets
 import time as timemodule
+import random
 
 import aiohttp
 import async_cleverbot as ac
@@ -1871,7 +1872,7 @@ async def invite(ctx):
 
 
 @client.command(
-    aliases=["pfp", "av", "profilepicture", "pp", "profile"],
+    aliases=["pfp", "av", "profilepicture", "profile"],
     description="Sends your or another users avatar",
 )
 async def avatar(
