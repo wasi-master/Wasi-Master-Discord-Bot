@@ -239,8 +239,6 @@ async def pypi(ctx, package_name:str):
 		embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["))
 	else:
 		embed = discord.Embed(title=fj["name"])
-	if not len(fj["image"]) == 0:
-		embed.set_thumbnail(url=fj["image"])
 	if len(fj["author_email"]) == 0:
 		email = "None"
 	else:
