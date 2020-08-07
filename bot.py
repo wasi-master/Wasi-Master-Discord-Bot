@@ -252,7 +252,7 @@ async def pypi(ctx, package_name:str):
 	else:
 		license = fj["license"]
 	embed.add_field(name="License", value={license})
-	if len(fj["requires_dist") > 5:
+	if len(fj["requires_dist"]) > 5:
 		embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
 	elif not len(fj["requires_dist"]) == 0:
 		embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
