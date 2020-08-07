@@ -114,17 +114,6 @@ async def update_server_count():
     )
 
 
-@tasks.loop(seconds=86400)
-async def change_pfp():
-	pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
-	pfp = random.choice(pfps)
-	with open(pfp, "rb") as f:
-		avatar = f.read()
-		await client.user.edit(avatar=avatar)
-		f.close()
-	
-	
-
 
 @client.event
 async def on_ready():
@@ -132,7 +121,6 @@ async def on_ready():
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
     update_server_count.start()
-    change_pfp.start()
     client.load_extension("jishaku")
 
 
@@ -239,6 +227,19 @@ def pad(to_pad):
 
 
 @client.command()
+@commands.cooldown(1, 900, BucketType.default)
+async def changepfp(ctx):
+	pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
+	pfp = random.choice(pfps)
+	with open(pfp, "rb") as f:
+		avatar = f.read()
+		await client.user.edit(avatar=avatar)
+		f.close()
+	file = discord.File(pfp)
+	await ctx.send("Changed Profile picture to:", file=filr)
+
+
+@client.command()
 @has_permissions(manage_channels=True)
 async def lock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
@@ -324,7 +325,7 @@ async def pp(ctx, *, member: discord.Member=None):
 	await ctx.send(embed=embed)
 
 @client.command(name="gender", description="Get a gender by providing a name")
-@commands.cooldown(1, 60, BucketType.default)
+@commands.cooldown(1, 60, BucketType.user)
 async def gender(ctx, *, name: str):
 	session = aiohttp.ClientSession()
 	url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
@@ -539,7 +540,7 @@ async def clone(ctx, channel: discord.TextChannel = None):
 @client.command(
     aliases=["sug", "suggestion"], description="Suggest a thing to be added to the bot"
 )
-@commands.cooldown(1, 3600, BucketType.default)
+@commands.cooldown(1, 3600, BucketType.user)
 async def suggest(ctx, *, suggestion: commands.clean_content):
     guild = client.get_guild(576016234152198155)
     channel = guild.get_channel(740071107041689631)
@@ -555,7 +556,7 @@ async def suggest(ctx, *, suggestion: commands.clean_content):
 
 
 @client.command(aliases=["upscaled"], description="Upscales a users profile picture")
-@commands.cooldown(1, 3600, type=BucketType.default)
+@commands.cooldown(1, 3600, type=BucketType.user)
 async def upscale(ctx, scaletype, *, member: discord.Member = None):
     member = member or ctx.author
     if scaletype.lower() == "anime":
