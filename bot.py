@@ -244,8 +244,8 @@ async def lock(ctx, *, role: discord.Role=None):
 async def unlock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     channel = ctx.channel
-    try:  # creates muted role
-        await channel.set_permissions(send_messages=True,read_message_history=True,read_messages=True)
+    try:
+        await channel.set_permissions(role, send_messages=True,read_message_history=True,read_messages=True)
         await ctx.send("Channel Unlocked")
     except discord.Forbidden:
         return await ctx.send(
