@@ -235,7 +235,7 @@ async def pypi(ctx, package_name:str):
 		else:
 			fj = json.loads(await response.text())
 	fj = fj["info"]
-	embed = discord.Embed(title=fj["name"], description=fj["description"])
+	embed = discord.Embed(title=fj["name"], description=fj["description"].replace("![", "["))
 	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {fj['author_email']}")
 	embed.add_field(name="Version", value=fj["version"])
 	embed.add_field(name="Summary", value=fj["summary"])
@@ -243,6 +243,7 @@ async def pypi(ctx, package_name:str):
 	embed.add_field(name="License", value=fj["license"])
 	embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
 	await ctx.send(embed=embed)
+	await session.close()
 
 
 @client.command(name="penis", aliases=["pp"], description="See someone's penis size (random)")
