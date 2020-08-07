@@ -292,7 +292,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
         embed.add_field(name="Topic", value=channel.topic)
     if not channel.slowmode_delay is None:
         embed.add_field(name="Slowmode", value=f"{channel.slowmode_delay} seconds")
-
+    await ctx.send(embed=embed)
 
 @client.command(
     aliases=["nk"],
