@@ -1297,7 +1297,7 @@ async def say(ctx, *, args: commands.clean_content):
 @client.command(
     description="Changes role for a user (removes if he has the role, adds the role if he doesn't)"
 )
-async def role(ctx, member: commands.Greedy[discord.Member], role: commands.Greedy[discord.Role]):
+async def role(ctx, member: discord.Member,*,  role: discord.Role):
     try:
         member = member[0]
         role = role[0]
