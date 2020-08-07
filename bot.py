@@ -1297,7 +1297,7 @@ async def say(ctx, *, args: commands.clean_content):
 @client.command(
     description="Changes role for a user (removes if he has the role, adds the role if he doesn't)"
 )
-async def role(ctx, member: discord.Member, role: discord.Role):
+async def role(ctx, member: commands.Greedy[discord.Member], role: commands.Greedy[discord.Role]):
     if role in member.roles:  # checks all roles the member has
         await member.remove_roles(role)
         embed = discord.Embed(colour=16711680, timestamp=ctx.message.created_at)
@@ -1454,7 +1454,7 @@ async def getusers(ctx, *, role: discord.Role):
         empty = True
         for member in ctx.message.guild.members:
             if role in member.roles:
-                embed.add_field(name=member, value=member.id)
+                embed.add_field(name=member, value=member.mention)
                 empty = False
     if empty:
         await ctx.send("Nobody has the role {}".format(role.mention))
