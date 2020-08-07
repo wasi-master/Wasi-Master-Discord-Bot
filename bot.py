@@ -246,7 +246,7 @@ async def pp(ctx, *, member: discord.Member=None):
 	await ctx.send(embed=embed)
 
 @client.command(name="gender", description="Get a gender by providing a name")
-@commands.cooldown(3, 3600, BucketType.default)
+@commands.cooldown(3, 60, BucketType.default)
 async def gender(ctx, *, name: str):
 	session = aiohttp.ClientSession()
 	url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
