@@ -281,7 +281,7 @@ async def screenshot(ctx, website:str):
 async def channelinfo(ctx, channel: discord.TextChannel = None):
     channel = channel or ctx.channel
     embed = discord.Embed()
-    embed.set_author(f"Channel Information for {channel.name}")
+    embed.set_author(name=f"Channel Information for {channel.name}")
     embed.add_field(
         name="Created at", value=channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")
     )
