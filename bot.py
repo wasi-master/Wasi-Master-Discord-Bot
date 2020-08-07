@@ -225,18 +225,22 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
-@client.command(name="penis", description="See someone's penis size (random)")
+@client.command(name="penis", aliases=["pp"], description="See someone's penis size (random)")
 async def pp(ctx, *, member: discord.Member=None):
 	member = member or ctx.author
-	ppsize = random.randint(0, 15)
+	ppsize = random.randint(0, 30)
 	if ppsize < 6:
-		comment = "Hehe, pp **smol**"
+		comment = "Hehe, pp smol"
 	elif ppsize < 9 and ppsize > 6:
-		comment = "Okay"
+		comment = "okay"
 	elif ppsize > 9 and ppsize > 12:
-		comment = "pretty big pp"
-	else:
+		comment = "normal pp"
+	elif ppsize > 12 and ppsize < 18:
 		comment = "huge pp"
+	elif ppsize > 18 and ppsize < 25:
+		comment = "extremely big pp"
+	else:
+		comment = "tremendous pp "
 	embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D")
 	embed.set_footer(text=comment)
 	await ctx.send(embed=embed)
