@@ -224,6 +224,29 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(description="See details about a movie")
+async def movie(ctx, *, query):
+	session = aiphttp.ClientSession()
+	url = f"http://www.omdbapi.com/?i=tt3896198&apikey=4e62e2fc&t={query}"
+	async with session.get(url) as response:
+		fj = json.loads(await response.text())
+	if fj["Response"] == "True":
+		embed = discord.Embed(title=fj["Title"], description=fj["Plot"])
+		embed.set_image(url=fj["Poster"])
+		embed.add_field(name="Released On", value=fj["Released"])
+		embed.add_field(name="Rated", value=fj["Rated"])
+		mins = []
+		embed.add_field(name="Duration", value=f"{fj['Runtime']}  ({convert_sec_to_min(''.join([int(letter) for letter in fj['Runtime'].split() if letter.isdigit()]))})")
+		embed.add_field(name="Genre", value=fj["Genre"])
+		embed.add_field(name="Credits", value=f"Director: {fj['Director']}\nWriter: {fj['Writer']}\nActors: {fj['Actors']}")
+		embed.add_field(name="Languages", value=fj['Languages'])
+		embed.add_field(name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}")
+		embed.add_field(name="Production", value=f"[{fj['Production']}]({fj['Website']})")
+		await ctx.send(embed=embed)
+	else:
+		await ctx.send("Movie Not Found")
+
+
 @client.command(aliases=["ri", "rlinf"], description=" See info about a role")
 async def roleinfo(ctx, role: discord.Role = None):
     if role is None:
