@@ -235,12 +235,25 @@ async def pypi(ctx, package_name:str):
 		else:
 			fj = json.loads(await response.text())
 	fj = fj["info"]
-	embed = discord.Embed(title=fj["name"], description=fj["description"].replace("![", "["))
-	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {fj['author_email']}")
+	if not len(fj["summary"]) == 0: 
+		embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["))
+	else:
+		embed = discord.Embed(title=fj["name"])
+	if not len(fj["image"]) == 0:
+		embed.set_thumbnail(url=fj["image"])
+	if len(fj["author_email"]) == 0:
+		email = "None"
+	else:
+		email = fj["author_email"]
+	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
 	embed.add_field(name="Version", value=fj["version"])
-	embed.add_field(name="Summary", value=fj["summary"])
+	#embed.add_field(name="Summary", value=fj["summary"])
 	embed.add_field(name="Links", value=f"[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
-	embed.add_field(name="License", value=fj["license"])
+	if len(fj["license"]) == 0:
+		license = "Not Specified"
+	else:
+		license = fj["license"]
+	embed.add_field(name="License", value={license})
 	embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
 	await ctx.send(embed=embed)
 	await session.close()
