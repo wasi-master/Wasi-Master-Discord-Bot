@@ -1970,7 +1970,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
 
     roles = [role for role in reversed(member.roles)]
-    roles = roles[1:]
+    roles = roles[:-1]
     flaglist = [flag for flag in member.public_flags.all()]
     flagstr = ""
     for i in flaglist:
