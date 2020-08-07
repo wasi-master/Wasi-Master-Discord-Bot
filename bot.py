@@ -165,6 +165,11 @@ async def on_guild_remove(guild):
 
 
 @client.event
+async def on_message(message):
+	
+
+
+@client.event
 async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
     	return
@@ -237,7 +242,7 @@ async def roleinfo(ctx, role: discord.Role = None):
     embed.add_field(name="Position", value=f"{role.position}/{len(ctx.guild.roles)}")
     embed.add_field(name="Members", value=len(role.members))
     embed.add_field(name="Role Color", value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb}")
-    if role.hoisted:
+    if role.hoist:
         embed.add_field(name="Displayed Separatel?", value="Yes")
     else:
         embed.add_field(name="Displayed Separatel?", value="No")
