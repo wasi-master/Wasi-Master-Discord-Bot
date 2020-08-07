@@ -226,6 +226,7 @@ def pad(to_pad):
 
 
 @client.command()
+@has_permissions(manage_channels=True)
 async def lock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     if not role:  # checks if there is muted role
@@ -241,6 +242,7 @@ async def lock(ctx, *, role: discord.Role=None):
                     read_message_history=True,
                     read_messages=True,
                 )
+            await ctx.send("Channel Locked")
         except discord.Forbidden:
             return await ctx.send(
                 "I have no permissions to lock"
@@ -248,6 +250,7 @@ async def lock(ctx, *, role: discord.Role=None):
 
 
 @client.command()
+@has_permissions(manage_channels=True)
 async def unlock(ctx, *, role: discord.Role=None):
     role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
     if not role:  # checks if there is muted role
@@ -263,6 +266,7 @@ async def unlock(ctx, *, role: discord.Role=None):
                     read_message_history=True,
                     read_messages=True,
                 )
+            await ctx.send("Channel Unlocked")
         except discord.Forbidden:
             return await ctx.send(
                 "I have no permissions to lock"
@@ -754,7 +758,7 @@ async def shutdown(ctx):
         await ctx.send("You are not the bot owner :grin::grin::grin:")
 
 
-@client.command(description="Custom Slow Mode")
+@client.command(aliases=["sd"],description="Custom Slow Mode")
 @has_permissions(manage_channels=True)
 async def slowmode(ctx, slowmode: int):
     if slowmode > 21600:
