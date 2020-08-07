@@ -1297,10 +1297,10 @@ async def say(ctx, *, args: commands.clean_content):
 @client.command(
     description="Changes role for a user (removes if he has the role, adds the role if he doesn't)"
 )
-async def role(ctx):
+async def role(ctx, member: commands.Greedy[discord.Member], role: commands.Greedy[discord.Role]):
     try:
-        member = ctx.message.mentions[0]
-        role = ctx.message.role_mentions[0]
+        member = member[0]
+        role = role[0]
     except IndexError:
         await ctx.send("Invalid usage")
     
