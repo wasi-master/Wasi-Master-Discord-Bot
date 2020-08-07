@@ -225,6 +225,7 @@ def pad(to_pad):
 
 
 @client.command(name="gender", description="Get a gender by providing a name")
+@commands.cooldown(2, 3600, BucketType.default)
 async def gender(ctx, *, name: str):
 	session = aiohttp.ClientSession()
 	url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
