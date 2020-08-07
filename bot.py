@@ -225,6 +225,50 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command()
+async def lock(ctx, *, role: discord.Role=None):
+    role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
+    if not role:  # checks if there is muted role
+        try:  # creates muted role
+            for (
+                channel
+            ) in (
+                ctx.guild.channels
+            ):  # removes permission to view and send in the channels
+                await channel.set_permissions(
+                    muted,
+                    send_messages=False,
+                    read_message_history=True,
+                    read_messages=True,
+                )
+        except discord.Forbidden:
+            return await ctx.send(
+                "I have no permissions to lock"
+            )
+
+
+@client.command()
+async def unlock(ctx, *, role: discord.Role=None):
+    role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
+    if not role:  # checks if there is muted role
+        try:  # creates muted role
+            for (
+                channel
+            ) in (
+                ctx.guild.channels
+            ):  # removes permission to view and send in the channels
+                await channel.set_permissions(
+                    muted,
+                    send_messages=True,
+                    read_message_history=True,
+                    read_messages=True,
+                )
+        except discord.Forbidden:
+            return await ctx.send(
+                "I have no permissions to lock"
+            )
+
+
 @client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl"])
 async def pypi(ctx, package_name:str):
 	session = aiohttp.ClientSession()
@@ -246,7 +290,7 @@ async def pypi(ctx, package_name:str):
 	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
 	embed.add_field(name="Version", value=fj["version"])
 	#embed.add_field(name="Summary", value=fj["summary"])
-	embed.add_field(name="Links", value=f"[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+	embed.add_field(name="Links", value=f"[Hoem Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
 	if len(fj["license"]) == 0:
 		license = "Not Specified"
 	else:
@@ -257,7 +301,7 @@ async def pypi(ctx, package_name:str):
 	elif not len(fj["requires_dist"]) == 0:
 		embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
 	if not len(fj["requires_python"]) == 0:
-		embed.add_field(name="Python Version Required", value=fj["requires_python"])
+		embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
 	await ctx.send(embed=embed)
 	await session.close()
 
