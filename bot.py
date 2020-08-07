@@ -1447,7 +1447,7 @@ async def urban(ctx, *, args):
 
 
 @client.command(aliases=["members"], description="Get who are in a certain role")
-async def getusers(ctx, role: discord.Role):
+async def getusers(ctx, *, role: discord.Role):
     embed = discord.Embed()
     embed.set_footer(text=f"Asked by {ctx.author}")
     async with ctx.typing():
