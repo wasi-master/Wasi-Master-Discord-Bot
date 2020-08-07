@@ -239,8 +239,8 @@ async def gender(ctx, *, name: str):
 	else:
 		gender = "Unknown"
 		color = 6579300
-	positive = str(fj[accuracy]) + "%"
-	negative = str(100 - fj[accuracy]) + "%"
+	positive = str(fj['accuracy']) + "%"
+	negative = str(100 - fj['accuracy']) + "%"
 	if not gender == "Unknown":
 		text = f"The name {fj['name_sanitized']} has a **{positive}** chance of being a  **{gender}** and a {negative} chance of not being a {gender}"
 	else:
