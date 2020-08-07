@@ -114,12 +114,25 @@ async def update_server_count():
     )
 
 
+@tasks.loop(seconds=86400)
+async def change_pfp():
+	pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
+	pfp = random.choice(pfps)
+	with open(pfp, "rb") as f:
+		avatar = f.read()
+		await client.user.edit(avatar=avatar)
+		f.close()
+	
+	
+
+
 @client.event
 async def on_ready():
     print("Bot is online")
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
     update_server_count.start()
+    change_pfp.start()
     client.load_extension("jishaku")
 
 
