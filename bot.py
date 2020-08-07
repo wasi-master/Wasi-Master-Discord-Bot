@@ -226,7 +226,7 @@ def pad(to_pad):
 
 @client.command(description="See details about a movie")
 async def movie(ctx, *, query):
-	session = aiphttp.ClientSession()
+	session = aiohttp.ClientSession()
 	url = f"http://www.omdbapi.com/?i=tt3896198&apikey=4e62e2fc&t={query}"
 	async with session.get(url) as response:
 		fj = json.loads(await response.text())
