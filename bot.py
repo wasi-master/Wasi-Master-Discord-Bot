@@ -165,11 +165,6 @@ async def on_guild_remove(guild):
 
 
 @client.event
-async def on_message(message):
-	
-
-
-@client.event
 async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
     	return
