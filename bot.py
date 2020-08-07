@@ -224,6 +224,30 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(aliases=["ri", "rlinf"], description=" See info about a role")
+async def roleinfo(ctx, role: discord.Role = None):
+	if role is None:
+        return await ctx.send("Please specify (mention or write the name) of a role")
+    embed = discord.Embed(colour=role.colour.value)
+    embed.set_author(name=f"Role Information for {role.name}")
+    embed.add_field(
+        name="Created at", value=role.created_at.strftime("%a, %d %B %Y, %H:%M:%S")
+    )
+    embed.add_field(name="ID", value=role.id)
+    embed.add_field(name="Position", value=f"{role.position}/{len(ctx.guild.roles)}")
+    embed.add_field(name="Members", value=len(role.members))
+    embed.add_field(name="Role Color", value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb}")
+    if role.hoisted:
+        embed.add_field(name="Displayed Separatel?", value="Yes")
+    else:
+        embed.add_field(name="Displayed Separatel?", value="No")
+    if role.mentionable:
+        embed.add_field(name="Mentionable", value="Yes")
+    else:
+        embed.add_field(name="Mentionable", value="No")
+    await ctx.send(embed=embed)
+
+
 @client.command(aliases=["tm"], description="See time")
 async def time(ctx, location: str=None):
 	embed = discord.Embed()
@@ -286,7 +310,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
         name="Created at", value=channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")
     )
     embed.add_field(name="ID", value=channel.id)
-    embed.add_field(name="Position", value=channel.position)
+    embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)})
     embed.add_field(name="Category", value=channel.category.name)
     if not channel.topic is None:
         embed.add_field(name="Topic", value=channel.topic)
