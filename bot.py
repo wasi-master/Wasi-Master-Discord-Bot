@@ -226,7 +226,7 @@ def pad(to_pad):
 
 @client.command(aliases=["ri", "rlinf"], description=" See info about a role")
 async def roleinfo(ctx, role: discord.Role = None):
-	if role is None:
+    if role is None:
         return await ctx.send("Please specify (mention or write the name) of a role")
     embed = discord.Embed(colour=role.colour.value)
     embed.set_author(name=f"Role Information for {role.name}")
