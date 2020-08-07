@@ -224,6 +224,22 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(name="penis", description="See someone's penis size (random)")
+async def pp(ctx, *, member: discord.Member=None):
+	member = member or ctx.author
+	ppsize = random.randint(0, 15)
+	if ppsize < 6:
+		comment = "Hehe, pp **smol**"
+	elif ppsize < 9 and ppsize > 6:
+		comment = "Okay"
+	elif ppsize > 9 and ppsize > 12:
+		comment = "pretty big pp"
+	else:
+		comment = "huge pp"
+	embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D")
+	embed.set_footer(text=comment)
+	await ctx.send(embed=embed)
+
 @client.command(name="gender", description="Get a gender by providing a name")
 @commands.cooldown(2, 3600, BucketType.default)
 async def gender(ctx, *, name: str):
