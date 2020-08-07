@@ -310,7 +310,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
         name="Created at", value=channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")
     )
     embed.add_field(name="ID", value=channel.id)
-    embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)})
+    embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)}")
     embed.add_field(name="Category", value=channel.category.name)
     if not channel.topic is None:
         embed.add_field(name="Topic", value=channel.topic)
