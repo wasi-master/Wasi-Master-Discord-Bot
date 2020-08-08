@@ -1968,7 +1968,7 @@ async def helpcommand(ctx, command: str = None):
         for i in client.commands:
             all_commands += f"`{i.name}`, "
         if ctx.guild is None:
-        	color = embed.Empty
+        	color = None
         else:
         	color = ctx.guild.me.colot
         embed = discord.Embed(
