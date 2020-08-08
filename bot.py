@@ -680,21 +680,7 @@ async def emoji(ctx, *, name: str):
 async def perms(
     ctx, member: discord.Member = None, channel: discord.TextChannel = None
 ):
-    mod = ctx.author.permissions_in(ctx.channel).manage_roles
-    if mod:
-        member = member or ctx.author
-    else:
-        if not member is None:
-            if member.bot:
-                member = member
-            else:
-                member = ctx.author
-        else:
-            member = ctx.author
-    if mod:
-        channel = channel or ctx.channel
-    else:
-        channel = ctx.channel
+    channel = channel or ctx.channel
     perms = []
     permstr = ""
     for i in member.permissions_in(channel):
