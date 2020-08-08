@@ -238,7 +238,7 @@ async def changepfp(ctx):
 	file = discord.File(pfp, filename="avatar.png")
 	await ctx.send("Changed Profile picture to:", file=file)
 	server = client.get_guild(576016234152198155)
-	channek = server.get_channel(741371556277518427)
+	channel = server.get_channel(741371556277518427)
 	embed = discord.Embed(title=f"Avatar was changed by {ctx.author}")
 	embed.set_image(url="attachment://avatar.png")
 	await channel.send(file=file, embed=embed)
