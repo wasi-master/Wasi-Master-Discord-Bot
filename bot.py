@@ -1970,7 +1970,7 @@ async def helpcommand(ctx, command: str = None):
         if ctx.guild is None:
         	color = None
         else:
-        	color = ctx.guild.me.colot
+        	color = ctx.guild.me.color
         embed = discord.Embed(
             colour=color,
             title=f"All Commands ({len(client.commands)})",
