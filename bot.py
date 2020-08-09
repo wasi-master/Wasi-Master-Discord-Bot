@@ -244,8 +244,8 @@ async def weather(ctx, location: str):
 	elif fj["cod"] == "404":
 		await ctx.send("Location not found")
 	else:
-		await ctx.send(f"I got a {fj["cod"]} Error")
-	session.close()
+		await ctx.send("Error")
+	await session.close()
 
 @client.command(aliases=["chpfp","cp"], description="Change the bots profile picture on random" )
 @commands.cooldown(2, 900, BucketType.default)
