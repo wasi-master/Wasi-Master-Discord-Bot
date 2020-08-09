@@ -236,7 +236,7 @@ async def weather(ctx, location: str):
 		fj = json.loads(await r.text())
 	if not fj["cod"] == "404":
 		embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}')
-		embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}° C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}° C\nMinimun: {round(fj["main"]["temp_min"]-273.15, 2)}° C\nMaximun: {round(fj["main"]["temp_max"]-273.15, 2)}° C')
+		embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C\nMinimum: {round(fj["main"]["temp_min"]-273.15, 2)}°C\nMaximum: {round(fj["main"]["temp_max"]-273.15, 2)}°C')
 		embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°')
 		embed.add_field(name="Cloudyness", value=str(fj["clouds"]["all"]) + "%")
 		#embed.add_field(name="Sun", value=f'Sunrise: {datetime.fromtimestamp(fj["sys"]["sunrise"]).strftime("%I:%M:%S")}\nSunset: {datetime.fromtimestamp(fj["sys"]["sunset"]).strftime("%I:%M:%S")}')
@@ -2012,7 +2012,7 @@ async def helpcommand(ctx, command: str = None):
             if not command_for_use.usage is None:
                 embed.add_field(name="Usage", value=command_for_use.usage)
             else:
-                pass
+                embed.add_field(name="Usage", value=command_for_use.name + " " + " ".join([f"`{i}`" for i in _bot.get_command(command_for_use.name).signature.split(" ")]))
             embed.add_field(name="Cooldown", value="None")
             await ctx.send(embed=embed)
         else:
