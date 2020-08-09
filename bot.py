@@ -231,7 +231,7 @@ async def weather(ctx, location: str):
 	session = aiohttp.ClientSession()
 	apiKey = "cbe36b072a1ef0a4aa566782989eb847"
 	location = location.replace(" ", "")
-	url = "api.openweathermap.org/data/2.5/weather?q={location}&APPID={apiKey}"
+	url = "https://api.openweathermap.org/data/2.5/weather?q={location}&APPID={apiKey}"
 	async with session.get(url) as r:
 		fj = json.loads(await r.text())
 	if not fj["cod"] == "404":
