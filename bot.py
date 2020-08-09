@@ -235,6 +235,8 @@ async def weather(ctx, location: str):
 	async with session.get(url) as r:
 		fj = json.loads(await r.text())
 		await ctx.send(await r.text())
+		await ctx.send("http://api.openweathermap.org/data/2.5/weather?q=Bogra&APPID=cbe36b072a1ef0a4aa566782989eb847")
+		await ctx.send(url)
 	if fj["cod"] == "404":
 		embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}')
 		embed.add_field(name="Temperature", value=f'Main: {fj["main"]["temp"]-273.15}\nFeels Like: {fj["main"]["feels_like"]-273.15}\nMinimun: {fj["main"]["temp_min"]-273.15}\nMaximun: {fj["main"]["temp_max"]-273.15}')
