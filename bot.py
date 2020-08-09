@@ -241,7 +241,7 @@ async def changepfp(ctx):
 		embed = discord.Embed(title=f"Avatar was changed by {ctx.author}")
 		embed.set_image(url="attachment://avatar.png")
 		await channel.send(file=file, embed=embed)
-		f.close()
+	f.close()
 
 @client.command(aliases=["lck", "lk"],description="Lock a channel")
 @has_permissions(manage_channels=True)
