@@ -226,6 +226,24 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command()
+async def weather(ctx, location: str):
+	session = aiohttp.ClientSession()
+	apiKey = "cbe36b072a1ef0a4aa566782989eb847"
+	location = location.replace(" ", "")
+	url = "api.openweathermap.org/data/2.5/weather?q={location}&APPID={apiKey}"
+	async with session.get(url) as r:
+		fj = json.loads(await r.text())
+	if not fj["cod"] == "404":
+		embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}')'
+		embed.add_field(name="Temperature", value=f'Main: {fj["main"]["temp"]-273.15}\nFeels Like: {fj["main"]["feels_like"]-273.15}\nMinimun: {fj["main"]["temp_min"]-273.15}\nMaximun: {fj["main"]["temp_max"]-273.15}')
+		embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}\nDirection: {fj["wind"]["deg"]}°')
+		embed.add_field(name="Cloudyness", value=fj["cloud"]["all"] + "%")
+		await ctx.send(embed=embed)
+	
+	else:
+		await ctx.send("Location not found")
+
 @client.command(aliases=["chpfp","cp"], description="Change the bots profile picture on random" )
 @commands.cooldown(2, 900, BucketType.default)
 async def changepfp(ctx):
