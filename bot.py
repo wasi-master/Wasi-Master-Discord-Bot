@@ -2012,7 +2012,7 @@ async def helpcommand(ctx, command: str = None):
             if not command_for_use.usage is None:
                 embed.add_field(name="Usage", value=command_for_use.usage)
             else:
-                embed.add_field(name="Usage", value=command_for_use.name + " " + " ".join([f"`{i}`" for i in _bot.get_command(command_for_use.name).signature.split(" ")]))
+                embed.add_field(name="Usage", value=command_for_use.name + " " + " ".join([f"`{i}`" for i in client.get_command(command_for_use.name).signature.split(" ")]))
             embed.add_field(name="Cooldown", value="None")
             await ctx.send(embed=embed)
         else:
