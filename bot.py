@@ -602,7 +602,6 @@ async def fact(ctx):
 async def waifu(ctx):
     session = aiohttp.ClientSession()
     gender = "male"
-    nsfw = True
     async with ctx.typing():
         while gender == "male":
             async with session.get("https://mywaifulist.moe/random") as resp:
@@ -630,15 +629,7 @@ async def waifu(ctx):
                 + "}"
             )["gender"]
         embed = discord.Embed(title=name.replace("&quot;", '"'))
-        if not ctx.channel.is_nsfw():
-            nsfw = False
-            r = requests.get(f"https://nsfw-categorize.it/api.php?url={image_url}")
-            if int(round(r["porn_probability"])) > 5 and not ctx.channel.is_nsfw():
-                nsfw = True
-                return await ctx.send("NSFW Filter Active")
-            else:
-                nsfw = False
-                embed.set_image(url=image_url)
+        embed.set_image(url=image_url)
     await session.close()
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u2764\ufe0f")
