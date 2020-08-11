@@ -7,4 +7,4 @@ async_cleverbot
 bs4
 psutil
 dblpy
-humanize
+git+git://github.com/jmoiron/humanize.git
