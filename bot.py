@@ -12,6 +12,7 @@ import time as timemodule
 import random
 
 import aiohttp
+import async_cleverbot as ac
 from bs4 import BeautifulSoup
 import humanize
 import psutil
