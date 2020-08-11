@@ -133,7 +133,7 @@ async def on_guild_join(guild):
         features += "\n" + i.title().replace("_", " ")
     embed = discord.Embed(
         title=f"Bot Added To {guild.name}",
-        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')} ({humanize.precisedelta(guild.created_at)})\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}",
+        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')} ({humanize.precisedelta(datetime.utcnow() - guild.created_at)})\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}",
     )
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
@@ -154,7 +154,7 @@ async def on_guild_remove(guild):
         features += "\n" + i.title().replace("_", " ")
     embed = discord.Embed(
         title=f"Bot Removed From {guild.name}",
-        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(guild.created_at)})\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}",
+        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.now() guild.created_at)})\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}",
     )
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
@@ -406,7 +406,7 @@ async def roleinfo(ctx, role: discord.Role = None):
     embed = discord.Embed(colour=role.colour.value)
     embed.set_author(name=f"Role Information for {role.name}")
     embed.add_field(
-        name="Created at", value=f"{role.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(role.created_at)}"
+        name="Created at", value=f"{role.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.utcnow() - role.created_at)}"
     )
     embed.add_field(name="ID", value=role.id)
     embed.add_field(name="Position", value=f"{role.position}/{len(ctx.guild.roles)}")
@@ -482,7 +482,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
     embed = discord.Embed()
     embed.set_author(name=f"Channel Information for {channel.name}")
     embed.add_field(
-        name="Created at", value=f"{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(channel.created_at)})"
+        name="Created at", value=f"{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - channel.created_at)})"
     )
     embed.add_field(name="ID", value=channel.id)
     embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)}")
@@ -733,11 +733,11 @@ async def firstmessage(ctx, channel: discord.TextChannel = None):
             attachments += f"[{i.filename}](i.url)\n"
         embed.add_field(name="Attatchments", value=attachments)
     embed.add_field(
-        name="Message sent at", value=f'{fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(fmo.created_at)})'
+        name="Message sent at", value=f'{fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.utcnow() - fmo.created_at)})'
     )
     if not fmo.edited_at is None:
         embed.add_field(
-            name="Edited", value=f'{fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(guild.created_at)})'
+            name="Edited", value=f'{fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.utcnow() - fmo.edited_at)})'
         )
     embed.add_field(name="Url", value=fmo.jump_url)
     embed.set_footer(
@@ -1192,7 +1192,7 @@ async def serverinfo(ctx):
         features += "\n" + i.title().replace("_", " ")
     embed = discord.Embed(
         title=f"Server Information for {guild.name}",
-        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(guild.created_at)})\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nTotal Members: {len(guild.members)}\nBots: {len([member for member in ctx.guild.members if member.bot])}\nHumans: {len(ctx.guild.members) - len([member for member in ctx.guild.members if member.bot])}\n<:boost4:724328585137225789> Boost Level: {guild.premium_tier}\n<:boost1:724328584893956168> Boosts: {guild.premium_subscription_count}\n<:boost1:724328584893956168> Boosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\n<:textchannel:724637677395116072> Text Channels: {len(guild.text_channels)}\n<:voicechannel:724637677130875001> Voice Channels: {len(guild.voice_channels)}\n<:category:724330131421659206> Categories: {len(guild.categories)}\nRoles: {len(guild.roles)}\n:slight_smile: Emojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n\n**Features:** {features}",
+        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.utcnow() - guild.created_at)})\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nTotal Members: {len(guild.members)}\nBots: {len([member for member in ctx.guild.members if member.bot])}\nHumans: {len(ctx.guild.members) - len([member for member in ctx.guild.members if member.bot])}\n<:boost4:724328585137225789> Boost Level: {guild.premium_tier}\n<:boost1:724328584893956168> Boosts: {guild.premium_subscription_count}\n<:boost1:724328584893956168> Boosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\n<:textchannel:724637677395116072> Text Channels: {len(guild.text_channels)}\n<:voicechannel:724637677130875001> Voice Channels: {len(guild.voice_channels)}\n<:category:724330131421659206> Categories: {len(guild.categories)}\nRoles: {len(guild.roles)}\n:slight_smile: Emojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n\n**Features:** {features}",
     )
     embed.set_thumbnail(url=guild.icon_url)
     await ctx.send(embed=embed)
@@ -1312,7 +1312,7 @@ async def spotify(ctx, *, member: discord.Member = None):
             )
             embed.add_field(
                 name="Time",
-                value=f"{convert_sec_to_min((datetime.now() - activity.start).total_seconds())} {get_p((abs((datetime.now() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))} {str(activity.duration)[2:-7]}",
+                value=f"{convert_sec_to_min((datetime.utcnow() - activity.start).total_seconds())} {get_p((abs((datetime.utcnow() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))} {str(activity.duration)[2:-7]}",
             )
             embed.set_footer(text="Track ID:" + activity.track_id)
             await ctx.send(embed=embed)
@@ -2174,11 +2174,11 @@ async def userinfo(ctx, *, member: discord.Member = None):
         value=f"Desktop: {get_status(member.desktop_status.name)}\nWeb: {get_status(member.web_status.name)}\nMobile: {get_status(member.mobile_status.name)}",
     )
     embed.add_field(
-        name="Created at", value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(member.created_at)})'
+        name="Created at", value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - member.created_at)})'
     )
 
     embed.add_field(
-        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(member.created_at)})'
+        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - member.created_at)})'
     )
 
     embed.add_field(
