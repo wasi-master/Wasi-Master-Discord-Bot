@@ -482,7 +482,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
     embed = discord.Embed()
     embed.set_author(name=f"Channel Information for {channel.name}")
     embed.add_field(
-        name="Created at", value=f"{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - channel.created_at)})"
+        name="Created at", value=f'{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - channel.created_at)})'
     )
     embed.add_field(name="ID", value=channel.id)
     embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)}")
