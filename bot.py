@@ -382,7 +382,7 @@ async def pypi(ctx, package_name:str):
 	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
 	embed.add_field(name="Version", value=fj["version"])
 	#embed.add_field(name="Summary", value=fj["summary"])
-	embed.add_field(name="Links", value=f"[Hoem Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+	embed.add_field(name="Links", value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
 	if len(fj["license"]) == 0:
 		license = "Not Specified"
 	else:
@@ -391,7 +391,7 @@ async def pypi(ctx, package_name:str):
 	if not fj["requires_dist"] is None:
 		if len(fj["requires_dist"]) > 5:
 			embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
-	    elif not len(fj["requires_dist"]) == 0:
+		elif not len(fj["requires_dist"]) == 0:
 		embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
 	if not len(fj["requires_python"]) == 0:
 		embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
