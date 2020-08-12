@@ -239,7 +239,7 @@ async def spoiler(ctx, text: str):
     if len(result) > 2000:
         await ctx.send("Too long")
     else:
-        await ctx.send(f"{content}")
+        await ctx.send(f"{content}`")
 
 
 
@@ -254,7 +254,7 @@ async def boxspoilerrepeat(ctx, width: int, height: int, text: str):
         await ctx.send(f"```{content}```")
 
 @client.command(description="Repeats a text")
-@command.cooldown(1, 10, BucketType.channel)
+@commands.cooldown(1, 10, BucketType.channel)
 async def repeat(ctx, amount: int, text: str):
     if not len(text*amount) > 2000:
         await ctx.send(f"```{text * amount}```")
