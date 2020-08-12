@@ -2212,12 +2212,10 @@ async def userinfo(ctx, *, member: discord.Member = None):
     embed.add_field(
         name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - member.joined_at)})'
     )
-
-    embed.add_field(
+    if not len(member.roles) == 0:
+        embed.add_field(
         name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles])
     )
-    embed.add_field(name="Top role:", value=member.top_role.mention)
-
     if not member.bot:
         member_type = ":blond_haired_man: Human"
     else:
