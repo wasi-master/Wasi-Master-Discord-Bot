@@ -548,7 +548,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
     embed = discord.Embed()
     embed.set_author(name=f"Channel Information for {channel.name}")
     embed.add_field(
-        name="Created at", value=f'{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - channel.created_at)})'
+        name="Created at", value=f'{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - channel.created_at)} old)'
     )
     embed.add_field(name="ID", value=channel.id)
     embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)}")
@@ -556,7 +556,7 @@ async def channelinfo(ctx, channel: discord.TextChannel = None):
     if not channel.topic is None:
         embed.add_field(name="Topic", value=channel.topic)
     if not channel.slowmode_delay is None:
-        embed.add_field(name="Slowmode", value=f"{channel.slowmode_delay} seconds")
+        embed.add_field(name="Slowmode", value=f"{channel.slowmode_delay} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(channel.slowmode_delay)))})")
     await ctx.send(embed=embed)
 
 @client.command(
