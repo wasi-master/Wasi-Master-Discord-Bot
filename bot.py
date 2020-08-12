@@ -2211,7 +2211,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     )
 
     embed.add_field(
-        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - member.created_at)})'
+        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - member.joined_at)})'
     )
 
     embed.add_field(
