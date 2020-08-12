@@ -1905,8 +1905,6 @@ async def quiz(ctx):
 
 @client.command(description="Translate a text")
 async def translate(ctx, lang: str = "en", *, args):
-    embed = discord.Embed(timestamp=ctx.message.created_at)
-    embed.set_footer(text="From Yandex")
     session = aiohttp.ClientSession()
     async with ctx.typing():
         if not lang == "help":
@@ -1917,12 +1915,12 @@ async def translate(ctx, lang: str = "en", *, args):
                     parsed_json = json.loads(await response.text())
                 await session.close()
                 translation = parsed_json.get("text")[0]
-                embed.add_field(name=f"Translation of {args}", value=translation)
+                embed = discord.Embed(title="Translation", description=translation)
             except:
                 if parsed_json.get("code") == 501:
                     embed.add_field(
                         name="Error Occured",
-                        value="it may be servers fault or you didn’t provide us with the details we need \n we need a language and a text to be translated in that language and the list of available languages can be found at \n [this link](https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage)",
+                        value="it may be the servers fault or you didn’t provide us with the details we need \n we need a language and a text to be translated in that language and the list of available languages can be found at \n [this link](https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage)",
                     )
         else:
             async with session.get(
@@ -1932,7 +1930,7 @@ async def translate(ctx, lang: str = "en", *, args):
             await session.close()
             for i in parsed_json.get("langs"):
                 parsed_langs = parsed_json.get("langs")[i]
-                languages = f"{i}  --->  {parsed_langs} \n"
+                languages += f"{i}  --->  {parsed_langs} \n"
             embed.add_field(name="Languages", value=languages)
     await ctx.send(embed=embed)
 
