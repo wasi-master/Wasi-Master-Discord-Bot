@@ -233,9 +233,8 @@ def pad(to_pad):
 @client.command(description="Spoilers a text letter by letter")
 @commands.cooldown(1, 15, BucketType.channel)
 async def spoiler(ctx, text: str):
-    content = ""
     result = ""
-    for i in content:
+    for i in text:
         result += f"||{i}||"
     if len(result) > 2000:
         await ctx.send("Too long")
