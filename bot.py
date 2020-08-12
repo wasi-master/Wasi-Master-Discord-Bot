@@ -61,7 +61,7 @@ def get_flag(flag: str):
 	elif flag == "hypesquad_bravery":
 		return "<:hypesquadbravery:724328585040625667>"
 	elif flag == "hypesquad_balance":
-		return "<s:hypesquadbalance:724328585166454845>"
+		return "<:hypesquadbalance:724328585166454845>"
 	elif flag == "hypesquad":
 		return "<:hypesquad:724328585237626931>"
 	elif flag == "early_supporter":
