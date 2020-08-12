@@ -231,7 +231,7 @@ def pad(to_pad):
 
 @client.command(description="Unmutes a muted user")
 @has_permissions(manage_roles=True)
-async def unmute(ctx, user: Redeemed):
+async def unmute(ctx, user: discord.Member):
     try:
         await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted")) # removes muted role
         await ctx.send(f"{user.mention} has been unmuted")
@@ -239,7 +239,7 @@ async def unmute(ctx, user: Redeemed):
         await ctx.send("No Permissions")
 @client.command(description="Blocks a user from chatting in current channel.")
 @has_permissions(manage_channels=True)
-async def block(ctx, user: Sinner=None):
+async def block(ctx, user: discord.Member=None):
                             
     if not user: # checks if there is user
         return await ctx.send("You must specify a user")
@@ -249,7 +249,7 @@ async def block(ctx, user: Sinner=None):
         await ctx.send("No permissions")
 @client.command(description="Unblocks a user from current channel")
 @has_permissions(manage_channels=True)
-async def unblock(ctx, user: Sinner=None):
+async def unblock(ctx, user: discord.Member=None):
                             
     if not user: # checks if there is user
         return await ctx.send("You must specify a user")
