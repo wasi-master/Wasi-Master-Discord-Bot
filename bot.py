@@ -255,7 +255,7 @@ async def unblock(ctx, user: Sinner=None):
         return await ctx.send("You must specify a user")
     try:
         await ctx.set_permissions(user, send_messages=True) # gives back send messages permissions
-   except discord.Forbidden:
+    except discord.Forbidden:
         await ctx.send("No permissions")
 
 
