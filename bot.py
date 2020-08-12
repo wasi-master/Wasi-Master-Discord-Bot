@@ -5,6 +5,7 @@ import codecs
 from datetime import datetime
 import difflib
 import discord
+import html
 import json
 import os
 import secrets
@@ -1721,168 +1722,103 @@ async def quiz(ctx):
             correct_answer = "a"
             embed.add_field(
                 name="A",
-                value=data.get("results")[0]
-                .get("correct_answer")
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0].get("correct_answer")),
                 inline=False
             )
             embed.add_field(
                 name="B",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[0]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[0]),
                 inline=False
             )
             embed.add_field(
                 name="C",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[1]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[1]),
                 inline=False
             )
             embed.add_field(
                 name="D",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[2]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[2]),
                 inline=False
             )
         if randomint == 2:
             correct_answer = "b"
             embed.add_field(
                 name="A",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[0]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[0]),
                 inline=False
             )
             embed.add_field(
                 name="B",
-                value=data.get("results")[0]
-                .get("correct_answer")
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("correct_answer")),
                 inline=False
             )
             embed.add_field(
                 name="C",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[1]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[1]),
                 inline=False
             )
             embed.add_field(
                 name="D",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[2]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[2]),
                 inline=False
             )
         if randomint == 3:
             correct_answer = "c"
             embed.add_field(
                 name="A",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[0]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[0]),
                 inline=False
             )
             embed.add_field(
                 name="B",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[1]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[1]),
                 inline=False
             )
             embed.add_field(
                 name="C",
-                value=data.get("results")[0]
-                .get("correct_answer")
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("correct_answer")),
                 inline=False
             )
             embed.add_field(
                 name="D",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[2]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[2]),
                 inline=False
             )
         if randomint == 4:
             correct_answer = "d"
             embed.add_field(
                 name="A",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[0]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[0]),
                 inline=False
             )
             embed.add_field(
                 name="B",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[1]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[1]),
                 inline=False
             )
             embed.add_field(
                 name="C",
-                value=data.get("results")[0]
-                .get("incorrect_answers")[2]
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("incorrect_answers")[2]),
                 inline=False
             )
             embed.add_field(
                 name="D",
-                value=data.get("results")[0]
-                .get("correct_answer")
-                .replace("&#039;", "'")
-                .replace("&quot;", '"')
-                .replace("&amp;", " &")
-                .replace("&eacute;", "é"),
+                value=html.parser.unescape(data.get("results")[0]
+                .get("correct_answer")),
                 inline=False
             )
     await ctx.send(embed=embed)
