@@ -230,6 +230,37 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(description="Spoilers a text letter by letter")
+async def spoiler(ctx, text: str):
+    content = ""
+    result = ""
+    for i in content:
+        result += f"||{i}||"
+    if len(result) > 2000:
+        await ctx.send("Too long")
+    else:
+        await ctx.send(f"{content}")
+
+
+
+@client.command(aliases=["bsr"], description="Box shaped spoilers and repeats a text")
+async def boxspoilerrepeat(ctx, width: int, height: int, text: str):
+    content = ""
+    for i in range (height):
+        content += f"||{text}||" * width + "\n"
+    if len(content) > 2000:
+        await ctx.send("Too long")
+    else:
+        await ctx.send(f"```{content}```")
+
+@client.command(description="Repeats a text")
+@command.cooldown(1, 10, BucketType.channel)
+async def repeat(ctx, amount: int, text: str):
+    if not len(text*amount) > 2000:
+        await ctx.send(f"```{text * amount}```")
+    else:
+        await ctx.send("Text too long")
+
 @client.command(description="Unmutes a muted user")
 @has_permissions(manage_roles=True)
 async def unmute(ctx, user: discord.Member):
