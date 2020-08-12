@@ -246,7 +246,7 @@ async def block(ctx, user: Sinner=None):
     try:
         await ctx.set_permissions(user, send_messages=False) # sets permissions for current channel
     except discord.Forbidden:
-    	await ctx.send("No permissions")
+        await ctx.send("No permissions")
 @client.command(description="Unblocks a user from current channel")
 @has_permissions(manage_channels=True)
 async def unblock(ctx, user: Sinner=None):
