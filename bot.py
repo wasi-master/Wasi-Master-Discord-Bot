@@ -1498,7 +1498,7 @@ async def say(ctx, *, args: commands.clean_content):
     try:
         if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
             await ctx.message.delete()
-    except commands.MissingPermissions:
+    except (discord.Forbidden, commands.MissingPermissions):
         pass
     await channel.send(mesg)
 
