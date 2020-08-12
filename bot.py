@@ -239,7 +239,7 @@ async def spoiler(ctx, text: str):
     if len(result) > 2000:
         await ctx.send("Too long")
     else:
-        await ctx.send(f"```{content}````")
+        await ctx.send(f"```{result}```")
 
 
 
