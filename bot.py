@@ -233,7 +233,7 @@ def pad(to_pad):
 @has_permissions(manage_rolez=True)
 async def unmute(ctx, user: Redeemed):
      try:
-        await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted") # removes muted role
+        await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted")) # removes muted role
         await ctx.send(f"{user.mention} has been unmuted")
     except discord.Forbidden:
         await ctx.send("No Permissions")
