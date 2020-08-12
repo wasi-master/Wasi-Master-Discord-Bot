@@ -206,7 +206,7 @@ async def on_command_error(ctx, error):
         except asyncio.TimeoutError:
             try:
                 return await message.clear_reactions()
-            except commands.Forbidden:
+            except discord.Forbidden:
                 return await message.remove_reaction("\u2705", ctx.guild.me)
         else:
             if str(reaction.emoji) == "\u2705":
