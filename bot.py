@@ -1506,6 +1506,7 @@ async def say(ctx, *, args: commands.clean_content):
 @client.command(
     description="Changes role for a user (removes if he has the role, adds the role if he doesn't)"
 )
+@has_permissions(manage_roles=True)
 async def role(ctx, member: discord.Member,*,  role: discord.Role):
     try:
         member = member
