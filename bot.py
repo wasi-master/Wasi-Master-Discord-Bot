@@ -293,7 +293,7 @@ async def unblock(ctx, user: discord.Member=None):
 
 
 @client.command()
-async def weather(ctx, location: str):
+async def weather(ctx, *, location: str):
 	session = aiohttp.ClientSession()
 	apiKey = "cbe36b072a1ef0a4aa566782989eb847"
 	location = location.replace(" ", "")
