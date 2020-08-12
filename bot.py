@@ -232,7 +232,7 @@ def pad(to_pad):
 
 @client.command(description="Spoilers a text letter by letter")
 @commands.cooldown(1, 15, BucketType.channel)
-async def spoiler(ctx, text: str):
+async def spoiler(ctx, *, text: str):
     result = ""
     for i in text:
         result += f"||{i}||"
@@ -245,7 +245,7 @@ async def spoiler(ctx, text: str):
 
 @client.command(aliases=["bsr"], description="Box shaped spoilers and repeats a text")
 @commands.cooldown(1, 15, BucketType.channel)
-async def boxspoilerrepeat(ctx, width: int, height: int, text: str):
+async def boxspoilerrepeat(ctx, width: int, height: int, *, text: str):
     content = ""
     for i in range (height):
         content += f"||{text}||" * width + "\n"
@@ -256,7 +256,7 @@ async def boxspoilerrepeat(ctx, width: int, height: int, text: str):
 
 @client.command(description="Repeats a text")
 @commands.cooldown(1, 15, BucketType.channel)
-async def repeat(ctx, amount: int, text: str):
+async def repeat(ctx, amount: int, *, text: str):
     if not len(text*amount) > 2000:
         await ctx.send(f"```{text * amount}```")
     else:
