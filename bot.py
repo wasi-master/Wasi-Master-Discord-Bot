@@ -230,7 +230,7 @@ def pad(to_pad):
 
 
 @client.command(description="Unmutes a muted user")
-@has_permissions(manage_rolez=True)
+@has_permissions(manage_roles=True)
 async def unmute(ctx, user: Redeemed):
     try:
         await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted")) # removes muted role
