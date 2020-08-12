@@ -179,6 +179,8 @@ async def on_command_error(ctx, error):
         await ctx.send(f"The {error.param} argument is missing")
     elif isinstance(error, commands.CommandNotFound):
         pass
+    elif isinstance(error, discord.Forbidden):
+    	await ctx.send("I am Missing permissions")
     elif "Cannot send messages to this user" in str(error):
         pass
     else:
@@ -225,6 +227,33 @@ async def on_command_error(ctx, error):
 
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+
+
+@client.command(description="Unmutes a muted user")
+async def unmute(ctx, user: Redeemed):
+     try:
+        await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted") # removes muted role
+        await ctx.send(f"{user.mention} has been unmuted")
+    except discord.Forbidden:
+        await ctx.send("No Permissions")
+@client.command(description="Blocks a user from chatting in current channel.")
+async def block(ctx, user: Sinner=None):
+                            
+    if not user: # checks if there is user
+        return await ctx.send("You must specify a user")
+    try:
+        await ctx.set_permissions(user, send_messages=False) # sets permissions for current channel
+    except discord.Forbidden:
+    	await ctx.send("No permissions")
+@client.command(description="Unblocks a user from current channel")
+async def unblock(ctx, user: Sinner=None):
+                            
+    if not user: # checks if there is user
+        return await ctx.send("You must specify a user")
+    try:
+        await ctx.set_permissions(user, send_messages=True) # gives back send messages permissions
+   except discord.Forbidden:
+        await ctx.send("No permissions")
 
 
 @client.command()
