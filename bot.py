@@ -170,7 +170,7 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_message_edit(before, after):
-    await process_commands(after)
+    await client.process_commands(after)
 
 @client.event
 async def on_command_error(ctx, error):
