@@ -1508,8 +1508,8 @@ async def say(ctx, *, args: commands.clean_content):
 )
 async def role(ctx, member: discord.Member,*,  role: discord.Role):
     try:
-        member = member[0]
-        role = role[0]
+        member = member
+        role = role
     except IndexError:
         await ctx.send("Invalid usage")
     
