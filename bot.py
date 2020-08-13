@@ -405,7 +405,7 @@ async def pypi(ctx, package_name:str):
     embed.add_field(name="Version", value=fj["version"])
     #embed.add_field(name="Summary", value=fj["summary"])
     embed.add_field(name="Links", value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
-    if fj["license"] is None:
+    if fj["license"] is None or len(fj["license"]) < 3:
         license = "Not Specified"
     else:
         license = fj["license"].replace("{", "").replace("}", "").replace("'", "")
