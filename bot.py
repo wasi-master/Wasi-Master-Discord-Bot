@@ -93,7 +93,7 @@ def get_status(status: str):
         return status
 
 
-client = commands.Bot(command_prefix=get_prefix)
+client = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
 dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs")
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
