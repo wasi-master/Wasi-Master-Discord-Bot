@@ -776,6 +776,7 @@ async def perms(
     ctx, member: discord.Member = None, channel: discord.TextChannel = None
 ):
     channel = channel or ctx.channel
+    member = member or ctx.author
     perms = []
     permstr = ""
     for i in member.permissions_in(channel):
