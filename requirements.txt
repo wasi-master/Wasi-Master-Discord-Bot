@@ -6,6 +6,6 @@ jishaku
 async_cleverbot
 bs4
 psutil
-aiopg
+asyncpg
 dblpy
 git+git://github.com/jmoiron/humanize.git
