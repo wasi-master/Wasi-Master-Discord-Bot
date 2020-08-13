@@ -61,7 +61,7 @@ def get_flag(flag: str):
 	elif flag == "hypesquad_bravery":
 		return "<:hypesquadbravery:724328585040625667>"
 	elif flag == "hypesquad_balance":
-		return "<:hypesquadbalance:724328585166454845>"
+		return "<s:hypesquadbalance:724328585166454845>"
 	elif flag == "hypesquad":
 		return "<:hypesquad:724328585237626931>"
 	elif flag == "early_supporter":
@@ -169,11 +169,6 @@ async def on_guild_remove(guild):
 
 
 @client.event
-async def on_message_edit(before, after):
-    if "jsk" in after.content:
-        await client.process_commands(after)
-
-@client.event
 async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
     	return
@@ -206,7 +201,7 @@ async def on_command_error(ctx, error):
         except asyncio.TimeoutError:
             try:
                 return await message.clear_reactions()
-            except discord.Forbidden:
+            except commands.Forbidden:
                 return await message.remove_reaction("\u2705", ctx.guild.me)
         else:
             if str(reaction.emoji) == "\u2705":
@@ -383,7 +378,7 @@ async def pypi(ctx, package_name:str):
 	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
 	embed.add_field(name="Version", value=fj["version"])
 	#embed.add_field(name="Summary", value=fj["summary"])
-	embed.add_field(name="Links", value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+	embed.add_field(name="Links", value=f"[Hoem Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
 	if len(fj["license"]) == 0:
 		license = "Not Specified"
 	else:
@@ -392,8 +387,8 @@ async def pypi(ctx, package_name:str):
 	if not fj["requires_dist"] is None:
 		if len(fj["requires_dist"]) > 5:
 			embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
-		elif not len(fj["requires_dist"]) == 0:
-			embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
+	elif not len(fj["requires_dist"]) == 0:
+		embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
 	if not len(fj["requires_python"]) == 0:
 		embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
 	await ctx.send(embed=embed)
@@ -1957,7 +1952,7 @@ async def mute(ctx, user: discord.Member, reason="No Reason Specified"):
 )
 async def invite(ctx):
     await ctx.send(
-        "https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640"
+        embed=discord.Embed(title="Invite", description="[Invite](https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640)")
     )
 
 
@@ -2185,7 +2180,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     embed.add_field(
         name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - member.joined_at)})'
     )
-    if not len(member.roles) == 1:
+    if not len(member.roles) == 0:
         embed.add_field(
         name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles])
     )
