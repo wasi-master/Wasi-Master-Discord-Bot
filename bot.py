@@ -415,7 +415,7 @@ async def pypi(ctx, package_name:str):
             embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
         elif not len(fj["requires_dist"]) == 0:
            embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
-    if not fj["requires_python"] is None:
+    if not fj["requires_python"] is None or len(fj["requires_python"]) < 1:
         embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
     await ctx.send(embed=embed)
     await session.close()
