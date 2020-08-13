@@ -32,7 +32,7 @@ import urllib.parse
 
 
 
-def get_prefix(client, message):
+async def get_prefix(client, message):
     prefix_for_this_guild = await client.db.fetchrow(
             """
             SELECT prefix
