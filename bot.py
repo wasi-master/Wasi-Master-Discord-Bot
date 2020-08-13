@@ -408,7 +408,7 @@ async def pypi(ctx, package_name:str):
     if fj["license"] is None:
         license = "Not Specified"
     else:
-        license = fj["license"]
+        license = "\n".join(set(fj["license"]))
     embed.add_field(name="License", value={license})
     if not fj["requires_dist"] is None:
         if len(fj["requires_dist"]) > 5:
