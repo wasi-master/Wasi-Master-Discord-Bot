@@ -33,13 +33,25 @@ import urllib.parse
 
 
 def get_prefix(client, message):
-    try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-        return prefixes[str(message.guild.id)]
-    except (KeyError, AttributeError):
-        return ","
-
+    prefix_for_this_guild = await client.db.fetchrow(
+            """
+            SELECT prefix
+            FROM prefixes
+            WHERE id=$1
+            """,
+            message.guild.id
+        )
+    if prefix_for_this_guild is None:
+        await client.db.execute(
+                """
+                INSERT INTO prefixes (id, prefix)
+                VALUES ($1, $2)
+                """,
+                message.guild.id,
+                ","
+            )
+        prefix_for_this_guild = {"prefix": ","}
+    return prefix_for_this_guild["prefix"]
 
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
@@ -104,7 +116,7 @@ client.remove_command("help")
 
 
 async def create_db_pool():
-    client.pg_con = await asyncpg.create_pool(host="ec2-52-23-86-208.compute-1.amazonaws.com", database="d5squd8cvojua1", user="poladbevzydxyx", password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8")
+    client.db = await asyncpg.create_pool(host="ec2-52-23-86-208.compute-1.amazonaws.com", database="d5squd8cvojua1", user="poladbevzydxyx", password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8")
 client.loop.run_until_complete(create_db_pool())
  
 
