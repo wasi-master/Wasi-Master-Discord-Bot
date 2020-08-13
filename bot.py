@@ -56,26 +56,26 @@ def get_p(prog, num=0):
 
 
 def get_flag(flag: str):
-	if flag == "hypesquad_brilliance":
-		return "<:hypesquadbrilliance:724328585363456070>"
-	elif flag == "hypesquad_bravery":
-		return "<:hypesquadbravery:724328585040625667>"
-	elif flag == "hypesquad_balance":
-		return "<s:hypesquadbalance:724328585166454845>"
-	elif flag == "hypesquad":
-		return "<:hypesquad:724328585237626931>"
-	elif flag == "early_supporter":
-		return "<:earlysupporter:724588086646014034>"
-	elif flag == "bug_hunter":
-		return "<:bughunt:724588087052861531>"
-	elif flag == "bug_hunter_level_2":
-		return "<:bughunt2:726775007908462653>"
-	elif flag == "verified_bot_developer":
-		return "<:verifiedbotdeveloper:740854331154235444>"
-	elif flag == "verified_bot":
-		return "<:verifiedbot:740855315985072189>"
-	elif flag == "partner":
-		return "<:partner:724588086461202442>"
+    if flag == "hypesquad_brilliance":
+        return "<:hypesquadbrilliance:724328585363456070>"
+    elif flag == "hypesquad_bravery":
+        return "<:hypesquadbravery:724328585040625667>"
+    elif flag == "hypesquad_balance":
+        return "<s:hypesquadbalance:724328585166454845>"
+    elif flag == "hypesquad":
+        return "<:hypesquad:724328585237626931>"
+    elif flag == "early_supporter":
+        return "<:earlysupporter:724588086646014034>"
+    elif flag == "bug_hunter":
+        return "<:bughunt:724588087052861531>"
+    elif flag == "bug_hunter_level_2":
+        return "<:bughunt2:726775007908462653>"
+    elif flag == "verified_bot_developer":
+        return "<:verifiedbotdeveloper:740854331154235444>"
+    elif flag == "verified_bot":
+        return "<:verifiedbot:740855315985072189>"
+    elif flag == "partner":
+        return "<:partner:724588086461202442>"
 
 
 def get_status(status: str):
@@ -171,7 +171,7 @@ async def on_guild_remove(guild):
 @client.event
 async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
-    	return
+        return
     if isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command}")
     elif isinstance(error, commands.MissingPermissions):
@@ -181,7 +181,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CommandNotFound):
         pass
     elif isinstance(error, discord.Forbidden):
-    	await ctx.send("I am Missing permissions")
+        await ctx.send("I am Missing permissions")
     elif "Cannot send messages to this user" in str(error):
         pass
     else:
@@ -311,40 +311,40 @@ async def unblock(ctx, user: discord.Member=None):
 
 @client.command()
 async def weather(ctx, *, location: str):
-	session = aiohttp.ClientSession()
-	apiKey = "cbe36b072a1ef0a4aa566782989eb847"
-	location = location.replace(" ", "")
-	url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&APPID={apiKey}"
-	async with session.get(url) as r:
-		fj = json.loads(await r.text())
-	if not fj["cod"] == "404":
-		embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}')
-		embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C\nMinimum: {round(fj["main"]["temp_min"]-273.15, 2)}°C\nMaximum: {round(fj["main"]["temp_max"]-273.15, 2)}°C')
-		embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°')
-		embed.add_field(name="Cloudyness", value=str(fj["clouds"]["all"]) + "%")
-		#embed.add_field(name="Sun", value=f'Sunrise: {datetime.fromtimestamp(fj["sys"]["sunrise"]).strftime("%I:%M:%S")}\nSunset: {datetime.fromtimestamp(fj["sys"]["sunset"]).strftime("%I:%M:%S")}')
-		await ctx.send(embed=embed)
-	elif fj["cod"] == "404":
-		await ctx.send("Location not found")
-	else:
-		await ctx.send("Error")
-	await session.close()
+    session = aiohttp.ClientSession()
+    apiKey = "cbe36b072a1ef0a4aa566782989eb847"
+    location = location.replace(" ", "")
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&APPID={apiKey}"
+    async with session.get(url) as r:
+        fj = json.loads(await r.text())
+    if not fj["cod"] == "404":
+        embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}')
+        embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C\nMinimum: {round(fj["main"]["temp_min"]-273.15, 2)}°C\nMaximum: {round(fj["main"]["temp_max"]-273.15, 2)}°C')
+        embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°')
+        embed.add_field(name="Cloudyness", value=str(fj["clouds"]["all"]) + "%")
+        #embed.add_field(name="Sun", value=f'Sunrise: {datetime.fromtimestamp(fj["sys"]["sunrise"]).strftime("%I:%M:%S")}\nSunset: {datetime.fromtimestamp(fj["sys"]["sunset"]).strftime("%I:%M:%S")}')
+        await ctx.send(embed=embed)
+    elif fj["cod"] == "404":
+        await ctx.send("Location not found")
+    else:
+        await ctx.send("Error")
+    await session.close()
 
 @client.command(aliases=["chpfp","cp"], description="Change the bots profile picture on random" )
 @commands.cooldown(2, 900, BucketType.default)
 async def changepfp(ctx):
-	pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
-	pfp = random.choice(pfps)
-	with open(pfp, "rb") as f:
-		avatar = f.read()
-		await client.user.edit(avatar=avatar)
-		file = discord.File(pfp, filename="avatar.png")
-		await ctx.send("Changed Profile picture to:", file=file)
-		server = client.get_guild(576016234152198155)
-		channel = server.get_channel(741371556277518427)
-		embed = discord.Embed(title=f"Avatar was changed by {ctx.author}")
-		await channel.send(embed=embed)
-	f.close()
+    pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
+    pfp = random.choice(pfps)
+    with open(pfp, "rb") as f:
+        avatar = f.read()
+        await client.user.edit(avatar=avatar)
+        file = discord.File(pfp, filename="avatar.png")
+        await ctx.send("Changed Profile picture to:", file=file)
+        server = client.get_guild(576016234152198155)
+        channel = server.get_channel(741371556277518427)
+        embed = discord.Embed(title=f"Avatar was changed by {ctx.author}")
+        await channel.send(embed=embed)
+    f.close()
 
 @client.command(aliases=["lck", "lk"],description="Lock a channel")
 @has_permissions(manage_channels=True)
@@ -376,110 +376,110 @@ async def unlock(ctx, *, role: discord.Role=None):
 
 @client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl"])
 async def pypi(ctx, package_name:str):
-	session = aiohttp.ClientSession()
-	url = f"https://pypi.org/pypi/{package_name}/json"
-	async with session.get(url) as response:
-		if "We looked everywhere but couldn't find this page" in await response.text():
-			return await ctx.send("Project not found")
-		else:
-			fj = json.loads(await response.text())
-	fj = fj["info"]
-	if not len(fj["summary"]) == 0: 
-		embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["))
-	else:
-		embed = discord.Embed(title=fj["name"])
-	if len(fj["author_email"]) == 0:
-		email = "None"
-	else:
-		email = fj["author_email"]
-	embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
-	embed.add_field(name="Version", value=fj["version"])
-	#embed.add_field(name="Summary", value=fj["summary"])
-	embed.add_field(name="Links", value=f"[Hoem Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
-	if len(fj["license"]) == 0:
-		license = "Not Specified"
-	else:
-		license = fj["license"]
-	embed.add_field(name="License", value={license})
-	if not fj["requires_dist"] is None:
-		if len(fj["requires_dist"]) > 5:
-			embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
-	elif not len(fj["requires_dist"]) == 0:
-		embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
-	if not len(fj["requires_python"]) == 0:
-		embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
-	await ctx.send(embed=embed)
-	await session.close()
+    session = aiohttp.ClientSession()
+    url = f"https://pypi.org/pypi/{package_name}/json"
+    async with session.get(url) as response:
+        if "We looked everywhere but couldn't find this page" in await response.text():
+            return await ctx.send("Project not found")
+        else:
+            fj = json.loads(await response.text())
+    fj = fj["info"]
+    if not len(fj["summary"]) == 0: 
+        embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["))
+    else:
+        embed = discord.Embed(title=fj["name"])
+    if len(fj["author_email"]) == 0:
+        email = "None"
+    else:
+        email = fj["author_email"]
+    embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
+    embed.add_field(name="Version", value=fj["version"])
+    #embed.add_field(name="Summary", value=fj["summary"])
+    embed.add_field(name="Links", value=f"[Hoem Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+    if len(fj["license"]) == 0:
+        license = "Not Specified"
+    else:
+        license = fj["license"]
+    embed.add_field(name="License", value={license})
+    if not fj["requires_dist"] is None:
+        if len(fj["requires_dist"]) > 5:
+            embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
+        elif not len(fj["requires_dist"]) == 0:
+           embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
+    if not len(fj["requires_python"]) == 0:
+        embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
+    await ctx.send(embed=embed)
+    await session.close()
 
 
 @client.command(name="penis", aliases=["pp"], description="See someone's penis size (random)")
 async def pp(ctx, *, member: discord.Member=None):
-	member = member or ctx.author
-	ppsize = random.randint(0, 30)
-	if ppsize < 6:
-		comment = "Hehe, pp smol"
-	elif ppsize < 9 and ppsize > 6:
-		comment = "okay"
-	elif ppsize > 9 and ppsize < 12:
-		comment = "normal pp"
-	elif ppsize > 12 and ppsize < 18:
-		comment = "huge pp"
-	elif ppsize > 18 and ppsize < 25:
-		comment = "extremely big pp"
-	else:
-		comment = "tremendous pp "
-	embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D")
-	embed.set_footer(text=comment)
-	await ctx.send(embed=embed)
+    member = member or ctx.author
+    ppsize = random.randint(0, 30)
+    if ppsize < 6:
+        comment = "Hehe, pp smol"
+    elif ppsize < 9 and ppsize > 6:
+        comment = "okay"
+    elif ppsize > 9 and ppsize < 12:
+        comment = "normal pp"
+    elif ppsize > 12 and ppsize < 18:
+        comment = "huge pp"
+    elif ppsize > 18 and ppsize < 25:
+        comment = "extremely big pp"
+    else:
+        comment = "tremendous pp "
+    embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D")
+    embed.set_footer(text=comment)
+    await ctx.send(embed=embed)
 
 @client.command(name="gender", description="Get a gender by providing a name")
 @commands.cooldown(1, 60, BucketType.user)
 async def gender(ctx, *, name: str):
-	session = aiohttp.ClientSession()
-	url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
-	async with session.get(url) as r:
-		fj = json.loads(await r.text())
-	if fj['gender'] == "male":
-		gender = "Male"
-		color = 2929919
-	elif fj["gender"] == "female":
-		gender = "Female"
-		color = 16723124
-	else:
-		gender = "Unknown"
-		color = 6579300
-	positive = str(fj['accuracy']) + "%"
-	negative = str(100 - fj['accuracy']) + "%"
-	if not gender == "Unknown":
-		text = f"The name {fj['name_sanitized']} has a **{positive}** chance of being a  **{gender}** and a {negative} chance of not being a {gender}"
-	else:
-		text = f"The name {fj['name_sanitized']} is not in our database"
-	embed = discord.Embed(title=fj["name_sanitized"], description=text, color=color)
-	await ctx.send(embed=embed)
+    session = aiohttp.ClientSession()
+    url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
+    async with session.get(url) as r:
+        fj = json.loads(await r.text())
+    if fj['gender'] == "male":
+        gender = "Male"
+        color = 2929919
+    elif fj["gender"] == "female":
+        gender = "Female"
+        color = 16723124
+    else:
+        gender = "Unknown"
+        color = 6579300
+    positive = str(fj['accuracy']) + "%"
+    negative = str(100 - fj['accuracy']) + "%"
+    if not gender == "Unknown":
+        text = f"The name {fj['name_sanitized']} has a **{positive}** chance of being a  **{gender}** and a {negative} chance of not being a {gender}"
+    else:
+        text = f"The name {fj['name_sanitized']} is not in our database"
+    embed = discord.Embed(title=fj["name_sanitized"], description=text, color=color)
+    await ctx.send(embed=embed)
 
 
 @client.command(description="See details about a movie")
 async def movie(ctx, *, query):
-	session = aiohttp.ClientSession()
-	url = f"http://www.omdbapi.com/?i=tt3896198&apikey=4e62e2fc&t={query}"
-	async with session.get(url) as response:
-		fj = json.loads(await response.text())
-	if fj["Response"] == "True":
-		embed = discord.Embed(title=fj["Title"], description=fj["Plot"])
-		embed.set_image(url=fj["Poster"])
-		embed.add_field(name="Released On", value=fj["Released"])
-		embed.add_field(name="Rated", value=fj["Rated"])
-		mins = []
-		embed.add_field(name="Duration", value=f"{fj['Runtime']}")
-		embed.add_field(name="Genre", value=fj["Genre"])
-		embed.add_field(name="Credits", value=f"**Director**: {fj['Director']}\n**Writer**: {fj['Writer']}\n**Casts**: {fj['Actors']}")
-		embed.add_field(name="Language(s)", value=fj['Language'])
-		embed.add_field(name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}")
-		embed.add_field(name="Production", value=f"[{fj['Production']}]({fj['Website']})")
-		await ctx.send(embed=embed)
-		await session.close()
-	else:
-		await ctx.send("Movie Not Found")
+    session = aiohttp.ClientSession()
+    url = f"http://www.omdbapi.com/?i=tt3896198&apikey=4e62e2fc&t={query}"
+    async with session.get(url) as response:
+        fj = json.loads(await response.text())
+    if fj["Response"] == "True":
+        embed = discord.Embed(title=fj["Title"], description=fj["Plot"])
+        embed.set_image(url=fj["Poster"])
+        embed.add_field(name="Released On", value=fj["Released"])
+        embed.add_field(name="Rated", value=fj["Rated"])
+        mins = []
+        embed.add_field(name="Duration", value=f"{fj['Runtime']}")
+        embed.add_field(name="Genre", value=fj["Genre"])
+        embed.add_field(name="Credits", value=f"**Director**: {fj['Director']}\n**Writer**: {fj['Writer']}\n**Casts**: {fj['Actors']}")
+        embed.add_field(name="Language(s)", value=fj['Language'])
+        embed.add_field(name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}")
+        embed.add_field(name="Production", value=f"[{fj['Production']}]({fj['Website']})")
+        await ctx.send(embed=embed)
+        await session.close()
+    else:
+        await ctx.send("Movie Not Found")
 
 
 @client.command(aliases=["ri", "rlinf"], description=" See info about a role")
@@ -508,34 +508,34 @@ async def roleinfo(ctx, role: discord.Role = None):
 
 @client.command(aliases=["tm"], description="See time")
 async def time(ctx, location: str=None):
-	embed = discord.Embed()
-	session = aiohttp.ClientSession()
-	async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
-		fj = json.loads(await r.text())
-	await session.close()
-	try:
-		fj["error"]
-		error = True
-	except:
-		error = False
-	if error:
-		if fj["error"] == "unknown location":
-			locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
-			suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
-			suggestionstring = ""
-			for i in suggestions:
-				suggestionstring += f"`{i}`\n"
-			embed.set_author(name="Location Not Found")
-			embed.add_field(name="Did you mean?", value=suggestionstring)
-			await ctx.send(embed=embed)
-	else:
-		currenttime = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
-		gmt = fj["utc_offset"]
-		embed.set_author(name="Time")
-		embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
-		embed.add_field(name="UTC Offset", value=gmt)
-		await ctx.send(embed=embed)
-		
+    embed = discord.Embed()
+    session = aiohttp.ClientSession()
+    async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
+        fj = json.loads(await r.text())
+    await session.close()
+    try:
+        fj["error"]
+        error = True
+    except:
+        error = False
+    if error:
+        if fj["error"] == "unknown location":
+            locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
+            suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
+            suggestionstring = ""
+            for i in suggestions:
+                suggestionstring += f"`{i}`\n"
+            embed.set_author(name="Location Not Found")
+            embed.add_field(name="Did you mean?", value=suggestionstring)
+            await ctx.send(embed=embed)
+    else:
+        currenttime = datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
+        gmt = fj["utc_offset"]
+        embed.set_author(name="Time")
+        embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
+        embed.add_field(name="UTC Offset", value=gmt)
+        await ctx.send(embed=embed)
+        
 @client.command(
     aliases=["ss"],
     description="Takes a sceenshot of a website"
@@ -1997,9 +1997,9 @@ async def helpcommand(ctx, command: str = None):
         for i in client.commands:
             all_commands += f"`{i.name}`, "
         if ctx.guild is None:
-        	color = None
+            color = None
         else:
-        	color = ctx.guild.me.color
+            color = ctx.guild.me.color
         embed = discord.Embed(
             colour=color,
             title=f"All Commands ({len(client.commands)})",
@@ -2171,7 +2171,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     flaglist = [flag for flag in member.public_flags.all()]
     flagstr = ""
     for i in flaglist:
-    	flagstr += f"{get_flag(i.name)} "
+        flagstr += f"{get_flag(i.name)} "
     embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
     embed.set_thumbnail(url=member.avatar_url)
     embed.set_author(name=f"{member}", icon_url=member.avatar_url)
