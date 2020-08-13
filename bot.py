@@ -230,6 +230,23 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@commands.command(description="Check who got banned")
+async def bans(ctx, limit: int = 10):
+  "Check who got banned"
+
+  if limit > 20:
+    limit = 20
+
+  bans = []
+
+  emb = discord.Embed(description = "", colour = 0x2F3136)
+
+  async for entry in ctx.guild.audit_logs(action=discord.AuditLogAction.ban, limit = limit):
+    emb.description += f"[**{humanize.naturaltime(entry.created_at)}**] **{str(entry.user)}** banned **{str(entry.target)}**\n- {entry.reason}\n\n"
+
+  await ctx.send(embed = emb)
+
+
 @client.command(description="Spoilers a text letter by letter")
 @commands.cooldown(1, 15, BucketType.channel)
 async def spoiler(ctx, *, text: str):
