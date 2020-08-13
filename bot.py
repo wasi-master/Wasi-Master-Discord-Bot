@@ -404,11 +404,11 @@ async def pypi(ctx, package_name:str):
     embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
     embed.add_field(name="Version", value=fj["version"])
     #embed.add_field(name="Summary", value=fj["summary"])
-    embed.add_field(name="Links", value=f"[Hoem Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+    embed.add_field(name="Links", value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
     if fj["license"] is None:
         license = "Not Specified"
     else:
-        license = "\n".join(set(fj["license"]))
+        license = fj["license"].replace("{", "").replace("}", "").replace("'", "")
     embed.add_field(name="License", value={license})
     if not fj["requires_dist"] is None:
         if len(fj["requires_dist"]) > 5:
