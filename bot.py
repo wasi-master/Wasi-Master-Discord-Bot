@@ -44,7 +44,7 @@ async def get_prefix(client, message):
     if prefix_for_this_guild is None:
         await client.db.execute(
                 """
-                INSERT INTO guild (id, prefix)
+                INSERT INTO guilds (id, prefix)
                 VALUES ($1, $2)
                 """,
                 message.guild.id,
