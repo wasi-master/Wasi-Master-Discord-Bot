@@ -1556,13 +1556,14 @@ async def colour(ctx, color: str):
 @has_permissions(manage_guild=True)
 async def prefix(ctx, prefix: str):
     await client.db.execute(
-                """
-                INSERT INTO guilds (id, prefix)
-                VALUES ($1, $2)
+               """
+                UPDATE guilds
+                SET prefix = $2
+                WHERE id = $1;
                 """,
                 ctx.guild.id,
                 prefix
-            )
+           ) 
     await ctx.send(f"prefix set to `{prefix}`")
 
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
