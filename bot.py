@@ -31,12 +31,12 @@ import urllib.parse
 
 
 
-'''
+
 async def get_prefix(client, message):
     prefix_for_this_guild = await client.db.fetchrow(
             """
             SELECT prefix
-            FROM prefixes
+            FROM guilds
             WHERE id=$1
             """,
             message.guild.id 
@@ -44,7 +44,7 @@ async def get_prefix(client, message):
     if prefix_for_this_guild is None:
         await client.db.execute(
                 """
-                INSERT INTO prefixes (id, prefix)
+                INSERT INTO guild (id, prefix)
                 VALUES ($1, $2)
                 """,
                 message.guild.id,
@@ -52,7 +52,7 @@ async def get_prefix(client, message):
             )
         prefix_for_this_guild = {"prefix": ","}
     return prefix_for_this_guild["prefix"]
-'''
+
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
     return "%02d:%02d" % (minutes, sec)
@@ -1548,7 +1548,7 @@ async def colour(ctx, color: str):
     await ctx.send(embed=embed)
     session.close()
 
-'''
+
 @client.command(
     aliases=["setprefix"],
     description="Sets a prefix for a server but doesn’t work always :(",
@@ -1557,14 +1557,14 @@ async def colour(ctx, color: str):
 async def prefix(ctx, prefix: str):
     await client.db.execute(
                 """
-                INSERT INTO prefixes (id, prefix)
+                INSERT INTO guilds (id, prefix)
                 VALUES ($1, $2)
                 """,
                 ctx.guild.id,
                 prefix
             )
     await ctx.send(f"prefix set to `{prefix}`")
-'''
+
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, *, args: commands.clean_content):
     mesg = args
