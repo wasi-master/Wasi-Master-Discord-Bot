@@ -31,7 +31,7 @@ import urllib.parse
 
 
 
-
+"""
 async def get_prefix(client, message):
     prefix_for_this_guild = await client.db.fetchrow(
             """
@@ -39,7 +39,7 @@ async def get_prefix(client, message):
             FROM prefixes
             WHERE id=$1
             """,
-            message.guild.id
+            message.guild.id 
         )
     if prefix_for_this_guild is None:
         await client.db.execute(
@@ -52,7 +52,7 @@ async def get_prefix(client, message):
             )
         prefix_for_this_guild = {"prefix": ","}
     return prefix_for_this_guild["prefix"]
-
+"""
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
     return "%02d:%02d" % (minutes, sec)
@@ -108,7 +108,7 @@ def get_status(status: str):
         return status
 
 
-client = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
+client = commands.Bot(command_prefix="wm,", case_insensitive=True)
 dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs")
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
@@ -1554,14 +1554,16 @@ async def colour(ctx, color: str):
     description="Sets a prefix for a server but doesn’t work always :(",
 )
 @has_permissions(manage_guild=True)
-async def prefix(ctx, prefix):
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-    prefixes[str(ctx.guild.id)] = prefix
+async def prefix(ctx, prefix: str):
+    await client.db.execute(
+                """
+                INSERT INTO prefixes (id, prefix)
+                VALUES ($1, $2)
+                """,
+                ctx..guild.id,
+                prefix
+            )
     await ctx.send(f"prefix set to `{prefix}`")
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
-
 
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, *, args: commands.clean_content):
