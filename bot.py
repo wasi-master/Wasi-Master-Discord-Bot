@@ -31,7 +31,7 @@ import urllib.parse
 
 
 
-"""
+'''
 async def get_prefix(client, message):
     prefix_for_this_guild = await client.db.fetchrow(
             """
@@ -52,7 +52,7 @@ async def get_prefix(client, message):
             )
         prefix_for_this_guild = {"prefix": ","}
     return prefix_for_this_guild["prefix"]
-"""
+'''
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
     return "%02d:%02d" % (minutes, sec)
