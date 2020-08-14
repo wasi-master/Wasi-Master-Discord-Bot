@@ -1548,7 +1548,7 @@ async def colour(ctx, color: str):
     await ctx.send(embed=embed)
     session.close()
 
-
+'''
 @client.command(
     aliases=["setprefix"],
     description="Sets a prefix for a server but doesn’t work always :(",
@@ -1560,11 +1560,11 @@ async def prefix(ctx, prefix: str):
                 INSERT INTO prefixes (id, prefix)
                 VALUES ($1, $2)
                 """,
-                ctx..guild.id,
+                ctx.guild.id,
                 prefix
             )
     await ctx.send(f"prefix set to `{prefix}`")
-
+'''
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, *, args: commands.clean_content):
     mesg = args
