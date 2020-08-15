@@ -256,7 +256,7 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
-@commands.command(description="See a list of top active users in a channel")
+@client.command(description="See a list of top active users in a channel")
 @commands.coolown(5, 1, BucketType.channel)
 async def top(self, ctx, limit = 500, *, channel: discord.TextChannel = None):
 
