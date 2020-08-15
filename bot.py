@@ -256,7 +256,41 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+@commands.command(description="See a list of top active users in a channel")
+@commands.coolown(5, 1, BucketType.channel)
+async def top(self, ctx, limit = 500, *, channel: discord.TextChannel = None):
 
+  
+
+  msg1 = await ctx.send("Loading messages...")
+
+  async with ctx.typing():
+    if not channel: channel = ctx.channel 
+    if limit > 1000:
+      limit = 1000
+    res = {} 
+    ch = await channel.history(limit = limit).flatten() 
+    for a in ch:
+      res[a.author] = {'messages': len([b for b in ch if b.author.id == a.author.id])}
+    lb = sorted(res, key=lambda x : res[x].get('messages', 0), reverse=True)
+    oof = ""
+    counter = 0
+    for a in lb:
+      counter += 1
+      if counter > 10:
+        pass
+      else:
+        oof += f"{str(a):<20} :: {res[a]['messages']}\n"
+    prolog = f"""```prolog
+{'User':<20} :: Messages
+
+{oof}
+```
+"""
+    emb = discord.Embed(description = f"Top {channel.mention} users (last {limit} messages): {prolog}", colour = discord.Color.blurple())
+    await ctx.send(embed = emb)
+    await msg1.delete()
+      
 @client.command(description="Do math stuff")
 async def math(ctx, equation:str):
     try:
