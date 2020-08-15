@@ -282,6 +282,7 @@ async def morse(ctx, text:str):
                         '?':'..--..', '/':'-..-.', '-':'-....-', 
     
                         '(':'-.--.', ')':'-.--.-'}
+    message = text
     cipher = '' 
     for letter in message: 
         if letter != ' ': 
@@ -322,6 +323,7 @@ async def unmorse(ctx, text:str):
                         '?':'..--..', '/':'-..-.', '-':'-....-', 
     
                         '(':'-.--.', ')':'-.--.-'}
+    message = text
     message += ' '
     decipher = '' 
     citext = '' 
