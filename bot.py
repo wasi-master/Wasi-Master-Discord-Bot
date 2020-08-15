@@ -258,10 +258,7 @@ def pad(to_pad):
 
 @client.command(description="See a list of top active users in a channel")
 @commands.coolown(5, 1, BucketType.channel)
-async def top(self, ctx, limit = 500, *, channel: discord.TextChannel = None):
-
-  
-
+async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
   msg1 = await ctx.send("Loading messages...")
 
   async with ctx.typing():
