@@ -5,4 +5,3 @@ Procfile
 prefixes.json
 runtime.txt
 requirements.txt
-bot.py
