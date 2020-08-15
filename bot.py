@@ -198,7 +198,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("I can't do that")
     elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(f"The {str(error.param).split(":")[0].strip()} argument is missing")
+        await ctx.send(f"The {str(error.param).split(':')[0].strip()} argument is missing")
     elif isinstance(error, commands.CommandNotFound):
         pass
     elif isinstance(error, discord.Forbidden):
