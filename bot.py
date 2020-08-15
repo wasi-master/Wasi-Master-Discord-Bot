@@ -265,12 +265,12 @@ async def messages(ctx, limit = 500):
         limit = 5000
     try:
         channel = ctx.message.channel_mentions[0]
-    except KeyError:
+    except IndexError:
         channel = ctx.channel
     try:
         member = ctx.message.mentions[0]
         a = member.mention
-    except KeyError:
+    except IndexError:
         member = ctx.author
         a = "You"
     async with ctx.typing():
