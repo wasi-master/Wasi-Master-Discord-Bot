@@ -404,7 +404,7 @@ async def bans(ctx, limit: int = 10):
 
 
 @client.command(description="Spoilers a text letter by letter")
-@commands.cooldown(1, 15, BucketType.channel)
+@commands.max_concurrency(1, BucketType.channel)
 async def spoiler(ctx, *, text: str):
     result = ""
     for i in text:
