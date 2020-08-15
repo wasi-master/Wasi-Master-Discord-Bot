@@ -259,7 +259,7 @@ def pad(to_pad):
 @client.command(description="See a list of top active users in a channel")
 @commands.max_concurrency(1, BucketType.channel, wait=True)
 async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
-  msg1 = await ctx.send("Loading messages...")
+  msg1 = await ctx.send("Loading messages <a:typing:597589448607399949>")
 
   async with ctx.typing():
     if not channel: channel = ctx.channel 
