@@ -337,7 +337,7 @@ async def unmorse(ctx, text:str):
                 decipher += list(MORSE_CODE_DICT.keys())[list(MORSE_CODE_DICT 
                 .values()).index(citext)] 
                 citext = '' 
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher)
+    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher))
 
 
 @client.command(description="Check who got banned")
