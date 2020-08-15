@@ -262,7 +262,7 @@ async def math(ctx, equation:str):
     try:
         result = numexpr.evaluate(equation)
     except:
-        await ctx.send("Math Operation Failed")
+        return await ctx.send("Math Operation Failed")
 
 @client.command(description="Morse code :nerd:")
 async def morse(ctx, *, text:str):
