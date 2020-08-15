@@ -217,13 +217,18 @@ async def on_command_error(ctx, error):
 
         try:
             reaction = await client.wait_for(
-                "reaction_add", check=check, timeout=10
+                "reaction_add", check=check, timeout=20
             )
         except asyncio.TimeoutError:
             try:
-                await message.clear_reactions()
-            except discord.Forbidden:
-                await message.remove_reaction("\u2705", ctx.guild.me)
+                return await message.clear_reactions()
+            except:
+                botembed.set_footer(
+                    icon_url=ctx.author.avatar_url,
+                    text="You were too late",
+                )
+                await message.edit(embed=botembed)
+                return await message.remove_reaction("\u2705", ctx.guild.me)
         else:
             if str(reaction.emoji) == "\u2705":
                 botembed.set_footer(
@@ -252,7 +257,7 @@ def pad(to_pad):
 
 
 @client.command(description="Morse code :nerd:")
-async def morse(ctx, text:str):
+async def morse(ctx, *, text:str):
     MORSE_CODE_DICT = { 'A':'.-', 'B':'-...', 
     
                         'C':'-.-.', 'D':'-..', 'E':'.', 
@@ -286,14 +291,14 @@ async def morse(ctx, text:str):
     cipher = '' 
     for letter in message: 
         if letter != ' ': 
-            cipher += MORSE_CODE_DICT[letter] + ' '
+            cipher += MORSE_CODE_DICT[letter.upper()] + ' '
         else: 
             cipher += ' '
     await ctx.send(embed=discord.Embed(title=str(ctx.author), description=cipher))
 
 
 @client.command(description="English to morse")
-async def unmorse(ctx, text:str):
+async def unmorse(ctx, *, text:str):
     MORSE_CODE_DICT = { 'A':'.-', 'B':'-...', 
     
                         'C':'-.-.', 'D':'-..', 'E':'.', 
@@ -330,7 +335,7 @@ async def unmorse(ctx, text:str):
     for letter in message: 
         if (letter != ' '): 
             i = 0
-            citext += letter
+            citext += letter.upper()
         else: 
             i += 1
             if i == 2 : 
