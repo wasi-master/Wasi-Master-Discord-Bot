@@ -194,6 +194,7 @@ async def on_guild_remove(guild):
 async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
         return
+    error = getattr(error, "original", error)
     if isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command}")
     elif isinstance(error, commands.MissingPermissions):
@@ -255,6 +256,33 @@ async def on_command_error(ctx, error):
 
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+
+
+@client.command(description="See your/other user's messages in a channel")
+async def messages(ctx, limit = 500):
+    msg1 = await ctx.send(f"Loading {limit} messages <a:typing:597589448607399949>")
+    if limit > 5000:
+        limit = 5000
+    try:
+        channel = ctx.message.channel_mentions[0]
+    except KeyError:
+        channel = ctx.channel
+    try:
+        member = ctx.message.mentions[0]
+        a = member.mention
+    except KeyError:
+        member = ctx.author
+        a = "You"
+    async with ctx.typing():
+        messages = await channel.history(limit=limit).flatten()
+        count = len([x for x in messages if x.author.id == member.id])
+        perc = ((100 * int(count))/int(limit))
+        emb = discord.Embed(description = f"{a} sent **{count} ({perc}%)** messages in {channel.mention} in the last **{limit}** messages.", colour = colour)
+        await ctx.send(embed = emb)
+    await msg1.delete()
+
+
+
 
 @client.command(description="See a list of top active users in a channel")
 @commands.max_concurrency(1, BucketType.channel, wait=True)
