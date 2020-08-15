@@ -8,4 +8,5 @@ bs4
 psutil
 asyncpg
 dblpy
+numexpr
 git+git://github.com/jmoiron/humanize.git
