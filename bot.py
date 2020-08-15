@@ -7,6 +7,7 @@ import difflib
 import discord
 import html
 import json
+import numexpr
 import os
 import secrets
 import time as timemodule
@@ -255,6 +256,13 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+
+@client.command(description="Do math stuff")
+async def math(ctx, equation:str):
+    try:
+        result = numexpr.evaluate(equation)
+    except:
+        
 
 @client.command(description="Morse code :nerd:")
 async def morse(ctx, *, text:str):
@@ -524,7 +532,8 @@ async def pypi(ctx, package_name:str):
         elif not len(fj["requires_dist"]) == 0:
            embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
     if not fj["requires_python"] is None:
-        embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
+        if len(fj["requires_python"]) > 2:
+            embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
     await ctx.send(embed=embed)
     await session.close()
 
