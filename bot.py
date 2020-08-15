@@ -257,7 +257,7 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 @client.command(description="See a list of top active users in a channel")
-@commands.coolown(5, 1, BucketType.channel)
+@commands.max_concurrency(1, BucketType.channel, wait=True)
 async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
   msg1 = await ctx.send("Loading messages...")
 
@@ -404,7 +404,7 @@ async def bans(ctx, limit: int = 10):
 
 
 @client.command(description="Spoilers a text letter by letter")
-@commands.max_concurrency(1, BucketType.channel)
+@commands.cooldown(1, 15, BucketType.channel)
 async def spoiler(ctx, *, text: str):
     result = ""
     for i in text:
