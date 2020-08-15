@@ -277,7 +277,7 @@ async def messages(ctx, limit = 500):
         messages = await channel.history(limit=limit).flatten()
         count = len([x for x in messages if x.author.id == member.id])
         perc = ((100 * int(count))/int(limit))
-        emb = discord.Embed(description = f"{a} sent **{count} ({perc}%)** messages in {channel.mention} in the last **{limit}** messages.", colour = colour)
+        emb = discord.Embed(description = f"{a} sent **{count} ({perc}%)** messages in {channel.mention} in the last **{limit}** messages.", colour = a.colour)
         await ctx.send(embed = emb)
     await msg1.delete()
 
