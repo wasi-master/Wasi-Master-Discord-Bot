@@ -2182,7 +2182,7 @@ async def servers(ctx):
 
 @client.command(
     name="8ball",
-    aliases=["8ball", "eightball", "eight ball", "question", "answer", "8b"],
+    aliases=["eightball", "eight ball", "question", "answer", "8b"],
     description="Sends a yes/no type answer to a question",
 )
 async def _8ball(ctx, *, question):
