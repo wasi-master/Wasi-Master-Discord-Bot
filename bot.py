@@ -297,7 +297,7 @@ async def emoji(ctx, task:str, emoji_name: str):
                 await ctx.send(embed=embed)
             elif task == "add":
                 if not ctx.author.guild_permissions.manage_emojis:
-                    raturn await ctx.send("You don't have the Manage Emojis permission to add a emoji to this server")
+                    return await ctx.send("You don't have the Manage Emojis permission to add a emoji to this server")
                 session = aiohttp.ClientSession()
                 async with session.get(emoji_from_api["image"]) as r:
                     try:
