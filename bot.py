@@ -197,7 +197,7 @@ async def on_command_error(ctx, error):
         return
     error = getattr(error, "original", error)
     if isinstance(error, commands.CheckFailure):
-        await ctx.send(f"You don't have the permission to use {ctx.command}")
+        await ctx.send(f"You don't have the permission to use {ctx.command} command")
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("I can't do that")
     elif isinstance(error, commands.MissingRequiredArgument):
@@ -291,6 +291,7 @@ async def emoji(ctx, task:str, emoji_name: str):
             if task == "view":
                 embed = discord.Embed(title=emoji_name)
                 embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
+                await ctx.send(f"```{emoji_from_api['image']}```")
                 embed.set_image(url=emoji_from_api["image"])
                 embed.set_footer(text="‌", icon_url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
