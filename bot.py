@@ -265,7 +265,7 @@ def pad(to_pad):
 
 
 @client.command(description="Adds a emoji from https://emoji.gg to your server")
-@commands.has_permissions(manage_emojis=True)
+#  @commands.has_permissions(manage_emojis=True)
 async def emoji(ctx, task:str, emoji_name: str):
     if len(ctx.bot.emoji_list) == 0:
         msg1 = await ctx.send(f"Loading emojis <a:typing:597589448607399949>")
@@ -296,6 +296,8 @@ async def emoji(ctx, task:str, emoji_name: str):
                 embed.set_footer(text="Because of a discord bug, we can't show the emoji as a big image, so here is the small version", icon_url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
             elif task == "add":
+                if not ctx.author.guild_permissions.manage_emojis:
+                    raturn await ctx.send("You don't have the Manage Emojis permission to add a emoji to this server")
                 session = aiohttp.ClientSession()
                 async with session.get(emoji_from_api["image"]) as r:
                     try:
