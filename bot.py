@@ -1467,7 +1467,7 @@ async def serverinfo(ctx):
     await ctx.send(embed=embed)
 
 
-@client.command(description="See info about the bot")
+@client.command(aliases=["stats"], description="See info about the bot")
 async def info(ctx):
     embed = discord.Embed(title="Statistics")
     ram = psutil.virtual_memory()
@@ -1477,7 +1477,7 @@ async def info(ctx):
     )
     embed.add_field(
         name="RAM",
-        value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total)))*100}",
+        value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total))*10)}",
     )
     await ctx.send(embed=embed)
 
