@@ -294,7 +294,7 @@ async def emoji(ctx, task:str, emoji_name: str):
                 #await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
                 embed.set_thumbnail(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
                 embed.set_image(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
-                embed.set_footer(text="Because of a discord bug, we can't show the emoji as a big image, so here is the small version", icon_url=emoji_from_api["image"])
+                embed.set_footer(text="Because of a discord bug, we may bot be able to show the emoji as a big image, so here is the small version", icon_url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
             elif task == "add":
                 if not ctx.author.guild_permissions.manage_emojis:
