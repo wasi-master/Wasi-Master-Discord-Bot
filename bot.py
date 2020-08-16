@@ -290,7 +290,7 @@ async def emoji(ctx, task:str, emoji_name: str):
                 session = aiohttp.ClientSession()
                 async with session.get(fj["image"]) as r:
                     try:
-                        emoji = ctx.guild.create_custom_emoji(name=emoji_name, image= await r.text())
+                        emoji = ctx.guild.create_custom_emoji(name=emoji_name, image= await r.read())
                         await ctx.send(f"Emoji {emoji} added succesfully :)")
                     except discord.Forbidden:
                         await ctx.send("Unable to add emoji, check my permissions and try again")
