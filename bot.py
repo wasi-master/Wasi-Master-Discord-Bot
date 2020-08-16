@@ -114,7 +114,8 @@ dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijcw
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
 client.remove_command("help")
-
+client.emoji_list = []
+client.emoji_list_str = []
 
 async def create_db_pool():
     client.db = await asyncpg.create_pool(host="ec2-52-23-86-208.compute-1.amazonaws.com", database="d5squd8cvojua1", user="poladbevzydxyx", password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8")
@@ -223,6 +224,11 @@ async def on_command_error(ctx, error):
             )
         except asyncio.TimeoutError:
             try:
+                botembed.set_footer(
+                    icon_url=ctx.author.avatar_url,
+                    text="You were too late",
+                )
+                await message.edit(embed=botembed)
                 return await message.clear_reactions()
             except:
                 botembed.set_footer(
@@ -256,6 +262,42 @@ async def on_command_error(ctx, error):
 
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+
+
+@client.command(description="Adds a emoji from https://emoji.gg to your server")
+async def emoji(ctx, task:str, emoji_name: str):
+    if len(ctx.bot.emoji_list) == 0:
+        msg1 = await ctx.send(f"Loading emojis <a:typing:597589448607399949>")
+        session = aiohttp.clientSession()
+        async with session.get("https://emoji.gg/api") as resp:
+            ctx.bot.emoji_list = json.loads(await resp.text())
+            fj = ctx.bot.emoji_list
+        msg1.delete()
+        ctx.bot.emoji_list_str = [i["title"].lower() for i in fj]
+        await session.close()
+    if task == "view" or task == "add":
+        emoji_from_api = discord.utils.get(ctx.bot.emoji_list, title=emoji_name)
+        if emoji_from_api is None:
+            embed = discord.Embed(title="Emoji not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(emoji_name.lower(), ctx.bot.emoji_list_str, n=5, cutoff=0.2))}")
+            return await ctx.send(embed=embed)
+        else:
+            if task == "view":
+                embed = discord.embed(title=emoji_name)
+                embed.add_field(name="Author", value=fj["submitted_by"])
+                embed.set_image(url=fj["image"])
+                await ctx.send(embed=embed)
+            elif task == "add":
+                session = aiohttp.ClientSession()
+                async with session.get(fj["image"]) as r:
+                    try:
+                        emoji = ctx.guild.create_custom_emoji(name=emoji_name, image= await r.text())
+                        await ctx.send(f"Emoji {emoji} added succesfully :)")
+                    except discord.Forbidden:
+                        await ctx.send("Unable to add emoji, check my permissions and try again")
+    else:
+        return await ctx.send("Invalid Task, task should be add or view")
+
+
 
 
 @client.command(description="See your/other user's messages in a channel")
@@ -948,7 +990,7 @@ async def waifu(ctx):
     description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`",
     usage="emoji `<name>`\n\nemoji hyper_pinged",
 )
-async def emoji(ctx, *, name: str):
+async def emojiid(ctx, *, name: str):
     await ctx.send(f"```{discord.utils.get(ctx.guild.emojis, name=name)}```")
 
 
@@ -1298,7 +1340,7 @@ async def gif(ctx, *, query: str):
 
 
 @client.command(aliases=["b64"], description="Encode or decode text to base64")
-async def base64(ctx, task, *, text):
+async def base64(ctx, task, *,, text: commands.clean_content):
     if task.strip().lower() == "encode" or task.strip().lower == "e":
         data = text
         encodedBytes = base64module.b64encode(data.encode("utf-8"))
