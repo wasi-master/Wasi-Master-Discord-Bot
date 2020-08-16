@@ -268,7 +268,7 @@ def pad(to_pad):
 async def emoji(ctx, task:str, emoji_name: str):
     if len(ctx.bot.emoji_list) == 0:
         msg1 = await ctx.send(f"Loading emojis <a:typing:597589448607399949>")
-        session = aiohttp.clientSession()
+        session = aiohttp.ClientSession()
         async with session.get("https://emoji.gg/api") as resp:
             ctx.bot.emoji_list = json.loads(await resp.text())
             fj = ctx.bot.emoji_list
