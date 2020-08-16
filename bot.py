@@ -289,12 +289,12 @@ async def emoji(ctx, task:str, emoji_name: str):
         else:
             if task == "view":
                 embed = discord.Embed(title=emoji_name)
-                embed.add_field(name="Author", value=fj["submitted_by"])
-                embed.set_image(url=fj["image"])
+                embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
+                embed.set_image(url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
             elif task == "add":
                 session = aiohttp.ClientSession()
-                async with session.get(fj["image"]) as r:
+                async with session.get(emoji_from_api["image"]) as r:
                     try:
                         emoji = ctx.guild.create_custom_emoji(name=emoji_name, image= await r.read())
                         await ctx.send(f"Emoji {emoji} added succesfully :)")
