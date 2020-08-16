@@ -1340,7 +1340,7 @@ async def gif(ctx, *, query: str):
 
 
 @client.command(aliases=["b64"], description="Encode or decode text to base64")
-async def base64(ctx, task, *,, text: commands.clean_content):
+async def base64(ctx, task, *, text: commands.clean_content):
     if task.strip().lower() == "encode" or task.strip().lower == "e":
         data = text
         encodedBytes = base64module.b64encode(data.encode("utf-8"))
