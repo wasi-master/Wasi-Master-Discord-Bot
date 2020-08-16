@@ -275,8 +275,14 @@ async def emoji(ctx, task:str, emoji_name: str):
         msg1.delete()
         ctx.bot.emoji_list_str = [i["title"].lower() for i in fj]
         await session.close()
+    emoji_from_api = None
     if task == "view" or task == "add":
-        emoji_from_api = discord.utils.get(ctx.bot.emoji_list, title=emoji_name)
+        for i in ctx.bot.emoji_list:
+            if i["title"].lower() == emoji_name.lower():
+                 emoji_from_api = i 
+                 break
+            else:
+                continue
         if emoji_from_api is None:
             embed = discord.Embed(title="Emoji not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(emoji_name.lower(), ctx.bot.emoji_list_str, n=5, cutoff=0.2))}")
             return await ctx.send(embed=embed)
