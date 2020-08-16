@@ -291,7 +291,7 @@ async def emoji(ctx, task:str, emoji_name: str):
             if task == "view":
                 embed = discord.Embed(title=emoji_name)
                 embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
-                #  await ctx.send(f"```{emoji_from_api['image']}```")
+                await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
                 embed.set_image(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
                 embed.set_footer(text="‌", icon_url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
