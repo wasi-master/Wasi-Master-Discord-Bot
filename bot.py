@@ -289,11 +289,11 @@ async def emoji(ctx, task:str, emoji_name: str):
             return await ctx.send(embed=embed)
         else:
             if task == "view":
-                embed = discord.Embed(title=emoji_name)
+                embed = discord.Embed(title=emoji_name, url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
                 embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
                 #await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
                 embed.set_thumbnail(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
-                embed.set_footer(text="for discord bugs, we can't show the emoji as a big image, so here is the small version", icon_url=emoji_from_api["image"])
+                embed.set_footer(text="Because of a discord bug, we can't show the emoji as a big image, so here is the small version", icon_url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
             elif task == "add":
                 session = aiohttp.ClientSession()
