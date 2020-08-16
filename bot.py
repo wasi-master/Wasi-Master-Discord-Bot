@@ -272,7 +272,7 @@ async def emoji(ctx, task:str, emoji_name: str):
         async with session.get("https://emoji.gg/api") as resp:
             ctx.bot.emoji_list = json.loads(await resp.text())
             fj = ctx.bot.emoji_list
-        msg1.delete()
+        await msg1.delete()
         ctx.bot.emoji_list_str = [i["title"].lower() for i in fj]
         await session.close()
     emoji_from_api = None
@@ -291,6 +291,7 @@ async def emoji(ctx, task:str, emoji_name: str):
                 embed = discord.Embed(title=emoji_name)
                 embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
                 embed.set_image(url=emoji_from_api["image"])
+                embed.set_footer(text="‌", icon_url=emoji_from_api["image"])
                 await ctx.send(embed=embed)
             elif task == "add":
                 session = aiohttp.ClientSession()
