@@ -265,6 +265,7 @@ def pad(to_pad):
 
 
 @client.command(description="Adds a emoji from https://emoji.gg to your server")
+@commands.has_permissions(manage_emojis=True)
 async def emoji(ctx, task:str, emoji_name: str):
     if len(ctx.bot.emoji_list) == 0:
         msg1 = await ctx.send(f"Loading emojis <a:typing:597589448607399949>")
