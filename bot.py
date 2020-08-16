@@ -1469,9 +1469,7 @@ async def serverinfo(ctx):
 
 @client.command(description="See info about the bot")
 async def info(ctx):
-    total = 0
     embed = discord.Embed(title="Statistics")
-    embed.add_field(name="Code", value=f"Lines: {total:3,}")
     ram = psutil.virtual_memory()
     embed.add_field(
         name="CPU",
@@ -1481,14 +1479,6 @@ async def info(ctx):
         name="RAM",
         value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total)))*100}",
     )
-    with codecs.open("bot.py", "r", "utf-8") as f:
-        for l in enumerate(f):
-            if (
-                l.strip().startswith("#") or len(l.strip()) == 0
-            ):  # skip commented lines.
-                pass
-            else:
-                total += 1
     await ctx.send(embed=embed)
 
 
