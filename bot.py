@@ -288,7 +288,7 @@ async def emoji(ctx, task:str, emoji_name: str):
             return await ctx.send(embed=embed)
         else:
             if task == "view":
-                embed = discord.embed(title=emoji_name)
+                embed = discord.Embed(title=emoji_name)
                 embed.add_field(name="Author", value=fj["submitted_by"])
                 embed.set_image(url=fj["image"])
                 await ctx.send(embed=embed)
