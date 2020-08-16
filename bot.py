@@ -1477,7 +1477,7 @@ async def info(ctx):
     )
     embed.add_field(
         name="RAM",
-        value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total))*10)}",
+        value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total))*100)}",
     )
     await ctx.send(embed=embed)
 
