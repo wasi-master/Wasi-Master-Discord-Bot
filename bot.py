@@ -377,7 +377,7 @@ async def math(ctx, equation:str):
             equation = equation.replace("×", "*").replace("÷", "/").replace("^", "**")
             result = numexpr.evaluate(equation)
             if not humanize.fractional(result) == str(result):
-                await ctx.send(f"{result} or {humanize.fractional(result)})
+                await ctx.send(f"{result} or {humanize.fractional(result)}")
             else:
                 await ctx.send(result)
         except:
