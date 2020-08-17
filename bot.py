@@ -270,10 +270,7 @@ async def abbreviations(ctx, text: commands.clean_content):
         fj = json.load(f)
     abs_str = [i for i in fj[0]]
     if text.upper() in abs_str:
-        try:
-            result = fj[0][text.upper()]
-        except KeyError:
-            continue
+        result = fj[0][text.upper()]
         embed = discord.Embed(title=text, value=result)
         await ctx.send(embed=embed)
     else:
