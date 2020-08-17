@@ -269,11 +269,15 @@ async def abbreviations(ctx, text: commands.clean_content):
     with open ("abs.json") as f:
         fj = json.load(f)
     abs_str = [i for i in fj]
-    try:
-        result = fj[text.upper()]
+    if text.upper() in abs_str:
+        for i in fj:
+            try:
+                result = i[text.upper()]
+            except KeyError:
+                continue
         embed = discord.Embed(title=text, value=result)
         await ctx.send(embed=embed)
-    except KeyError:
+    else:
         embed = discord.Embed(title=f"Abbreviation for {text} not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}")
         return await ctx.send(embed=embed)
 
