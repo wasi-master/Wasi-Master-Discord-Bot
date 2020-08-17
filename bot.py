@@ -271,7 +271,7 @@ async def abbreviations(ctx, text: commands.clean_content):
     abs_str = [i for i in fj[0]]
     if text.upper() in abs_str:
         result = fj[0][text.upper()]
-        embed = discord.Embed(title=text, value=result)
+        embed = discord.Embed(title=text, description=result)
         await ctx.send(embed=embed)
     else:
         embed = discord.Embed(title=f"Abbreviation for {text} not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}")
