@@ -791,7 +791,7 @@ async def time(ctx, location: str=None):
         embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
         embed.add_field(name="UTC Offset", value=gmt)
         await ctx.send(embed=embed)
-        
+        """
 @client.command(
     aliases=["ss"],
     description="Takes a sceenshot of a website"
@@ -813,7 +813,7 @@ async def screenshot(ctx, website:str):
                 embed.set_image(url=data["snapshot"])
         await ctx.send(embed=embed)
         session.close()
-
+"""
 
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
 async def channelinfo(ctx, channel: discord.TextChannel = None):
