@@ -270,7 +270,7 @@ async def abbreviations(ctx, text: commands.clean_content):
         fj = json.load(f)
     abs_str = [i for i in fj[0]]
     if text.upper() in abs_str:
-        for i in fj:
+        for i in fj[0]:
             try:
                 result = i[text.upper()]
             except KeyError:
