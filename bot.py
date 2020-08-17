@@ -376,11 +376,14 @@ async def math(ctx, equation:str):
         try:
             equation = equation.replace("×", "*").replace("÷", "/").replace("^", "**")
             result = numexpr.evaluate(equation)
-            await ctx.send(result)
+            if not humanize.fractional(result) == str(result):
+                await ctx.send(f"{result} or {humanize.fractional(result)})
+            else:
+                await ctx.send(result)
         except:
             return await ctx.send("Math Operation Failed")
     else:
-        await ctx.send("Too bog task, not gonna do that :grin:")
+        await ctx.send("Too big task, not gonna do that :grin:")
 @client.command(description="Morse code :nerd:")
 async def morse(ctx, *, text:str):
     MORSE_CODE_DICT = { 'A':'.-', 'B':'-...', 
