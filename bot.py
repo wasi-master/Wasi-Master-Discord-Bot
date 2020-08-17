@@ -372,13 +372,15 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
       
 @client.command(description="Do math stuff")
 async def math(ctx, equation:str):
-    try:
-        equation = equation.replace("×", "*").replace("÷", "/").replace("^", "**")
-        result = numexpr.evaluate(equation)
-        await ctx.send(result)
-    except:
-        return await ctx.send("Math Operation Failed")
-
+    if not len(equation) > 30:
+        try:
+            equation = equation.replace("×", "*").replace("÷", "/").replace("^", "**")
+            result = numexpr.evaluate(equation)
+            await ctx.send(result)
+        except:
+            return await ctx.send("Math Operation Failed")
+    else:
+        await ctx.send("Too bog task, not gonna do that :grin:")
 @client.command(description="Morse code :nerd:")
 async def morse(ctx, *, text:str):
     MORSE_CODE_DICT = { 'A':'.-', 'B':'-...', 
