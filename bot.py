@@ -264,6 +264,22 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@client.command(description="See the meaning of a texting abbreviation", aliases=["avs", "abs", "whatdoesitmean" "wdim"])
+async def abbreviations(ctx, text: commands.clean_content):
+    session = aiohttp.ClientSession()
+    async with session.get("https://raw.githubusercontent.com/wasi-master/Wasi-Master-Discord-Bot/master/abs.json?token=APBACIA7H3SPND3IGGSWTBC7HIWOM") as r:
+        fj = json.loads(await r.text())
+    abs_str = [i for i in fj]
+    try:
+        result = fj[text.upper()]
+        embed = discord.Embed(title=text, value=result)
+        await ctx.send(embed=embed)
+    except KeyError:
+        embed = discord.Embed(title=f"Abbreviation for {text} not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}")
+        return await ctx.send(embed=embed)
+
+
+
 @client.command(description="Rolls a dice and gives you a number")
 async def dice(ctx):
   msg = await ctx.send(":game_die: Rolling Dice <a:typing:597589448607399949>")
