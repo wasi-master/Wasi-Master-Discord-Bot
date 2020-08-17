@@ -270,7 +270,7 @@ async def dice(ctx):
   
   dice_emoji = [":one:",":two:",":three:",":four:",":five:",":six:"]
   dice = random.randint(0, 5)
-  asyncio.sleep(1)
+  await asyncio.sleep(1)
   await msg.delete()
   await ctx.send(f"Your number is {dice_emoji[dice]}")
 
