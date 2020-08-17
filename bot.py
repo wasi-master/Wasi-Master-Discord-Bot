@@ -267,7 +267,7 @@ def pad(to_pad):
 @client.command(description="See the meaning of a texting abbreviation", aliases=["avs", "abs", "whatdoesitmean" "wdim"])
 async def abbreviations(ctx, text: commands.clean_content):
     session = aiohttp.ClientSession()
-    async with session.get("https://raw.githubusercontent.com/wasi-master/Wasi-Master-Discord-Bot/master/abs.json?token=APBACIA7H3SPND3IGGSWTBC7HIWOM") as r:
+    async with session.get("https://raw.githubusercontent.com/wasi-master/Wasi-Master-Discord-Bot/master/abs.json?token=APBACIFN6A2CSUYVO3KVV5C7HIXY4") as r:
         fj = json.loads(await r.text())
     abs_str = [i for i in fj]
     try:
