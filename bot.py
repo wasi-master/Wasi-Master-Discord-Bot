@@ -374,6 +374,7 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
 async def math(ctx, equation:str):
     try:
         result = numexpr.evaluate(equation)
+        await ctx.send(result)
     except:
         return await ctx.send("Math Operation Failed")
 
