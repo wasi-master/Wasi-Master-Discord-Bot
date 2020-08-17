@@ -397,7 +397,7 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
       
 @client.command(description="Do math stuff")
 async def math(ctx, equation:str):
-    if not len(equation) > 30:
+    if not len(equation) > 15:
         try:
             equation = equation.replace("×", "*").replace("÷", "/").replace("^", "**")
             result = numexpr.evaluate(equation)
