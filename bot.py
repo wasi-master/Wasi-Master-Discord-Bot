@@ -1866,7 +1866,7 @@ async def choose(ctx, *, args):
 async def ping(ctx):
     start = timemodule.perf_counter()
     embed = discord.Embed(
-        description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it takes between seeing your message then sending a response\n**Bot Latency** = Time needed to send/edit messages"
+        description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it took send this response to your message\n**Bot Latency** = Time needed to send/edit messages"
     )
     embed.set_author(name="Ping")
     embed.set_footer(text=f"Asked by {ctx.author}")
