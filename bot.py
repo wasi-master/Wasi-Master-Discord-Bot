@@ -264,6 +264,17 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
+@commands.command(help="Rolls a dice and gives you a number")
+async def dice(ctx):
+  msg = await ctx.send(":game_die: Rolling Dice <a:typing:597589448607399949>")
+  
+  dice_emoji = [":one:",":two:",":three:",":four:",":five:",":six:"]
+  dice = random.randint(0, 5)
+  asyncio.sleep(1)
+  await msg.delete()
+  await ctx.send(f"Your number is {dice_emoji[dice]}")
+
+
 @client.command(description="Adds a emoji from https://emoji.gg to your server")
 #  @commands.has_permissions(manage_emojis=True)
 async def emoji(ctx, task:str, emoji_name: str):
@@ -1863,7 +1874,7 @@ async def choose(ctx, *, args):
 
 
 @client.command(aliases=["p"], description="Shows the bot's speed")
-async def ping(ctx):
+async (ctx):
     start = timemodule.perf_counter()
     embed = discord.Embed(
         description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it took send this response to your message\n**Bot Latency** = Time needed to send/edit messages"
