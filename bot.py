@@ -264,7 +264,7 @@ def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
 
-@commands.command(help="Rolls a dice and gives you a number")
+@client.command(description="Rolls a dice and gives you a number")
 async def dice(ctx):
   msg = await ctx.send(":game_die: Rolling Dice <a:typing:597589448607399949>")
   
@@ -1874,7 +1874,7 @@ async def choose(ctx, *, args):
 
 
 @client.command(aliases=["p"], description="Shows the bot's speed")
-async (ctx):
+async def ping (ctx):
     start = timemodule.perf_counter()
     embed = discord.Embed(
         description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it took send this response to your message\n**Bot Latency** = Time needed to send/edit messages"
