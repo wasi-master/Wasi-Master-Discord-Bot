@@ -11,9 +11,11 @@ import numexpr
 import os
 import secrets
 import time as timemodule
+from typing import Union
 import random
 
 import aiohttp
+import alexflipnote
 import asyncpg
 import async_cleverbot as ac
 from bs4 import BeautifulSoup
@@ -113,6 +115,9 @@ client = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
 dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs")
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
+alex_api = alexflipnote.Client()
+
+
 client.remove_command("help")
 client.emoji_list = []
 client.emoji_list_str = []
@@ -262,6 +267,13 @@ async def on_command_error(ctx, error):
 
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+
+
+@client.command()
+async def achievement(ctx, text: str, icon: Union[int, str] = None): 
+    image = await (await alex_api.achievement(text=text, icon=icon)).read() # BytesIO
+    await ctx.send(f"Rendered by {ctx.author}", file=discord.File(image, filename="achievement.png"))
+
 
 
 @client.command(description="See the meaning of a texting abbreviation", aliases=["avs", "abs", "whatdoesitmean" "wdim"])
@@ -2294,7 +2306,7 @@ async def helpcommand(ctx, command: str = None):
             if not command_for_use.usage is None:
                 embed.add_field(name="Usage", value=ctx.prefix + command_for_use.usage)
             else:
-                embed.add_field(name="Usage", value=command_for_use.name + " " + " ".join([f"`{i}`" for i in client.get_command(command_for_use.name).signature.split(" ")]))
+                embed.add_field(name="Usage", value=ctx.prefix + command_for_use.name + " " + " ".join([f"`{i}`" for i in client.get_command(command_for_use.name).signature.split(" ")]))
             embed.add_field(name="Cooldown", value="None")
             await ctx.send(embed=embed)
         else:
