@@ -2477,7 +2477,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     )
     if not len(member.roles) == 1:
         embed.add_field(
-        name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles])
+        name=f"Roles ({len(roles)})", value=" | ".join([role.mention for role in roles])
     )
     if not member.bot:
         member_type = ":blond_haired_man: Human"
