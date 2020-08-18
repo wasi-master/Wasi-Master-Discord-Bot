@@ -9,4 +9,5 @@ psutil
 asyncpg
 dblpy
 numexpr
+alexflipnote.py
 git+git://github.com/jmoiron/humanize.git
