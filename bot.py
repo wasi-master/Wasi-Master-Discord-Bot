@@ -279,7 +279,7 @@ def tts(lang:str, text:str):
 @client.command("Converts a text to speech (TTS)", aliases=["tts"])
 async def texttospeech(ctx, lang:str, text:str):
     msg = await ctx.send("Generating <a:typing:597589448607399949>")
-    await client.loop.run_in_executor(None, lang, text)
+    await client.loop.run_in_executor(None, tts, lang, text)
     await msg.delete()
     await ctx.send(f"{ctx.author.mention} Here you go:", file=discord.File("tts.mp3"))
     os.remove("tts.mp3")
