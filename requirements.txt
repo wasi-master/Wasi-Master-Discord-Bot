@@ -11,4 +11,5 @@ dblpy
 numexpr
 alexflipnote.py
 async_cse
+aiogoogletrans
 git+git://github.com/jmoiron/humanize.git
