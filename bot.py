@@ -18,6 +18,7 @@ import aiohttp
 import alexflipnote
 import asyncpg
 import async_cleverbot as ac
+import async_cse as ag
 from bs4 import BeautifulSoup
 import humanize
 import psutil
@@ -116,7 +117,7 @@ dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijcw
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
 alex_api = alexflipnote.Client()
-
+google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 
 client.remove_command("help")
 client.emoji_list = []
@@ -167,13 +168,14 @@ async def on_guild_join(guild):
     )
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-    prefixes[str(guild.id)] = ","
-
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
-
+    await client.db.execute(
+                """
+                INSERT INTO guilds (id, prefix)
+                VALUES ($1, $2)
+                """,
+                message.guild.id,
+                ","
+            )
 
 @client.event
 async def on_guild_remove(guild):
@@ -1873,10 +1875,22 @@ async def howgay(ctx, member: discord.Member = None):
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["search"], description="Generates a link to search google")
-async def google(ctx, *, args):
-    result = "http://www.google.com/search?q=" + args.replace(" ", "+") + "&safe=active"
-    await ctx.send(result)
+@client.command(aliases=["search"], description="Searches Google")
+async def google(ctx, *, search_term: commands.clean_content):
+    results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
+    result = results[0]
+    embed=discord.Embed(title=result.title, description=result.description, url=result.url)
+    embed.set_thumbnail(url=result.image_url)
+    await ctx.send(embed=embed)
+
+
+@client.command(aliases=["imagesearch"], description="Searched Google Images and returns the first image")
+async def image(ctx, *, search_term: commands.clean_content):
+    results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True)
+    result = results[0]
+    embed=discord.Embed(title=result.title, description=result.description, url=result.url)
+    embed.set_image(url=result.image_url)
+    await ctx.send(embed=embed)
 
 
 @client.command(
