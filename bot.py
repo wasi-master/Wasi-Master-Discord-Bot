@@ -601,7 +601,11 @@ async def boxspoilerrepeat(ctx, width: int, height: int, *, text: str):
 @commands.cooldown(1, 15, BucketType.channel)
 async def repeat(ctx, amount: int, *, text: str):
     if not len(text*amount) > 2000:
-        await ctx.send(f"```{text * amount}```")
+        message = await ctx.send(f"```{text * amount}```")
+        asyncio.sleep(4)
+        await message.delete()
+        if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
+            await ctx.message.delete()
     else:
         await ctx.send("Text too long")
 
