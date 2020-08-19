@@ -2183,7 +2183,7 @@ async def translate(ctx, lang: str, *, text: str):
     source = ""
     for i in languages:
         if i["alpha2"] == result.src:
-            language = i["alpha2"]
+            language = i["English"]
             break
         else:
             continue
