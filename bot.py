@@ -21,6 +21,7 @@ import asyncpg
 import async_cleverbot as ac
 import async_cse as ag
 from bs4 import BeautifulSoup
+import gtts
 import humanize
 import psutil
 import randomcolor
@@ -270,9 +271,19 @@ async def on_command_error(ctx, error):
         raise error
 
 
-def pad(to_pad):
-    return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
+def tts(lang:str, text:str):
+    speech = gtts.gTTS(text=text, lang=lang, slow=False)
+    speech.save("tts.mp3")
+    return
 
+@client.command("Converts a text to speech (TTS)", aliases=["tts"])
+async def texttospeech(ctx, lang:str, text:str):
+    msg = await ctx.send("Generating <a:typing:597589448607399949>")
+    await client.loop.run_in_executor(None, lang, text)
+    await msg.delete()
+    await ctx.send(f"{ctx.author.mention} Here you go:", file=discord.File("tts.mp3"))
+    os.remove("tts.mp3")
+    
 """
 @client.command(aliases=["recipes", "rec", "recipies"], description=" Search for a recipe ")
 async def recipe(ctx, task:str, food: Union[str, int]):
