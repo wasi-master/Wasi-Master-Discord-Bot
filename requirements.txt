@@ -12,4 +12,5 @@ numexpr
 alexflipnote.py
 async_cse
 aiogoogletrans
+gTTS
 git+git://github.com/jmoiron/humanize.git
