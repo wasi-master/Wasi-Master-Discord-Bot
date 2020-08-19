@@ -10,4 +10,5 @@ asyncpg
 dblpy
 numexpr
 alexflipnote.py
+async_cse
 git+git://github.com/jmoiron/humanize.git
