@@ -273,8 +273,35 @@ async def on_command_error(ctx, error):
 def pad(to_pad):
     return to_pad + "=" * ((4 - len(to_pad) % 4) % 4)
 
+"""
+@client.command(aliases=["recipes", "rec", "recipies"], description=" Search for a recipe ")
+async def recipe(ctx, task:str, food: Union[str, int]):
+    apiKey = "e02f13472e174f55b2e7556fb6fbc7df"
+    headers: {
+        "Content-Type": "application/json"
+    }
+    tasks = ["search", "view", "ingredients"]
+    if task.lower() in tasks:
+        session = aiohttp.ClientSession()
+        if task.lower() == "search":
+            url = f"https://api.spoonacular.com/recipes/complexSearch?query={food}&apiKey={apiKey}"
+            async with session.get(url, headers=headers) as r:
+                fj = json.loads(await r.text())
+            result = fj["results"][0]
+            embed = discord.Embed(title=result["title"])
+            embed.set_image(url=result["image"])
+            embed.add_field(name="ID", value=result["id"])
+            embed.set_footer(text="Note: Remember the ID to view the recipe")
+            await ctx.send(embed=embed)
+        elif task.lower() == "view":
+            
+        
+        
+        
+"""
 
-@client.command()
+
+@client.command(description="Generates a minecraft style achievement image")
 async def achievement(ctx, text: str, icon: Union[int, str] = None): 
     image = await (await alex_api.achievement(text=text, icon=icon)).read() # BytesIO
     await ctx.send(f"Rendered by {ctx.author}", file=discord.File(image, filename="achievement.png"))
