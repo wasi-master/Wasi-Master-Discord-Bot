@@ -2196,7 +2196,7 @@ async def translate(ctx, lang: str, *, text: str):
             break
         else:
             continue
-    embed = discord.Embed(title=f"Translation", value=result.text, color=0x2F3136)
+    embed = discord.Embed(title=f"Translation", description=result.text, color=0x2F3136)
     embed.add_field(name="Pronunciation", value=result.pronunciation)
     embed.set_footer(text=f"Translated from {language}")
     await ctx.send(embed=embed)
