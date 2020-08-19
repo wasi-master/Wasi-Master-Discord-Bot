@@ -256,7 +256,7 @@ async def on_command_error(ctx, error):
                 await message.edit(embed=botembed)
                 guild = client.get_guild(576016234152198155)
                 channel = guild.get_channel(739673341388128266)
-                embed = discord.Embed()
+                embed = discord.Embed(color=0x2F3136)
                 embed.set_author(name="Error")
                 embed.add_field(name="User", value=ctx.message.author)
                 embed.add_field(name="Guild", value=ctx.guild.name)
@@ -288,10 +288,10 @@ async def abbreviations(ctx, text: commands.clean_content):
     abs_str = [i for i in fj[0]]
     if text.upper() in abs_str:
         result = fj[0][text.upper()]
-        embed = discord.Embed(title=text, description=result)
+        embed = discord.Embed(title=text, description=result, color=0x2F3136)
         await ctx.send(embed=embed)
     else:
-        embed = discord.Embed(title=f"Abbreviation for {text} not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}")
+        embed = discord.Embed(title=f"Abbreviation for {text} not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}", color=0x2F3136)
         return await ctx.send(embed=embed)
 
 
@@ -327,11 +327,11 @@ async def emoji(ctx, task:str, emoji_name: str):
             else:
                 continue
         if emoji_from_api is None:
-            embed = discord.Embed(title="Emoji not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(emoji_name.lower(), ctx.bot.emoji_list_str, n=5, cutoff=0.2))}")
+            embed = discord.Embed(title="Emoji not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(emoji_name.lower(), ctx.bot.emoji_list_str, n=5, cutoff=0.2))}", color=0x2F3136)
             return await ctx.send(embed=embed)
         else:
             if task == "view":
-                embed = discord.Embed(title=emoji_name, url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
+                embed = discord.Embed(title=emoji_name, url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"), color=0x2F3136)
                 embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
                 #await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
                 embed.set_thumbnail(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
@@ -464,7 +464,7 @@ async def morse(ctx, *, text:str):
             cipher += MORSE_CODE_DICT[letter.upper()] + ' '
         else: 
             cipher += ' '
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=cipher))
+    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=cipher), color=0x2F3136)
 
 
 @client.command(description="English to morse")
@@ -514,7 +514,7 @@ async def unmorse(ctx, *, text:str):
                 decipher += list(MORSE_CODE_DICT.keys())[list(MORSE_CODE_DICT 
                 .values()).index(citext)] 
                 citext = '' 
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher))
+    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher), color=0x2F3136)
 
 
 @client.command(description="Check who got banned")
@@ -605,7 +605,7 @@ async def weather(ctx, *, location: str):
     async with session.get(url) as r:
         fj = json.loads(await r.text())
     if not fj["cod"] == "404":
-        embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}')
+        embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}', color=0x2F3136)
         embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C\nMinimum: {round(fj["main"]["temp_min"]-273.15, 2)}°C\nMaximum: {round(fj["main"]["temp_max"]-273.15, 2)}°C')
         embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°')
         embed.add_field(name="Cloudyness", value=str(fj["clouds"]["all"]) + "%")
@@ -629,7 +629,7 @@ async def changepfp(ctx):
         await ctx.send("Changed Profile picture to:", file=file)
         server = client.get_guild(576016234152198155)
         channel = server.get_channel(741371556277518427)
-        embed = discord.Embed(title=f"Avatar was changed by {ctx.author}")
+        embed = discord.Embed(title=f"Avatar was changed by {ctx.author}", color=0x2F3136)
         await channel.send(embed=embed)
     f.close()
 
@@ -672,9 +672,9 @@ async def pypi(ctx, package_name:str):
             fj = json.loads(await response.text())
     fj = fj["info"]
     if not len(fj["summary"]) == 0: 
-        embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["))
+        embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["), color=0x2F3136)
     else:
-        embed = discord.Embed(title=fj["name"])
+        embed = discord.Embed(title=fj["name"], color=0x2F3136)
     if len(fj["author_email"]) == 0:
         email = "None"
     else:
@@ -716,7 +716,7 @@ async def pp(ctx, *, member: discord.Member=None):
         comment = "extremely big pp"
     else:
         comment = "tremendous pp "
-    embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D")
+    embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D", color=0x2F3136)
     embed.set_footer(text=comment)
     await ctx.send(embed=embed)
 
@@ -753,7 +753,7 @@ async def movie(ctx, *, query):
     async with session.get(url) as response:
         fj = json.loads(await response.text())
     if fj["Response"] == "True":
-        embed = discord.Embed(title=fj["Title"], description=fj["Plot"])
+        embed = discord.Embed(title=fj["Title"], description=fj["Plot"], color=0x2F3136)
         embed.set_image(url=fj["Poster"])
         embed.add_field(name="Released On", value=fj["Released"])
         embed.add_field(name="Rated", value=fj["Rated"])
@@ -796,7 +796,7 @@ async def roleinfo(ctx, role: discord.Role = None):
 
 @client.command(aliases=["tm"], description="See time")
 async def time(ctx, location: str=None):
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     session = aiohttp.ClientSession()
     async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
         fj = json.loads(await r.text())
@@ -850,7 +850,7 @@ async def screenshot(ctx, website:str):
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
 async def channelinfo(ctx, channel: discord.TextChannel = None):
     channel = channel or ctx.channel
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_author(name=f"Channel Information for {channel.name}")
     embed.add_field(
         name="Created at", value=f'{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.utcnow() - channel.created_at)} old)'
@@ -940,7 +940,7 @@ async def clone(ctx, channel: discord.TextChannel = None):
 async def suggest(ctx, *, suggestion: commands.clean_content):
     guild = client.get_guild(576016234152198155)
     channel = guild.get_channel(740071107041689631)
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_author(name="Suggestion Added")
     embed.add_field(name="User", value=ctx.message.author)
     embed.add_field(name="Guild", value=ctx.guild.name)
@@ -972,7 +972,7 @@ async def upscale(ctx, scaletype, *, member: discord.Member = None):
         url = fj["output_url"]
     await session.close()
     await message.delete()
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_author(name=f"{member.name}'s Profile Picture Upscaled")
     embed.set_image(url=url)
     await ctx.send(embed=embed)
@@ -985,7 +985,7 @@ async def fact(ctx):
         "https://uselessfacts.jsph.pl/random.json?language=en"
     ) as resp:
         fj = json.loads(await resp.text())
-    embed = discord.Embed(title="Random Fact", description=fj["text"])
+    embed = discord.Embed(title="Random Fact", description=fj["text"], color=0x2F3136)
     await ctx.send(embed=embed)
     await session.close()
 
@@ -1020,7 +1020,7 @@ async def waifu(ctx):
                 .split(",")[0]
                 + "}"
             )["gender"]
-        embed = discord.Embed(title=name.replace("&quot;", '"'))
+        embed = discord.Embed(title=name.replace("&quot;", '"'), color=0x2F3136)
         embed.set_image(url=image_url)
     await session.close()
     message = await ctx.send(embed=embed)
@@ -1078,7 +1078,7 @@ async def perms(
         else:
             continue
             # permstr += f"{i.replace('_', ' ' ).title()}  <:redTick:596576672149667840>\n"
-    embed = discord.Embed(title=f"{member}'s Permissions", description=permstr)
+    embed = discord.Embed(title=f"{member}'s Permissions", description=permstr, color=0x2F3136)
     await ctx.send(embed=embed)
 
 
@@ -1093,7 +1093,7 @@ async def firstmessage(ctx, channel: discord.TextChannel = None):
             fmo = i
             break
 
-    embed = discord.Embed(title=f"First message in {channel.name}")
+    embed = discord.Embed(title=f"First message in {channel.name}", color=0x2F3136)
     embed.add_field(name="Message Author", value=fmo.author)
     try:
         embed.add_field(name="Message Content", value=fmo.content)
@@ -1188,7 +1188,7 @@ async def truthordare(ctx, questype: str = "random"):
         questiontype = picked["type"]
     else:
         return
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_author(name=summary)
     embed.add_field(name="Level", value=level)
     embed.add_field(name="Type", value=questiontype)
@@ -1211,7 +1211,7 @@ async def wanted(ctx, member: discord.Member = None):
         formatted_json = json.loads(loaded_response)
         await session.close()
     if formatted_json["succes"]:
-        embed = discord.Embed(title=f"{member.name} Wanted")
+        embed = discord.Embed(title=f"{member.name} Wanted", color=0x2F3136)
         embed.set_image(url=formatted_json["url"])
         await ctx.send(embed=embed)
     else:
@@ -1234,7 +1234,7 @@ async def hitler(ctx, member: discord.Member = None):
         formatted_json = json.loads(loaded_response)
         await session.close()
     if formatted_json["succes"]:
-        embed = discord.Embed(title=f"{member.name} is Worse Than Hitler")
+        embed = discord.Embed(title=f"{member.name} is Worse Than Hitler", color=0x2F3136)
         embed.set_image(url=formatted_json["url"])
         await ctx.send(embed=embed)
     else:
@@ -1260,7 +1260,7 @@ async def tweet(ctx, member: discord.Member = None, *, text):
         formatted_json = json.loads(loaded_response)
         await session.close()
     if formatted_json["succes"]:
-        embed = discord.Embed(title=f"{member.name} Posted a new tweet")
+        embed = discord.Embed(title=f"{member.name} Posted a new tweet", color=0x2F3136)
         embed.set_image(url=formatted_json["url"])
         await ctx.send(embed=embed)
     else:
@@ -1286,7 +1286,7 @@ async def covid(ctx, area: str = "Global"):
                 continue
     else:
         formatted_json = formatted_json["Global"]
-    embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})")
+    embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
     embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
     embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
     embed.add_field(name="New Deaths", value=f"{formatted_json['NewDeaths']:,}")
@@ -1326,7 +1326,7 @@ async def boosters(ctx):
 async def invert(ctx, member: discord.Member = None):
     member = member or ctx.message.author
     url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
-    e = discord.Embed()
+    e = discord.Embed(color=0x2F3136)
     e.set_image(url=url)
     e.set_footer(text=f"Asked by {ctx.message.author}")
     await ctx.send(embed=e)
@@ -1336,7 +1336,7 @@ async def invert(ctx, member: discord.Member = None):
 async def blur(ctx, member: discord.Member = None):
     member = member or ctx.message.author
     url = f"https://api.alexflipnote.dev/filter/blur?image={member.avatar_url}"
-    e = discord.Embed()
+    e = discord.Embed(color=0x2F3136)
     e.set_image(url=url)
     e.set_footer(text=f"Asked by {ctx.message.author}")
     await ctx.send(embed=e)
@@ -1349,7 +1349,7 @@ async def blur(ctx, member: discord.Member = None):
 async def bw(ctx, member: discord.Member = None):
     member = member or ctx.message.author
     url = f"https://api.alexflipnote.dev/filter/b&w?image={member.avatar_url}"
-    e = discord.Embed()
+    e = discord.Embed(color=0x2F3136)
     e.set_image(url=url)
     e.set_footer(text=f"Asked by {ctx.message.author}")
     await ctx.send(embed=e)
@@ -1359,7 +1359,7 @@ async def bw(ctx, member: discord.Member = None):
 async def pixelate(ctx, member: discord.Member = None):
     member = member or ctx.message.author
     url = f"https://api.alexflipnote.dev/filter/pixelate?image={member.avatar_url}"
-    e = discord.Embed()
+    e = discord.Embed(color=0x2F3136)
     e.set_image(url=url)
     e.set_footer(text=f"Asked by {ctx.message.author}")
     await ctx.send(embed=e)
@@ -1371,7 +1371,7 @@ async def pixelate(ctx, member: discord.Member = None):
 async def gay(ctx, member: discord.Member = None):
     member = member or ctx.message.author
     url = f"https://api.alexflipnote.dev/filter/gay?image={member.avatar_url}"
-    e = discord.Embed()
+    e = discord.Embed(color=0x2F3136)
     e.set_image(url=url)
     e.set_footer(text=f"Asked by {ctx.message.author}")
     await ctx.send(embed=e)
@@ -1391,7 +1391,7 @@ async def gif(ctx, *, query: str):
             gifs = json.loads(await r.text())
             gif: str = gifs["results"][0]["media"][0]["gif"]["url"]
     await session.close()
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_image(url=gif)
     embed.add_field(
         name="Link (click to see or long press to copy)", value=f"[click here]({gif})"
@@ -1458,7 +1458,7 @@ async def meme(ctx, *, text: str = None):
         session = aiohttp.ClientSession()
         async with session.get("https://meme-api.herokuapp.com/gimme") as r:
             fj = json.loads(await r.text())
-        embed = discord.Embed(title=fj["title"], url=fj["postLink"])
+        embed = discord.Embed(title=fj["title"], url=fj["postLink"], color=0xff5700)
         embed.set_image(url=fj["url"])
         await ctx.send(embed=embed)
         await session.close()
@@ -1472,7 +1472,7 @@ async def meme(ctx, *, text: str = None):
             masked_url = response_json["direct"]["masked"]
         except:
             await ctx.send("Error")
-        embed = discord.Embed()
+        embed = discord.Embed(color=0x2F3136)
         embed.set_author(name=template.title())
         embed.set_image(url=masked_url)
         await ctx.send(embed=embed)
@@ -1572,16 +1572,7 @@ async def serverinfo(ctx):
 
 @client.command(aliases=["stats"], description="See info about the bot")
 async def info(ctx):
-    embed = discord.Embed(title="Statistics")
-    ram = psutil.virtual_memory()
-    embed.add_field(
-        name="CPU",
-        value=f"Percentage:{get_p(psutil.cpu_percent())}\nFrequency {psutil.cpu_freq().current}Mhz\nCores: {psutil.cpu_count()}",
-    )
-    embed.add_field(
-        name="RAM",
-        value=f"Used: {round(ram.used/1048576)}MB\nAvailable: {round(ram.available/54316236)}MB\nTotal: {round(ram.total/54316236)}MB\nPercentage:{get_p(round((ram.used/ram.total))*100)}",
-    )
+    embed = discord.Embed(title="Info",description="Made by Wasi Master#4245", color=0x2F3136)
     await ctx.send(embed=embed)
 
 
@@ -1721,7 +1712,7 @@ async def music(ctx, *, args):
     album_name = album.get("title")
     album_cover = album.get("cover_xl")
 
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_author(name=name, icon_url=artist_picture)
     embed.add_field(name="Explict", value=explict)
     embed.add_field(name="Song Name", value=name, inline=True)
@@ -1882,7 +1873,7 @@ async def howgay(ctx, member: discord.Member = None):
 async def google(ctx, *, search_term: commands.clean_content):
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
     result = results[0]
-    embed=discord.Embed(title=result.title, description=result.description, url=result.url)
+    embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
     embed.set_thumbnail(url=result.image_url)
     await ctx.send(embed=embed)
 
@@ -1891,7 +1882,7 @@ async def google(ctx, *, search_term: commands.clean_content):
 async def image(ctx, *, search_term: commands.clean_content):
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True)
     result = results[0]
-    embed=discord.Embed(title=result.title, description=result.description, url=result.url)
+    embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
     embed.set_image(url=result.image_url)
     await ctx.send(embed=embed)
 
@@ -2008,7 +1999,7 @@ async def urban(ctx, *, args):
 
 @client.command(aliases=["members"], description="Get who are in a certain role")
 async def getusers(ctx, *, role: discord.Role):
-    embed = discord.Embed()
+    embed = discord.Embed(color=0x2F3136)
     embed.set_footer(text=f"Asked by {ctx.author}")
     async with ctx.typing():
         empty = True
@@ -2057,7 +2048,7 @@ async def quiz(ctx):
             .replace("Entertainment: ", "")
             .replace("Science: ", "")
         )
-        embed = discord.Embed(title=question, description=f"Category: {category.title()}\nDifficulty: {difficulty.title()}")
+        embed = discord.Embed(title=question, description=f"Category: {category.title()}\nDifficulty: {difficulty.title()}", color=0x2F3136)
         embed.set_footer(text=f"Trivia/Quiz for {ctx.author}")
         correct_answer = "not found"
         randomint = secureRandom.randint(1, 4)
@@ -2250,7 +2241,7 @@ async def mute(ctx, user: discord.Member, reason="No Reason Specified"):
 )
 async def invite(ctx):
     await ctx.send(
-        embed=discord.Embed(title="Invite", description="[Invite](https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640)")
+        embed=discord.Embed(title="Invite", description="[Invite](https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640)", color=0x2F3136)
     )
 
 
@@ -2298,7 +2289,7 @@ async def helpcommand(ctx, command: str = None):
             aliases = ""
             for i in command_for_use.aliases:
                 aliases += f"`{i}`, "
-            embed = discord.Embed()
+            embed = discord.Embed(color=0x2F3136)
             embed.set_author(name=str(command))
 
             embed.add_field(name="Name", value=command_for_use.name)
@@ -2320,7 +2311,7 @@ async def helpcommand(ctx, command: str = None):
                     description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list, n=1, cutoff=0.2)[0]}`",
                 )
             except IndexError:
-                embed = discord.Embed(title="Not Found")
+                embed = discord.Embed(title="Not Found", color=0x2F3136)
             await ctx.send(embed=embed)
 
 
