@@ -14,6 +14,7 @@ import time as timemodule
 from typing import Union
 import random
 
+import aiogoogletrans as translator
 import aiohttp
 import alexflipnote
 import asyncpg
@@ -118,6 +119,8 @@ cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
 alex_api = alexflipnote.Client()
 google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
+translate_api = translator.Translator
+
 
 client.remove_command("help")
 client.emoji_list = []
@@ -2181,34 +2184,21 @@ async def quiz(ctx):
 
 
 @client.command(description="Translate a text")
-async def translate(ctx, lang: str = "en", *, args):
+async def translate(ctx, lang: str, *, text):
     session = aiohttp.ClientSession()
-    async with ctx.typing():
-        if not lang == "help":
-            try:
-                async with session.get(
-                    f"https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T062446Z.1e5abaa65939d784.390d015d69abbe56445b9ba840e7b556c709efd2&text={args}&lang={lang}"
-                ) as response:
-                    parsed_json = json.loads(await response.text())
-                await session.close()
-                translation = parsed_json.get("text")[0]
-                embed = discord.Embed(title="Translation", description=translation)
-            except:
-                if parsed_json.get("code") == 501:
-                    embed.add_field(
-                        name="Error Occured",
-                        value="it may be the servers fault or you didn’t provide us with the details we need \n we need a language and a text to be translated in that language and the list of available languages can be found at \n [this link](https://tech.yandex.com/translate/doc/dg/concepts/api-overview-docpage)",
-                    )
+    async with session.get("https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json") as r:
+        languages = json.loads(await r.text())
+    result = await translate_api.translate(text, dest=lang)
+    source = ""
+    for i in languages:
+        if i["alpha2"] == result.src:
+            language = i["alpha2"]
+            break
         else:
-            async with session.get(
-                "https://translate.yandex.net/api/v1.5/tr.json/getLangs?ui=en&key=trnsl.1.1.20200414T062446Z.1e5abaa65939d784.390d015d69abbe56445b9ba840e7b556c709efd2&"
-            ) as response:
-                parsed_json = json.loads(await response.text())
-            await session.close()
-            for i in parsed_json.get("langs"):
-                parsed_langs = parsed_json.get("langs")[i]
-                languages += f"{i}  --->  {parsed_langs} \n"
-            embed.add_field(name="Languages", value=languages)
+            continue
+    embed = discord.Embed(title=f"Translation", value=result.text, color=0x2F3136)
+    embed.add_field(name="Pronunciation", value=result.pronounciation)
+    embed.set_footer(text=f"Translated from {language})
     await ctx.send(embed=embed)
 
 
