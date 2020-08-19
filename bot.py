@@ -649,7 +649,7 @@ async def weather(ctx, *, location: str):
         fj = json.loads(await r.text())
     if not fj["cod"] == "404":
         embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}', color=0x2F3136)
-        embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C\nMinimum: {round(fj["main"]["temp_min"]-273.15, 2)}°C\nMaximum: {round(fj["main"]["temp_max"]-273.15, 2)}°C')
+        embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C')
         embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°')
         embed.add_field(name="Cloudyness", value=str(fj["clouds"]["all"]) + "%")
         #embed.add_field(name="Sun", value=f'Sunrise: {datetime.fromtimestamp(fj["sys"]["sunrise"]).strftime("%I:%M:%S")}\nSunset: {datetime.fromtimestamp(fj["sys"]["sunset"]).strftime("%I:%M:%S")}')
