@@ -277,7 +277,7 @@ def tts(lang:str, text:str):
     return
 
 @client.command("Converts a text to speech (TTS)", aliases=["tts"])
-@commands.cooldown(1, 5, BucketType.User)
+@commands.cooldown(1, 5, BucketType.user)
 async def texttospeech(ctx, lang:str, text:str):
     msg = await ctx.send("Generating <a:typing:597589448607399949>")
     await client.loop.run_in_executor(None, tts, lang, text)
