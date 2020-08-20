@@ -57,7 +57,7 @@ async def get_prefix(client, message):
                 ","
             )
         prefix_for_this_guild = {"prefix": ","}
-    return prefix_for_this_guild["prefix"]
+    prefix_return = prefix_for_this_guild["prefix"]
 
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
@@ -995,7 +995,7 @@ async def suggest(ctx, *, suggestion: commands.clean_content):
 
 
 @client.command(aliases=["upscaled"], description="Upscales a users profile picture")
-@commands.cooldown(1, 3600, type=BucketType.user)
+@commands.cooldown(1, 60, type=BucketType.user)
 async def upscale(ctx, scaletype, *, member: discord.Member = None):
     member = member or ctx.author
     if scaletype.lower() == "anime":
@@ -1927,7 +1927,7 @@ async def google(ctx, *, search_term: commands.clean_content):
 async def image(ctx, *, search_term: commands.clean_content):
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True)
     result = results[0]
-    embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+    embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
     embed.set_image(url=result.image_url)
     await ctx.send(embed=embed)
 
