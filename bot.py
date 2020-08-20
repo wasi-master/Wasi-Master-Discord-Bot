@@ -57,7 +57,7 @@ async def get_prefix(client, message):
                 ","
             )
         prefix_for_this_guild = {"prefix": ","}
-    prefix_return = prefix_for_this_guild["prefix"]
+    prefix_return = str(prefix_for_this_guild["prefix"])
     return commands.when_mentioned_or(*prefix_return) (client, message)
 
 def convert_sec_to_min(seconds):
