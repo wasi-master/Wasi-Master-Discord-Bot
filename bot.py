@@ -282,7 +282,7 @@ def tts(lang:str, text:str):
 
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
-    return numexpr.evaluate(equation)
+    return eval(equation)
 
 
 @client.command(description="Converts a text to speech (TTS)", aliases=["tts"])
@@ -462,6 +462,10 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
       
 @client.command(description="Do math stuff")
 async def math(ctx, equation:str):
+    available = ["*", "^", "+", "-", "/"]
+    for i in equation:
+        if not i.isdigit() or i in available:
+            return await ctx.send("Invalid Math Equation")
     if not len(equation) > 15 and not equation.count("**") > 1 and not equation.count("^") < 1:
         try:
             result = await client.loop.run_in_executor(None, do_math, equation)
