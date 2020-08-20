@@ -462,9 +462,9 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
       
 @client.command(description="Do math stuff")
 async def math(ctx, equation:str):
-    available = [" ", "*", "^", "+", "-", "/"]
+    available = ["1", "2", "3", "4", "5", "6", "7", "8", "9', "0", " ", *", "^", "+", "-", "/"]
     for i in equation:
-        if not i.isdigit() or i in available:
+        if not i in available:
             return await ctx.send("Invalid Math Equation")
     if not len(equation) > 15 and not equation.count("**") > 1 and not equation.count("^") < 1:
         try:
