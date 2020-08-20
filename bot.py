@@ -462,7 +462,7 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
       
 @client.command(description="Do math stuff")
 async def math(ctx, equation:str):
-    if not len(equation) > 15:
+    if not len(equation) > 15 and not equation.count("**") > 1 and not equation.count("^") < 1:
         try:
             result = await client.loop.run_in_executor(None, do_math, equation)
             if not humanize.fractional(result) == str(result):
