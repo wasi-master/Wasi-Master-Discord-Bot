@@ -233,26 +233,26 @@ async def on_command_error(ctx, error):
             return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id
 
         try:
-            reaction = await client.wait_for(
+            reaction, user = await client.wait_for(
                 "reaction_add", check=check, timeout=20
             )
         except asyncio.TimeoutError:
             try:
                 botembed.set_footer(
                     icon_url=ctx.author.avatar_url,
-                    text="You were too late",
+                    text="You were too late to report",
                 )
                 await message.edit(embed=botembed)
                 return await message.clear_reactions()
             except:
                 botembed.set_footer(
                     icon_url=ctx.author.avatar_url,
-                    text="You were too late",
+                    text="You were too late to answer",
                 )
                 await message.edit(embed=botembed)
                 return await message.remove_reaction("\u2705", ctx.guild.me)
         else:
-            if str(reaction.emoji) == "\u2705":
+            if reaction.emoji == "\u2705":
                 botembed.set_footer(
                     icon_url=ctx.author.avatar_url,
                     text="Reported to The Support Server",
@@ -270,7 +270,7 @@ async def on_command_error(ctx, error):
                     name="Message Links",
                     value=f"[User Message]({ctx.message.jump_url})\n[Bot Message]({message.jump_url})",
                 )
-                await channel.send(embed=embed)
+                return await channel.send(embed=embed)
         raise error
 
 
