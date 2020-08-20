@@ -2353,7 +2353,7 @@ async def helpcommand(ctx, command: str = None):
             if command_for_use._buckets._cooldown is None:
                 embed.add_field(name="Cooldown", value="None")
             else:
-                embed.add_field(name="Cooldown", value=f"{command_for_use._buckets._cooldown.rate} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(command_for_use._buckets._cooldown.rate)))})")
+                embed.add_field(name="Cooldown", value=f"{command_for_use._buckets._cooldown.per} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(command_for_use._buckets._cooldown.per)))})")
             await ctx.send(embed=embed)
         else:
             try:
