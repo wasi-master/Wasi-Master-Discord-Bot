@@ -39,6 +39,8 @@ import urllib.parse
 
 
 async def get_prefix(client, message):
+    if isinstance(message.channel, discord.DMChannel):
+        return ","
     prefix_for_this_guild = await client.db.fetchrow(
             """
             SELECT prefix
