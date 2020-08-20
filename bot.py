@@ -828,9 +828,9 @@ async def roleinfo(ctx, role: discord.Role = None):
     embed.add_field(name="ID", value=role.id)
     embed.add_field(name="Position", value=f"{role.position}/{len(ctx.guild.roles)}")
     embed.add_field(name="Members", value=len(role.members))
-    embed.add_field(name="Role Color", value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb}")
+    embed.add_field(name="Role Color", value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb()}")
     if role.hoist:
-        embed.add_field(name="Displayed Separatel?", value="Yes")
+        embed.add_field(name="Displayed Separately?", value="Yes")
     else:
         embed.add_field(name="Displayed Separatel?", value="No")
     if role.mentionable:
