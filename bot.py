@@ -279,6 +279,12 @@ def tts(lang:str, text:str):
     speech.save("tts.mp3")
     return
 
+
+def do_math(text: str):
+    equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
+    return numexpr.evaluate(equation)
+
+
 @client.command(description="Converts a text to speech (TTS)", aliases=["tts"])
 @commands.cooldown(1, 5, BucketType.user)
 async def texttospeech(ctx, lang:str, *, text:str):
@@ -458,8 +464,7 @@ async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
 async def math(ctx, equation:str):
     if not len(equation) > 15:
         try:
-            equation = equation.replace("×", "*").replace("÷", "/").replace("^", "**")
-            result = numexpr.evaluate(equation)
+            result = await client.loop.run_in_executor(None, do_math, equation)
             if not humanize.fractional(result) == str(result):
                 await ctx.send(f"{result} or {humanize.fractional(result)}")
             else:
