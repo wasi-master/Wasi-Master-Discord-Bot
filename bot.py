@@ -1915,7 +1915,7 @@ async def howgay(ctx, member: discord.Member = None):
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["search"], description="Searches Google")
+@client.command(aliases=["search", "g"], description="Searches Google")
 @commands.cooldown(1, 5, BucketType.user)
 async def google(ctx, *, search_term: commands.clean_content):
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
@@ -1925,7 +1925,7 @@ async def google(ctx, *, search_term: commands.clean_content):
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["imagesearch"], description="Searched Google Images and returns the first image")
+@client.command(aliases=["imagesearch", "is", "i"], description="Searched Google Images and returns the first image")
 @commands.cooldown(1, 5, BucketType.user)
 async def image(ctx, *, search_term: commands.clean_content):
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True)
