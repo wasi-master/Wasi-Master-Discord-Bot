@@ -2008,7 +2008,7 @@ async def google(ctx, *, search_term: commands.clean_content):
         try:
             reaction, user = await client.wait_for("reaction_add", check=check, timeout=30)
         except asyncio.TimeoutError:
-            embed.set_footer(icon_url=str(ctx.author.avatar.url), text="Timed out")
+            embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
             await message.edit(embed=embed)
             try:
                 return await message.clear_reactions()
@@ -2017,6 +2017,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                 return
         else:
+            global num
             if reaction.emoji == "\u25c0\ufe0f":
                 num -= 1
                 result = results[num]
