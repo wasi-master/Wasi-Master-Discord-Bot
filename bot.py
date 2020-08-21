@@ -1855,7 +1855,7 @@ async def randomcolour(ctx):
         rand_color = randomcolor.RandomColor()
         generated_color = rand_color.generate()[0]
         hexcol = generated_color.replace("#", "")
-        async with session.get(f"http://www.thecolorapi.com/id?hex={hex}") as response:
+        async with session.get(f"http://www.thecolorapi.com/id?hex={hexcol}") as response:
             data = json.loads(await response.text())
         color_name = data.get("name").get("value")
         link = f"http://singlecolorimage.com/get/{hexcol}/1x1"
