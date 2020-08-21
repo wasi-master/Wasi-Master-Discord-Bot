@@ -344,7 +344,7 @@ async def emojiinfo(ctx, emoji: discord.Emoji):
     embed = discord.Embed(title=emoji.name, description=str(emoji))
     embed.add_field(name-"ID", value=emoji,id)
     try:
-        embed.add_flied(name=Added by, value=emoji.user)
+        embed.add_field(name="Added by", value=emoji.user)
     except discord.Forbidden:
         pass
     embed.add_field(
