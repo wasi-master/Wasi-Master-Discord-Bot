@@ -2017,14 +2017,14 @@ async def google(ctx, *, search_term: commands.clean_content):
             result = results[num]
             embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
             embed.set_thumbnail(url=result.image_url)
-            embed.set_footer(text=f"Page {num}/{len(results)}")
+            embed.set_footer(text=f"Page {num+1}/{len(results)}")
             message = await message.edit(embed=embed)
         elif reaction.emoji == "\u25b6\ufe0f":
             num += 1
             result = results[num]
             embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
             embed.set_thumbnail(url=result.image_url)
-            embed.set_footer(text=f"Page {num}/{len(results)}")
+            embed.set_footer(text=f"Page {num+1}/{len(results)}")
             message = await message.edit(embed=embed)
         else:
             pass
