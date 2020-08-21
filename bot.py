@@ -2004,7 +2004,7 @@ async def google(ctx, *, search_term: commands.clean_content):
         def check(reaction, user):
             return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
-            reaction, user = await client.wait_for("reaction_add", check=check, timeout=30)
+            reaction, user = await client.wait_for("reaction_add", check=check, timeout=120)
         except asyncio.TimeoutError:
             embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
             await message.edit(embed=embed)
@@ -2078,7 +2078,7 @@ async def image(ctx, *, search_term: commands.clean_content):
         def check(reaction, user):
             return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
-            reaction, user = await client.wait_for("reaction_add", check=check, timeout=30)
+            reaction, user = await client.wait_for("reaction_add", check=check, timeout=120)
         except asyncio.TimeoutError:
             embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
             await message.edit(embed=embed)
