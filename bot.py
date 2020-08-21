@@ -342,7 +342,7 @@ def do_math(text: str):
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
     embed = discord.Embed(title=emoji.name, description=str(emoji))
-    embed.add_field(name-"ID", value=emoji.id)
+    embed.add_field(name="ID", value=emoji.id)
     try:
         embed.add_field(name="Added by", value=emoji.user)
     except discord.Forbidden:
