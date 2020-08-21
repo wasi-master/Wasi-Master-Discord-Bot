@@ -1998,37 +1998,40 @@ async def google(ctx, *, search_term: commands.clean_content):
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
-    def check(reaction, user):
-        return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
-    try:
-        reaction, user = await client.wait_for("reaction_add", check=check, timeout=30)
-    except asyncio.TimeoutError:
-        embed.set_footer(icon_url=str(ctx.author.avatar.url), text="Timed out")
-        await message.edit(embed=embed)
+    def do_work():
+        def check(reaction, user):
+            return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
-            return await message.clear_reactions()
-        except:
-            await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-            await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-            return
-    else:
-        if reaction.emoji == "\u25c0\ufe0f":
-            num -= 1
-            result = results[num]
-            embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
-            embed.set_thumbnail(url=result.image_url)
-            embed.set_footer(text=f"Page {num+1}/{len(results)}")
-            message = await message.edit(embed=embed)
-        elif reaction.emoji == "\u25b6\ufe0f":
-            num += 1
-            result = results[num]
-            embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
-            embed.set_thumbnail(url=result.image_url)
-            embed.set_footer(text=f"Page {num+1}/{len(results)}")
-            message = await message.edit(embed=embed)
+            reaction, user = await client.wait_for("reaction_add", check=check, timeout=30)
+        except asyncio.TimeoutError:
+            embed.set_footer(icon_url=str(ctx.author.avatar.url), text="Timed out")
+            await message.edit(embed=embed)
+            try:
+                return await message.clear_reactions()
+            except:
+                await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+                await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                return
         else:
-            pass
-        
+            if reaction.emoji == "\u25c0\ufe0f":
+                num -= 1
+                result = results[num]
+                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed.set_thumbnail(url=result.image_url)
+                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                message = await message.edit(embed=embed)
+                do_work()
+            elif reaction.emoji == "\u25b6\ufe0f":
+                num += 1
+                result = results[num]
+                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed.set_thumbnail(url=result.image_url)
+                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                message = await message.edit(embed=embed)
+                do_work()
+            else:
+                pass
+            
 
 @client.command(aliases=["imagesearch", "is", "i"], description="Searched Google Images and returns the first image")
 @commands.cooldown(1, 5, BucketType.user)
