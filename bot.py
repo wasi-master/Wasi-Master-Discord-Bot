@@ -269,6 +269,13 @@ async def on_command_error(ctx, error):
         await ctx.send("I am Missing permissions")
     elif "Cannot send messages to this user" in str(error):
         pass
+    elif isinstance(error, commands.CommandOnCooldown):
+        embed = discord.Embed(
+            title = "Slow Down!",
+            description = f"The command `{ctx.command}` is on cooldown, please try again after **{error.retry_after}** seconds.\nPatience, patience.",
+            colour = discord.Colour.red()
+        )
+        await ctx.send(embed = embed)
     else:
         botembed = discord.Embed(
             description=f"Welp, The command was unsuccessful for this reason:\n```{error}```\nReact with :white_check_mark: to report the error to the support server\nIf you can't understand why this happens, ask Wasi Master#4245 or join the bot support server (you can get the invite with the support command)"
