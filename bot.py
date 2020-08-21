@@ -1994,12 +1994,14 @@ async def google(ctx, *, search_term: commands.clean_content):
     async def do_work():
         num = 0
         if not 'message' in locals() or 'message' in globals():
-            global results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
+            global results
+            results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
             result = results[num]
             embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
             embed.set_thumbnail(url=result.image_url)
             embed.set_footer(text=f"Page {num+1}/{len(results)}")
-            global message = await ctx.send(embed=embed)
+            global message
+            message = await ctx.send(embed=embed)
             await message.add_reaction("\u25c0\ufe0f")
             await message.add_reaction("\u25b6\ufe0f")
         def check(reaction, user):
