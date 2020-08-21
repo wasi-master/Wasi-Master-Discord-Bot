@@ -339,6 +339,20 @@ def do_math(text: str):
     return eval(equation)
 
 
+@client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
+async def emojiinfo(ctx, emoji: discord.Emoji):
+    embed = discord.Embed(title=emoji.name, description=str(emoji))
+    embed.add_field(name-"ID", value=emoji,id)
+    try:
+        embed.add_flied(name=Added by, value=emoji.user)
+    except discord.Forbidden:
+        pass
+    embed.add_field(
+        name="Created at", value=f'{emoji.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - emoji.created_at)})'
+    )
+    embed.add_field(name="URL", value=f"[Click Here]({emoji.url})")
+    await ctx.send(embed=embed)
+
 @client.command(description="Converts a text to speech (TTS)", aliases=["tts"])
 @commands.cooldown(1, 5, BucketType.user)
 async def texttospeech(ctx, lang:str, *, text:str):
@@ -830,7 +844,7 @@ async def pp(ctx, *, member: discord.Member=None):
     await ctx.send(embed=embed)
 
 @client.command(name="gender", description="Get a gender by providing a name")
-@commands.cooldown(1, 60, BucketType.user)
+@commands.cooldown(1, 30, BucketType.user)
 async def gender(ctx, *, name: str):
     session = aiohttp.ClientSession()
     url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
