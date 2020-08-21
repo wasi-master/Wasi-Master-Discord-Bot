@@ -2019,7 +2019,6 @@ async def google(ctx, *, search_term: commands.clean_content):
         else:
             num = globals("num")
             if reaction.emoji == "\u25c0\ufe0f":
-                global num
                 num -= 1
                 result = results[num]
                 embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
@@ -2028,7 +2027,6 @@ async def google(ctx, *, search_term: commands.clean_content):
                 message = await message.edit(embed=embed)
                 await do_work()
             elif reaction.emoji == "\u25b6\ufe0f":
-                global num
                 num += 1
                 result = results[num]
                 embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
