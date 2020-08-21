@@ -2412,7 +2412,7 @@ async def helpcommand(ctx, command: str = None):
         )
         embed.add_field(
                     name=f"All Commands ({len(client.commands)})",
-                    description=all_commands
+                    value=all_commands
         )
         await ctx.send(embed=embed)
     else:
