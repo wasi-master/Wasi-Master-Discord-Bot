@@ -1995,6 +1995,7 @@ async def google(ctx, *, search_term: commands.clean_content):
     result = results[num]
     embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
     embed.set_thumbnail(url=result.image_url)
+    embed.set_footer(text=f"Page {num+1}/{len(results)}")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
@@ -2031,7 +2032,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 await do_work()
             else:
                 pass
-            
+    await do_work()
 
 @client.command(aliases=["imagesearch", "is", "i"], description="Searched Google Images and returns the first image")
 @commands.cooldown(1, 5, BucketType.user)
