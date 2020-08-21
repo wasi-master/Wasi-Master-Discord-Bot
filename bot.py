@@ -1990,7 +1990,6 @@ async def howgay(ctx, member: discord.Member = None):
 @client.command(aliases=["search", "g"], description="Searches Google")
 @commands.cooldown(1, 5, BucketType.user)
 async def google(ctx, *, search_term: commands.clean_content):
-    global num
     num = 0
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
     result = results[num]
@@ -2018,7 +2017,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                 return
         else:
-            global num
+            num = globals("num")
             if reaction.emoji == "\u25c0\ufe0f":
                 global num
                 num -= 1
