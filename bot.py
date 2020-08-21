@@ -2018,6 +2018,10 @@ async def google(ctx, *, search_term: commands.clean_content):
                 return
         else:
             if reaction.emoji == "\u25c0\ufe0f":
+                try:
+                    message.remove_reaction("\u25c0\ufe0f", ctx.author)
+                except discord.Forbidden:
+                    pass
                 num -= 1
                 try:
                     result = results[num]
@@ -2028,6 +2032,10 @@ async def google(ctx, *, search_term: commands.clean_content):
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u25b6\ufe0f":
+                try:
+                    message.remove_reaction("\u25b6\ufe0f", ctx.author)
+                exceot discord.Forbidden:
+                    pass
                 num += 1
                 try:
                     result = results[num]
@@ -2056,11 +2064,76 @@ async def google(ctx, *, search_term: commands.clean_content):
 @client.command(aliases=["imagesearch", "is", "i"], description="Searched Google Images and returns the first image")
 @commands.cooldown(1, 5, BucketType.user)
 async def image(ctx, *, search_term: commands.clean_content):
+    num = 0
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True)
-    result = results[0]
+    result = results[num]
     embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
     embed.set_image(url=result.image_url)
-    await ctx.send(embed=embed)
+    embed.set_footer(text=f"Page {num+1}/{len(results)}")
+    message = await ctx.send(embed=embed)
+    await message.add_reaction("\u25c0\ufe0f")
+    await message.add_reaction("\u23f8\ufe0f")
+    await message.add_reaction("\u25b6\ufe0f")
+    while True:
+        def check(reaction, user):
+            return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
+        try:
+            reaction, user = await client.wait_for("reaction_add", check=check, timeout=30)
+        except asyncio.TimeoutError:
+            embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
+            await message.edit(embed=embed)
+            try:
+                return await message.clear_reactions()
+            except:
+                await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+                await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                await message.remove_reaction("\u23f8\ufe0f", ctx.guild.me)
+                break
+                return
+        else:
+            if reaction.emoji == "\u25c0\ufe0f":
+                try:
+                    message.remove_reaction("\u25c0\ufe0f", ctx.author)
+                except discord.Forbidden:
+                    pass
+                num -= 1
+                try:
+                    result = results[num]
+                except IndexError:
+                    pass
+                embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
+                embed.set_image(url=result.image_url)
+                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                await message.edit(embed=embed)
+            elif reaction.emoji == "\u25b6\ufe0f":
+                try:
+                    message.remove_reaction("\u25b6\ufe0f", ctx.author)
+                exceot discord.Forbidden:
+                    pass
+                num += 1
+                try:
+                    result = results[num]
+                except KeyError:
+                    pass
+                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed.set_thumbnail(url=result.image_url)
+                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                await message.edit(embed=embed)
+            elif reaction.emoji == "\u23f8\ufe0f":
+                embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
+                embed.set_image(url=result.image_url)
+                #  embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                await message.edit(embed=embed)
+                try:
+                    return await message.clear_reactions()
+                except:
+                    await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u23f8\ufe0f", ctx.guild.me)
+                    break
+                    return
+            else:
+                pass
 
 
 @client.command(
