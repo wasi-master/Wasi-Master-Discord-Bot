@@ -2720,6 +2720,9 @@ async def userinfo(ctx, *, member: discord.Member = None):
         )
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
+    a = sorted(ctx.guild.members, key=__import__('operator').attrgetter('joined_at'))
+    idx = a.index(ctx.author)
+    embed.add_field(name="Join Position", value=idx)
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr)
     
