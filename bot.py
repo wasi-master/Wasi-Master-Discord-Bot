@@ -1998,6 +1998,7 @@ async def google(ctx, *, search_term: commands.clean_content):
     embed.set_footer(text=f"Page {num+1}/{len(results)}")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
+    await message.add_reaction("\u23f8\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
     while True:
         def check(reaction, user):
@@ -2012,6 +2013,8 @@ async def google(ctx, *, search_term: commands.clean_content):
             except:
                 await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
                 await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                await message.remove_reaction("\u23f8\ufe0f", ctx.guild.me)
+                break
                 return
         else:
             if reaction.emoji == "\u25c0\ufe0f":
@@ -2034,6 +2037,14 @@ async def google(ctx, *, search_term: commands.clean_content):
                 embed.set_thumbnail(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
+            elif reaction.emoji == "\u23f8\ufe0f":
+                try:
+                    return await message.clear_reactions()
+                except:
+                    await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u23f8\ufe0f", ctx.guild.me)
+                    return
             else:
                 pass
 
