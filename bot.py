@@ -1992,6 +1992,7 @@ async def howgay(ctx, member: discord.Member = None):
 async def google(ctx, *, search_term: commands.clean_content):
     
     async def do_work():
+        num = 0
         if not 'message' in locals() or 'message' in globals():
             results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
             result = results[num]
@@ -2001,7 +2002,6 @@ async def google(ctx, *, search_term: commands.clean_content):
             message = await ctx.send(embed=embed)
             await message.add_reaction("\u25c0\ufe0f")
             await message.add_reaction("\u25b6\ufe0f")
-        num = 0
         def check(reaction, user):
             return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
