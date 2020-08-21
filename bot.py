@@ -2290,6 +2290,13 @@ async def translate(ctx, lang: str, *, text: str):
     session = aiohttp.ClientSession()
     async with session.get("https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json") as r:
         languages = json.loads(await r.text())
+    for i in languages:
+        if i["English"].lower() == lang.lower():
+            lang = i["alpha2"]
+            break
+        else:
+            lang = language
+            continue
     result = await translate_api.translate(text, dest=lang)
     source = ""
     for i in languages:
