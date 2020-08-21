@@ -2295,7 +2295,7 @@ async def translate(ctx, lang: str, *, text: str):
             lang = i["alpha2"]
             break
         else:
-            lang = language
+            lang = lang
             continue
     result = await translate_api.translate(text, dest=lang)
     source = ""
