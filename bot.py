@@ -2054,8 +2054,8 @@ async def google(ctx, *, search_term: commands.clean_content):
                     return await message.clear_reactions()
                 except:
                     await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                     await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                     break
                     return
             else:
@@ -2128,8 +2128,8 @@ async def image(ctx, *, search_term: commands.clean_content):
                     return await message.clear_reactions()
                 except:
                     await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                     await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                     break
                     return
             else:
