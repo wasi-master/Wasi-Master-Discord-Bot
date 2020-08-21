@@ -273,7 +273,7 @@ async def on_command_error(ctx, error):
         embed = discord.Embed(
             title = "Slow Down!",
             description = f"The command `{ctx.command}` is on cooldown, please try again after **{round(error.retry_after, 2)}** seconds.\nPatience, patience.",
-            colour = discord.Colour.red()
+            colour = 16711680
         )
         await ctx.send(embed = embed)
     else:
