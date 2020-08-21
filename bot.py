@@ -2407,11 +2407,11 @@ async def helpcommand(ctx, command: str = None):
             color = ctx.guild.me.color
         embed = discord.Embed(
             title="Help",
-            description="```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```",
+            description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```",
             colour=color
         )
         embed.add_field(
-                    title=f"All Commands ({len(client.commands)})",
+                    name=f"All Commands ({len(client.commands)})",
                     description=all_commands
         )
         await ctx.send(embed=embed)
@@ -2426,7 +2426,8 @@ async def helpcommand(ctx, command: str = None):
             aliases = ""
             for i in command_for_use.aliases:
                 aliases += f"`{i}`, "
-            embed = discord.Embed(color=0x2F3136, description="```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help for a list of commands!```")
+            embed = discord.Embed(color=0x2F3136, description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help for a list of commands!```")
+
             embed.set_author(name=str(command))
 
             embed.add_field(name="Name", value=command_for_use.name)
