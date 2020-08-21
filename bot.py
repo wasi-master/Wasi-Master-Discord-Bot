@@ -700,20 +700,14 @@ async def unmute(ctx, user: discord.Member):
         await ctx.send("No Permissions")
 @client.command(description="Blocks a user from chatting in current channel.")
 @has_permissions(manage_channels=True)
-async def block(ctx, user: discord.Member=None):
-                            
-    if not user: # checks if there is user
-        return await ctx.send("You must specify a user")
+async def block(ctx, user: discord.Member):
     try:
         await ctx.set_permissions(user, send_messages=False) # sets permissions for current channel
     except discord.Forbidden:
         await ctx.send("No permissions")
 @client.command(description="Unblocks a user from current channel")
 @has_permissions(manage_channels=True)
-async def unblock(ctx, user: discord.Member=None):
-                            
-    if not user: # checks if there is user
-        return await ctx.send("You must specify a user")
+async def unblock(ctx, user: discord.Member):
     try:
         await ctx.set_permissions(user, send_messages=True) # gives back send messages permissions
     except discord.Forbidden:
