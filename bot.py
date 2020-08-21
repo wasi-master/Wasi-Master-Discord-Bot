@@ -1998,7 +1998,7 @@ async def google(ctx, *, search_term: commands.clean_content):
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
-    def do_work():
+    async def do_work():
         def check(reaction, user):
             return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
@@ -2020,7 +2020,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 embed.set_thumbnail(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 message = await message.edit(embed=embed)
-                do_work()
+                await do_work()
             elif reaction.emoji == "\u25b6\ufe0f":
                 num += 1
                 result = results[num]
@@ -2028,7 +2028,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 embed.set_thumbnail(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 message = await message.edit(embed=embed)
-                do_work()
+                await do_work()
             else:
                 pass
             
