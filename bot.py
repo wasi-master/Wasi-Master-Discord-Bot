@@ -2017,7 +2017,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
                 return
         else:
-            num = globals("num")
+            num = globals()["num"]
             if reaction.emoji == "\u25c0\ufe0f":
                 num -= 1
                 result = results[num]
