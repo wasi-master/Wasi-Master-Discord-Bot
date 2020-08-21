@@ -1990,20 +1990,19 @@ async def howgay(ctx, member: discord.Member = None):
 @client.command(aliases=["search", "g"], description="Searches Google")
 @commands.cooldown(1, 5, BucketType.user)
 async def google(ctx, *, search_term: commands.clean_content):
-    
+    num = 0
+    results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
+    result = results[num]
+    embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+    embed.set_thumbnail(url=result.image_url)
+    embed.set_footer(text=f"Page {num+1}/{len(results)}")
+    message = await ctx.send(embed=embed)
+    await message.add_reaction("\u25c0\ufe0f")
+    await message.add_reaction("\u25b6\ufe0f")
     async def do_work():
-        num = 0
-        if not 'message' in locals() or 'message' in globals():
-            global results
-            results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
-            result = results[num]
-            embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
-            embed.set_thumbnail(url=result.image_url)
-            embed.set_footer(text=f"Page {num+1}/{len(results)}")
-            global message
-            message = await ctx.send(embed=embed)
-            await message.add_reaction("\u25c0\ufe0f")
-            await message.add_reaction("\u25b6\ufe0f")
+        global message
+        global results
+        global num
         def check(reaction, user):
             return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
