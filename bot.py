@@ -2476,7 +2476,7 @@ async def wikipedia(ctx, *, args):
         if len(result) < 1997:
             await ctx.send(result)
         else:
-            await paginator(ctx, result.split("\n"), 20)
+            await paginator(ctx, result.split("\n"), 10)
 
 
 @client.command(
