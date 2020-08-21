@@ -1999,10 +1999,7 @@ async def google(ctx, *, search_term: commands.clean_content):
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
-    async def do_work():
-        global message
-        global results
-        global num
+    while True:
         def check(reaction, user):
             return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
         try:
@@ -2036,7 +2033,6 @@ async def google(ctx, *, search_term: commands.clean_content):
                 await do_work()
             else:
                 pass
-    await do_work()
 
 @client.command(aliases=["imagesearch", "is", "i"], description="Searched Google Images and returns the first image")
 @commands.cooldown(1, 5, BucketType.user)
