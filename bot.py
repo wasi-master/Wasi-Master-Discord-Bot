@@ -1992,7 +1992,7 @@ async def howgay(ctx, member: discord.Member = None):
 async def google(ctx, *, search_term: commands.clean_content):
     
     async def do_work():
-        if not message:
+        if not message in locals():
             results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
             result = results[num]
             embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
