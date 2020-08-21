@@ -2034,7 +2034,7 @@ async def google(ctx, *, search_term: commands.clean_content):
             elif reaction.emoji == "\u25b6\ufe0f":
                 try:
                     message.remove_reaction("\u25b6\ufe0f", ctx.author)
-                exceot discord.Forbidden:
+                except discord.Forbidden:
                     pass
                 num += 1
                 try:
@@ -2108,7 +2108,7 @@ async def image(ctx, *, search_term: commands.clean_content):
             elif reaction.emoji == "\u25b6\ufe0f":
                 try:
                     message.remove_reaction("\u25b6\ufe0f", ctx.author)
-                exceot discord.Forbidden:
+                except discord.Forbidden:
                     pass
                 num += 1
                 try:
