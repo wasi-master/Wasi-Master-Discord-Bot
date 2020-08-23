@@ -337,7 +337,40 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+    
+@client.command(name='wtp', aliases=['whosthatpokemon', 'pokemonsearch','pokesearch'], description='Tells you which pokemon it is.')
+async def _pokesearch_smd(ctx, link=None):
+    url = None
 
+    if link is None:
+        if ctx.message.attachments:
+            url = ctx.message.attachments[0].url
+        else:
+            await ctx.send('Attach an image or provide an image url.')
+            return
+    else:
+        url = link
+
+    url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={url}&start=0"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers, allow_redirects=True) as r:
+            q = await r.read()
+
+    result = ""
+
+    soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
+    for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
+        result += best_guess.get_text()
+
+    kek = result.split(' ')
+    if 'pokemon' not in kek:
+        await ctx.send("I don't know which pokemon this is.")
+        return
+    else:
+        result = result.replace('pokemon', '')
+        await ctx.send(content=result.title())
 
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
@@ -2720,9 +2753,8 @@ async def userinfo(ctx, *, member: discord.Member = None):
         )
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
-    a = sorted(ctx.guild.members, key=__import__('operator').attrgetter('joined_at'))
-    idx = a.index(ctx.author)
-    embed.add_field(name="Join Position", value=idx)
+    a = sorted(ctx.guild.members, key=lambda member: member.joined_at).index(member) + 1
+    embed.add_field(name="Join Position", value=a)
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr)
     
