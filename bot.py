@@ -338,8 +338,8 @@ def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
     
-@client.command(name='wtp', aliases=['whosthatpokemon', 'pokemonsearch','pokesearch'], description='Tells you which pokemon it is.')
-async def _pokesearch_smd(ctx, link=None):
+@client.command(aliases=['ris','imagesearch'], description='Tells you which pokemon it is.')
+async def reverseimagesearch(ctx, link=None):
     url = None
 
     if link is None:
@@ -365,12 +365,7 @@ async def _pokesearch_smd(ctx, link=None):
         result += best_guess.get_text()
 
     kek = result.split(' ')
-    if 'pokemon' not in kek:
-        await ctx.send("I don't know which pokemon this is.")
-        return
-    else:
-        result = result.replace('pokemon', '')
-        await ctx.send(content=result.title())
+    await ctx.send(kek[0])
 
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
@@ -2460,7 +2455,7 @@ async def quiz(ctx):
             answered = True
 
 
-@client.command(description="Translate a text")
+@client.command(aliases=["tr"], description="Translate a text")
 async def translate(ctx, lang: str, *, text: str):
     session = aiohttp.ClientSession()
     async with session.get("https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json") as r:
