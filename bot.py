@@ -1424,18 +1424,18 @@ async def covid(ctx, area: str = "Global"):
     session = aiohttp.ClientSession()
     async with ctx.typing():
         async with session.get("https://api.covid19api.com/summary") as r:
-            formatted_json = json.loads(await r.text())
+            fj = json.loads(await r.text())
     await session.close()
     if not area.lower() == "global":
-        for i in formatted_json["Countries"]:
+        for i in fj["Countries"]:
             num += 1
-            if i["Slug"].lower() == area.lower:
-                formatted_json = i[num - 1]
+            if i["Country"].lower() == area.lower:
+                formatted_json = fj["Countries"][num - 1]
                 break
             else:
                 continue
     else:
-        formatted_json = formatted_json["Global"]
+        formatted_json = fj["Global"]
     embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
     embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
     embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
@@ -2558,7 +2558,7 @@ async def helpcommand(ctx, command: str = None):
         for i in sorted([i.name for i in client.commands]):
             all_commands += f"`{i}`, "
         if ctx.guild is None:
-            color = None
+            color = 0x2f3136
         else:
             color = ctx.guild.me.color
         embed = discord.Embed(
