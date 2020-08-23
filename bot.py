@@ -1630,6 +1630,7 @@ async def meme(ctx, *, text: str = None):
 
 
 @client.command(aliases=["yt"], description="Search youtube for stuff")
+@commands.cooldown(2, 15, BucketType.user)
 async def youtube(ctx, *, args):
     search_terms = args
     max_results = 1
@@ -2555,7 +2556,7 @@ async def avatar(
 async def helpcommand(ctx, command: str = None):
     all_commands = ""
     if command is None:
-        for i in client.commands:
+        for i in sorted([i.name for i in client.commands]):
             all_commands += f"`{i.name}`, "
         if ctx.guild is None:
             color = None
