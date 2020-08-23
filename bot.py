@@ -1437,7 +1437,7 @@ async def covid(ctx, area: str = "Global"):
                 continue
     else:
         formatted_json = fj["Global"]
-    if formatted_json is None:
+    if not formatted_json is None:
         embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
         embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
         embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
