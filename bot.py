@@ -931,7 +931,7 @@ async def roleinfo(ctx, role: discord.Role = None):
         name="Created at", value=f"{role.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.datetime.utcnow() - role.created_at)}"
     )
     embed.add_field(name="ID", value=role.id)
-    embed.add_field(name="Position", value=f"{role.position}/{len(ctx.guild.roles)}")
+    embed.add_field(name="Position", value=f"{len(ctx.guild.roles) - role.position}/{len(ctx.guild.roles)}")
     embed.add_field(name="Members", value=len(role.members))
     embed.add_field(name="Role Color", value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb()}")
     if role.hoist:
