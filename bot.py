@@ -362,10 +362,11 @@ async def reverseimagesearch(ctx, link=None):
 
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
+        await ctx.send(best_guess)
         result += best_guess.get_text()
 
     kek = result.split(' ')
-    await ctx.send(result[0])
+    #  await ctx.send(result[0])
 
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
