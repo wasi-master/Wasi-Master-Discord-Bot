@@ -1430,7 +1430,7 @@ async def covid(ctx, area: str = "Global"):
     if not area.lower() == "global":
         for i in fj["Countries"]:
             num += 1
-            if i["Slug"].lower() == area.lower:
+            if i["Slug"].lower() == area.lower():
                 formatted_json = fj["Countries"][num - 1]
                 break
             else:
