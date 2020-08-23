@@ -1431,13 +1431,11 @@ async def covid(ctx, area: str = "Global"):
             num += 1
             if i["Slug"].lower() == area.lower:
                 formatted_json = i[num - 1]
-                await ctx.send(formatted_json)
                 break
             else:
                 continue
     else:
         formatted_json = formatted_json["Global"]
-    await ctx.send(formatted_json)
     embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
     embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
     embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
