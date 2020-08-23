@@ -1421,6 +1421,7 @@ async def tweet(ctx, member: discord.Member = None, *, text):
 @client.command(description="Coronavirus Stats")
 async def covid(ctx, area: str = "Global"):
     num = 0
+    formatted_json = None
     session = aiohttp.ClientSession()
     async with ctx.typing():
         async with session.get("https://api.covid19api.com/summary") as r:
@@ -1429,23 +1430,26 @@ async def covid(ctx, area: str = "Global"):
     if not area.lower() == "global":
         for i in fj["Countries"]:
             num += 1
-            if i["Country"].lower() == area.lower:
+            if i["Slug"].lower() == area.lower:
                 formatted_json = fj["Countries"][num - 1]
                 break
             else:
                 continue
     else:
         formatted_json = fj["Global"]
-    embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
-    embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
-    embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
-    embed.add_field(name="New Deaths", value=f"{formatted_json['NewDeaths']:,}")
-    embed.add_field(name="Total Deaths", value=f"{formatted_json['TotalDeaths']:,}")
-    embed.add_field(name="New Recovered", value=f"{formatted_json['NewRecovered']:,}")
-    embed.add_field(
-        name="Total Recovered", value=f"{formatted_json['TotalRecovered']:,}"
-    )
-    await ctx.send(embed=embed)
+    if formatted_json is None:
+        embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
+        embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
+        embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
+        embed.add_field(name="New Deaths", value=f"{formatted_json['NewDeaths']:,}")
+        embed.add_field(name="Total Deaths", value=f"{formatted_json['TotalDeaths']:,}")
+        embed.add_field(name="New Recovered", value=f"{formatted_json['NewRecovered']:,}")
+        embed.add_field(
+            name="Total Recovered", value=f"{formatted_json['TotalRecovered']:,}"
+        )
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send("Country not found")
 
 
 @client.command(name="chatbot", aliases=["cb"], description=" Talk with a chat bot")
