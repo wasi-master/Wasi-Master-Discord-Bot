@@ -2153,7 +2153,7 @@ async def image(ctx, *, search_term: commands.clean_content):
                 except KeyError:
                     pass
                 embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
-                embed.set_thumbnail(url=result.image_url)
+                embed.set_image(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u23f9\ufe0f":
