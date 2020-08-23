@@ -1437,6 +1437,7 @@ async def covid(ctx, area: str = "Global"):
                 continue
     else:
         formatted_json = formatted_json["Global"]
+    await ctx.send(formatted_json)
     embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
     embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
     embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
@@ -2557,7 +2558,7 @@ async def helpcommand(ctx, command: str = None):
     all_commands = ""
     if command is None:
         for i in sorted([i.name for i in client.commands]):
-            all_commands += f"`{i.name}`, "
+            all_commands += f"`{i}`, "
         if ctx.guild is None:
             color = None
         else:
