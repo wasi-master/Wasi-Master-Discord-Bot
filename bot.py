@@ -1419,7 +1419,7 @@ async def tweet(ctx, member: discord.Member = None, *, text):
 
 
 @client.command(description="Coronavirus Stats")
-async def covid(ctx, area: str = "Global"):
+async def covid(ctx, *, area: str = "Global"):
     num = 0
     formatted_json = None
     session = aiohttp.ClientSession()
