@@ -365,7 +365,7 @@ async def reverseimagesearch(ctx, link=None):
         result += best_guess.get_text()
 
     kek = result.split(' ')
-    await ctx.send(kek[0])
+    await ctx.send(result[0])
 
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
