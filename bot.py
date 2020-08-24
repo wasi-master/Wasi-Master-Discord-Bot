@@ -331,7 +331,7 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
- """
+"""
 @client.command(aliases=['ris'], description='Tells you which pokemon it is.')
 async def reverseimagesearch(ctx, link=None):
     url = None
