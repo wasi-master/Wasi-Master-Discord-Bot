@@ -334,7 +334,7 @@ def do_math(text: str):
       
 @client.command(aliases=["bin"], description="Converts text to binary")
 async def binary(ctx, number: int):
-    await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{bin(number).replace("0b", "")}```"))
+    await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{bin(number).replace('0b', '')}```"))
 
 
 @client.command(aliases=["unbin"], description="Converts binary to text")
