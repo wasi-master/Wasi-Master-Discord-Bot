@@ -87,7 +87,7 @@ async def paginator (ctx , entries , limit=5 ):
 
 async def get_prefix(client, message):
     if isinstance(message.channel, discord.DMChannel):
-        return ","
+        return ["", ","]
     prefix_for_this_guild = await client.db.fetchrow(
             """
             SELECT prefix
@@ -171,7 +171,6 @@ secureRandom = secrets.SystemRandom()
 alex_api = alexflipnote.Client()
 google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 translate_api = translator.Translator()
-
 
 client.remove_command("help")
 client.emoji_list = []
