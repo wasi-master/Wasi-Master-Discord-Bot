@@ -331,6 +331,12 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+
+@client.command(description="Converts text to binary")
+async def binary(ctx, number: int):
+    await ctx.send(embed=discord.Embed(name=ctx.author.name, description=f"```py\n{bin(number)[1:]}```"))
+    
+    
 """
 @client.command(aliases=['ris'], description='Tells you which pokemon it is.')
 async def reverseimagesearch(ctx, link=None):
@@ -2060,7 +2066,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u25b6\ufe0f":
                 try:
-                    message.remove_reaction("\u25b6\ufe0f", ctx.author)
+                    await message.remove_reaction("\u25b6\ufe0f", ctx.author)
                 except discord.Forbidden:
                     pass
                 num += 1
