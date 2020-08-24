@@ -331,12 +331,17 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
-
-@client.command(description="Converts text to binary")
+      
+@client.command(aliases=["bin"], description="Converts text to binary")
 async def binary(ctx, number: int):
-    await ctx.send(embed=discord.Embed(name=ctx.author.name, description=f"```py\n{bin(number)[1:]}```"))
-    
-    
+    await ctx.send(embed=discord.Embed(name=ctx.author.name, description=f"```py\n{bin(number)[2:]}```"))
+
+
+@client.command(aliases=["unbin"], description="Converts binary to text")
+async def unbinary(ctx, number: int):
+    await ctx.send(embed=discord.Embed(name=ctx.author.name, description=f"```py\n{int(str(number), 2)}```"))
+
+
 """
 @client.command(aliases=['ris'], description='Tells you which pokemon it is.')
 async def reverseimagesearch(ctx, link=None):
