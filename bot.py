@@ -227,7 +227,7 @@ async def on_guild_join(guild):
                 INSERT INTO guilds (id, prefix)
                 VALUES ($1, $2)
                 """,
-                message.guild.id,
+                guild.id,
                 ","
             )
 
@@ -244,12 +244,6 @@ async def on_guild_remove(guild):
     )
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-    prefixes.pop(str(guild.id))
-
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
 
 
 @client.event
@@ -337,7 +331,7 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
-    
+ """
 @client.command(aliases=['ris'], description='Tells you which pokemon it is.')
 async def reverseimagesearch(ctx, link=None):
     url = None
@@ -367,7 +361,7 @@ async def reverseimagesearch(ctx, link=None):
 
     kek = result.split(' ')
     #  await ctx.send(result[0])
-
+"""
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
     embed = discord.Embed(title=emoji.name, description="\\" + str(emoji))
@@ -613,7 +607,7 @@ async def morse(ctx, *, text:str):
             cipher += MORSE_CODE_DICT[letter.upper()] + ' '
         else: 
             cipher += ' '
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=cipher), color=0x2F3136)
+    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=cipher, color=0x2F3136))
 
 
 @client.command(description="English to morse")
@@ -663,7 +657,7 @@ async def unmorse(ctx, *, text:str):
                 decipher += list(MORSE_CODE_DICT.keys())[list(MORSE_CODE_DICT 
                 .values()).index(citext)] 
                 citext = '' 
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher), color=0x2F3136)
+    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher, color=0x2F3136))
 
 
 @client.command(description="Check who got banned")
@@ -2754,7 +2748,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     embed.add_field(name="ID: ", value=member.id)
     embed.add_field(name="Guild name:", value=member.display_name)
     a = sorted(ctx.guild.members, key=lambda member: member.joined_at).index(member) + 1
-    embed.add_field(name="Join Position", value=f"{a}/{len(ctx.guild.members)}")
+    embed.add_field(name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}")
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr)
     
