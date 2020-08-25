@@ -331,7 +331,28 @@ def do_math(text: str):
     return eval(equation)
 
 
-@client.command(description="Character Info :nerd:")
+@client.command(
+                aliases=["t"],
+                description="Test your timing! As soon as the message shows, click on the reaction after some amount of seconds"
+                )
+async def timing(ctx, time=10):
+    if time > 60:
+        time = 60
+    embed = discord.Embed(title=f"Try to react to this message with :thumbsup: exactly after (time) seconds have passed")
+    message = await ctx.send(embed=embed)
+    message.add_reaction("\u2705")
+    def check(r, u):
+        return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id and str(r.emoji) == "\u2705"
+    try:
+        reaction, user = await client.wait_for('reaction_add', check = check, timeout =time + (time/2))
+        embed = discord.Embed(title=f"You reacted to this message with :thumbsup: after (round(datetime.datetme.utcnow() - message.created_at.total_seconds(), 2)) seconds")
+        await message.edit(embed=embed)
+    except asyncio.TimeoutError:
+        await ctx.send(f"{ctx.author.mention}, you didnt react with a :white_check_mark:.")
+        return
+
+
+@client.command(description="Character Info :nerd:", aliases=["chrinf", "unicode", "characterinfo"])
 async def charinfo(ctx, *, characters: str):
     def to_string(c):
         digit = f'{ord(c):x}'
