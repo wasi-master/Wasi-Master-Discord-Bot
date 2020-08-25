@@ -9,10 +9,12 @@ import html
 import json
 import numexpr
 import os
+import random
 import secrets
 import time as timemodule
 from typing import Union
-import random
+import unicodedata
+
 
 import aiogoogletrans as translator
 import aiohttp
