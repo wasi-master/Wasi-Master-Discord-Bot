@@ -345,8 +345,8 @@ async def timing(ctx, time=10):
         return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id and str(r.emoji) == "\u2705"
     try:
         reaction, user = await client.wait_for('reaction_add', check = check, timeout =time + (time/2))
-        embed = discord.Embed(title=f"You reacted to this message with :white_check_mark: after {round(datetime.datetme.utcnow() - message.created_at.total_seconds(), 2)} seconds")
-        embed.set_footer(text=f"Exact time is {datetime.datetme.utcnow() - message.created_at.total_seconds()}")
+        embed = discord.Embed(title=f"You reacted to this message with :white_check_mark: after {round(datetime.datetime.utcnow() - message.created_at.total_seconds(), 2)} seconds")
+        embed.set_footer(text=f"Exact time is {datetime.datetime.utcnow() - message.created_at.total_seconds()}")
         await message.edit(embed=embed)
     except asyncio.TimeoutError:
         await ctx.send(f"{ctx.author.mention}, you didnt react with a :white_check_mark:.")
