@@ -330,7 +330,7 @@ def do_math(text: str):
 
 
 @client.command(description="Character Info :nerd:")
-async def charinfo(self, ctx, *, characters: str):
+async def charinfo(ctx, *, characters: str):
     def to_string(c):
         digit = f'{ord(c):x}'
         name = unicodedata.name(c, 'Name not found.')
