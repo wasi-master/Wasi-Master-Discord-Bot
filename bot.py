@@ -338,14 +338,15 @@ def do_math(text: str):
 async def timing(ctx, time=10):
     if time > 60:
         time = 60
-    embed = discord.Embed(title=f"Try to react to this message with :thumbsup: exactly after (time) seconds have passed")
+    embed = discord.Embed(title=f"Try to react to this message with :white_check_mark: exactly after {time} seconds have passed")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u2705")
     def check(r, u):
         return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id and str(r.emoji) == "\u2705"
     try:
         reaction, user = await client.wait_for('reaction_add', check = check, timeout =time + (time/2))
-        embed = discord.Embed(title=f"You reacted to this message with :thumbsup: after (round(datetime.datetme.utcnow() - message.created_at.total_seconds(), 2)) seconds")
+        embed = discord.Embed(title=f"You reacted to this message with :white_check_mark: after {round(datetime.datetme.utcnow() - message.created_at.total_seconds(), 2)} seconds")
+        embed.set_footer(text=f"Exact time is {datetime.datetme.utcnow() - message.created_at.total_seconds()}")
         await message.edit(embed=embed)
     except asyncio.TimeoutError:
         await ctx.send(f"{ctx.author.mention}, you didnt react with a :white_check_mark:.")
