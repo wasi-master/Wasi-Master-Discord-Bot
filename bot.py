@@ -2599,13 +2599,13 @@ async def helpcommand(ctx, command: str = None):
         else:
             color = ctx.guild.me.color
         embed = discord.Embed(
-            title="Help",
-            description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```",
+            title=f"All Commands ({len(client.commands)})",
+            description=all_commands,
             colour=color
         )
         embed.add_field(
-                    name=f"All Commands ({len(client.commands)})",
-                    value=all_commands
+                    name="Help",
+                    value=description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```",
         )
         await ctx.send(embed=embed)
     else:
