@@ -82,9 +82,6 @@ async def paginator (ctx , entries , limit=5 ):
             pass
 
 
-
-
-
 async def get_prefix(client, message):
     if isinstance(message.channel, discord.DMChannel):
         return ["", ","]
@@ -330,7 +327,20 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
-      
+
+
+@client.command(description="Character Info :nerd:")
+async def charinfo(self, ctx, *, characters: str):
+    def to_string(c):
+        digit = f'{ord(c):x}'
+        name = unicodedata.name(c, 'Name not found.')
+        return f'`\\U{digit:>08}`: {name} - {c} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{digit}>'
+    msg = '\n'.join(map(to_string, characters))
+    if len(msg) > 2000:
+        return await ctx.send('Output too long to display.')
+    await ctx.send(msg)
+
+
 @client.command(aliases=["bin"], description="Converts text to binary")
 async def binary(ctx, number: int):
     await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{bin(number).replace('0b', '')}```"))
@@ -2589,7 +2599,7 @@ async def helpcommand(ctx, command: str = None):
                 aliases += f"`{i}`, "
             embed = discord.Embed(color=0x2F3136, description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help for a list of commands!```")
 
-            embed.set_author(name=str(command))
+            embed.set_author(name=str(command_for_use.name))
 
             embed.add_field(name="Name", value=command_for_use.name)
             embed.add_field(name="Description", value=command_for_use.description, inline=False)
