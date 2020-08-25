@@ -27,6 +27,7 @@ import gtts
 import humanize
 import psutil
 import randomcolor
+import re
 import requests
 import wikipedia as wikimodule
 import dbl
@@ -351,7 +352,7 @@ async def timing(ctx, time=10):
         embed.set_footer(text=f"Exact time is {(datetime.datetime.utcnow() - message.created_at).total_seconds()}")
         await message.edit(embed=embed)
     except asyncio.TimeoutError:
-        await message.edit(embed=discord.Embed(title=f"{ctx.author.mention}, you didnt react with a :white_check_mark:"))
+        await message.edit(embed=discord.Embed(title=f"{ctx.author}, you didnt react with a :white_check_mark:"))
         return
 
 
@@ -941,7 +942,8 @@ async def movie(ctx, *, query):
         fj = json.loads(await response.text())
     if fj["Response"] == "True":
         embed = discord.Embed(title=fj["Title"], description=fj["Plot"], color=0x2F3136)
-        embed.set_image(url=fj["Poster"])
+        if re.search("(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)", fj["Poster"]):
+            embed.set_image(url=fj["Poster"])
         embed.add_field(name="Released On", value=fj["Released"])
         embed.add_field(name="Rated", value=fj["Rated"])
         mins = []
@@ -1854,10 +1856,13 @@ async def spotify(ctx, *, member: discord.Member = None):
                 name="Youtube Link",
                 value=f"[Click Here](https://www.youtube.com{videos[0]['url_suffix']})",
             )
-            embed.add_field(
-                name="Time",
-                value=f"{convert_sec_to_min((datetime.datetime.utcnow() - activity.start).total_seconds())} {get_p((abs((datetime.datetime.utcnow() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))} {str(activity.duration)[2:-7]}",
-            )
+            try:
+                embed.add_field(
+                    name="Time",
+                    value=f"{convert_sec_to_min((datetime.datetime.utcnow() - activity.start).total_seconds())} {get_p((abs((datetime.datetime.utcnow() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))} {str(activity.duration)[2:-7]}",
+                )
+            except IndexError:
+                pass
             embed.set_footer(text="Track ID:" + activity.track_id)
             await ctx.send(embed=embed)
             successfull = True
