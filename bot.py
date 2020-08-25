@@ -2578,11 +2578,12 @@ async def helpcommand(ctx, command: str = None):
     else:
         all_commands_list = []
         all_commands_name_list = []
+        command_for_use = None
         for i in client.commands:
             all_commands_name_list.append(i.name)
-            all_commands_list.append(i)
-        if command.strip().lower() in all_commands_name_list:
-            command_for_use = all_commands_list[all_commands_name_list.index(command)]
+            if i.name == command.strip().lower() or command.strip().lower() in i.aliases:
+                command_for_use = i
+        if not command_for_use is None:
             aliases = ""
             for i in command_for_use.aliases:
                 aliases += f"`{i}`, "
@@ -2591,7 +2592,7 @@ async def helpcommand(ctx, command: str = None):
             embed.set_author(name=str(command))
 
             embed.add_field(name="Name", value=command_for_use.name)
-            embed.add_field(name="Description", value=command_for_use.description)
+            embed.add_field(name="Description", value=command_for_use.description, inline=False)
             if not len(aliases) == 0:
                 embed.add_field(name="Aliases", value=aliases[:-2])
             else:
@@ -2608,7 +2609,7 @@ async def helpcommand(ctx, command: str = None):
         else:
             try:
                 embed = discord.Embed(
-                    title=f'Command "{str(command)}" was not found, try using the command name instead of it\'s alias',
+                    title=f'Command "{str(command)}" was not found',
                     description=f"Did you mean `{difflib.get_close_matches(command.strip().lower(), all_commands_name_list, n=1, cutoff=0.2)[0]}`",
                 )
             except IndexError:
