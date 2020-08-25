@@ -2605,7 +2605,7 @@ async def helpcommand(ctx, command: str = None):
         )
         embed.add_field(
                     name="Help",
-                    value=description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```"
+                    value=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```"
         )
         await ctx.send(embed=embed)
     else:
