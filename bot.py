@@ -2593,8 +2593,7 @@ async def avatar(
 async def helpcommand(ctx, command: str = None):
     all_commands = ""
     if command is None:
-        for i in sorted([i.name for i in client.commands]):
-            all_commands += f"`{i}`, "
+        all_commands += sorted([f"`{i.name}`, " for i in client.commands])
         if ctx.guild is None:
             color = 0x2f3136
         else:
