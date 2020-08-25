@@ -942,7 +942,7 @@ async def movie(ctx, *, query):
         fj = json.loads(await response.text())
     if fj["Response"] == "True":
         embed = discord.Embed(title=fj["Title"], description=fj["Plot"], color=0x2F3136)
-        if re.search("(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)", fj["Poster"]):
+        if re.search("(http(s?):)(.)*\.(?:jpg|gif|png)", fj["Poster"]):
             embed.set_image(url=fj["Poster"])
         embed.add_field(name="Released On", value=fj["Released"])
         embed.add_field(name="Rated", value=fj["Rated"])
