@@ -338,7 +338,9 @@ def do_math(text: str):
 async def timing(ctx, time=10):
     if time > 60:
         time = 60
-    embed = discord.Embed(title=f"Try to react to this message with :white_check_mark: exactly after {time} seconds have passed")
+    if time < 1:
+        time = 1
+    embed = discord.Embed(title=f"Try to react to this message with :white_check_mark: within {time} seconds")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u2705")
     def check(r, u):
@@ -349,7 +351,7 @@ async def timing(ctx, time=10):
         embed.set_footer(text=f"Exact time is {(datetime.datetime.utcnow() - message.created_at).total_seconds()}")
         await message.edit(embed=embed)
     except asyncio.TimeoutError:
-        await ctx.send(f"{ctx.author.mention}, you didnt react with a :white_check_mark:.")
+        await message.edit(embed=discord.Embed(title=f"{ctx.author.mention}, you didnt react with a :white_check_mark:"))
         return
 
 
