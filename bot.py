@@ -2722,10 +2722,16 @@ async def wikipedia(ctx, *, args):
     description=" clears a certain amount of messages",
 )
 @commands.has_permissions(manage_messages=True)
-async def purge(ctx, amount: int):
+async def purge(ctx, amount: int, member: discord.Member=None):
+    def check(message):
+        return message.author == member
     amount += 1
-    deleted = await ctx.channel.purge(limit=amount)
-    message = await ctx.send(f"Deleted `{len(deleted)}` messages")
+    if not member:
+        deleted = await ctx.channel.purge(limit=amount)
+        message = await ctx.send(f"Deleted `{len(deleted - 1)}` messages")
+    else:
+        deleted = await ctx.channel.purge(limit=amount, check=check)
+        message = await ctx.send(f"Deleted `{len(deleted - 1)}` messages by {member}")
     await asyncio.sleep(2)
     await message.delete()
 
