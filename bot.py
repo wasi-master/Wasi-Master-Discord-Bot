@@ -259,9 +259,11 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CommandNotFound):
         pass
     elif isinstance(error, discord.Forbidden):
-        await ctx.send("I am Missing permissions")
+        await ctx.send("I am missing permissions")
     elif "Cannot send messages to this user" in str(error):
         pass
+    elif isinstance(error, discord.NotFound):
+        await ctx.send(embed=discord.Embed(title="Not Found", description=error))
     elif isinstance(error, commands.CommandOnCooldown):
         embed = discord.Embed(
             title = "Slow Down!",
