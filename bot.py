@@ -2805,7 +2805,8 @@ async def userinfo(ctx, *, member: discord.Member = None):
             value="He is the owner and the only person that developed this bot",
         )
     embed.add_field(name="ID: ", value=member.id)
-    embed.add_field(name="Guild name:", value=member.display_name)
+    if not member.name == member.display_name:
+        embed.add_field(name="Nickname:", value=member.display_name)
     a = sorted(ctx.guild.members, key=lambda member: member.joined_at).index(member) + 1
     embed.add_field(name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}")
     if not len(flaglist) == 0:
