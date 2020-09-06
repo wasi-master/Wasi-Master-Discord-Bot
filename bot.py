@@ -2810,11 +2810,11 @@ async def userinfo(ctx, *, member: discord.Member = None):
     a = sorted(ctx.guild.members, key=lambda member: member.joined_at).index(member) + 1
     embed.add_field(name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}")
     if not len(flaglist) == 0:
-        embed.add_field(name="Badges", value=flagstr)
+        embed.add_field(name="Badges", value=flagstr, inline=False)
     
     embed.add_field(
         name="Online Status",
-        value=f"Desktop: {get_status(member.desktop_status.name)}\nWeb: {get_status(member.web_status.name)}\nMobile: {get_status(member.mobile_status.name)}",
+        value=f"{get_status(member.desktop_status.name)} Desktop\n{get_status(member.web_status.name)} Web\n{get_status(member.mobile_status.name)} Mobile",
     )
     embed.add_field(
         name="Created at", value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.created_at)})'
