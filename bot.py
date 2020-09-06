@@ -414,12 +414,12 @@ async def reverseimagesearch(ctx, link=None):
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
     embed = discord.Embed(title=emoji.name, description="\\" + str(emoji))
+    emb3d.set_thumbnail(url=emoji.url)
     embed.set_image(url=emoji.url)
     embed.add_field(name="ID", value=emoji.id)
-    try:
+    if not emoji.user is None:
         embed.add_field(name="Added by", value=emoji.user)
-    except discord.Forbidden:
-        pass
+    embed.add_field(name="Server", value=emoji.guild)
     embed.add_field(
         name="Created at", value=f'{emoji.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - emoji.created_at)})'
     )
@@ -977,7 +977,7 @@ async def roleinfo(ctx, role: discord.Role = None):
     if role.hoist:
         embed.add_field(name="Displayed Separately?", value="Yes")
     else:
-        embed.add_field(name="Displayed Separatel?", value="No")
+        embed.add_field(name="Displayed Separately?", value="No")
     if role.mentionable:
         embed.add_field(name="Mentionable", value="Yes")
     else:
@@ -1039,7 +1039,7 @@ async def screenshot(ctx, website:str):
 """
 
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
-async def channelinfo(ctx, channel: discord.TextChannel = None):
+async def channelinfo(ctx, channel: Union[discord.TextChannel, discord.VoiceChannel] = None):
     channel = channel or ctx.channel
     embed = discord.Embed(color=0x2F3136)
     embed.set_author(name=f"Channel Information for {channel.name}")
@@ -2328,7 +2328,7 @@ async def urban(ctx, *, args):
 
 @client.command(aliases=["members"], description="Get who are in a certain role")
 async def getusers(ctx, *, role: discord.Role):
-    embed = discord.Embed(color=0x2F3136)
+    embed = discord.Embed(color=0x2F3136 if str(role.colour) == "#000000" else role.colour)
     embed.set_footer(text=f"Asked by {ctx.author}")
     async with ctx.typing():
         empty = True
