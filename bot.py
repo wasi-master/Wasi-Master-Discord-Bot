@@ -414,7 +414,7 @@ async def reverseimagesearch(ctx, link=None):
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
     embed = discord.Embed(title=emoji.name, description="\\" + str(emoji))
-    emb3d.set_thumbnail(url=emoji.url)
+    embed.set_thumbnail(url=emoji.url)
     embed.set_image(url=emoji.url)
     embed.add_field(name="ID", value=emoji.id)
     if not emoji.user is None:
@@ -2785,7 +2785,7 @@ async def unban(ctx, *, member: str):
         await ctx.send("User not found")
 
 
-@client.command(aliases=["ui", "whois", "wi"], description="Shows info about a user")
+@client.command(aliases=["ui", "whois", "wi", "whoami", "me"], description="Shows info about a user")
 async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
 
