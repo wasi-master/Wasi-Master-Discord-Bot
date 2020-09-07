@@ -382,6 +382,7 @@ async def unbinary(ctx, number: int):
 
 @client.command(aliases=['ph'], description='Tells you which pokemon it is that has been spawned by a bot')
 async def pokemonhack(ctx, channel: discord.TextChannel=None):
+    msg1 = await ctx.send(f"Finding <a:typing:597589448607399949>")
     url = None
     async for message in ctx.channel.history(limit=50):
         if message.embeds:
@@ -404,7 +405,8 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
         #  await ctx.send(best_guess)
         result = best_guess.get_text().replace("pokemon", "")
-    await ctx.send(embed=discord.embed(description=f"**{result}**").set_image(url=img_url))
+    await ctx.send(embed=discord.Embed(description=f"**{result}**").set_image(url=img_url))
+    await msg1.delete()
     #  kek = result.split(' ')
     #  await ctx.send(result[0])
 
