@@ -383,15 +383,15 @@ async def unbinary(ctx, number: int):
 @client.command(aliases=['ph'], description='Tells you which pokemon it is that has been spawned by a bot')
 async def pokemonhack(ctx, channel: discord.TextChannel=None):
     url = None
-    async for message in await ctx.channel.history(limit=50):
+    async for message in ctx.channel.history(limit=50):
         if message.embeds:
             embed = message.embeds[0]
             if not embed.image:
                 continue
             else:
-                url = embed.image.url
+                img_url = embed.image.url
 
-    url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={url}&start=0"
+    url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
 
     async with aiohttp.ClientSession() as session:
@@ -404,7 +404,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
         #  await ctx.send(best_guess)
         result = best_guess.get_text().replace("pokemon", "")
-    await ctx.send(embed=discord.embed(description=f"**{result}**").set_image(url=url))
+    await ctx.send(embed=discord.embed(description=f"**{result}**").set_image(url=img_url))
     #  kek = result.split(' ')
     #  await ctx.send(result[0])
 
