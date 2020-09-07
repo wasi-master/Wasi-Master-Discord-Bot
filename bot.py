@@ -393,8 +393,9 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
                 else:
                     img_url = embed.image.url
             else:
-                continue 
-    
+                continue
+        else:
+            continue
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
 
