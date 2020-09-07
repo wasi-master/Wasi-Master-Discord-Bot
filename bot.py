@@ -411,7 +411,11 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
         #  await ctx.send(best_guess)
-        result = best_guess.get_text().replace("pokemon", "")
+        if not best_guess.get_text().replace("pokemon", "").isdigit():
+            result = best_guess.get_text().replace("pokemon", "")
+            break
+        else:
+            continue
     await ctx.send(embed=discord.Embed(description=f"**{result}**").set_image(url=img_url))
     await msg1.delete()
     #  kek = result.split(' ')
