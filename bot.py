@@ -380,19 +380,16 @@ async def unbinary(ctx, number: int):
     await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{int(str(number), 2)}```"))
 
 
-"""
-@client.command(aliases=['ris'], description='Tells you which pokemon it is.')
-async def reverseimagesearch(ctx, link=None):
+@client.command(aliases=['ph'], description='Tells you which pokemon it is that has been spawned by a bot')
+async def pokemonhack(ctx, channel: discord.TextChannel=None):
     url = None
-
-    if link is None:
-        if ctx.message.attachments:
-            url = ctx.message.attachments[0].url
-        else:
-            await ctx.send('Attach an image or provide an image url.')
-            return
-    else:
-        url = link
+    async for message in await ctx.channel.history(limit=50):
+        if message.embeds:
+            embed = message.embeds[0]
+            if not embed.image:
+                continue
+            else:
+                url = embed.image.url
 
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
@@ -405,12 +402,12 @@ async def reverseimagesearch(ctx, link=None):
 
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
-        await ctx.send(best_guess)
-        result += best_guess.get_text()
-
-    kek = result.split(' ')
+        #  await ctx.send(best_guess)
+        result = best_guess.get_text().replace("pokemon", "")
+    await ctx.send(embed=discord.embed(description=f"**{result}**").set_image(url=url))
+    #  kek = result.split(' ')
     #  await ctx.send(result[0])
-"""
+
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
     embed = discord.Embed(title=emoji.name, description="\\" + str(emoji))
@@ -2817,11 +2814,13 @@ async def userinfo(ctx, *, member: discord.Member = None):
         value=f"{get_status(member.desktop_status.name)} Desktop\n{get_status(member.web_status.name)} Web\n{get_status(member.mobile_status.name)} Mobile",
     )
     embed.add_field(
-        name="Created at", value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.created_at)})'
+        name="Created at", value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.created_at)})',
+        inline=False
     )
 
     embed.add_field(
-        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.joined_at)})'
+        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.joined_at)})',
+        inline=False
     )
     if not len(member.roles) == 1:
         embed.add_field(
