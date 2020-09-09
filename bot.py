@@ -386,8 +386,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     channel = channel or ctx.channel 
     url = None
     img_url = None
-    messages = await channel.history(limit=10, oldest_first=False).flatten()
-    for message in messages:
+    async for message in channel.history(limit=5, oldest_first=False):
         if not message.author == ctx.guild.me:
             if message.embeds:
                 embed = message.embeds[0]
