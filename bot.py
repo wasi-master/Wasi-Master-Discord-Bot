@@ -416,6 +416,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
             break
         else:
             continue
+    embed.set_footer(text=f"Long press the name on mobile to copy quickly\n\nCommand Invoked by {ctx.author}", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=discord.Embed(description=f"**{result}**").set_image(url=img_url))
     await msg1.delete()
     #  kek = result.split(' ')
