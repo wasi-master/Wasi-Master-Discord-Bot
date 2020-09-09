@@ -416,10 +416,10 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
             break
         else:
             continue
-    emby=discord.Embed(description=f"**p!catch {result}**", color=0x2F3136)
+    emby = discord.Embed(description=f"**p!catch {result}**", color=0x2F3136)
     emby.set_author(name=result)
     emby.set_image(url=img_url)
-    emby.set_footer(text=f"Long press the p!catch {result} on mobile to copy quickly\n\nCommand Invoked by {ctx.author}", icon_url=ctx.author.avatar_url))
+    emby.set_footer(text=f"Long press the p!catch {result} on mobile to copy quickly\n\nCommand Invoked by {ctx.author}", icon_url=ctx.author.avatar_url)
     await ctx.send(embed = emby)
     await msg1.delete()
     #  kek = result.split(' ')
