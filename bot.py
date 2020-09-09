@@ -412,7 +412,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
         #  await ctx.send(best_guess)
         if not best_guess.get_text().replace("pokemon", "").strip().isdigit():
-            result = best_guess.get_text().replace("pokemon", "").replace("png", "")
+            result = best_guess.get_text().lower.replace("pokemon", "").replace("png", "").replace("evolution", "").strip()
             break
         else:
             continue
