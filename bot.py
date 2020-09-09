@@ -412,6 +412,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
         #  await ctx.send(best_guess)
         if not best_guess.get_text().replace("pokemon", "").strip().isdigit():
+            raw_result = best_guess.get_text()
             result = best_guess.get_text().lower().replace("pokemon", "").replace("png", "").replace("evolution", "").strip()
             break
         else:
@@ -419,7 +420,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     emby = discord.Embed(description=f"**p!catch {result}**", color=0x2F3136)
     emby.set_author(name=result)
     emby.set_image(url=img_url)
-    emby.set_footer(text=f"Long press the p!catch {result} on mobile to copy quickly\n\nCommand Invoked by {ctx.author}", icon_url=ctx.author.avatar_url)
+    emby.set_footer(text=f"Long press the p!catch {result} on mobile to copy quickly\n\nCommand Invoked by {ctx.author}\nRaw Result: {raw_result}", icon_url=ctx.author.avatar_url)
     await ctx.send(embed = emby)
     await msg1.delete()
     #  kek = result.split(' ')
