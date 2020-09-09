@@ -385,6 +385,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     msg1 = await ctx.send(f"Finding <a:typing:597589448607399949>")
     channel = channel or ctx.channel 
     url = None
+    img_url = None
     messages = await channel.history(limit=10, oldest_first=False).flatten()
     for message in messages:
         if not message.author == ctx.guild.me:
@@ -398,7 +399,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
                 continue
         else:
             continue
-    if not img_url: return await ctx.send("Message Not Found")
+    if not img_url: return await ctx.send("Message containing a pokemon Not Found")
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
 
