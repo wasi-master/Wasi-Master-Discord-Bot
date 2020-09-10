@@ -343,11 +343,11 @@ async def emojify(ctx, *, text: str):
         for word in text:
             if word.isdigit():
                 list_.append(f":{humanize.apnumber(word)}:")
-            elif word == " ":
+            elif word == "   ":
                 list_.append(" ")
             else:
                 list_.append(f":regional_indicator_{word}:")
-        await ctx.send(f"```{''.join(list_)}```")
+        await ctx.send(' '.join(list_))
 
 
 @client.command(
