@@ -343,7 +343,7 @@ async def rawjson(ctx, message_id: int):
 
 
 @client.command(aliases=["raw"], description="See a raw version of a message")
-async def rawmessage(ctx, message_id: int)
+async def rawmessage(ctx, message_id: int):
     message = ctx.channel.fetch_message(message_id)
     res = discord.utils.escape_markdown(message.content)
     await ctx.send(res)
