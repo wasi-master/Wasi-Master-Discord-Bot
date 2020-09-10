@@ -334,6 +334,22 @@ def do_math(text: str):
     return eval(equation)
 
 
+@client.command(aliases=["rg", "emf"], description="Emojify a text")
+async def emojify(ctx, *, text: str):
+    list_ = []
+    if len(text) > 90:
+        return await ctx.send("Text to big to emojify")
+    else:
+        for word in text:
+            if word.isdigit:
+                list_.append(f":{humanize.apnumber(word)}:")
+            elif word == " ":
+                list_.append(" ")
+            else:
+                list_.append(f":regional_indicator_{word}:")
+        await ctx.send(f"```{''.join(list_)}```")
+
+
 @client.command(
                 aliases=["t"],
                 description="Test your timing! As soon as the message shows, click on the reaction after some amount of seconds"
