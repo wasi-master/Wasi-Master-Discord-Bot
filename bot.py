@@ -425,7 +425,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
 
     result = ""
     wrong = {
-        "bonsai": "bonsly"
+        "bonsai": "bonsly",
         "golet": "golette"
     }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
