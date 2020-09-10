@@ -258,12 +258,14 @@ async def on_command_error(ctx, error):
         await ctx.send(f"The {str(error.param).split(':')[0].strip()} argument is missing")
     elif isinstance(error, commands.CommandNotFound):
         pass
-    elif isinstance(error, discord.Forbidden):
-        await ctx.send("I am missing permissions")
-    elif "Cannot send messages to this user" in str(error):
-        pass
     elif isinstance(error, commands.BadArgument):
         await ctx.send(embed=discord.Embed(title="Not Found", description=error))
+    elif isinstance(error, discord.Forbidden):
+        await ctx.send("I am missing permissions")
+    elif isinstance(error, discord.HTTPException):
+        await ctx.send("Message Too long to be sent")
+    elif "Cannot send messages to this user" in str(error):
+        pass
     elif isinstance(error, commands.CommandOnCooldown):
         embed = discord.Embed(
             title = "Slow Down!",
@@ -332,6 +334,19 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+
+
+@client.command(aliases=["rj"], description="Shows raw json of a message")
+async def rawjson(ctx, message_id: int):
+    res = await client.http.get(ctx.channel.id, message_id)
+    await ctx.send(f"```json\n{res}```")
+
+
+@client.command(aliases=["raw"], description="See a raw version of a message")
+async def rawmessage(ctx, message_id: int)
+    message = ctx.channel.fetch_message(message_id)
+    res = discord.utils.escape_markdown(message.content)
+    await ctx.send(res)
 
 
 @client.command(aliases=["rg", "emf", "banner"], description="Emojify a text")
