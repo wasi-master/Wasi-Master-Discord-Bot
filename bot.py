@@ -334,7 +334,7 @@ def do_math(text: str):
     return eval(equation)
 
 
-@client.command(aliases=["rg", "emf"], description="Emojify a text")
+@client.command(aliases=["rg", "emf", "banner"], description="Emojify a text")
 async def emojify(ctx, *, text: str):
     list_ = []
     if len(text) > 90:
@@ -424,13 +424,17 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
             q = await r.read()
 
     result = ""
-
+    wrong = {
+        "bonsai": "bonsly"
+        "golet": "golette"
+    }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
         #  await ctx.send(best_guess)
         if not best_guess.get_text().replace("pokemon", "").strip().isdigit():
             raw_result = best_guess.get_text()
             result = best_guess.get_text().lower().replace("pokemon", "").replace("png", "").replace("evolution", "").strip()
+            if result in wrong: result = wrong[result]
             break
         else:
             continue
