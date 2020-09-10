@@ -341,7 +341,7 @@ async def emojify(ctx, *, text: str):
         return await ctx.send("Text to big to emojify")
     else:
         for word in text:
-            if word.isdigit:
+            if word.isdigit():
                 list_.append(f":{humanize.apnumber(word)}:")
             elif word == " ":
                 list_.append(" ")
