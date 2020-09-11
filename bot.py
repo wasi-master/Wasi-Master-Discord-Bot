@@ -374,7 +374,7 @@ def do_math(text: str):
     return eval(equation)
 
 
-@client.command(aliases="il", "it", " invitelogger", description="Tracks Invites")
+@client.command(aliases=["il", "it"], " invitelogger", description="Tracks Invites")
 @has_permissions(manage_guild=True)
 async def invitetracker(ctx):
     pass
