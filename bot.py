@@ -348,7 +348,7 @@ async def on_guild_remove(guild):
 async def on_member_join(member):
     channelid_for_this_guild = await client.db.fetchrow(
             """
-            SELECT channelid
+            SELECT channel_id
             FROM invitetracker
             WHERE guild_id=$1
             """,
