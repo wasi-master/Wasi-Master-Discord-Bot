@@ -2117,16 +2117,23 @@ async def prefix(ctx, prefix: str):
            ) 
     await ctx.send(f"prefix set to `{prefix}`")
 
+
+@client.command(description="Used to test if bot is online")
+async def hello(ctx):
+    await ctx.send("Hi im online :)")
+
+
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, *, args: commands.clean_content):
-    mesg = args
-    channel = ctx.message.channel
+    m = await ctx.send(args)
+    def check(message):
+        return message = ctx.message
     try:
-        if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
-            await ctx.message.delete()
-    except (discord.Forbidden, commands.MissingPermissions):
+        await client.wait_for("message_delete", timeout=30, check=check)
+    except asyncio.TimeoutError:
         pass
-    await channel.send(mesg)
+    else:
+        await m.edit(content=f"{args}\n\n- {ctx.author}")
 
 
 @client.command(
