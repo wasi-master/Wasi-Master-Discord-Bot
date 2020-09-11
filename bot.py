@@ -956,7 +956,7 @@ async def unlock(ctx, *, role: discord.Role=None):
             )
 
 
-@client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl"])
+@client.command(name="pypl", description="Searches pypi for python packages", aliases=["pypl"])
 async def pypi(ctx, package_name:str):
     session = aiohttp.ClientSession()
     url = f"https://pypi.org/pypi/{package_name}/json"
@@ -984,7 +984,7 @@ async def pypi(ctx, package_name:str):
         license = fj["license"].replace("{", "").replace("}", "").replace("'", "")
     embed.add_field(name="License", value=f"‌{license}")
     if not fj["requires_dist"] is None:
-        if len(fj["requires_dist"]) > 5:
+        if len(fj["requires_dist"]) > 15:
             embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
         elif not len(fj["requires_dist"]) == 0:
            embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
