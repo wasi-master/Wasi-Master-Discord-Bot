@@ -376,8 +376,17 @@ def do_math(text: str):
 
 @client.command(aliases=["il", "it", "invitelogger"], description="Tracks Invites")
 @has_permissions(manage_guild=True)
-async def invitetracker(ctx):
-    pass
+async def invitetracker(ctx, log_channel: discord.TextChannel):
+    channel = channel.id
+    await client.db.execute(
+                """
+                INSERT INTO channel (guild_id, channel_id)
+                VALUES ($1, $2)
+                """,
+                ctx.guild.id,
+                channel.id
+            )
+    
 
 
 @client.command(aliases=["rj"], description="Shows raw json of a message")
@@ -388,7 +397,7 @@ async def rawjson(ctx, message_id: int):
 
 @client.command(aliases=["raw"], description="See a raw version of a message")
 async def rawmessage(ctx, message_id: int):
-    message = ctx.channel.fetch_message(message_id)
+    message = await ctx.channel.fetch_message(message_id)
     res = discord.utils.escape_markdown(message.content)
     await ctx.send(res)
 
@@ -805,6 +814,7 @@ async def unmorse(ctx, *, text:str):
 
 
 @client.command(description="Check who got banned")
+@has_permissions(view_audit_log=True)
 async def bans(ctx, limit: int = 10):
     "Check who got banned"
 
