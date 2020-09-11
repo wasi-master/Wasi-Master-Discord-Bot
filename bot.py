@@ -346,7 +346,7 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_member_join(member):
-     channelid_for_this_guild = await client.db.fetchrow(
+    channelid_for_this_guild = await client.db.fetchrow(
             """
             SELECT channelid
             FROM invitetracker
