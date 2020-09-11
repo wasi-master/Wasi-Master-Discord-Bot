@@ -391,7 +391,7 @@ async def invitetracker(ctx, log_channel: discord.TextChannel):
 
 @client.command(aliases=["rj"], description="Shows raw json of a message")
 async def rawjson(ctx, message_id: int):
-    res = await client.http.get(ctx.channel.id, message_id)
+    res = await client.http.get_message(ctx.channel.id, message_id)
     await ctx.send(f"```json\n{res}```")
 
 
