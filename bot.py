@@ -956,8 +956,8 @@ async def unlock(ctx, *, role: discord.Role=None):
             )
 
 
-@client.command(name="pypl", description="Searches pypi for python packages", aliases=["pypl"])
-async def pypi(ctx, package_name:str):
+@client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl"])
+async def pythonpackagingindex(ctx, package_name:str):
     session = aiohttp.ClientSession()
     url = f"https://pypi.org/pypi/{package_name}/json"
     async with session.get(url) as response:
