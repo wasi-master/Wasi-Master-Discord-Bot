@@ -377,18 +377,79 @@ def do_math(text: str):
 @client.command(aliases=["def", "df"])
 async def define(ctx, word: str):
     session = aiohttp.ClientSession()
-    async with session.get("https://owlbot.info/api/v1/dictionary/owl?format=json") as r:
+    async with session.get(f"https://owlbot.info/api/v1/dictionary/{word}?format=json") as r:
         text = await r.text()
     fj = json.loads(text)
     if not len(fj) > 1:
-        embeds = []
-        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(ctx)
-        for term in fj:
-            embed = discord.Embed(title=word, description=term["defenition"])
-            embed.add_field(name="Type", value=term["type"])
-            embed.add_field(name="Example", value=term["example"])
-            embeds.append(embed)
-        await ctx.send(embed=embeds[0])
+        results = fj
+        term = results[0]
+        embed = discord.Embed(title=word, description=term["defenition"])
+        embed.add_field(name="Type", value=term["type"])
+        embed.add_field(name="Example", value=term["example"])
+        await ctx.send(embed=embed)
+        while True:
+            def check(reaction, user):
+                return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
+            try:
+                reaction, user = await client.wait_for("reaction_add", check=check, timeout=120)
+            except asyncio.TimeoutError:
+                #  e.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
+                #  await message.edit(embed=embed)
+                try:
+                    return await message.clear_reactions()
+                except:
+                    await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                    await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
+                    #  break
+                    return
+            else:
+                if reaction.emoji == "\u25c0\ufe0f":
+                    try:
+                        message.remove_reaction("\u25c0\ufe0f", ctx.author)
+                    except discord.Forbidden:
+                        pass
+                    num -= 1
+                    try:
+                        term = results[num]
+                    except IndexError:
+                        pass
+                    embed = discord.Embed(title=word, description=term["defenition"])
+                    embed.add_field(name="Type", value=term["type"])
+                    embed.add_field(name="Example", value=term["example"])
+                    embed.set_footer(text=f"Definition {num+1}/{len(results)}")
+                    await message.edit(embed=embed)
+                elif reaction.emoji == "\u25b6\ufe0f":
+                    try:
+                        await message.remove_reaction("\u25b6\ufe0f", ctx.author)
+                    except discord.Forbidden:
+                        pass
+                    num += 1
+                    try:
+                        result = results[num]
+                    except IndexError:
+                        pass
+                    embed = discord.Embed(title=word, description=term["defenition"])
+                    embed.add_field(name="Type", value=term["type"])
+                    embed.add_field(name="Example", value=term["example"])
+                    embed.set_footer(text=f"Definition {num+1}/{len(results)}")
+                    await message.edit(embed=embed)
+                elif reaction.emoji == "\u23f9\ufe0f":
+                    embed = discord.Embed(title=word, description=term["defenition"])
+                    embed.add_field(name="Type", value=term["type"])
+                    embed.add_field(name="Example", value=term["example"])
+                    await message.edit(embed=embed)
+                    try:
+                        return await message.clear_reactions()
+                    except:
+                        await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+                        await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
+                        await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+                        break
+                        return
+                else:
+                    pass
+        #  await ctx.send(embed=embeds[0])
     elif len(fj) == 1:
         term = fj[0]
         embed = discord.Embed(title=word, description=term["defenition"])
