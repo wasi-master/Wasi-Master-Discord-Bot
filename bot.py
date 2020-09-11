@@ -31,6 +31,7 @@ import re
 import requests
 import wikipedia as wikimodule
 import dbl
+import DiscordUtils
 
 from discord.ext import commands
 from discord.ext import tasks
@@ -171,6 +172,7 @@ secureRandom = secrets.SystemRandom()
 alex_api = alexflipnote.Client()
 google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 translate_api = translator.Translator()
+tracker = DiscordUtils.InviteTracker(client)
 
 client.remove_command("help")
 client.emoji_list = []
@@ -201,6 +203,7 @@ async def update_server_count():
 
 @client.event
 async def on_ready():
+    await tracker.cache_invites()
     print("Bot is online")
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
@@ -325,6 +328,41 @@ async def on_command_error(ctx, error):
         raise error
 
 
+@client.event
+async def on_invite_create(invite):
+    await tracker.update_invite_cache(invite)
+
+@client.event
+async def on_guild_join(guild):
+    await tracker.update_guild_cache(guild)
+
+@client.event
+async def on_invite_delete(invite):
+    await tracker.remove_invite_cache(invite)
+
+@clieny.event
+async def on_guild_remove(guild):
+    await tracker.remove_guild_cache(guild)
+
+@client.event
+async def on_member_join(member):
+     channelid_for_this_guild = await client.db.fetchrow(
+            """
+            SELECT channelid
+            FROM invitetracker
+            WHERE guild_id=$1
+            """,
+            member.guild.id 
+        )
+    if channelid_for_this_guild is None:
+        return
+    else:
+        inviter = await tracker.fetch_inviter(member)
+        guild = member.guild
+        message = f"{member.mention} Joined, he was invited by {inviter.mention}"
+        channel = guild.get_channel(channelid_for_this_guild)
+        await channel.send(message)
+
 def tts(lang:str, text:str):
     speech = gtts.gTTS(text=text, lang=lang, slow=False)
     speech.save("tts.mp3")
@@ -334,6 +372,12 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+
+
+@client.command(aliases="il", "it", " invitelogger", description="Tracks Invites")
+@has_permissions(manage_guild=True)
+async def invitetracker(ctx):
+    pass
 
 
 @client.command(aliases=["rj"], description="Shows raw json of a message")
