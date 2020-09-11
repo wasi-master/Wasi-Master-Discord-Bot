@@ -374,6 +374,31 @@ def do_math(text: str):
     return eval(equation)
 
 
+@client.command(aliases=["def", "df"])
+async def define(ctx, word: str):
+    session = aiohttp.ClientSession()
+    async with session.get("https://owlbot.info/api/v1/dictionary/owl?format=json") as r:
+        text = await r.text()
+    fj = json.loads(text)
+    if not len(fj) > 1:
+        embeds = []
+        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(ctx)
+        for term in fj:
+            embed = discord.Embed(title=word, description=term["defenition"])
+            embed.add_field(name="Type", value=term["type"])
+            embed.add_field(name="Example", value=term["example"])
+            embeds.append(embed)
+        await ctx.send(embed=embeds[0])
+    elif len(fj) == 1:
+        term = fj[0]
+        embed = discord.Embed(title=word, description=term["defenition"])
+            embed.add_field(name="Type", value=term["type"])
+            embed.add_field(name="Example", value=term["example"])
+            embeds.append(embed)
+    else:
+        await ctx.send("Word not found")
+
+
 @client.command(aliases=["il", "it", "invitelogger"], description="Tracks Invites")
 @has_permissions(manage_guild=True)
 async def invitetracker(ctx, log_channel: discord.TextChannel):
