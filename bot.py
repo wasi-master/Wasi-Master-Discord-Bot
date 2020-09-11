@@ -340,7 +340,7 @@ async def on_guild_join(guild):
 async def on_invite_delete(invite):
     await tracker.remove_invite_cache(invite)
 
-@clieny.event
+@client.event
 async def on_guild_remove(guild):
     await tracker.remove_guild_cache(guild)
 
