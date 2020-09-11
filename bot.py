@@ -2127,7 +2127,7 @@ async def hello(ctx):
 async def say(ctx, *, args: commands.clean_content):
     m = await ctx.send(args)
     def check(message):
-        return message = ctx.message
+        return message == ctx.message
     try:
         await client.wait_for("message_delete", timeout=30, check=check)
     except asyncio.TimeoutError:
