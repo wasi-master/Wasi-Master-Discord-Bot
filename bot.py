@@ -1701,18 +1701,18 @@ async def gif(ctx, *, query: str):
 
 @client.command(aliases=["b64"], description="Encode or decode text to base64")
 async def base64(ctx, task, *, text: commands.clean_content):
-    if task.strip().lower() == "encode" or task.strip().lower == "e":
+    if task.strip().lower() == "encode" or task.strip().lower() == "e":
         data = text
         encodedBytes = base64module.b64encode(data.encode("utf-8"))
         encodedStr = str(encodedBytes, "utf-8")
         await ctx.send(encodedStr)
-    elif task.strip().lower() == "decode" or task.strip().lower == "d":
+    elif task.strip().lower() == "decode" or task.strip().lower() == "d":
         data = text
         message_bytes = base64module.b64decode(data)
         message = message_bytes.decode("ascii")
         await ctx.send(message)
     else:
-        await ctx.send("Must have either encode or decode")
+        await ctx.send("Must have either encode or decode / e or d")
 
 
 @client.command(description="Get a invite link to the bots support server")
