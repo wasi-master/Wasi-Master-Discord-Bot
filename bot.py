@@ -392,9 +392,9 @@ async def define(ctx, word: str):
     elif len(fj) == 1:
         term = fj[0]
         embed = discord.Embed(title=word, description=term["defenition"])
-            embed.add_field(name="Type", value=term["type"])
-            embed.add_field(name="Example", value=term["example"])
-            embeds.append(embed)
+        embed.add_field(name="Type", value=term["type"])
+        embed.add_field(name="Example", value=term["example"])
+        embeds.append(embed)
     else:
         await ctx.send("Word not found")
 
