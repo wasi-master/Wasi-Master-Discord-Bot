@@ -13,4 +13,5 @@ alexflipnote.py
 async_cse
 aiogoogletrans
 gTTS
+DiscordUtils
 git+git://github.com/jmoiron/humanize.git
