@@ -380,7 +380,7 @@ async def define(ctx, word: str):
     async with session.get(f"https://owlbot.info/api/v1/dictionary/{word}?format=json") as r:
         text = await r.text()
     fj = json.loads(text)
-    if not len(fj) > 1:
+    if len(fj) > 1:
         results = fj
         term = results[0]
         embed = discord.Embed(title=word, description=term["defenition"])
@@ -457,7 +457,7 @@ async def define(ctx, word: str):
         embed.add_field(name="Example", value=term["example"])
         embeds.append(embed)
     else:
-        await ctx.send("Word not found")
+        await ctx.send("Word not found, ")
 
 
 @client.command(aliases=["il", "it", "invitelogger"], description="Tracks Invites")
