@@ -386,7 +386,9 @@ async def define(ctx, word: str):
         term = results[num]
         embed = discord.Embed(title=word, description=term["defenition"])
         embed.add_field(name="Type", value=term["type"])
-        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+        if not term["example"] is None:
+            embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+        embed.set_footer(text=f"Definition {num+1}/{len(results)}")
         message = await ctx.send(embed=embed)
         await message.add_reaction("\u25c0\ufe0f")
         await message.add_reaction("\u23f9\ufe0f")
@@ -420,7 +422,8 @@ async def define(ctx, word: str):
                         pass
                     embed = discord.Embed(title=word, description=term["defenition"])
                     embed.add_field(name="Type", value=term["type"])
-                    embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+                    if not term["example"] is None:
+                        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u25b6\ufe0f":
@@ -430,12 +433,13 @@ async def define(ctx, word: str):
                         pass
                     num += 1
                     try:
-                        result = results[num]
+                        term = results[num]
                     except IndexError:
                         pass
                     embed = discord.Embed(title=word, description=term["defenition"])
                     embed.add_field(name="Type", value=term["type"])
-                    embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+                    if not term["example"] is None:
+                        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u23f9\ufe0f":
