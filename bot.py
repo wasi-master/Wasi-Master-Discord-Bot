@@ -2717,19 +2717,25 @@ async def translate(ctx, lang: str, *, text: str):
         else:
             lang = lang
             continue
+    if lang == "zh": language = "zh-CN"
     result = await translate_api.translate(text, dest=lang)
     source = ""
     for i in languages:
         if i["alpha2"] == result.src:
-            language = i["English"]
+            src = i["English"]
             break
         else:
             continue
-    if language == "zh": language = "zh-CN"
+    for i in languages:
+        if i["alpha2"] == result.dest:
+            dest = i["English"]
+            break
+        else:
+            continue
     embed = discord.Embed(title=f"Translation", description=result.text, color=0x2F3136)
     if not result.text == result.pronunciation: 
         embed.add_field(name="Pronunciation", value=result.pronunciation)
-    embed.set_footer(text=f"Translated from {result.src.split(';')[0]} to {result.dest.split(';')[0]}")
+    embed.set_footer(text=f"Translated from {src.split(';')[0]} to {dest.split(';')[0]}")
     await ctx.send(embed=embed)
 
 
