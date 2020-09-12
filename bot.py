@@ -2921,9 +2921,11 @@ async def purge(ctx, amount: int, member: discord.Member=None):
     amount += 1
     if not member:
         deleted = await ctx.channel.purge(limit=amount)
-        message = await ctx.send(f"Deleted `{len(deleted) - 1}` messages")
+        a = "message" if len(deleted) else "messages"
+        message = await ctx.send(f"Deleted `{len(deleted) - 1}` {a}")
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
+        a = "message" if len(deleted) else "messages"
         message = await ctx.send(f"Deleted `{len(deleted) - 1}` messages by {member}")
     await asyncio.sleep(2)
     await message.delete()
