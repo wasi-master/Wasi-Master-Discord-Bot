@@ -385,8 +385,11 @@ async def define(ctx, word: str):
         term = results[0]
         embed = discord.Embed(title=word, description=term["defenition"])
         embed.add_field(name="Type", value=term["type"])
-        embed.add_field(name="Example", value=term["example"])
-        await ctx.send(embed=embed)
+        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+        message = await ctx.send(embed=embed)
+        await message.add_reaction("\u25c0\ufe0f")
+        await message.add_reaction("\u23f9\ufe0f")
+        await message.add_reaction("\u25b6\ufe0f")
         while True:
             def check(reaction, user):
                 return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
@@ -416,7 +419,7 @@ async def define(ctx, word: str):
                         pass
                     embed = discord.Embed(title=word, description=term["defenition"])
                     embed.add_field(name="Type", value=term["type"])
-                    embed.add_field(name="Example", value=term["example"])
+                    embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u25b6\ufe0f":
@@ -431,13 +434,13 @@ async def define(ctx, word: str):
                         pass
                     embed = discord.Embed(title=word, description=term["defenition"])
                     embed.add_field(name="Type", value=term["type"])
-                    embed.add_field(name="Example", value=term["example"])
+                    embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u23f9\ufe0f":
                     embed = discord.Embed(title=word, description=term["defenition"])
                     embed.add_field(name="Type", value=term["type"])
-                    embed.add_field(name="Example", value=term["example"])
+                    embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     await message.edit(embed=embed)
                     try:
                         return await message.clear_reactions()
@@ -454,7 +457,7 @@ async def define(ctx, word: str):
         term = fj[0]
         embed = discord.Embed(title=word, description=term["defenition"])
         embed.add_field(name="Type", value=term["type"])
-        embed.add_field(name="Example", value=term["example"])
+        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
         embeds.append(embed)
     else:
         await ctx.send("Word not found, ")
