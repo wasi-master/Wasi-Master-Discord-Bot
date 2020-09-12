@@ -2725,6 +2725,7 @@ async def translate(ctx, lang: str, *, text: str):
             break
         else:
             continue
+    if language == "zh": language = "zh-CN"
     embed = discord.Embed(title=f"Translation", description=result.text, color=0x2F3136)
     if not result.text == result.pronunciation: 
         embed.add_field(name="Pronunciation", value=result.pronunciation)
