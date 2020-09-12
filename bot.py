@@ -580,7 +580,8 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     result = ""
     wrong = {
         "bonsai": "bonsly",
-        "golet": "golette"
+        "golet": "golette",
+        "ポケモン ホルビー": " diggersby"
     }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
