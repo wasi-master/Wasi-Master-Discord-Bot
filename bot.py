@@ -464,9 +464,9 @@ async def define(ctx, word: str):
         embed.add_field(name="Type", value=term["type"])
         if not term["example"] is None:
             embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
-        embeds.append(embed)
+        #  embeds.append(embed)
     else:
-        await ctx.send("Word not found, ")
+        await ctx.send("Word not found")
 
 
 @client.command(aliases=["il", "it", "invitelogger"], description="Tracks Invites")
