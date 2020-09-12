@@ -2725,12 +2725,14 @@ async def translate(ctx, lang: str, *, text: str):
             src = i["English"]
             break
         else:
+            src = result.src
             continue
     for i in languages:
         if i["alpha2"] == result.dest:
             dest = i["English"]
             break
         else:
+            dest = result.dest
             continue
     embed = discord.Embed(title=f"Translation", description=result.text, color=0x2F3136)
     if not result.text == result.pronunciation: 
