@@ -376,13 +376,14 @@ def do_math(text: str):
 
 @client.command(aliases=["def", "df"])
 async def define(ctx, word: str):
+    num = 0
     session = aiohttp.ClientSession()
     async with session.get(f"https://owlbot.info/api/v1/dictionary/{word}?format=json") as r:
         text = await r.text()
     fj = json.loads(text)
     if len(fj) > 1:
         results = fj
-        term = results[0]
+        term = results[num]
         embed = discord.Embed(title=word, description=term["defenition"])
         embed.add_field(name="Type", value=term["type"])
         embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
