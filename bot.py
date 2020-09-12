@@ -384,7 +384,7 @@ async def define(ctx, word: str):
     if len(fj) > 1:
         results = fj
         term = results[num]
-        embed = discord.Embed(title=word, description=term["defenition"])
+        embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
         embed.add_field(name="Type", value=term["type"])
         if not term["example"] is None:
             embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
@@ -420,7 +420,7 @@ async def define(ctx, word: str):
                         term = results[num]
                     except IndexError:
                         pass
-                    embed = discord.Embed(title=word, description=term["defenition"])
+                    embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
                     embed.add_field(name="Type", value=term["type"])
                     if not term["example"] is None:
                         embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
@@ -436,14 +436,14 @@ async def define(ctx, word: str):
                         term = results[num]
                     except IndexError:
                         pass
-                    embed = discord.Embed(title=word, description=term["defenition"])
+                    embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
                     embed.add_field(name="Type", value=term["type"])
                     if not term["example"] is None:
                         embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u23f9\ufe0f":
-                    embed = discord.Embed(title=word, description=term["defenition"])
+                    embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
                     embed.add_field(name="Type", value=term["type"])
                     embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
                     await message.edit(embed=embed)
@@ -460,9 +460,10 @@ async def define(ctx, word: str):
         #  await ctx.send(embed=embeds[0])
     elif len(fj) == 1:
         term = fj[0]
-        embed = discord.Embed(title=word, description=term["defenition"])
+        embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
         embed.add_field(name="Type", value=term["type"])
-        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+        if not term["example"] is None:
+            embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
         embeds.append(embed)
     else:
         await ctx.send("Word not found, ")
