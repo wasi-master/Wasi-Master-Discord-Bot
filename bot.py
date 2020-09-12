@@ -2728,7 +2728,7 @@ async def translate(ctx, lang: str, *, text: str):
     embed = discord.Embed(title=f"Translation", description=result.text, color=0x2F3136)
     if not result.text == result.pronunciation: 
         embed.add_field(name="Pronunciation", value=result.pronunciation)
-    embed.set_footer(text=f"Detected Language: {result.language.split(';')[0]}")
+    embed.set_footer(text=f"Translated from {result.src.split(';')[0]} to {result.dest.split(';')[0]}")
     await ctx.send(embed=embed)
 
 
