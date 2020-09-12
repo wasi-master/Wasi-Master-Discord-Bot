@@ -2227,12 +2227,6 @@ async def say(ctx, *, args: commands.clean_content):
 )
 @has_permissions(manage_roles=True)
 async def role(ctx, member: discord.Member,*,  role: discord.Role):
-    try:
-        member = member
-        role = role
-    except IndexError:
-        await ctx.send("Invalid usage")
-    
     if role in member.roles:  # checks all roles the member has
         await member.remove_roles(role)
         embed = discord.Embed(colour=16711680, timestamp=ctx.message.created_at)
@@ -2927,10 +2921,10 @@ async def purge(ctx, amount: int, member: discord.Member=None):
     amount += 1
     if not member:
         deleted = await ctx.channel.purge(limit=amount)
-        message = await ctx.send(f"Deleted `{len(deleted - 1)}` messages")
+        message = await ctx.send(f"Deleted `{len(deleted) - 1}` messages")
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
-        message = await ctx.send(f"Deleted `{len(deleted - 1)}` messages by {member}")
+        message = await ctx.send(f"Deleted `{len(deleted) - 1}` messages by {member}")
     await asyncio.sleep(2)
     await message.delete()
 
