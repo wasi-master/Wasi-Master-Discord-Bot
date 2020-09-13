@@ -265,8 +265,8 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=discord.Embed(title="Not Found", description=error))
     elif isinstance(error, discord.Forbidden):
         await ctx.send("I am missing permissions")
-    elif isinstance(error, discord.HTTPException):
-        await ctx.send("Message Too long to be sent")
+    # elif isinstance(error, discord.HTTPException):
+        # await ctx.send("Message Too long to be sent")
     elif "Cannot send messages to this user" in str(error):
         pass
     elif isinstance(error, commands.CommandOnCooldown):
