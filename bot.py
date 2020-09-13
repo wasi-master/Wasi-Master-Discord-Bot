@@ -265,8 +265,8 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=discord.Embed(title="Not Found", description=error))
     elif isinstance(error, discord.Forbidden):
         await ctx.send("I am missing permissions")
-    # elif isinstance(error, discord.HTTPException):
-        # await ctx.send("Message Too long to be sent")
+    elif isinstance(error, discord.HTTPException):
+        await ctx.send("Message Too long to be sent")
     elif "Cannot send messages to this user" in str(error):
         pass
     elif isinstance(error, commands.CommandOnCooldown):
@@ -384,7 +384,7 @@ async def spam(ctx, amount: int=5):
         await ctx.send(secrets.token_hex(8))
 
 
-@client.command(aliases=["def", "df"])
+@client.command(aliases=["def", "df"], description="Returns the defination of a word")
 async def define(ctx, word: str):
     num = 0
     session = aiohttp.ClientSession()
@@ -475,6 +475,7 @@ async def define(ctx, word: str):
         if not term["example"] is None:
             embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
         #  embeds.append(embed)
+        await ctx.send(embed=embed)
     else:
         await ctx.send("Word not found")
 
