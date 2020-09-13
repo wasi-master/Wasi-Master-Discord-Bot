@@ -376,7 +376,7 @@ def do_math(text: str):
 
 @client.command(aliases=["sp"], description="Spams random text (verified users only)")
 async def spam(ctx, amount: int=30):
-    allowed = [538332632535007244, 538332632535007244, 582893321870114824, 535807154678923285, 673350143655018498, 619482888823373824]
+    allowed = [538332632535007244, 585827905939046415, 582893321870114824, 535807154678923285, 673350143655018498, 619482888823373824]
     if not ctx.author.id in allowed:
         return await ctx.send("You don’t have permission to use this, you can ask for the permission via DMing the bot owner with a good reason to ask it for")
     if amount > 50: amount = 50
