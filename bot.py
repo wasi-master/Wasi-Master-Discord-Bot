@@ -533,7 +533,7 @@ async def timing(ctx, time=10):
         time = 60
     if time < 1:
         time = 1
-    embed = discord.Embed(title=f"Try to react to this message with :white_check_mark: within {time} seconds")
+    embed = discord.Embed(title=f"Try to react to this message with :white_check_mark: exactly after {time} seconds")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u2705")
     def check(r, u):
@@ -551,6 +551,7 @@ async def timing(ctx, time=10):
 @client.command(description="Character Info :nerd:", aliases=["chrinf", "unicode", "characterinfo"])
 async def charinfo(ctx, *, characters: str):
     def to_string(c):
+        l.append("a")
         digit = f'{ord(c):x}'
         name = unicodedata.name(c, 'Name not found.')
         return f'`\\U{digit:>08}`: {name} - {c} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{digit}>'
@@ -592,16 +593,17 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     if not img_url: return await ctx.send("Message containing a pokemon Not Found")
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
-
+    await msg1.edit(f"Searching <a:typing:597589448607399949>")
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers, allow_redirects=True) as r:
             q = await r.read()
-
+    await msg1.edit(f"Getting the result <a:typing:597589448607399949>")
     result = ""
     wrong = {
         "bonsai": "bonsly",
         "golet": "golette",
-        "ポケモン ホルビー": " diggersby"
+        "ポケモン ホルビー": "diggersby",
+        "golett  go": " golett"
     }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
