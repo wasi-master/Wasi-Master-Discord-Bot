@@ -593,11 +593,11 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     if not img_url: return await ctx.send("Message containing a pokemon Not Found")
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
-    await msg1.edit(f"Searching <a:typing:597589448607399949>")
+    await msg1.edit(content=f"Searching <a:typing:597589448607399949>")
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers, allow_redirects=True) as r:
             q = await r.read()
-    await msg1.edit(f"Getting the result <a:typing:597589448607399949>")
+    await msg1.edit(content=f"Getting the result <a:typing:597589448607399949>")
     result = ""
     wrong = {
         "bonsai": "bonsly",
