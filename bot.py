@@ -1339,7 +1339,7 @@ async def clone(ctx, channel: discord.TextChannel = None):
 
 
 @client.command(
-    aliases=["sug", "suggestion"], description="Suggest a thing to be added to the bot"
+    aliases=["sug", "suggestion", "rep", "report"], description="Suggest a thing to be added to the bot"
 )
 @commands.cooldown(1, 3600, BucketType.user)
 async def suggest(ctx, *, suggestion: commands.clean_content):
