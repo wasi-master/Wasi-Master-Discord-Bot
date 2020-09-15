@@ -178,6 +178,40 @@ client.remove_command("help")
 client.emoji_list = []
 client.emoji_list_str = []
 
+
+@client.event
+async def on_command_completion(ctx):
+    usage = await client.db.fetchrow(
+            """
+            SELECT usage
+            FROM usages
+            WHERE name=$1
+            """,
+            ctx.command.name
+        )
+    if usage is None:
+        await client.db.execute(
+                """
+                INSERT INTO usages (usage, name)
+                VALUES ($1, $2)
+                """,
+                0,
+                ctx.command.name
+            )
+    else:
+        usage = usage["usage"]
+        usage += 1
+        await client.db.execute(
+               """
+                UPDATE usages
+                SET usage = $2
+                WHERE name = $1;
+                """,
+                ctx.command.name,
+                usage
+           ) 
+
+
 @client.check
 async def bot_check(ctx):
     blocked = await client.db.fetchrow(
