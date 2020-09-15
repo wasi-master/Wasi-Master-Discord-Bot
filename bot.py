@@ -474,7 +474,7 @@ async def fileinfo(ctx, file_extension: str):
         embed.add_field(name="File Type", value=fileType)
     if not fileFormat == "N/A" and len(fileFormat) != 0:
         embed.add_field(name="File Format", value=fileFormat)
-    if not MoreInfo == "N/A" and len(MoreInfo) != 0:
+    if not moreInfo == "N/A" and len(moreInfo) != 0:
         embed.add_field(name="More Info", value=moreInfo)
     await ctx,send(embed=embed)
     await msg.delete()
