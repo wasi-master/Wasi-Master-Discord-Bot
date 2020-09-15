@@ -423,8 +423,9 @@ async def blockfromusingthebot(ctx, task: str, user: discord.User):
                 user_id = list(i.values())[0]
                 user = await _bot.get_user(user_id)
                 blocked_users.append(str(user))
-            await ctx.send(embed=discord.Embed(title="Blocked Users", description=f"```{'\n'.join(blocked_users)}```"))
-         else:
+            nl = '\n'
+            await ctx.send(embed=discord.Embed(title="Blocked Users", description=f"```{nl.join(blocked_users)}```"))
+        else:
             return await ctx.send("Oh wasi, you forgot again didn\'t you?\n you need either add remove or list")
         msg = await ctx.send("Ok Done")
         try:
@@ -451,7 +452,7 @@ async def spam(ctx, amount: int=5):
 async def fileinfo(ctx, file_extension: str):
     msg = await ctx.send("Searching <a:typing:597589448607399949>")
     data = requests.get(f"https://fileinfo.com/extension/{file_extension}").text
-    await msg.edit("Loading <a:typing:597589448607399949>")
+    await msg.edit(content="Loading <a:typing:597589448607399949>")
     soup = BeautifulSoup(data, "lxml")
 
     filename = soup.find_all("h2")[0].text.replace("File Type", "")
