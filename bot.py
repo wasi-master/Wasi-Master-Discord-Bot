@@ -420,7 +420,7 @@ async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
             blocked_users = []
             for i in list_of_users:
                 user_id = list(i.values())[0]
-                user = await _bot.get_user(user_id)
+                user = await bot.get_user(user_id)
                 blocked_users.append(str(user))
             nl = '\n'
             await ctx.send(embed=discord.Embed(title="Blocked Users", description=f"```{nl.join(blocked_users)}```"))
