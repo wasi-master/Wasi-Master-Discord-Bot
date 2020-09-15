@@ -391,10 +391,9 @@ def do_math(text: str):
 
 
 @client.command(aliases=["bfutb", "bfb", "blockfrombot"], description="Blocks a user from using the bot (Owner only)")
-@has_permissions(manage_guild=True)
-async def blockfromusingthebot(ctx, task: str, user: discord.User):
+async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
     if ctx.author.id == 538332632535007244:
-        if task.lower() == "add":
+        if task.lower() == "add" and user:
             id_ = user.id
             await client.db.execute(
                         """
@@ -403,7 +402,7 @@ async def blockfromusingthebot(ctx, task: str, user: discord.User):
                         """,
                         id_,
                     )
-        elif task.lower() == "remove":
+        elif task.lower() == "remove" and user:
             id_ = user.id
             await client.db.execute(
                         """
