@@ -465,9 +465,9 @@ async def fileinfo(ctx, file_extension: str):
 
     whatIsIt = soup.find_all("p")[0].text
 
-    MoreInfo = soup.find_all("p")[1].text
+    moreInfo = soup.find_all("p")[1].text
 
-    embed = discord.Embed(title=filename, description=WhatIsIt)
+    embed = discord.Embed(title=filename, description=whatIsIt)
     if not developer == "N/A" and len(developer) != 0:
         embed.add_field(name="Developed by", value=developer)
     if not fileType == "N/A" and len(fileType) != 0:
@@ -475,7 +475,7 @@ async def fileinfo(ctx, file_extension: str):
     if not fileFormat == "N/A" and len(fileFormat) != 0:
         embed.add_field(name="File Format", value=fileFormat)
     if not MoreInfo == "N/A" and len(MoreInfo) != 0:
-        embed.add_field(name="More Info", value=MoreInfo)
+        embed.add_field(name="More Info", value=moreInfo)
     await ctx,send(embed=embed)
     await msg.delete()
 
