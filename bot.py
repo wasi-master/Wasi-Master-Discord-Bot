@@ -178,6 +178,22 @@ client.remove_command("help")
 client.emoji_list = []
 client.emoji_list_str = []
 
+@client.check
+async def bot_check(ctx):
+    blocked = await client.db.fetchrow(
+            """
+            SELECT *
+            FROM blocks
+            WHERE user_id=$1
+            """,
+            ctx.author.id 
+        )
+    if blocked is None:
+        return True
+    else:
+        return False
+
+
 async def create_db_pool():
     client.db = await asyncpg.create_pool(host="ec2-52-23-86-208.compute-1.amazonaws.com", database="d5squd8cvojua1", user="poladbevzydxyx", password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8")
 client.loop.run_until_complete(create_db_pool())
@@ -372,6 +388,53 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+
+
+@client.command(aliases=["bfutb", "bfb", "blockfrombot"], description="Blocks a user from using the bot (Owner only)")
+@has_permissions(manage_guild=True)
+async def blockfromusingthebot(ctx, task: str, user: discord.User):
+    if ctx.author.id == 538332632535007244:
+        if task.lower() == "add":
+            id_ = user.id
+            await client.db.execute(
+                        """
+                        INSERT INTO blocks (user_id)
+                        VALUES ($1)
+                        """,
+                        id_,
+                    )
+        elif task.lower() == "remove":
+            id_ = user.id
+            await client.db.execute(
+                        """
+                        DELETE FROM blocks WHERE user_id=$1);
+                        """,
+                        id_,
+                    )
+        elif task.lower() == "list":
+            list_of_users = await client.db.fetch(
+            """
+            SELECT *
+            FROM blocks
+            """
+        )
+            blocked_users = []
+            for i in list_of_users:
+                user_id = list(i.values())[0]
+                user = await _bot.get_user(user_id)
+                blocked_users.append(str(user))
+            await ctx.send(embed=discord.Embed(title="Blocked Users", description=f"```{'\n'.join(blocked_users)}```"))
+         else:
+            return await ctx.send("Oh wasi, you forgot again didn\'t you?\n you need either add remove or list")
+        msg = await ctx.send("Ok Done")
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+        await asyncio.sleep(2)
+        await msg.delete()
+    else:
+        await ctx.send("It\+'s for the bot owner only and ur not my owner :grin:")
 
 
 @client.command(aliases=["sp"], description="Spams random text (verified users only)")
@@ -603,7 +666,7 @@ async def unbinary(ctx, number: int):
     await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{int(str(number), 2)}```"))
 
 
-@client.command(aliases=['ph'], description='Tells you which pokemon it is that has been spawned by a bot')
+@client.command(aliases=['ph', 'catch'], description='Tells you which pokemon it is that has been spawned by a bot')
 async def pokemonhack(ctx, channel: discord.TextChannel=None):
     #  msg1 = await ctx.send(f"Finding <a:typing:597589448607399949>")
     channel = channel or ctx.channel 
