@@ -383,6 +383,36 @@ async def spam(ctx, amount: int=5):
     for i in range(amount):
         await ctx.send(secrets.token_hex(8))
 
+@client.command(description="Shows info about a file extension", aliases=["fe", "fi"])
+async def fileinfo(ctx, file_extension: str):
+    session = aiohttp.ClientSession()
+    async with session.get(f"https://fileinfo.com/extension/{file_extension}") as r:
+        data = await r.text()
+    msg = await ctx.send("Searching <a:typing:597589448607399949>")
+    soup = BeautifulSoup(data, "lxml")
+
+    filename = soup.find_all("h2")[0].text.replace("File Type", "")
+    
+    developer = soup.find_all("table")[0].find_all("td")[1].text
+
+    fileType = soup.find_all("a")[10].text
+
+    fileFormat = soup.find_all("a")[11].text
+
+    whatIsIt = soup.find_all("p")[0].text
+
+    MoreInfo = soup.find_all("p")[1].text
+
+    embed = discord.Embed(title=filename, description=WhatIsit)
+    if not developer == "N/A" and len(developer) != 0:
+        embed.add_field(name="Developed by", value=developer)
+    if not fileType == "N/A" and len(fileType) != 0:
+        embed.add_field(name="File Type", value=fileType)
+    if not fileFormat == "N/A" and len(fileFormat) != 0:
+        embed.add_field(name="File Format", value=fileFormat)
+    if not MoreInfo == "N/A" and len(MoreInfo) != 0:
+        embed.add_field(name="More Info", value=MoreInfo)
+
 
 @client.command(aliases=["def", "df"], description="Returns the defination of a word")
 async def define(ctx, word: str):
@@ -593,7 +623,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     if not img_url: return await ctx.send("Message containing a pokemon Not Found")
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
-    await msg1.edit(content=f"Searching <a:typing:597589448607399949>")
+    msg1 = await ctx,send(f"Searching <a:typing:597589448607399949>")
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers, allow_redirects=True) as r:
             q = await r.read()
