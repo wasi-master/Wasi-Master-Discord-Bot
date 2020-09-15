@@ -195,13 +195,13 @@ async def on_command_completion(ctx):
                 INSERT INTO usages (usage, name)
                 VALUES ($1, $2)
                 """,
-                0,
+                1,
                 ctx.command.name
             )
     else:
         usage = usage["usage"]
         usage += 1
-        command_name = ctx.command if ctx.command.parent is None else f"{ctx.command.parent.name} {ctx.command.name}"
+        command_name = ctx.command.name if ctx.command.parent is None else f"{ctx.command.parent.name} {ctx.command.name}"
         await client.db.execute(
                """
                 UPDATE usages
@@ -647,8 +647,8 @@ async def emojify(ctx, *, text: str):
         for word in text:
             if word.isdigit():
                 list_.append(f":{humanize.apnumber(word)}:")
-            elif word == "   ":
-                list_.append(" ")
+            elif word == " ":
+                list_.append("   ")
             else:
                 list_.append(f":regional_indicator_{word}:")
         await ctx.send(' '.join(list_))
