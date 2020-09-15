@@ -384,11 +384,11 @@ async def spam(ctx, amount: int=5):
         await ctx.send(secrets.token_hex(8))
 
 @client.command(description="Shows info about a file extension", aliases=["fe", "fi"])
+@commands.cooldown(1, 10, BucketType.user)
 async def fileinfo(ctx, file_extension: str):
-    session = aiohttp.ClientSession()
-    async with session.get(f"https://fileinfo.com/extension/{file_extension}") as r:
-        data = await r.text()
     msg = await ctx.send("Searching <a:typing:597589448607399949>")
+    data = requests.get(f"https://fileinfo.com/extension/{file_extension}").text
+    await msg.edit("Loading <a:typing:597589448607399949>")
     soup = BeautifulSoup(data, "lxml")
 
     filename = soup.find_all("h2")[0].text.replace("File Type", "")
@@ -412,6 +412,8 @@ async def fileinfo(ctx, file_extension: str):
         embed.add_field(name="File Format", value=fileFormat)
     if not MoreInfo == "N/A" and len(MoreInfo) != 0:
         embed.add_field(name="More Info", value=MoreInfo)
+    await ctx,send(embed=embed)
+    await msg.delete()
 
 
 @client.command(aliases=["def", "df"], description="Returns the defination of a word")
