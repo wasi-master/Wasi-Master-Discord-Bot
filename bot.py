@@ -467,7 +467,7 @@ async def fileinfo(ctx, file_extension: str):
 
     MoreInfo = soup.find_all("p")[1].text
 
-    embed = discord.Embed(title=filename, description=WhatIsit)
+    embed = discord.Embed(title=filename, description=WhatIsIt)
     if not developer == "N/A" and len(developer) != 0:
         embed.add_field(name="Developed by", value=developer)
     if not fileType == "N/A" and len(fileType) != 0:
