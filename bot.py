@@ -201,13 +201,14 @@ async def on_command_completion(ctx):
     else:
         usage = usage["usage"]
         usage += 1
+        command_name = ctx.command if ctx.command.parent is None else f"{ctx.command.parent.name} {ctx.command.name}"
         await client.db.execute(
                """
                 UPDATE usages
                 SET usage = $2
                 WHERE name = $1;
                 """,
-                ctx.command.name,
+                command_name,
                 usage
            ) 
 
