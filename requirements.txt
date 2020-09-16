@@ -12,8 +12,8 @@ git+git://github.com/jmoiron/humanize.git
 jishaku
 lxml
 numexpr
-prettytable
 psutil
 randomcolor
 requests
+tabulate
 wikipedia
