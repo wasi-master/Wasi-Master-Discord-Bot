@@ -314,7 +314,7 @@ async def on_command_error(ctx, error):
         await ctx.send(f"The {str(error.param).split(':')[0].strip()} argument is missing")
     elif isinstance(error, commands.CommandNotFound):
         pass
-    elif isinstance(error, commands.BadArgument):
+    elif "Not found" in error:
         await ctx.send(embed=discord.Embed(title="Not Found", description=error))
     elif isinstance(error, discord.Forbidden):
         await ctx.send("I am missing permissions")
@@ -461,7 +461,7 @@ async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
             id_ = user.id
             await client.db.execute(
                         """
-                        DELETE FROM blocks WHERE user_id=$1);
+                        DELETE FROM blocks WHERE user_id=$1;
                         """,
                         id_,
                     )
@@ -1216,7 +1216,7 @@ async def unlock(ctx, *, role: discord.Role=None):
             )
 
 
-@client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl"])
+@client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl", "pip"])
 async def pythonpackagingindex(ctx, package_name:str):
     session = aiohttp.ClientSession()
     url = f"https://pypi.org/pypi/{package_name}/json"
