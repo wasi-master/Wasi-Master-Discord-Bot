@@ -181,13 +181,17 @@ client.emoji_list_str = []
 
 @client.event
 async def on_command_completion(ctx):
+    if ctx.command.parent is None:
+        command_name = ctx.command.name
+    else:
+        command_name = f"{ctx.command.parent.name} {ctx.command.name}"
     usage = await client.db.fetchrow(
             """
             SELECT usage
             FROM usages
             WHERE name=$1
             """,
-            ctx.command.name
+            command_name
         )
     if usage is None:
         await client.db.execute(
@@ -196,15 +200,11 @@ async def on_command_completion(ctx):
                 VALUES ($1, $2)
                 """,
                 1,
-                ctx.command.name
+                command_name
             )
     else:
         usage = usage["usage"]
         usage += 1
-        if ctx.command.parent is None:
-            command_name = ctx.command.name
-        else:
-            command_name = f"{ctx.command.parent.name} {ctx.command.name}"
         await client.db.execute(
                """
                 UPDATE usages
