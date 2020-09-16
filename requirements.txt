@@ -10,9 +10,10 @@ discord.py>=1.4.1
 gTTS
 git+git://github.com/jmoiron/humanize.git
 jishaku
+lxml
 numexpr
+prettytable
 psutil
 randomcolor
 requests
 wikipedia
-lxml

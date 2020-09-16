@@ -25,6 +25,7 @@ import async_cse as ag
 from bs4 import BeautifulSoup
 import gtts
 import humanize
+from prettytable import PrettyTable
 import psutil
 import randomcolor
 import re
@@ -435,12 +436,14 @@ async def usage(ctx):
                 FROM usages;
                 """
             )
+    table = PrettyTable(['Name', 'Usage'])
     dict_command_usage = {}
     for i in command_usage:
         dict_command_usage[i["name"]] = i["usage"]
-    dict_command_usage = sorted(dict_command_usage.items(), key=lambda item: item[1])
-    js = json.dumps(dict_command_usage[0:20], indent=4)
-    await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```json\n{dict_command_usage}```"))
+    dict_c_u = sorted(dict_command_usage.items(), key=lambda item: item[1])
+    for name, usage in dict_c_u:
+        table.add_row([name, usage])
+    await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```{table}```"))
 
 
 
