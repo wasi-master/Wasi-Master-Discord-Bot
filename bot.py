@@ -437,8 +437,8 @@ async def usage(ctx):
             )
     dict_command_usage = {}
     for i in command_usage:
-        dict_command_usage[i.get("name")] = i.get("usage")
-        dict_command_usage = sorted(dict_command_usage.items(), key=lambda item: item[1])
+        dict_command_usage[i["name"]] = i["usage"]
+    dict_command_usage = sorted(dict_command_usage.items(), key=lambda item: item[1])
     js = json.dumps(dict_command_usage[0:20], indent=4)
     await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```json\n{dict_command_usage}```"))
 
