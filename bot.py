@@ -426,6 +426,24 @@ def do_math(text: str):
     return eval(equation)
 
 
+@client.command(aliases=["usg", "usages"], description="Shows usage statistics about commands")
+@commands.cooldown(1, 10, BucketType.user)
+async def usage(ctx):
+    command_usage = await _bot.db.fetch(
+                """
+                SELECT *
+                FROM usages;
+                """
+            )
+    dict_command_usage = {}
+    for i in command_usage:
+        dict_command_usage[i.get("name")] = i.get("usage")
+        dict_command_usage = sorted(dict_command_usage, key=lamba m: dict_command_usage[m])
+    js = json.dumps(dict_command_usage[0:20], indent=4)
+    await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```json\n{dict_command_usage}```"))
+
+
+
 @client.command(aliases=["bfutb", "bfb", "blockfrombot"], description="Blocks a user from using the bot (Owner only)")
 async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
     if ctx.author.id == 538332632535007244:
