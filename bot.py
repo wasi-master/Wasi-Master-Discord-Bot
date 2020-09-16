@@ -225,8 +225,6 @@ async def bot_check(ctx):
         )
     if blocked is None:
         return True
-    else:
-        return False
 
 
 async def create_db_pool():
