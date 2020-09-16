@@ -429,7 +429,7 @@ def do_math(text: str):
 @client.command(aliases=["usg", "usages"], description="Shows usage statistics about commands")
 @commands.cooldown(1, 10, BucketType.user)
 async def usage(ctx):
-    command_usage = await bot.db.fetch(
+    command_usage = await client.db.fetch(
                 """
                 SELECT *
                 FROM usages;
