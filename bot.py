@@ -477,7 +477,7 @@ def do_math(text: str):
 async def uptime(ctx):
     delta = datetime.datetime.utcnow() - ctx.bot.started_at
     precisedelta = humanize.precisedelta(delta, minimum_unit = "seconds")
-    naturalday = humanize.naturalday(delta)
+    naturalday = humanize.naturalday(ctx.bot.started_at)
     if naturalday == "today":
         naturalday = ""
     else:
