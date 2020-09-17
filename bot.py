@@ -217,6 +217,40 @@ async def on_command_completion(ctx):
            ) 
 
 
+@client.event
+async def on_command(ctx):
+    id = ctx.author.id
+    usage = await client.db.fetchrow(
+            """
+            SELECT usage
+            FROM users
+            WHERE user_id=$1
+            """,
+            id
+        )
+    if usage is None:
+        await client.db.execute(
+                """
+                INSERT INTO users (usage, user_id)
+                VALUES ($1, $2)
+                """,
+                1,
+                id
+            )
+    else:
+        usage = usage["usage"]
+        usage += 1
+        await client.db.execute(
+               """
+                UPDATE users
+                SET usage = $2
+                WHERE user_id = $1;
+                """,
+                id,
+                usage
+           ) 
+
+
 @client.check
 async def bot_check(ctx):
     blocked = await client.db.fetchrow(
@@ -441,6 +475,24 @@ async def usage(ctx):
         dict_command_usage[i["name"]] = i["usage"]
     dict_c_u = reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
     tabular = tabulate(dict_c_u, headers=["Name", "Usage"], tablefmt="fancy_grid")
+    await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```{tabular}```"))
+
+
+@client.command(aliases=["usr", "users"], description="Shows usage statistics about users")
+@commands.cooldown(1, 10, BucketType.user)
+async def users(ctx):
+    command_usage = await client.db.fetch(
+                """
+                SELECT *
+                FROM users;
+                """
+            )
+    dict_command_usage = {}
+    for i in command_usage:
+        user = client.get_user(i["user_id"])
+        dict_command_usage[str(user)] = i["usage"]
+    dict_c_u = reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
+    tabular = tabulate(dict_c_u, headers=["User", "Commands Used"], tablefmt="fancy_grid")
     await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```{tabular}```"))
 
 
