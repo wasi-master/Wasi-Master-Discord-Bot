@@ -478,7 +478,7 @@ async def usage(ctx):
     await ctx.send(embed=discord.Embed(title="Top 15 Commands", description=f"```{tabular}```"))
 
 
-@client.command(aliases=["usr", "users"], description="Shows usage statistics about users")
+@client.command(aliases=["usr", "user"], description="Shows usage statistics about users")
 @commands.cooldown(1, 10, BucketType.user)
 async def users(ctx):
     command_usage = await client.db.fetch(
