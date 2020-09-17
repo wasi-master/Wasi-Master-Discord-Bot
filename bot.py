@@ -473,7 +473,7 @@ def do_math(text: str):
 @client.command(aliases=["webping", "pingweb", "wp", "pw"])
 async def websiteping(ctx, url: str):
     session = aiohttp.ClientSession()
-    if re.match(url, "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"):
+    if re.match("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", url):
         start = datetime.datetime.utcnow()
         async with session.get(url) as r:
             status = r.Status
@@ -518,7 +518,7 @@ async def usage(ctx):
     dict_command_usage = {}
     for i in command_usage:
         dict_command_usage[i["name"]] = i["usage"]
-    dict_c_u = reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
+    dict_c_u = list(reversed(sorted(dict_command_usage.items(), key=lambda item: item[1])))
     tabular = tabulate(dict_c_u[:15], headers=["Name", "Usage"], tablefmt="fancy_grid")
     await ctx.send(embed=discord.Embed(title="Top 15 Commands", description=f"```{tabular}```"))
 
@@ -2082,7 +2082,7 @@ async def support(ctx):
 
 @client.command(description="Reminds you something")
 async def remind(ctx, time: str, *, text: str):
-    time = str_to_sec(time)
+    seconds = str_to_sec(time)
     natural_time = humanize.naturaldelta(datetime.timedelta(seconds=int(seconds)))
     user = ctx.message.author
     texttosend = text
