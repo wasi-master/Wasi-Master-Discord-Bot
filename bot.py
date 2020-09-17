@@ -473,7 +473,7 @@ def do_math(text: str):
 @client.command(aliases=["webping", "pingweb", "wp", "pw"])
 async def websiteping(ctx, url: str):
     session = aiohttp.ClientSession()
-    if not url.startswith("http") or url.startswith("https"): url = "https" + url
+    if not url.startswith("http://") or url.startswith("https://"): url = "https://" + url
     if re.match("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", url):
         start = datetime.datetime.utcnow()
         async with session.get(url) as r:
@@ -852,7 +852,8 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
         "golet": "golette",
         "ポケモン ホルビー": "diggersby",
         "golett  go": " golett",
-        "excalibur": "escavalier"
+        "excalibur": "escavalier",
+        "flower": "ralts"
     }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
