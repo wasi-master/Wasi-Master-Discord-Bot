@@ -474,8 +474,8 @@ async def usage(ctx):
     for i in command_usage:
         dict_command_usage[i["name"]] = i["usage"]
     dict_c_u = reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
-    tabular = tabulate(dict_c_u, headers=["Name", "Usage"], tablefmt="fancy_grid")
-    await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```{tabular}```"))
+    tabular = tabulate(dict_c_u[:15], headers=["Name", "Usage"], tablefmt="fancy_grid")
+    await ctx.send(embed=discord.Embed(title="Top 15 Commands", description=f"```{tabular}```"))
 
 
 @client.command(aliases=["usr", "users"], description="Shows usage statistics about users")
@@ -492,8 +492,8 @@ async def users(ctx):
         user = client.get_user(i["user_id"])
         dict_command_usage[str(user)] = i["usage"]
     dict_c_u = reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
-    tabular = tabulate(dict_c_u, headers=["User", "Commands Used"], tablefmt="fancy_grid")
-    await ctx.send(embed=discord.Embed(title="Command Usages", description=f"```{tabular}```"))
+    tabular = tabulate(dict_c_u[:10], headers=["User", "Commands Used"], tablefmt="fancy_grid")
+    await ctx.send(embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```"))
 
 
 
