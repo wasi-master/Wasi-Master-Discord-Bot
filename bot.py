@@ -2,6 +2,7 @@ import ast
 import asyncio
 import base64 as base64module
 import codecs
+from collections import Counter
 import datetime
 import difflib
 import discord
@@ -164,6 +165,14 @@ def get_status(status: str):
         return "<:status_offline:596576752013279242>"
     else:
         return status
+
+
+def str_to_sec(text:str):
+    times = {'s': lambda x: x, 'm': lambda x: x*60, 'h':lambda x: x*3600, 'd':lambda x: x*3600*24} #map s/m/h/d to multiply time provided to seconds
+    regex = r'([0-9]+)(s|m|h|d)'
+    time = '45m'
+    match = re.match(regex, time, flags=re.I)
+    return times[match[2]](int(match[1]))
 
 
 client = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
@@ -461,6 +470,42 @@ def do_math(text: str):
     return eval(equation)
 
 
+@client.command(aliases=["webping", "pingweb", "wp", "pw"])
+async def websiteping(ctx, url: str):
+    session = aiohttp.ClientSession()
+    if re.match(url, "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"):
+        start = datetime.datetime.utcnow()
+        async with session.get(url) as r:
+            status = r.Status
+        await session.close()
+        end = datetime.datetime.utcnow()
+        elapsed = end - start
+        embed = discord.Embed(description=f"Website took **{elapsed.total_seconds() * 1000}ms** to complete")
+        embed.set_footer(text=f"Status Code: {status}")
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"Invalid URL: {url}")
+
+
+@client.command(description="Shows how many badges are in this guild")
+@commands.cooldown(1, 60, BucketType.user)
+async def badges(ctx, server: discord.Guild=None):
+    count = Counter()
+    guild = server or ctx.guild
+    for member in guild.members:
+      for flag in member.public_flags.all():
+        count[flag.name] += 1
+    
+    msg = ""
+    count = dict(reversed(sorted(count.items(), key=lambda item: item[1])))
+    for k, v in count.items():
+        msg += f'{k.title().replace("_", " ")}: **{v}**\n\n'
+    
+    embed = discord.Embed()
+    embed.set_author(name=f"Badge Count in {guild.name}", icon_url=guild.icon_url)
+    await ctx.send(embed=embed)
+
+
 @client.command(aliases=["usg", "usages"], description="Shows usage statistics about commands")
 @commands.cooldown(1, 10, BucketType.user)
 async def usage(ctx):
@@ -491,7 +536,7 @@ async def users(ctx):
     for i in command_usage:
         user = client.get_user(i["user_id"])
         dict_command_usage[str(user)] = i["usage"]
-    dict_c_u = reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
+    dict_c_u = list(reversed(sorted(dict_command_usage.items(), key=lambda item: item[1])))
     tabular = tabulate(dict_c_u[:10], headers=["User", "Commands Used"], tablefmt="fancy_grid")
     await ctx.send(embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```"))
 
@@ -1351,6 +1396,7 @@ async def gender(ctx, *, name: str):
         text = f"The name {fj['name_sanitized']} is not in our database"
     embed = discord.Embed(title=fj["name_sanitized"], description=text, color=color)
     await ctx.send(embed=embed)
+    await session.close()
 
 
 @client.command(description="See details about a movie")
@@ -1376,6 +1422,7 @@ async def movie(ctx, *, query):
         await session.close()
     else:
         await ctx.send("Movie Not Found")
+    await session.close()
 
 
 @client.command(aliases=["ri", "rlinf"], description=" See info about a role")
@@ -1431,7 +1478,8 @@ async def time(ctx, location: str=None):
         embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
         embed.add_field(name="UTC Offset", value=gmt)
         await ctx.send(embed=embed)
-        """
+    await session.close()
+"""
 @client.command(
     aliases=["ss"],
     description="Takes a sceenshot of a website"
@@ -2033,12 +2081,14 @@ async def support(ctx):
 
 
 @client.command(description="Reminds you something")
-async def remind(ctx, time: int, *, text: str):
+async def remind(ctx, time: str, *, text: str):
+    time = str_to_sec(time)
+    natural_time = humanize.naturaldelta(datetime.timedelta(seconds=int(seconds)))
     user = ctx.message.author
     texttosend = text
-    timetowait = time
-    await ctx.send(f"Gonna remind you `{texttosend}` in `{timetowait}` seconds")
-    await asyncio.sleep(timetowait)
+    timetowait = natural_time
+    await ctx.send(f"Gonna remind you `{texttosend}` in {timetowait}")
+    await asyncio.sleep(seconds)
     await user.send(texttosend)
 
 
