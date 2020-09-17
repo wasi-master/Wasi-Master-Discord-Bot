@@ -280,7 +280,7 @@ client.loop.run_until_complete(create_db_pool())
  
 #  @client.event
 async def fake_on_ready():
-    await client..wait_until_ready()
+    await client.wait_until_ready()
     await tracker.cache_invites()
     print("Bot is online")
     owner = client.get_user(538332632535007244)
