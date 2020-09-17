@@ -280,14 +280,18 @@ client.loop.run_until_complete(create_db_pool())
  
 #  @client.event
 async def fake_on_ready():
-    await tracker.cache_invites()
+    await bot.wait_until_ready()
+    #  await tracker.cache_invites()
     print("Bot is online")
     owner = client.get_user(538332632535007244)
-    await owner.send("Bot Online")
+    try:
+        await owner.send("Bot Online")
+    except AttributeError:
+        pass
     client.started_at = datetime.utcnow()
     update_server_count.start()
     client.load_extension("jishaku")
-client.loop.run_until_complete(fake_on_ready())
+client.loop.create_task(fake_on_ready())
  
 @tasks.loop(seconds=86400)
 async def update_server_count():
