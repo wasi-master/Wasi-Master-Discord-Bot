@@ -288,7 +288,7 @@ async def fake_on_ready():
         await owner.send("Bot Online")
     except AttributeError:
         pass
-    client.started_at = datetime.utcnow()
+    client.started_at = datetime.datetime.utcnow()
     update_server_count.start()
     client.load_extension("jishaku")
 client.loop.create_task(fake_on_ready())
