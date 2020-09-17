@@ -348,8 +348,8 @@ async def on_command_error(ctx, error):
         await ctx.send(f"The {str(error.param).split(':')[0].strip()} argument is missing")
     elif isinstance(error, commands.CommandNotFound):
         pass
-    elif "Not found" in error:
-        await ctx.send(embed=discord.Embed(title="Not Found", description=error))
+    # elif "Not found" in error:
+        # await ctx.send(embed=discord.Embed(title="Not Found", description=error))
     elif isinstance(error, discord.Forbidden):
         await ctx.send("I am missing permissions")
     elif isinstance(error, discord.HTTPException):
