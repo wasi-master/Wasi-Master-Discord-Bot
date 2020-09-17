@@ -484,7 +484,7 @@ async def uptime(ctx):
         naturalday = f"Bot is online since {naturalday}"
     embed = discord.Embed(description=f"Bot is online for {precisedelta}\n{naturalday}")
     embed.set_author(name="Bot Uptime")
-    embed.set_footer(text=f"Note: This also means thr bot hasn’t been updated for {preisedelta} because the bot is restarted to update")
+    embed.set_footer(text=f"Note: This also means thr bot hasn’t been updated for {precisedelta} because the bot is restarted to update")
     await ctx.send(embed=embed)
 
 
