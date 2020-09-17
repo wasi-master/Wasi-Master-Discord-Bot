@@ -300,6 +300,7 @@ async def update_server_count():
 @client.event
 async def on_ready():
     await tracker.cache_invites()
+    client.started_at = datetime.utcnow()
     print("Bot is online")
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
@@ -468,6 +469,20 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+
+
+@client.command(aliases=["upt"], description="Shows how long the bot was up for")
+async def uptime(ctx):
+    delta = datetime.utcnow() - ctx.bot.started_at
+    precisedelta = humanize.precisedelta(delta, minimum_unit = "seconds")
+    naturalday = humanize.naturalday(delta)
+    if naturalday == "today":
+        naturalday = ""
+    else:
+        naturalday = f"Bot is online since {naturalday}"
+    embed = discord.Embed(description=f"Bot is online for {delta}\n{naturalday}")
+    embed.set_author(name="Bot Uptime")
+    await ctx.send(embed=embed)
 
 
 @client.command(aliases=["webping", "pingweb", "wp", "pw"])
