@@ -170,8 +170,8 @@ def get_status(status: str):
 def str_to_sec(text:str):
     times = {'s': lambda x: x, 'm': lambda x: x*60, 'h':lambda x: x*3600, 'd':lambda x: x*3600*24} #map s/m/h/d to multiply time provided to seconds
     regex = r'([0-9]+)(s|m|h|d)'
-    time = '45m'
-    match = re.match(regex, time, flags=re.I)
+    # time = '45m'
+    match = re.match(regex, text, flags=re.I)
     return times[match[2]](int(match[1]))
 
 
