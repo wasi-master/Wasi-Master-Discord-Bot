@@ -473,10 +473,11 @@ def do_math(text: str):
 @client.command(aliases=["webping", "pingweb", "wp", "pw"])
 async def websiteping(ctx, url: str):
     session = aiohttp.ClientSession()
+    if not url.startswith("http") or url.startswith("https"): url = "https" + url
     if re.match("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", url):
         start = datetime.datetime.utcnow()
         async with session.get(url) as r:
-            status = r.Status
+            status = r.status
         await session.close()
         end = datetime.datetime.utcnow()
         elapsed = end - start
