@@ -278,7 +278,17 @@ async def create_db_pool():
     client.db = await asyncpg.create_pool(host="ec2-52-23-86-208.compute-1.amazonaws.com", database="d5squd8cvojua1", user="poladbevzydxyx", password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8")
 client.loop.run_until_complete(create_db_pool())
  
-
+@client.event
+async def fake_on_ready():
+    await tracker.cache_invites()
+    print("Bot is online")
+    owner = client.get_user(538332632535007244)
+    await owner.send("Bot Online")
+    client.started_at = datetime.utcnow()
+    update_server_count.start()
+    client.load_extension("jishaku")
+client.loop.run_until_complete(fake_on_ready())
+ 
 @tasks.loop(seconds=86400)
 async def update_server_count():
     memberlist = []
@@ -294,18 +304,6 @@ async def update_server_count():
             name=f"{len(memberlist)} people in {len(serverlist)} servers 😁😁😁",
         )
     )
-
-
-
-@client.event
-async def on_ready():
-    #  await tracker.cache_invites()
-    print("Bot is online")
-    owner = client.get_user(538332632535007244)
-    await owner.send("Bot Online")
-    client.started_at = datetime.utcnow()
-    update_server_count.start()
-    client.load_extension("jishaku")
 
 
 @client.event
