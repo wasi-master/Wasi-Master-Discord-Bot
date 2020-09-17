@@ -299,11 +299,11 @@ async def update_server_count():
 
 @client.event
 async def on_ready():
-    await tracker.cache_invites()
-    client.started_at = datetime.utcnow()
+    #  await tracker.cache_invites()
     print("Bot is online")
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
+    client.started_at = datetime.utcnow()
     update_server_count.start()
     client.load_extension("jishaku")
 
