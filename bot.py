@@ -360,8 +360,8 @@ async def on_command_error(ctx, error):
         await ctx.send(f"The {str(error.param).split(':')[0].strip()} argument is missing")
     elif isinstance(error, commands.CommandNotFound):
         pass
-    # elif "Not found" in error:
-        # await ctx.send(embed=discord.Embed(title="Not Found", description=error))
+    elif "not found" in str(error):
+        await ctx.send(embed=discord.Embed(title="Not Found", description=str(error)))
     elif isinstance(error, discord.Forbidden):
         await ctx.send("I am missing permissions")
     elif isinstance(error, discord.HTTPException):
@@ -3288,9 +3288,9 @@ async def unban(ctx, *, member: str):
 @client.command(aliases=["ui", "whois", "wi", "whoami", "me"], description="Shows info about a user")
 async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
-
-    roles = [role for role in reversed(member.roles)]
-    roles = roles[:-1]
+    if not len(member.roles) == 1:
+        roles = [role for role in reversed(member.roles)]
+        roles = roles[:-1]
     flaglist = [flag for flag in member.public_flags.all()]
     flagstr = ""
     for i in flaglist:
