@@ -1472,6 +1472,8 @@ async def roleinfo(ctx, role: discord.Role = None):
 @client.command(aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"], description=" Set your time zone to be used in the timr command")
 async def timeset(ctx, timezone: str):
     location = timezone
+    continents = ["asia", "europe", "oceania", "australia", "africa"]
+    if location.lower() in continents: return await ctx.send('I need a area not a continent')
     session = aiohttp.ClientSession()
     async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
         fj = json.loads(await r.text())
