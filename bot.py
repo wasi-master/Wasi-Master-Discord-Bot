@@ -1507,7 +1507,7 @@ async def timeset(ctx, timezone: str):
         embed = discord.Embed(title="Success", description=f"Timezone set to {location}", color=5028631)
         await ctx.send(embed = embed)
     else:
-        if fj["error"] == "Unknown location":
+        if fj["error"] == "unknown location":
             locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
             suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
             suggestionstring = ""
@@ -1550,13 +1550,14 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
     except:
         error = False
     if error:
-        await ctx.send(f"```json\n{fj}```")
-        if fj["error"] == "Unknown location":
+        # await ctx.send(f"```json\n{fj}```")
+        if fj["error"] == "unknown location":
             locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
             suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
             suggestionstring = ""
             for i in suggestions:
                 suggestionstring += f"`{i}`\n"
+            embed = discord.Embed(description=f"{location} is not available")
             embed.set_author(name="Location Not Found")
             embed.add_field(name="Did you mean?", value=suggestionstring)
             await ctx.send(embed=embed)
