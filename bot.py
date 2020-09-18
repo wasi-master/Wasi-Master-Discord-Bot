@@ -1550,7 +1550,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
     except:
         error = False
     if error:
-        await ctx.send("Error")
+        await ctx.send(f"```json\n{fj}```")
         if fj["error"] == "Unknown location":
             locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
             suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
@@ -1567,10 +1567,6 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
         embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
         embed.add_field(name="UTC Offset", value=gmt)
         await ctx.send(embed=embed)
-    try:
-        await ctx.send(embed=embed)
-    except NameError:
-        pass
     await session.close()
 """
 @client.command(
