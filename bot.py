@@ -764,7 +764,7 @@ async def invitetracker(ctx, log_channel: discord.TextChannel):
 @client.command(aliases=["rj"], description="Shows raw json of a message")
 async def rawjson(ctx, message_id: int):
     res = await client.http.get_message(ctx.channel.id, message_id)
-    await ctx.send(f"```json\n{json.dumps(json.loads(res), indent=4)}```")
+    await ctx.send(f"```json\n{json.dumps(res, indent=4)}```")
 
 
 @client.command(aliases=["raw"], description="See a raw version of a message")
@@ -2112,7 +2112,7 @@ async def remind(ctx, time: str, *, text: str):
     await user.send(texttosend)
 
 
-@client.command(aliases=["makememe"], description="See or make a meme")
+@client.command(aliases=["makememe"], description="See or make a meme", usage="See a meme:\n,meme\n\nMake a meme:\n,meme `<format>`: `<text 1>`||`<text 2>`\n,meme drake: Other Bots||This Bot")
 async def meme(ctx, *, text: str = None):
     Make = True
     if not text is None:
