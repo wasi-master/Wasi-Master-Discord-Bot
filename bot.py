@@ -1527,6 +1527,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
         SELECT * FROM timezones
         WHERE user_id = $1""",
         ctx.author.id)
+        if not location is None: location = location["timezone"]
         if location is None:
             embed = discord.Embed(title="Timezone Not set", description="Set your time with the timeset command (shortest alias \"ts\")", color=14885931)
             await ctx.send(embed=embed)
@@ -1536,6 +1537,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
         SELECT * FROM timezones
         WHERE user_id = $1""",
         location.id)
+        if not location is None: location = location["timezone"]
         if location is None:
             embed = discord.Embed(title=f"{location.name} has not yet set his tinezone", description="Set timezone with the timeset command (shortest alias \"ts\")", color=14885931)
             await ctx.send(embed=embed)
@@ -1559,7 +1561,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
                 suggestionstring += f"`{i}`\n"
             embed = discord.Embed(description=f"{location} is not available")
             embed.set_author(name="Location Not Found")
-            embed.add_field(name="Did you mean?", value=suggestionstring + "‌")
+            embed.add_field(name="Did you mean?", value=suggestionstring)
             await ctx.send(embed=embed)
     else:
         currenttime = datetime.datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
