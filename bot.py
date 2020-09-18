@@ -854,18 +854,18 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
     url = None
     img_url = None
     raw_result = None
-    async for message in channel.history(limit=8, oldest_first=True):
+    async for message in channel.history(limit=8, oldest_first=False):
         if not message.author == ctx.guild.me:
             if message.embeds:
                 embed = message.embeds[0]
                 if not embed.image:
-                    continue
+                    pass
                 else:
                     img_url = embed.image.url
             else:
-                continue
+                pass
         else:
-            continue
+            pass
     if not img_url: return await ctx.send("Message containing a pokemon Not Found")
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
