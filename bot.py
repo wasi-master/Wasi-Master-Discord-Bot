@@ -884,7 +884,8 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
         "flower": "ralts",
         "tranquil": "tranquill",
         "shutterbug": "scatterbug",
-        "fletching": "fletchling"
+        "fletching": "fletchling",
+        "oricorio baile style": "oricorio"
     }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
