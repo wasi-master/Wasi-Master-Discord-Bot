@@ -1483,7 +1483,7 @@ async def timeset(ctx, timezone: str):
         error = False
     if not error:
         savedtimezone = await client.db.execute("""
-        UPDATE TABLE timezones
+        UPDATE timezones
         SET timezone = $2
         WHERE user_id = $1
             """,
