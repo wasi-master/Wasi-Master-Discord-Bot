@@ -793,7 +793,7 @@ async def emojify(ctx, *, text: str):
         elif word in fixed:
             list_.append(fixed[word])
         elif word in list(string.ascii_letters):
-            list_.append(f":regional_indicator_{word}:")
+            list_.append(f":regional_indicator_{word.lower()}:")
     try:
         await ctx.send(' '.join(list_))
     except:
@@ -881,7 +881,8 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
         "ポケモン ホルビー": "diggersby",
         "golett  go": " golett",
         "excalibur": "escavalier",
-        "flower": "ralts"
+        "flower": "ralts",
+        "tranquil": "tranquill"
     }
     soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
     for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
