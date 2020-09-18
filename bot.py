@@ -1,3 +1,4 @@
+import string 
 import ast
 import asyncio
 import base64 as base64module
@@ -774,18 +775,27 @@ async def rawmessage(ctx, message_id: int):
     await ctx.send(res)
 
 
-@client.command(aliases=["rg", "emf", "banner"], description="Emojify a text")
+@client.command(aliases=["fancy", "emf", "banner"], description="Emojify a text")
 async def emojify(ctx, *, text: str):
     list_ = []
     if len(text) > 90:
         return await ctx.send("Text to big to emojify")
+    fixed = {
+        "?": ":grey_question:",
+        "!": ":grey_exclamation:",
+        "#": ":hash:",
+        "*": ":asterisk:",
+        "∞": ":infinity:"
+    }
     else:
         for word in text:
             if word.isdigit():
                 list_.append(f":{humanize.apnumber(word)}:")
             elif word == " ":
                 list_.append("   ")
-            else:
+            elif word in fixed:
+                list_.append(fixed[word])
+            elif word in list(string.ascii_letters):
                 list_.append(f":regional_indicator_{word}:")
         await ctx.send(' '.join(list_))
 
