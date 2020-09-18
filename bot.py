@@ -778,8 +778,6 @@ async def rawmessage(ctx, message_id: int):
 @client.command(aliases=["fancy", "emf", "banner"], description="Emojify a text")
 async def emojify(ctx, *, text: str):
     list_ = []
-    if len(text) > 90:
-        return await ctx.send("Text to big to emojify")
     fixed = {
         "?": ":grey_question:",
         "!": ":grey_exclamation:",
@@ -787,17 +785,19 @@ async def emojify(ctx, *, text: str):
         "*": ":asterisk:",
         "∞": ":infinity:"
     }
-    else:
-        for word in text:
-            if word.isdigit():
-                list_.append(f":{humanize.apnumber(word)}:")
-            elif word == " ":
-                list_.append("   ")
-            elif word in fixed:
-                list_.append(fixed[word])
-            elif word in list(string.ascii_letters):
-                list_.append(f":regional_indicator_{word}:")
+    for word in text:
+        if word.isdigit():
+            list_.append(f":{humanize.apnumber(word)}:")
+        elif word == " ":
+            list_.append("   ")
+        elif word in fixed:
+            list_.append(fixed[word])
+        elif word in list(string.ascii_letters):
+            list_.append(f":regional_indicator_{word}:")
+    try:
         await ctx.send(' '.join(list_))
+    except:
+        await ctx.send("Message too long") 
 
 
 @client.command(
