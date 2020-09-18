@@ -1472,6 +1472,7 @@ async def roleinfo(ctx, role: discord.Role = None):
 @client.command(aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"], description=" Set your time zone to be used in the timr command")
 async def timeset(ctx, timezone: str):
     location = timezone
+    session = aiohttp.ClientSession()
     async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
         fj = json.loads(await r.text())
     await session.close()
@@ -2531,7 +2532,7 @@ async def colour(ctx, color: str):
     embed.add_field(name="CMYK", value=cmyk)
     embed.add_field(name="XYZ", value=xyz)
     await ctx.send(embed=embed)
-    await session.close()
+    # await session.close()
 
 
 @client.command(
