@@ -1482,13 +1482,28 @@ async def timeset(ctx, timezone: str):
     except:
         error = False
     if not error:
-        savedtimezone = await client.db.execute("""
-        UPDATE timezones
-        SET timezone = $2
+        savedtimezone = await client.db.fetchrow("""
+        SELECT * FROM timezones
         WHERE user_id = $1
             """,
-        ctx.author.id,
-        timezone)
+        ctx.author.id)
+        if not savedtimezone is None:
+            savedtimezone = await client.db.execute("""
+            UPDATE timezones
+            SET timezone = $2
+            WHERE user_id = $1
+                """,
+            ctx.author.id,
+            timezone)
+        else:
+            await client.db.execute(
+                """
+                INSERT INTO timezones (timezone, user_id)
+                VALUES ($1, $2)
+                """,
+                timezone,
+                ctx.author.id
+            )
         embed = discord.Embed(title="Success", description=f"Timezone set to {location}", color=5028631)
         await ctx.send(embed = embed)
     else:
