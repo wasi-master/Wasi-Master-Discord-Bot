@@ -1508,7 +1508,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
     embed = discord.Embed(color=0x2F3136)
     location = location_or_user
     if location is None:
-        location = await bot.db.fetchrow("""
+        location = await client.db.fetchrow("""
         SELECT * FROM timezones
         WHERE user_id = $1""",
         ctx.author.id)
