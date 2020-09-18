@@ -891,7 +891,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
         #  await ctx.send(best_guess)
         if not best_guess.get_text().replace("pokemon", "").strip().isdigit():
             raw_result = best_guess.get_text()
-            result = best_guess.get_text().lower().replace("pokemon", "").replace("png", "").replace("evolution", "").replace("shiny", "").strip()
+            result = best_guess.get_text().lower().replace("pokemon", "").replace("png", "").replace("evolution", "").replace("shiny", "").replace("pokedex", "")strip()
             if result in wrong: result = wrong[result]
             break
         else:
