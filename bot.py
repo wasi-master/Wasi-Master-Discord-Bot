@@ -1559,7 +1559,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
                 suggestionstring += f"`{i}`\n"
             embed = discord.Embed(description=f"{location} is not available")
             embed.set_author(name="Location Not Found")
-            embed.add_field(name="Did you mean?", value=suggestionstring)
+            embed.add_field(name="Did you mean?", value=suggestionstring + "‌")
             await ctx.send(embed=embed)
     else:
         currenttime = datetime.datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
