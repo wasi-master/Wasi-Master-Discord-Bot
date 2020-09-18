@@ -1469,9 +1469,61 @@ async def roleinfo(ctx, role: discord.Role = None):
     await ctx.send(embed=embed)
 
 
+@client.command(aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"], description=" Set your time zone to be used in the timr command")
+async def timeset(ctx, timezone: str):
+    location = timezone
+    async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
+        fj = json.loads(await r.text())
+    await session.close()
+    try:
+        fj["error"]
+        error = True
+    except:
+        error = False
+    if not error:
+        savedtimezone = await client.db.execute("""
+        UPDATE TABLE timezones
+        SET timezone = $2
+        WHERE user_id = $1
+            """,
+        ctx.author.id,
+        timezone)
+        embed = discord.Embed(title="Success", description=f"Timezone set to {location}", color=5028631)
+        await ctx.send(embed = embed)
+    else:
+        if fj["error"] == "Unknown location":
+            locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
+            suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
+            suggestionstring = ""
+            embed = discord.Embed(title="Unknown Location", description="The location couldn't be found", color=14885931)
+            for i in suggestions:
+                suggestionstring += f"`{i}`\n"
+            #  embed.set_author(name="Location Not Found")
+            embed.add_field(name="Did you mean?", value=suggestionstring)
+            await ctx.send(embed=embed)
+
 @client.command(aliases=["tm"], description="See time")
-async def time(ctx, location: str=None):
+async def time(ctx, location_or_user: Union[discord.Member, str]=None):
     embed = discord.Embed(color=0x2F3136)
+    location = location_or_user
+    if location is None:
+        location = await bot.db.fetchrow("""
+        SELECT * FROM timezones
+        WHERE user_id = $1""",
+        ctx.author.id)
+        if location is None:
+            embed = discord.Embed(title="Timezone Not set", description="Set your time with the timeset command (shortest alias \"ts\")", color=14885931)
+            await ctx.send(embed=embed)
+            return
+    elif isinstance(location, discord.Member):
+        location = await bot.db.fetchrow("""
+        SELECT * FROM timezones
+        WHERE user_id = $1""",
+        location.id)
+        if location is None:
+            embed = discord.Embed(title=f"{location.name} has not yet set his tinezone", description="Set timezone with the timeset command (shortest alias \"ts\")", color=14885931)
+            await ctx.send(embed=embed)
+            return
     session = aiohttp.ClientSession()
     async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
         fj = json.loads(await r.text())
@@ -1482,7 +1534,7 @@ async def time(ctx, location: str=None):
     except:
         error = False
     if error:
-        if fj["error"] == "unknown location":
+        if fj["error"] == "Unknown location":
             locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
             suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
             suggestionstring = ""
@@ -2479,7 +2531,7 @@ async def colour(ctx, color: str):
     embed.add_field(name="CMYK", value=cmyk)
     embed.add_field(name="XYZ", value=xyz)
     await ctx.send(embed=embed)
-    session.close()
+    await session.close()
 
 
 @client.command(
@@ -2661,7 +2713,7 @@ async def image(ctx, *, search_term: commands.clean_content):
         else:
             if reaction.emoji == "\u25c0\ufe0f":
                 try:
-                    message.remove_reaction("\u25c0\ufe0f", ctx.author)
+                    await message.remove_reaction("\u25c0\ufe0f", ctx.author)
                 except discord.Forbidden:
                     pass
                 num -= 1
