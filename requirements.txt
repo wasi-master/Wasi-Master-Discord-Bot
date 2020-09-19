@@ -17,3 +17,4 @@ randomcolor
 requests
 tabulate
 wikipedia
+youtube_dl
