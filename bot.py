@@ -2264,8 +2264,8 @@ async def meme(ctx, *, text: str = None):
 
 @client.command(aliases=["yt"], description="Search youtube for stuff")
 @commands.cooldown(2, 15, BucketType.user)
-async def youtube(ctx, *, args):
-    search_terms = args
+async def youtube(ctx, *, search_term: str):
+    search_terms = search_term
     max_results = 1
 
     def parse_html(response):
@@ -2456,9 +2456,9 @@ async def leaveserver(ctx):
 
 
 @client.command(description="Find details about a music")
-async def music(ctx, *, args):
+async def music(ctx, *, music_name: str):
     url = "https://deezerdevs-deezer.p.rapidapi.com/search"
-    querystring = {"q": args}
+    querystring = {"q": music_name}
     session = aiohttp.ClientSession()
     headers = {
         "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com",
@@ -2493,8 +2493,8 @@ async def music(ctx, *, args):
 
 
 @client.command(description="Sends you stuff")
-async def dm(ctx, *, args):
-    await ctx.message.author.send(args)
+async def dm(ctx, *, message_to_dm: str):
+    await ctx.message.author.send(message_to_dm)
 
 
 @client.command(
@@ -2797,9 +2797,10 @@ async def image(ctx, *, search_term: commands.clean_content):
 @client.command(
     aliases=["pick", "choice", "ch"], description="makes desicions for you :)"
 )
-async def choose(ctx, *, args):
-    mesg = args
+async def choose(ctx, *, choices):
+    mesg = choices
     mesglist = mesg.split(",")
+    mesglist = [i.strip() for i in mesg]
     num = 0
     choices = ""
     embed = discord.Embed(timestamp=ctx.message.created_at)
@@ -2837,14 +2838,14 @@ async def ping (ctx):
 
 
 @client.command(aliases=["synonym"], description="Sends synomyms for a word")
-async def synonyms(ctx, *, args):
+async def synonyms(ctx, *, word):
     api_key = "dict.1.1.20200701T101603Z.fe245cbae2db542c.ecb6e35d1120ee008541b7c1f962a6d964df61dd"
     session = aiohttp.ClientSession()
     async with ctx.typing():
         embed = discord.Embed(timestamp=ctx.message.created_at)
-        embed.set_author(name=f"Synonyms for {args}")
+        embed.set_author(name=f"Synonyms for {word}")
         async with session.get(
-            f"https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key={api_key}&lang=en-en&text={args.lower()}"
+            f"https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key={api_key}&lang=en-en&text={word.lower()}"
         ) as response:
             data = await response.json()
         await session.close()
@@ -2863,13 +2864,13 @@ async def synonyms(ctx, *, args):
     aliases=["urbandict", "urbandefine", "urbandefinition", "ud", "urbandictionary"],
     description="Searches The Urban Dictionary (nsfw only)",
 )
-async def urban(ctx, *, args):
+async def urban(ctx, *, word):
     if not ctx.channel.is_nsfw():
         await ctx.send(
             "You can use this only in nsfw channels because the results may include nsfw content"
         )
     else:
-        params = {"term": args}
+        params = {"term": word}
         headers = {
             "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
             "x-rapidapi-key": "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d",
@@ -3295,9 +3296,9 @@ async def _8ball(ctx, *, question):
 
 
 @client.command(aliases=["wiki", "searchwiki"])
-async def wikipedia(ctx, *, args):
+async def wikipedia(ctx, *, search_term):
     async with ctx.typing():
-        result = wikimodule.summary(args)
+        result = wikimodule.summary(search_term)
         if len(result) < 1997:
             await ctx.send(result)
         else:
