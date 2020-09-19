@@ -453,8 +453,8 @@ async def youtubeinfo(ctx, video_url: str):
     embed.set_author(name=infos["uploader"], url=infos["uploader_url"])
     embed.set_image(url=infos["thumbnails"][-1]["url"])
     embed.add_field(name="View Count", value=f"{infos['view_count']:,}")
-    time = humanize.naturalday(datetime.datetime.strptime(infos["upload_date"], '%Y%m%d'))
-    embed.add_field(name="Uploaded On", value=time)
+    time = datetime.datetime.strptime(infos["upload_date"], '%Y%m%d')
+    embed.add_field(name="Uploaded On", value=time.strftime("%d %B, %Y"))
     embed.add_field(name="Duration", value=convert_sec_to_min(infos["duration"]))
     if infos["age_limit"]:
         embed.add_field(name="Age Restriction", value=f"You must be {infos['age_limit']} or older in order to see this video")
