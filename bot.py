@@ -2616,7 +2616,7 @@ async def hello(ctx):
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, channel = Optional[discord.TextChannel] = None, *, text: commands.clean_content):
     if channel:
-        text = f"{text}\n\n- sent by {ctx.author} from {ctx.channel.mention}"
+        text = f"{text}\n\n    - sent by {ctx.author} from {ctx.channel.mention}"
     m = await ctx.send(text)
     def check(message):
         return message == ctx.message
@@ -2625,7 +2625,7 @@ async def say(ctx, channel = Optional[discord.TextChannel] = None, *, text: comm
     except asyncio.TimeoutError:
         pass
     else:
-        await m.edit(content=f"{text}\n\n- sent by {ctx.author} but he deleted his message")
+        await m.edit(content=f"{text}\n\n    - sent by {ctx.author} but he deleted his message")
 
 
 @client.command(
