@@ -1,9 +1,9 @@
-import string 
+from collections import Counter
+from typing import Union, Optional
 import ast
 import asyncio
 import base64 as base64module
 import codecs
-from collections import Counter
 import datetime
 import difflib
 import discord
@@ -13,8 +13,8 @@ import numexpr
 import os
 import random
 import secrets
+import string 
 import time as timemodule
-from typing import Union, Optional
 import unicodedata
 
 
@@ -25,6 +25,8 @@ import asyncpg
 import async_cleverbot as ac
 import async_cse as ag
 from bs4 import BeautifulSoup
+import dbl
+import DiscordUtils
 import gtts
 import humanize
 import psutil
@@ -33,8 +35,7 @@ import re
 import requests
 from tabulate import tabulate
 import wikipedia as wikimodule
-import dbl
-import DiscordUtils
+import youtube_dl as ytdl
 
 from discord.ext import commands
 from discord.ext import tasks
@@ -222,8 +223,6 @@ async def on_command(ctx):
                 usage
            ) 
 
-
-@client.check
 async def bot_check(ctx):
     blocked = await client.db.fetchrow(
             """
@@ -318,8 +317,8 @@ async def on_command_error(ctx, error):
         return
     error = getattr(error, "original", error)
     if isinstance(error, BlackListed):
-        pass
-    if isinstance(error, commands.CheckFailure):
+        return
+    elif isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command} command")
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("I can't do that")
@@ -440,6 +439,36 @@ def do_math(text: str):
     return eval(equation)
 
 
+@client.command(aliases=["yti", "ytinfo", "youtubei", "videoinfo", "youtubevideoinfo", "ytvi", "vi"], description=" See Details about a youtube video")
+async def youtubeinfo(ctx, video_url: str):
+    ops = {}
+    msg = await ctx.send("Searching <a:typing:597589448607399949>")
+    with  ytdl.YoutubeDL(ops) as ydl:
+        infos = ydl.extract_info(video_url, download=False)
+    await msg.delete()
+    description = infos["description"]
+    if len(description) > 400:
+        description = description[0:400] + "..."
+    embed = discord.Embed(title=infos["title"], description=description, color=16711680)
+    embed.set_author(name=infos["uploader"], url=infos["uploader_url"])
+    embed.set_image(url=infos["thumbnails"][-1])
+    embed.add_field(name="View Count", value=f"{infos['view_count']:,}")
+    time = humanize.naturalday(datetime.datetime.strptime(infos["upload_date"], '%Y%m%d'))
+    embed.add_field(name="Uploaded On", value=time)
+    embed.add_field(name="Duration", value=convert_sec_to_min(infos["duration"]))
+    if embed["age_limit"]:
+        embed.add_field(name="Age Restriction", value=f"You must be {embed['age_limit']} or older in order to see this video")
+    if infos["categories"]:
+        embed.add_field(name="Category", value=infos["category"])
+    if infos["tags"]:
+        tags = "". join([f"`{i}`, " for i in infos["tags"]][:-2])
+        embed.add_field(name="Tags/Keywords", value=tags)
+    if infos["average_rating"]:
+        embed.add_field(name="Average Rating", value=round(infos["average_rating"], 2))
+    embed.add_field(name="Video Info", value=f"Video Quality: {infos['width']}x{infos['height']}@{infos['fps']}\nVideo Codec: {infos['codec']}")
+    embed.add_field(name="Audio Info", value=f"Audio Bitrate: {infos['abr']}\nAudio Codec: {infos['acodec']}")
+    
+
 @client.command(description="Chooses between multiple choices N times.", aliases=["cbo"])
 async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_content):
 
@@ -493,7 +522,7 @@ async def websiteping(ctx, url: str):
         await ctx.send(f"Invalid URL: {url}")
 
 
-@client.command(description="Shows how many badges are in this guild")
+@client.command(aliases=["flags"], description="Shows how many badges are in this guild")
 @commands.cooldown(1, 60, BucketType.user)
 async def badges(ctx, server: discord.Guild=None):
     count = Counter()
@@ -2286,27 +2315,12 @@ async def youtube(ctx, *, args):
         return results
 
     videos = search()
-    embed = discord.Embed(title=videos[0]["title"])
-    embed.add_field(name="Channel", value=videos[0]["channel"])
-    embed.add_field(name="Duration", value=videos[0]["duration"])
-    embed.add_field(name="Views", value=videos[0]["views"])
-    embed.add_field(
-        name="Watch",
-        value=f"[Click Here to open or long press to copy](https://www.youtube.com{videos[0]['url_suffix']})",
-    )
-    try:
-        embed.set_image(
-            url=f"https://img.youtube.com/vi/{videos[0]['id']}/hqdefault.jpg"
-        )
-    except:
-        try:
-            embed.set_image(url=videos[0]["thumbnails"][1])
-        except:
-            try:
-                embed.set_image(url=videos[0]["thumbnails"][2])
-            except:
-                embed.set_image(url=videos[0]["thumbnails"][3])
-    await ctx.send(embed=embed)
+    embed = discord.Embed(title=videos[0]["title"], inline=False)
+    embed.add_field(name="Channel", value=videos[0]["channel"], inline=False)
+    embed.add_field(name="Duration", value=videos[0]["duration"], jnline=False)
+    embed.add_field(name="Views", value=videos[0]["views"], inline=False)
+    url = f"https://www.youtube.com{videos[0]['url_suffix']})"
+    await ctx.send(content=url, embed=embed)
 
 
 @client.command(
