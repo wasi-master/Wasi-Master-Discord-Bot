@@ -464,8 +464,8 @@ async def youtubeinfo(ctx, video_url: str):
         tags = "". join([f"`{i}`, " for i in infos["tags"]][:-2])
         embed.add_field(name="Tags/Keywords", value=tags)
     if infos["average_rating"]:
-        embed.add_field(name="Average Rating", value=round(infos["average_rating"], 2))
-    embed.add_field(name="Video Info", value=f"Video Quality: {infos['width']}x{infos['height']}@{infos['fps']}\nVideo Codec: {infos['vcodec']}\nVideo File Extension: `.{infos['ext']}`")
+        embed.add_field(name="Likes", value=round(infos["average_rating"] * 20, 2) + "%")
+    embed.add_field(name="Video Info", value=f"Video Quality: {infos['width']}x{infos['height']}@{infos['fps']}p\nVideo Codec: {infos['vcodec']}\nVideo File Extension: `.{infos['ext']}`")
     embed.add_field(name="Audio Info", value=f"Audio Bitrate: {infos['abr']}\nAudio Codec: {infos['acodec']}")
     await ctx.send(embed=embed)
 
