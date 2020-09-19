@@ -43,50 +43,8 @@ from discord.ext.commands.cooldowns import BucketType
 import urllib.parse
 
 
-
-async def paginator (ctx , entries , limit=5 ):
-    pages = []
-    my_list = []
-    for i in entries :
-        my_list.append(i)
-    for i in range(0 , (len(my_list)) , int(limit)):
-          pages.append(tuple(my_list[i:i+int(limit)]))
-    c = pages
-
-    content = ""
-    for i in c[0]:
-       content += str(i) + "\n"
-    k = await ctx.send(f"`​``{content}`​``")
-    def check (reaction , user) :
-          return user == ctx.author and reaction.message.id == k.id
-    reactions = [ ":backward:",":stop:", ":forward:" ]
-    prev ,stop ,  next = reactions
-    for i in reactions :
-         await k.add_reaction(i)
-    pages = 0
-    while True :
-       try : 
-            a = await  ctx.bot.wait_for("reaction_add" , timeout = 45 , check = check)
-            if str(a[0]) == next:
-                   pages += 1 
-                   content = ""
-                   for i in c[pages]:
-                         content += str(i) + "\n"
-                   await k.edit(content = f"`​``{content}`​``")
-                   continue
-            if str(a[0]) == prev :
-                  pages -= 1 
-                  content = ""
-                  for i in c[pages]:
-                         content += str(i) + "\n"
-                  await k.edit(content = f"`​``{content}`​``")
-            if str(a[0]) == stop :
-               await k.delete()
-               break
-       except(asyncio.TimeoutError):
-            break
-       except (IndexError):
-            pass
+class BlackListed(commands.CheckFailure):
+    pass
 
 
 async def get_prefix(client, message):
@@ -277,6 +235,8 @@ async def bot_check(ctx):
         )
     if blocked is None:
         return True
+    else:
+        raise BlackListed
 
 
 async def create_db_pool():
@@ -357,6 +317,8 @@ async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
         return
     error = getattr(error, "original", error)
+    if isinstance(error, BlackListed):
+        pass
     if isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command} command")
     elif isinstance(error, commands.MissingPermissions):
