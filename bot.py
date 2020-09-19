@@ -2616,7 +2616,7 @@ async def hello(ctx):
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, channel = Optional[discord.TextChannel], *, text: commands.clean_content):
     if channel:
-        text = f"{text}\n\n- by {ctx.author} from {ctx.channel}")
+        text = f"{text}\n\n- sent by {ctx.author} from {ctx.channel.mention}"
     m = await ctx.send(text)
     def check(message):
         return message == ctx.message
