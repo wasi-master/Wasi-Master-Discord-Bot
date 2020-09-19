@@ -451,7 +451,7 @@ async def youtubeinfo(ctx, video_url: str):
         description = description[0:400] + "..."
     embed = discord.Embed(title=infos["title"], description=description, color=16711680)
     embed.set_author(name=infos["uploader"], url=infos["uploader_url"])
-    embed.set_image(url=infos["thumbnails"][-1])
+    embed.set_image(url=infos["thumbnails"][-1]["url"])
     embed.add_field(name="View Count", value=f"{infos['view_count']:,}")
     time = humanize.naturalday(datetime.datetime.strptime(infos["upload_date"], '%Y%m%d'))
     embed.add_field(name="Uploaded On", value=time)
