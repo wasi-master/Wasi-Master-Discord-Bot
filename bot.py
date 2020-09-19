@@ -459,7 +459,7 @@ async def youtubeinfo(ctx, video_url: str):
     if infos["age_limit"]:
         embed.add_field(name="Age Restriction", value=f"You must be {infos['age_limit']} or older in order to see this video")
     if infos["categories"]:
-        embed.add_field(name="Category", value=infos["category"])
+        embed.add_field(name="Category", value="\n".join(infos["categories"])
     if infos["tags"]:
         tags = "". join([f"`{i}`, " for i in infos["tags"]][:-2])
         embed.add_field(name="Tags/Keywords", value=tags)
