@@ -14,7 +14,7 @@ import os
 import random
 import secrets
 import time as timemodule
-from typing import Union
+from typing import Union, Optional
 import unicodedata
 
 
@@ -472,6 +472,26 @@ def tts(lang:str, text:str):
 def do_math(text: str):
     equation = text.replace("×", "*").replace("÷", "/").replace("^", "**")
     return eval(equation)
+
+
+@client.command(description="Chooses between multiple choices N times.", aliases=["cbo"])
+async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_content):
+
+    if len(choices) < 2:
+        return await ctx.send('Not enough choices to pick from.')
+
+    if times is None:
+        times = (len(choices) ** 2) + 1
+
+    times = min(10001, max(1, times))
+    results = Counter(rng.choice(choices) for i in range(times))
+    builder = []
+    if len(results) > 10:
+        builder.append('Only showing top 10 results...')
+    for index, (elem, count) in enumerate(results.most_common(10), start=1):
+        builder.append(f'{index}. {elem} ({plural(count):time}, {count/times:.2%})')
+
+    await ctx.send('\n'.join(builder))
 
 
 @client.command(aliases=["upt"], description="Shows how long the bot was up for")
@@ -2594,8 +2614,10 @@ async def hello(ctx):
 
 
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
-async def say(ctx, *, args: commands.clean_content):
-    m = await ctx.send(args)
+async def say(ctx, channel = Optional[discord.TextChannel], *, text: commands.clean_content):
+    if channel:
+        text = f"{text}\n\n- by {ctx.author} from {ctx.channel}")
+    m = await ctx.send(text)
     def check(message):
         return message == ctx.message
     try:
@@ -2603,7 +2625,7 @@ async def say(ctx, *, args: commands.clean_content):
     except asyncio.TimeoutError:
         pass
     else:
-        await m.edit(content=f"{args}\n\n- {ctx.author}")
+        await m.edit(content=f"{text}\n\n- sent by {ctx.author} but he deleted his message")
 
 
 @client.command(
