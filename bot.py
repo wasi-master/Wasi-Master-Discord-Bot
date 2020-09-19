@@ -2315,12 +2315,9 @@ async def youtube(ctx, *, args):
         return results
 
     videos = search()
-    embed = discord.Embed(title=videos[0]["title"], inline=False)
-    embed.add_field(name="Channel", value=videos[0]["channel"], inline=False)
-    embed.add_field(name="Duration", value=videos[0]["duration"], inline=False)
-    embed.add_field(name="Views", value=videos[0]["views"], inline=False)
-    url = f"https://www.youtube.com{videos[0]['url_suffix']})"
-    await ctx.send(content=url, embed=embed)
+    test = f'**__{videos[0]["title"]}__**\n```diff\nChannel:: {videos[0]["channel"]}\nDuration::{videos[0]["duration"]}\nViews:: {videos[0]["views"]}``'
+    url = f"https://www.youtube.com{videos[0]['url_suffix']}"
+    await ctx.send(content=text + "\n" url)
 
 
 @client.command(
