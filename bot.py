@@ -132,25 +132,29 @@ def get_p(prog, num=0):
 
 def get_flag(flag: str):
     if flag == "hypesquad_brilliance":
-        return "<:hypesquadbrilliance:724328585363456070>"
+        return "<:hypesquadbrilliance:724328585363456070> | HypeSquad Brilliance"
     elif flag == "hypesquad_bravery":
-        return "<:hypesquadbravery:724328585040625667>"
+        return "<:hypesquadbravery:724328585040625667> | HypeSquad Bravery"
     elif flag == "hypesquad_balance":
-        return "<:hypesquadbalance:724328585166454845>"
+        return "<:hypesquadbalance:724328585166454845> | HypeSquad Balance"
     elif flag == "hypesquad":
-        return "<:hypesquad:724328585237626931>"
+        return "<:hypesquad:724328585237626931> | HypeSquad Events"
     elif flag == "early_supporter":
-        return "<:earlysupporter:724588086646014034>"
+        return "<:earlysupporter:724588086646014034> | Early Supporter"
     elif flag == "bug_hunter":
-        return "<:bughunt:724588087052861531>"
+        return "<:bughunt:724588087052861531> | Bug Huntet"
     elif flag == "bug_hunter_level_2":
-        return "<:bughunt2:726775007908462653>"
+        return "<:bughunt2:726775007908462653> | Bug Hunter Level 2"
     elif flag == "verified_bot_developer":
-        return "<:verifiedbotdeveloper:740854331154235444>"
+        return "<:verifiedbotdeveloper:740854331154235444> | Early Verified Bot Developer"
     elif flag == "verified_bot":
-        return "<:verifiedbot:740855315985072189>"
+        return "<:verifiedbot:740855315985072189> | Verified Bot"
     elif flag == "partner":
-        return "<:partner:724588086461202442>"
+        return "<:partner:724588086461202442> | Discord Partner"
+    elif flag == "staff":
+        return "Discord Staff"
+    else:
+        return flag.title().replace("_", "")
 
 
 def get_status(status: str):
@@ -2616,8 +2620,11 @@ async def hello(ctx):
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(ctx, channel : Optional[discord.TextChannel] = None, *, text: commands.clean_content):
     if channel:
+        channel = channel
         text = f"{text}\n\n    - sent by {ctx.author} from {ctx.channel.mention}"
-    m = await ctx.send(text)
+    else:
+        channel = ctx.channel
+    m = await channel.send(text)
     def check(message):
         return message == ctx.message
     try:
