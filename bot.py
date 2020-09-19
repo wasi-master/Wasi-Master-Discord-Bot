@@ -456,8 +456,8 @@ async def youtubeinfo(ctx, video_url: str):
     time = humanize.naturalday(datetime.datetime.strptime(infos["upload_date"], '%Y%m%d'))
     embed.add_field(name="Uploaded On", value=time)
     embed.add_field(name="Duration", value=convert_sec_to_min(infos["duration"]))
-    if embed["age_limit"]:
-        embed.add_field(name="Age Restriction", value=f"You must be {embed['age_limit']} or older in order to see this video")
+    if infos["age_limit"]:
+        embed.add_field(name="Age Restriction", value=f"You must be {infos['age_limit']} or older in order to see this video")
     if infos["categories"]:
         embed.add_field(name="Category", value=infos["category"])
     if infos["tags"]:
@@ -479,7 +479,7 @@ async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_conte
         times = (len(choices) ** 2) + 1
 
     times = min(10001, max(1, times))
-    results = Counter(rng.choice(choices) for i in range(times))
+    results = Counter(random.choice(choices) for i in range(times))
     builder = []
     if len(results) > 10:
         builder.append('Only showing top 10 results...')
@@ -2317,7 +2317,7 @@ async def youtube(ctx, *, args):
     videos = search()
     embed = discord.Embed(title=videos[0]["title"], inline=False)
     embed.add_field(name="Channel", value=videos[0]["channel"], inline=False)
-    embed.add_field(name="Duration", value=videos[0]["duration"], jnline=False)
+    embed.add_field(name="Duration", value=videos[0]["duration"], inline=False)
     embed.add_field(name="Views", value=videos[0]["views"], inline=False)
     url = f"https://www.youtube.com{videos[0]['url_suffix']})"
     await ctx.send(content=url, embed=embed)
