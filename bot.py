@@ -2315,7 +2315,7 @@ async def youtube(ctx, *, args):
         return results
 
     videos = search()
-    test = f'**__{videos[0]["title"]}__**\n```prolog\nChannel:: {videos[0]["channel"]}\nDuration::{videos[0]["duration"]}\nViews:: {videos[0]["views"]}``'
+    text = f'**__{videos[0]["title"]}__**\n```prolog\nChannel:: {videos[0]["channel"]}\nDuration::{videos[0]["duration"]}\nViews:: {videos[0]["views"]}``'
     url = f"https://www.youtube.com{videos[0]['url_suffix']}"
     await ctx.send(content=text + "\n" + url)
 
