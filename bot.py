@@ -442,7 +442,7 @@ def do_math(text: str):
 @client.command(aliases=["yti", "ytinfo", "youtubei", "videoinfo", "youtubevideoinfo", "ytvi", "vi"], description=" See Details about a youtube video")
 async def youtubeinfo(ctx, video_url: str):
     ops = {}
-    msg = await ctx.send("Searching <a:typing:597589448607399949>")
+    msg = await ctx.send("Loading <a:typing:597589448607399949>")
     with  ytdl.YoutubeDL(ops) as ydl:
         infos = ydl.extract_info(video_url, download=False)
     await msg.delete()
@@ -467,7 +467,7 @@ async def youtubeinfo(ctx, video_url: str):
         embed.add_field(name="Average Rating", value=round(infos["average_rating"], 2))
     embed.add_field(name="Video Info", value=f"Video Quality: {infos['width']}x{infos['height']}@{infos['fps']}\nVideo Codec: {infos['vcodec']}\nVideo File Extension: `.{infos['ext']}`")
     embed.add_field(name="Audio Info", value=f"Audio Bitrate: {infos['abr']}\nAudio Codec: {infos['acodec']}")
-    
+    await ctx.send(embed=embed)
 
 @client.command(description="Chooses between multiple choices N times.", aliases=["cbo"])
 async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_content):
