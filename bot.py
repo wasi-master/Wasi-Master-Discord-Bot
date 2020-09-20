@@ -598,11 +598,11 @@ async def saveallemojis(ctx):
     embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
     for item in emojis:
         done +=1
-        name = item.name
+        name = item.namep
         ext = "." + str(item.url).split(".")[-1]
         await item.url.save(gn + "/" + name + ext)
-        if done // 25 == 0:
-            time_required = 0.038924*(len(emojis)-done)
+        if done // 5 == 0:
+            time_required = 0.25*(len(emojis)-done)
             embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} more seconds if all things go right")
             embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
             await msg.edit(embed=embed)
