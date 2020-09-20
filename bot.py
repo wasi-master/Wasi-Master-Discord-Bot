@@ -428,6 +428,41 @@ async def on_member_join(member):
         channel = guild.get_channel(channelid_for_this_guild)
         await channel.send(message)
 
+@client.event
+async def on_member_update(old, new):
+    if not new.status == discord.Status.online:
+        return
+    time = datetime.datetime.utcnow()
+    
+    status = await client.db.fetchrow(
+            """
+            SELECT *
+            FROM status
+            WHERE user_id=$1
+            """,
+            new.id 
+        )
+    
+    if status is None:
+        await client.db.execute(
+                    """
+                    INSERT INTO status (time, user_id)
+                    VALUES ($1, $2)
+                    """,
+                    time,
+                    new.id
+                )
+    else:
+        await client.db.execute(
+               """
+                UPDATE status
+                SET time = $2
+                WHERE user_id = $1;
+                """,
+                new.id,
+                time
+            ) 
+    
 def tts(lang:str, text:str):
     speech = gtts.gTTS(text=text, lang=lang, slow=False)
     speech.save("tts.mp3")
@@ -3379,6 +3414,14 @@ async def unban(ctx, *, member: str):
 @client.command(aliases=["ui", "whois", "wi", "whoami", "me"], description="Shows info about a user")
 async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
+    status = await client.db.fetchrow(
+            """
+            SELECT *
+            FROM status
+            WHERE user_id=$1
+            """,
+            member.id 
+        )
     if not len(member.roles) == 1:
         roles = [role for role in reversed(member.roles)]
         roles = roles[:-1]
@@ -3402,7 +3445,10 @@ async def userinfo(ctx, *, member: discord.Member = None):
     embed.add_field(name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}")
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr, inline=False)
-    
+    if not status is None:
+        embed.add_field(name="Last Seen",
+                        value=humanize.precisedelta(datetime.datetime.utcnow() - status) + " ago"
+                        )
     embed.add_field(
         name="Online Status",
         value=f"{get_status(member.desktop_status.name)} Desktop\n{get_status(member.web_status.name)} Web\n{get_status(member.mobile_status.name)} Mobile",
