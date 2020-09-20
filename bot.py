@@ -13,6 +13,7 @@ import numexpr
 import os
 import random
 import secrets
+import shutil
 import string 
 import time as timemodule
 import unicodedata
@@ -583,13 +584,15 @@ async def users(ctx):
 async def saveallemojis(ctx):
     guild = ctx.guild
     gn = guild.name
+    if os.path.isdir(gn):
+        shutil.rmtree(gn)
+    os.makedirs(gn)
     emojis = guild.emojis
     time_required = 0.038924*len(emojis)
     embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} seconds if all things go right")
     msg=await ctx.send(embed = embed)
     done = 0
     embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
-    os.makedirs(gn)
     for item in emojis:
         done +=1
         name = item.name
