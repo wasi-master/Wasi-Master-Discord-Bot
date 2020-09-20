@@ -438,7 +438,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_member_update(old, new):
-    if not new.status == discord.Status.offline & old.status == discord.Status.online:
+    if not (new.status != old.status) & new.status == discord.Status.offline:
         return
     time = datetime.datetime.utcnow()
 
