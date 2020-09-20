@@ -44,6 +44,10 @@ from discord.ext.commands.cooldowns import BucketType
 import urllib.parse
 
 
+
+
+ytdl.utils.but_reports_message = lambda: ""
+
 class BlackListed(commands.CheckFailure):
     pass
 
@@ -596,7 +600,7 @@ async def saveallemojis(ctx):
             embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} more seconds if all things go right")")
             embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
             await msg.edit(embed=embed)
-    embed = discord.Embed(title="Zipping <a:typing:597589448607399949>", description=f"This should take a few more seconds if all things go right)
+    embed = discord.Embed(title="Zipping <a:typing:597589448607399949>", description=f"This should take a few more seconds if all things go right")
     await msg.edit(embed=embed)
     def get_all_file_paths(directory): 
         file_paths = [] 
@@ -613,7 +617,7 @@ async def saveallemojis(ctx):
             zip.write(file)
     size = os.path.getsize(filename)
     size = humanize.naturalsize(size, gnu=True)
-    embed = discord.Embed(title="Completed", description=f"Task finished\n made a zip file containing **{len(emojis))}** in a **{size}** zip file")
+    embed = discord.Embed(title="Completed", description=f"Task finished\n made a zip file containing **{len(emojis)}** in a **{size}** zip file")
     embed.add_field(name="File size", value=size)
     await ctx.send(embed=embed, file=discord.File(filename))
 
