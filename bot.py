@@ -3502,7 +3502,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
         embed.add_field(name="Badges", value=flagstr, inline=False)
     if not status is None:
         embed.add_field(name="Last Seen",
-                        value=humanize.precisedelta(datetime.datetime.utcnow() - status) + " ago"
+                        value=humanize.precisedelta(datetime.datetime.utcnow() - status["time"]) + " ago"
     )
     embed.add_field(
         name="Online Status",
