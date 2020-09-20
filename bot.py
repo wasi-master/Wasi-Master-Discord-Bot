@@ -461,7 +461,7 @@ async def youtubeinfo(ctx, video_url: str):
     if infos["categories"]:
         embed.add_field(name="Category", value="\n".join(infos["categories"]))
     if infos["tags"]:
-        tags = "". join([f"`{i}`, " for i in infos["tags"]][:-2])
+        tags = "". join([f"`{i}`, " for i in infos["tags"]][:-3])
         embed.add_field(name="Tags/Keywords", value=tags)
     if infos["average_rating"]:
         embed.add_field(name="Likes", value=str(round(infos["average_rating"] * 20, 2)) + "%")
@@ -907,7 +907,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
         #  await ctx.send(best_guess)
         if not best_guess.get_text().replace("pokemon", "").strip().isdigit():
             raw_result = best_guess.get_text()
-            result = best_guess.get_text().lower().replace("pokemon", "").replace("png", "").replace("evolution", "").replace("shiny", "").replace("pokedex", "").strip()
+            result = best_guess.get_text().lower().replace("pokemon go", "").replace("pokemon", "").replace("png", "").replace("evolution", "").replace("shiny", "").replace("pokedex", "").strip()
             if result in wrong: result = wrong[result]
             break
         else:
