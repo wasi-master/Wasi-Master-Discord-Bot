@@ -581,7 +581,7 @@ async def users(ctx):
     tabular = tabulate(dict_c_u[:10], headers=["User", "Commands Used"], tablefmt="fancy_grid")
     await ctx.send(embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```"))
 
-@client.command(aliases=["sae"], description="Saves all emojis to a zip file and sends the zip file")
+@client.command(aliases=["sae", "getallemojis", "gae"], description="Saves all emojis to a zip file and sends the zip file")
 async def saveallemojis(ctx):
     guild = ctx.guild
     gn = guild.name
@@ -597,7 +597,7 @@ async def saveallemojis(ctx):
     for item in emojis:
         done +=1
         name = item.name
-        ext = str(item.url).split(".")[-1]
+        ext = "." + str(item.url).split(".")[-1]
         await item.url.save(gn + "/" + name + ext)
         if done // 25 == 0:
             time_required = 0.038924*(len(emojis)-done)
@@ -621,7 +621,7 @@ async def saveallemojis(ctx):
             zip.write(file)
     size = os.path.getsize(filename)
     size = humanize.naturalsize(size, gnu=True)
-    embed = discord.Embed(title="Completed", description=f"Task finished\n made a zip file containing **{len(emojis)}** in a **{size}** zip file")
+    embed = discord.Embed(title="Completed", description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size.replace('K', 'kB').replace('M', 'MB')}** zip file")
     embed.add_field(name="File size", value=size)
     await ctx.send(embed=embed, file=discord.File(filename))
 
