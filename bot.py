@@ -82,15 +82,16 @@ def convert_sec_to_min(seconds):
     return "%02d:%02d" % (minutes, sec)
 
 
-def get_p(prog, num=0):
-    numlist = list(range(0, 101, 4))
+def get_p(prog):
+    num = 0
+    numlist = list(range(0, 101, 5))
     text = ""
     for i in numlist:
         num += 1
         if prog >= i and numlist[num] > prog:
-            text += "⬤"
+            text += "•"
         else:
-            text += "—"
+            text += "-"
     return f"`{text}`"
 
 
