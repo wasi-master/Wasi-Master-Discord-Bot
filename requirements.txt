@@ -16,5 +16,6 @@ psutil
 randomcolor
 requests
 tabulate
+uwuify
 wikipedia
 youtube_dl
