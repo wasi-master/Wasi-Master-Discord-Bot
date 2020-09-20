@@ -83,8 +83,8 @@ def convert_sec_to_min(seconds):
 
 
 def get_p(percent: int):
-    total = 80
-    percent = percent * 0.8
+    total = 25
+    percent = percent * 0.25
     rn = round(percent/4)
     body = "☐" * total 
     li = list(body)
@@ -627,7 +627,7 @@ async def saveallemojis(ctx):
     embed = discord.Embed(title="Completed", description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size.replace('K', 'kB').replace('M', 'MB')}** zip file")
     embed.add_field(name="File size", value=size)
     await ctx.send(embed=embed, file=discord.File(filename))
-
+    shutil.rmtree(gn)
 
 @client.command(aliases=["bfutb", "bfb", "blockfrombot"], description="Blocks a user from using the bot (Owner only)")
 async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
