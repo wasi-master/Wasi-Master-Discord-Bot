@@ -594,7 +594,7 @@ async def saveallemojis(ctx):
         done +=1
         name = item.name
         ext = str(item.url).split(".")[-1]
-        await item.save(gn + "/" + name + ext)
+        await item.url.save(gn + "/" + name + ext)
         if done // 25 == 0:
             time_required = 0.038924*(len(emojis)-done)
             embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} more seconds if all things go right")
