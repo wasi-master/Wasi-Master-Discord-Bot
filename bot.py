@@ -623,9 +623,11 @@ async def saveallemojis(ctx):
             zip.write(file)
     size = os.path.getsize(filename)
     size = humanize.naturalsize(size, gnu=True)
+    size = size.replace('K', 'kB').replace('M', 'MB')
     await msg.delete()
-    embed = discord.Embed(title="Completed", description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size.replace('K', 'kB').replace('M', 'MB')}** zip file")
-    embed.add_field(name="File size", value=size)
+    embed = discord.Embed(title="Completed", description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size}** zip file")
+    embed.add_field(name="Original File size", value=size)
+    embed.set_footer(text="Discord may show a different size since it stores some more metadata about the file in their database")
     await ctx.send(embed=embed, file=discord.File(filename))
     shutil.rmtree(gn)
 
