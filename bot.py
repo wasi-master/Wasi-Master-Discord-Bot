@@ -16,7 +16,7 @@ import secrets
 import string 
 import time as timemodule
 import unicodedata
-
+from zipfile import ZipFile
 
 import aiogoogletrans as translator
 import aiohttp
@@ -428,41 +428,6 @@ async def on_member_join(member):
         channel = guild.get_channel(channelid_for_this_guild)
         await channel.send(message)
 
-@client.event
-async def on_member_update(old, new):
-    if not new.status == discord.Status.online:
-        return
-    time = datetime.datetime.utcnow()
-    
-    status = await client.db.fetchrow(
-            """
-            SELECT *
-            FROM status
-            WHERE user_id=$1
-            """,
-            new.id 
-        )
-    
-    if status is None:
-        await client.db.execute(
-                    """
-                    INSERT INTO status (time, user_id)
-                    VALUES ($1, $2)
-                    """,
-                    time,
-                    new.id
-                )
-    else:
-        await client.db.execute(
-               """
-                UPDATE status
-                SET time = $2
-                WHERE user_id = $1;
-                """,
-                new.id,
-                time
-            ) 
-    
 def tts(lang:str, text:str):
     speech = gtts.gTTS(text=text, lang=lang, slow=False)
     speech.save("tts.mp3")
@@ -610,6 +575,47 @@ async def users(ctx):
     tabular = tabulate(dict_c_u[:10], headers=["User", "Commands Used"], tablefmt="fancy_grid")
     await ctx.send(embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```"))
 
+@client.command(aliases=["sae"], description="Saves all emojis to a zip file and sends the zip file")
+async def saveallemojis(ctx):
+    guild = ctx.guild
+    gn = guild.name
+    emojis = guild.emojis
+    time_required = 0.038924*len(emojis)
+    embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} seconds if all things go right")")
+    msg=await ctx.send(embed = embed)
+    done = 0
+    embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
+    os.makedirs(gn)
+    for item in emojis:
+        done +=1
+        name = item.name
+        ext = str(item.url).split(".")[-1]
+        await item.save(gn + "/" + name + ext)
+        if done // 25 == 0:
+            time_required = 0.038924*(len(emojis)-done)
+            embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} more seconds if all things go right")")
+            embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
+            await msg.edit(embed=embed)
+    embed = discord.Embed(title="Zipping <a:typing:597589448607399949>", description=f"This should take a few more seconds if all things go right")")
+    await msg.edit(embed=embed)
+    def get_all_file_paths(directory): 
+        file_paths = [] 
+        for root, directories, files in os.walk(directory): 
+            for filename in files: 
+                filepath = os.path.join(root, filename) 
+                file_paths.append(filepath) 
+        return file_paths
+    directory = './' + gn
+    file_paths = get_all_file_paths(directory) 
+    filename = gn + "_emojis" + ".zip"
+    with ZipFile(filename,'w') as zip: 
+        for file in file_paths: 
+            zip.write(file)
+    size = os.path.getsize(filename)
+    size = humanize.naturalsize(size, gnu=True)
+    embed = discord.Embed(title="Completed", description=f"Task finished\n made a zip file containing **{len(emojis))}** in a **{size}** zip file")
+    embed.add_field(name="File size", value=size)
+    await ctx.send(embed=embed, file=discord.File(filename))
 
 
 @client.command(aliases=["bfutb", "bfb", "blockfrombot"], description="Blocks a user from using the bot (Owner only)")
@@ -3414,14 +3420,6 @@ async def unban(ctx, *, member: str):
 @client.command(aliases=["ui", "whois", "wi", "whoami", "me"], description="Shows info about a user")
 async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
-    status = await client.db.fetchrow(
-            """
-            SELECT *
-            FROM status
-            WHERE user_id=$1
-            """,
-            member.id 
-        )
     if not len(member.roles) == 1:
         roles = [role for role in reversed(member.roles)]
         roles = roles[:-1]
@@ -3445,10 +3443,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
     embed.add_field(name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}")
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr, inline=False)
-    if not status is None:
-        embed.add_field(name="Last Seen",
-                        value=humanize.precisedelta(datetime.datetime.utcnow() - status) + " ago"
-                        )
+    
     embed.add_field(
         name="Online Status",
         value=f"{get_status(member.desktop_status.name)} Desktop\n{get_status(member.web_status.name)} Web\n{get_status(member.mobile_status.name)} Mobile",
