@@ -581,7 +581,7 @@ async def saveallemojis(ctx):
     gn = guild.name
     emojis = guild.emojis
     time_required = 0.038924*len(emojis)
-    embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} seconds if all things go right")")
+    embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} seconds if all things go right")
     msg=await ctx.send(embed = embed)
     done = 0
     embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
@@ -596,7 +596,7 @@ async def saveallemojis(ctx):
             embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} more seconds if all things go right")")
             embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
             await msg.edit(embed=embed)
-    embed = discord.Embed(title="Zipping <a:typing:597589448607399949>", description=f"This should take a few more seconds if all things go right")")
+    embed = discord.Embed(title="Zipping <a:typing:597589448607399949>", description=f"This should take a few more seconds if all things go right)
     await msg.edit(embed=embed)
     def get_all_file_paths(directory): 
         file_paths = [] 
