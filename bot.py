@@ -522,7 +522,7 @@ async def websiteping(ctx, url: str):
         await session.close()
         end = datetime.datetime.utcnow()
         elapsed = end - start
-        embed = discord.Embed(description=f"Website took **{elapsed.total_seconds() * 1000}ms** to complete")
+        embed = discord.Embed(description=f"Website took **{round((elapsed.total_seconds() * 1000), 2)}ms** to complete")
         embed.set_footer(text=f"Status Code: {status}")
         await ctx.send(embed=embed)
     else:
