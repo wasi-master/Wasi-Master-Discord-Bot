@@ -82,17 +82,17 @@ def convert_sec_to_min(seconds):
     return "%02d:%02d" % (minutes, sec)
 
 
-def get_p(prog):
-    num = 0
-    numlist = list(range(0, 101, 5))
-    text = ""
-    for i in numlist:
-        num += 1
-        if prog >= i and numlist[num] > prog:
-            text += "•"
-        else:
-            text += "-"
-    return f"`{text}`"
+def get_p(percent: int):
+    total = 100
+    rn = round(percent/4)
+    body = "—" * total 
+    li = list(body)
+    
+    for i , elem in enumerate(li[:rn]):
+        li[i] = "○"
+        
+    ku = "".join(li)
+    return f"{ku}"
 
 
 def get_flag(flag: str):
