@@ -598,7 +598,7 @@ async def saveallemojis(ctx):
     embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
     for item in emojis:
         done +=1
-        name = item.namep
+        name = item.name
         ext = "." + str(item.url).split(".")[-1]
         await item.url.save(gn + "/" + name + ext)
         if done // 5 == 0:
