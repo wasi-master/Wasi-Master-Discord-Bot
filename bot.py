@@ -83,13 +83,14 @@ def convert_sec_to_min(seconds):
 
 
 def get_p(percent: int):
-    total = 100
+    total = 80
+    percent = percent * 0.8
     rn = round(percent/4)
-    body = "—" * total 
+    body = "☐" * total 
     li = list(body)
     
     for i , elem in enumerate(li[:rn]):
-        li[i] = "○"
+        li[i] = "■"
         
     ku = "".join(li)
     return f"{ku}"
@@ -582,6 +583,7 @@ async def users(ctx):
     await ctx.send(embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```"))
 
 @client.command(aliases=["sae", "getallemojis", "gae"], description="Saves all emojis to a zip file and sends the zip file")
+@commands.max_concurrency(1, BucketType.channel, wait=True)
 async def saveallemojis(ctx):
     guild = ctx.guild
     gn = guild.name
@@ -589,7 +591,7 @@ async def saveallemojis(ctx):
         shutil.rmtree(gn)
     os.makedirs(gn)
     emojis = guild.emojis
-    time_required = 0.038924*len(emojis)
+    time_required = 0.25*len(emojis)
     embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} seconds if all things go right")
     msg=await ctx.send(embed = embed)
     done = 0
