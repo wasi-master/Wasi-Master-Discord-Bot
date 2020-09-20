@@ -621,6 +621,7 @@ async def saveallemojis(ctx):
             zip.write(file)
     size = os.path.getsize(filename)
     size = humanize.naturalsize(size, gnu=True)
+    await msg.delete()
     embed = discord.Embed(title="Completed", description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size.replace('K', 'kB').replace('M', 'MB')}** zip file")
     embed.add_field(name="File size", value=size)
     await ctx.send(embed=embed, file=discord.File(filename))
