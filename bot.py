@@ -35,6 +35,7 @@ import randomcolor
 import re
 import requests
 from tabulate import tabulate
+from uwuify import uwu
 import wikipedia as wikimodule
 import youtube_dl as ytdl
 
@@ -545,6 +546,11 @@ async def uptime(ctx):
     embed.set_author(name="Bot Uptime")
     embed.set_footer(text=f"Note: This also means thr bot hasn’t been updated for {precisedelta} because the bot is restarted to update")
     await ctx.send(embed=embed)
+
+
+@client.command(aliases=["uwu"], description="uwuifies a given text")
+async def uwuify(ctx, *, text: commands.clean_content):
+    await ctx.send(uwu(text))
 
 
 @client.command(aliases=["webping", "pingweb", "wp", "pw"])
