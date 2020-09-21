@@ -2001,13 +2001,14 @@ async def restart(ctx):
         await ctx.send("You are not the bot owner :grin::grin::grin:")
 
 
+"""
 @client.command(aliases=["sd"], description="Stops the bot, only for the bot owner")
 async def shutdown(ctx):
     if ctx.message.author.id == 538332632535007244:
         exit()
     else:
         await ctx.send("You are not the bot owner :grin::grin::grin:")
-
+"""
 
 
 @client.command(aliases=["sd"],description="Custom Slow Mode")
