@@ -3516,9 +3516,9 @@ async def userinfo(ctx, *, member: discord.Member = None):
     embed.add_field(name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}")
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr, inline=False)
-    if not status is None:
+    if not status is None and member.status == discord.Status.offline:
         embed.add_field(name="Last Seen",
-                        value=humanize.precisedelta(datetime.datetime.utcnow() - status["time"]) + " ago"
+                        value=humanize.precisedelta(datetime.datetime.utcnow() - status["last_seen"]) + " ago"
     )
     embed.add_field(
         name="Online Status",
