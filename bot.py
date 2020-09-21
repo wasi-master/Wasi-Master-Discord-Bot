@@ -439,7 +439,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_member_update(old, new):
-    if not (new.status != old.status and str(old.status) != "offline" and str(new.status) == "offline" and if not new.guild.id == 264445053596991498):
+    if not (new.status != old.status and str(old.status) != "offline" and str(new.status) == "offline" and new.guild.id == 264445053596991498):
         return
     time = datetime.datetime.utcnow()
 
