@@ -455,7 +455,7 @@ async def on_member_update(old, new):
     if status is None:
         await client.db.execute(
                     """
-                    INSERT INTO status (time, user_id)
+                    INSERT INTO status (last_seen, user_id)
                     VALUES ($1, $2)
                     """,
                     time,
@@ -465,7 +465,7 @@ async def on_member_update(old, new):
         await client.db.execute(
                """
                 UPDATE status
-                SET time = $2
+                SET last_seen = $2
                 WHERE user_id = $1;
                 """,
                 new.id,
