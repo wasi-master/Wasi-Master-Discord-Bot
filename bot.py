@@ -439,7 +439,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_member_update(old, new):
-    if not new.status != old.status:
+    if not (new.status != old.status and str(old.status) != "offline" and str(new.status) == "offline" and if not new.guild.id == 264445053596991498):
         return
     time = datetime.datetime.utcnow()
 
@@ -3366,7 +3366,7 @@ async def servers(ctx):
     members = len(memberlist)
     average = round(int(members) / int(servers))
     await ctx.send(
-        f"I'm in {servers:3,} servers and there are {members:3,} members total in all servers combined and {average:3,}  on average in each server"
+        f"I'm in {servers:3,} servers and there are {members:3,} members ({len(client.users):3,} Unique) total in all servers combined and {average:3,} on average in each server"
     )
 
 
