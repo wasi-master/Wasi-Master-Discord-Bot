@@ -84,8 +84,8 @@ def convert_sec_to_min(seconds):
 
 
 def get_p(percent: int):
-    total = 25
-    percent = percent * 0.25
+    total = 18
+    percent = percent * 0.18
     rn = round(percent/4)
     body = "☐" * total 
     li = list(body)
@@ -1993,12 +1993,21 @@ async def firstmessage(ctx, channel: discord.TextChannel = None):
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["stop"], description="Stops the bot, only for the bot owner")
-async def shutdown(ctx):
+@client.command(aliases=["rs"], description="Stops the bot, only for the bot owner")
+async def restart(ctx):
     if ctx.message.author.id == 538332632535007244:
         await client.close()
     else:
         await ctx.send("You are not the bot owner :grin::grin::grin:")
+
+
+@client.command(aliases=["sd"], description="Stops the bot, only for the bot owner")
+async def shutdown(ctx):
+    if ctx.message.author.id == 538332632535007244:
+        exit()
+    else:
+        await ctx.send("You are not the bot owner :grin::grin::grin:")
+
 
 
 @client.command(aliases=["sd"],description="Custom Slow Mode")
