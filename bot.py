@@ -483,6 +483,60 @@ def do_math(text: str):
     return eval(equation)
 
 
+async def _basic_cleanup_strategy(ctx, search):
+        count = 0
+        async for msg in ctx.history(limit=search, before=ctx.message):
+            if msg.author == ctx.me:
+                await msg.delete()
+                count += 1
+        return { 'Bot': count }
+
+async def _complex_cleanup_strategy(ctx, search):
+    prefix_for_this_guild = await client.db.fetchrow(
+            """
+            SELECT prefix
+            FROM guilds
+            WHERE id=$1
+            """,
+            message.guild.id 
+        )
+    prefix = str(prefix_for_this_guild["prefix"])
+
+    def check(m):
+        return m.author == ctx.me or m.content.startswith(prefix)
+
+    deleted = await ctx.channel.purge(limit=search, check=check, before=ctx.message)
+    return Counter(m.author.display_name for m in deleted)
+
+@client.command(aliases=["clnup"], description="Cleans the bot's messages and the person that executed that command's messages if bot has permissions to do that")
+@has_permissions(manage_messages=True)
+async def cleanup(ctx, search=100):
+    """Cleans up the bot's messages from the channel.
+    If a search number is specified, it searches that many messages to delete.
+    If the bot has Manage Messages permissions then it will try to delete
+    messages that look like they invoked the bot as well.
+    After the cleanup is completed, the bot will send you a message with
+    which people got their messages deleted and their count. This is useful
+    to see which users are spammers.
+    You must have Manage Messages permission to use this.
+    """
+
+    strategy = _basic_cleanup_strategy
+    if ctx.me.permissions_in(ctx.channel).manage_messages:
+        strategy = _complex_cleanup_strategy
+
+    spammers = await strategy(ctx, search)
+    deleted = sum(spammers.values())
+    messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
+    if deleted:
+        messages.append('')
+        spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
+        messages.extend(f'- **{author}**: {count}' for author, count in spammers)
+
+    await ctx.send('\n'.join(messages), delete_after=10)
+
+
+
 @client.command(aliases=["yti", "ytinfo", "youtubei", "videoinfo", "youtubevideoinfo", "ytvi", "vi"], description=" See Details about a youtube video")
 async def youtubeinfo(ctx, video_url: str):
     ops = {}
