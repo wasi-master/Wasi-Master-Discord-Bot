@@ -14,7 +14,7 @@ import os
 import random
 import secrets
 import shutil
-import string 
+import string
 import time as timemodule
 import unicodedata
 from zipfile import ZipFile
@@ -46,9 +46,8 @@ from discord.ext.commands.cooldowns import BucketType
 import urllib.parse
 
 
-
-
 ytdl.utils.but_reports_message = lambda: ""
+
 
 class BlackListed(commands.CheckFailure):
     pass
@@ -58,25 +57,26 @@ async def get_prefix(client, message):
     if isinstance(message.channel, discord.DMChannel):
         return ["", ","]
     prefix_for_this_guild = await client.db.fetchrow(
-            """
+        """
             SELECT prefix
             FROM guilds
             WHERE id=$1
             """,
-            message.guild.id 
-        )
+        message.guild.id,
+    )
     if prefix_for_this_guild is None:
         await client.db.execute(
-                """
+            """
                 INSERT INTO guilds (id, prefix)
                 VALUES ($1, $2)
                 """,
-                message.guild.id,
-                ","
-            )
+            message.guild.id,
+            ",",
+        )
         prefix_for_this_guild = {"prefix": ","}
     prefix_return = str(prefix_for_this_guild["prefix"])
-    return commands.when_mentioned_or(prefix_return) (client, message)
+    return commands.when_mentioned_or(prefix_return)(client, message)
+
 
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
@@ -86,13 +86,13 @@ def convert_sec_to_min(seconds):
 def get_p(percent: int):
     total = 18
     percent = percent * 0.18
-    rn = round(percent/4)
-    body = "☐" * total 
+    rn = round(percent / 4)
+    body = "☐" * total
     li = list(body)
-    
-    for i , elem in enumerate(li[:rn]):
+
+    for i, elem in enumerate(li[:rn]):
         li[i] = "■"
-        
+
     ku = "".join(li)
     return f"{ku}"
 
@@ -113,7 +113,9 @@ def get_flag(flag: str):
     elif flag == "bug_hunter_level_2":
         return "<:bughunt2:726775007908462653> | Bug Hunter Level 2"
     elif flag == "verified_bot_developer":
-        return "<:verifiedbotdeveloper:740854331154235444> | Early Verified Bot Developer"
+        return (
+            "<:verifiedbotdeveloper:740854331154235444> | Early Verified Bot Developer"
+        )
     elif flag == "verified_bot":
         return "<:verifiedbot:740855315985072189> | Verified Bot"
     elif flag == "partner":
@@ -139,16 +141,24 @@ def get_status(status: str):
         return status
 
 
-def str_to_sec(text:str):
-    times = {'s': lambda x: x, 'm': lambda x: x*60, 'h':lambda x: x*3600, 'd':lambda x: x*3600*24} #map s/m/h/d to multiply time provided to seconds
-    regex = r'([0-9]+)(s|m|h|d)'
+def str_to_sec(text: str):
+    times = {
+        "s": lambda x: x,
+        "m": lambda x: x * 60,
+        "h": lambda x: x * 3600,
+        "d": lambda x: x * 3600 * 24,
+    }  # map s/m/h/d to multiply time provided to seconds
+    regex = r"([0-9]+)(s|m|h|d)"
     # time = '45m'
     match = re.match(regex, text, flags=re.I)
     return times[match[2]](int(match[1]))
 
 
-client = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
-dblpy = dbl.DBLClient(client, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs")
+client = commands.Bot(command_prefix=get_prefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+dblpy = dbl.DBLClient(
+    client,
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs",
+)
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
 alex_api = alexflipnote.Client()
@@ -168,78 +178,79 @@ async def on_command_completion(ctx):
     else:
         command_name = f"{ctx.command.parent.name} {ctx.command.name}"
     usage = await client.db.fetchrow(
-            """
+        """
             SELECT usage
             FROM usages
             WHERE name=$1
             """,
-            command_name
-        )
+        command_name,
+    )
     if usage is None:
         await client.db.execute(
-                """
+            """
                 INSERT INTO usages (usage, name)
                 VALUES ($1, $2)
                 """,
-                1,
-                command_name
-            )
+            1,
+            command_name,
+        )
     else:
         usage = usage["usage"]
         usage += 1
         await client.db.execute(
-               """
+            """
                 UPDATE usages
                 SET usage = $2
                 WHERE name = $1;
                 """,
-                command_name,
-                usage
-           ) 
+            command_name,
+            usage,
+        )
 
 
 @client.event
 async def on_command(ctx):
     id = ctx.author.id
     usage = await client.db.fetchrow(
-            """
+        """
             SELECT usage
             FROM users
             WHERE user_id=$1
             """,
-            id
-        )
+        id,
+    )
     if usage is None:
         await client.db.execute(
-                """
+            """
                 INSERT INTO users (usage, user_id)
                 VALUES ($1, $2)
                 """,
-                1,
-                id
-            )
+            1,
+            id,
+        )
     else:
         usage = usage["usage"]
         usage += 1
         await client.db.execute(
-               """
+            """
                 UPDATE users
                 SET usage = $2
                 WHERE user_id = $1;
                 """,
-                id,
-                usage
-           ) 
+            id,
+            usage,
+        )
+
 
 async def bot_check(ctx):
     blocked = await client.db.fetchrow(
-            """
+        """
             SELECT *
             FROM blocks
             WHERE user_id=$1
             """,
-            ctx.author.id 
-        )
+        ctx.author.id,
+    )
     if blocked is None:
         return True
     else:
@@ -247,9 +258,16 @@ async def bot_check(ctx):
 
 
 async def create_db_pool():
-    client.db = await asyncpg.create_pool(host="ec2-52-23-86-208.compute-1.amazonaws.com", database="d5squd8cvojua1", user="poladbevzydxyx", password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8")
+    client.db = await asyncpg.create_pool(
+        host="ec2-52-23-86-208.compute-1.amazonaws.com",
+        database="d5squd8cvojua1",
+        user="poladbevzydxyx",
+        password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8",
+    )
+
+
 client.loop.run_until_complete(create_db_pool())
- 
+
 #  @client.event
 async def fake_on_ready():
     await client.wait_until_ready()
@@ -263,8 +281,11 @@ async def fake_on_ready():
     client.started_at = datetime.datetime.utcnow()
     update_server_count.start()
     client.load_extension("jishaku")
+
+
 client.loop.create_task(fake_on_ready())
- 
+
+
 @tasks.loop(seconds=86400)
 async def update_server_count():
     memberlist = []
@@ -296,13 +317,14 @@ async def on_guild_join(guild):
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
     await client.db.execute(
-                """
+        """
                 INSERT INTO guilds (id, prefix)
                 VALUES ($1, $2)
                 """,
-                guild.id,
-                ","
-            )
+        guild.id,
+        ",",
+    )
+
 
 @client.event
 async def on_guild_remove(guild):
@@ -331,7 +353,9 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("I can't do that")
     elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(f"The {str(error.param).split(':')[0].strip()} argument is missing")
+        await ctx.send(
+            f"The {str(error.param).split(':')[0].strip()} argument is missing"
+        )
     elif isinstance(error, commands.CommandNotFound):
         pass
     elif "not found" in str(error):
@@ -339,16 +363,16 @@ async def on_command_error(ctx, error):
     elif isinstance(error, discord.Forbidden):
         await ctx.send("I am missing permissions")
     # elif isinstance(error, discord.HTTPException):
-        # await ctx.send("Message Too long to be sent")
+    # await ctx.send("Message Too long to be sent")
     elif "Cannot send messages to this user" in str(error):
         pass
     elif isinstance(error, commands.CommandOnCooldown):
         embed = discord.Embed(
-            title = "Slow Down!",
-            description = f"The command `{ctx.command}` is on cooldown, please try again after **{round(error.retry_after, 2)}** seconds.\nPatience, patience.",
-            colour = 16711680
+            title="Slow Down!",
+            description=f"The command `{ctx.command}` is on cooldown, please try again after **{round(error.retry_after, 2)}** seconds.\nPatience, patience.",
+            colour=16711680,
         )
-        await ctx.send(embed = embed)
+        await ctx.send(embed=embed)
     else:
         botembed = discord.Embed(
             description=f"Welp, The command was unsuccessful for this reason:\n```{error}```\nReact with :white_check_mark: to report the error to the support server\nIf you can't understand why this happens, ask Wasi Master#4245 or join the bot support server (you can get the invite with the support command)"
@@ -366,15 +390,13 @@ async def on_command_error(ctx, error):
         except asyncio.TimeoutError:
             try:
                 botembed.set_footer(
-                    icon_url=ctx.author.avatar_url,
-                    text="You were too late to report",
+                    icon_url=ctx.author.avatar_url, text="You were too late to report",
                 )
                 await message.edit(embed=botembed)
                 return await message.clear_reactions()
             except:
                 botembed.set_footer(
-                    icon_url=ctx.author.avatar_url,
-                    text="You were too late to answer",
+                    icon_url=ctx.author.avatar_url, text="You were too late to answer",
                 )
                 await message.edit(embed=botembed)
                 return await message.remove_reaction("\u2705", ctx.guild.me)
@@ -405,28 +427,32 @@ async def on_command_error(ctx, error):
 async def on_invite_create(invite):
     await tracker.update_invite_cache(invite)
 
+
 @client.event
 async def on_guild_join(guild):
     await tracker.update_guild_cache(guild)
+
 
 @client.event
 async def on_invite_delete(invite):
     await tracker.remove_invite_cache(invite)
 
+
 @client.event
 async def on_guild_remove(guild):
     await tracker.remove_guild_cache(guild)
 
+
 @client.event
 async def on_member_join(member):
     channelid_for_this_guild = await client.db.fetchrow(
-            """
+        """
             SELECT channel_id
             FROM invitetracker
             WHERE guild_id=$1
             """,
-            member.guild.id 
-        )
+        member.guild.id,
+    )
     if channelid_for_this_guild is None:
         return
     else:
@@ -439,40 +465,46 @@ async def on_member_join(member):
 
 @client.event
 async def on_member_update(old, new):
-    if not (new.status != old.status and str(old.status) != "offline" and str(new.status) == "offline" and len(new.guild.members) < 500):
+    if not (
+        new.status != old.status
+        and str(old.status) != "offline"
+        and str(new.status) == "offline"
+        and len(new.guild.members) < 500
+    ):
         return
     time = datetime.datetime.utcnow()
 
     status = await client.db.fetchrow(
-            """
+        """
             SELECT *
             FROM status
             WHERE user_id=$1
             """,
-            new.id 
-        )
+        new.id,
+    )
 
     if status is None:
         await client.db.execute(
-                    """
+            """
                     INSERT INTO status (last_seen, user_id)
                     VALUES ($1, $2)
                     """,
-                    time,
-                    new.id
-                )
+            time,
+            new.id,
+        )
     else:
         await client.db.execute(
-               """
+            """
                 UPDATE status
                 SET last_seen = $2
                 WHERE user_id = $1;
                 """,
-                new.id,
-                time
-            ) 
+            new.id,
+            time,
+        )
 
-def tts(lang:str, text:str):
+
+def tts(lang: str, text: str):
     speech = gtts.gTTS(text=text, lang=lang, slow=False)
     speech.save("tts.mp3")
     return
@@ -484,22 +516,23 @@ def do_math(text: str):
 
 
 async def _basic_cleanup_strategy(ctx, search):
-        count = 0
-        async for msg in ctx.history(limit=search, before=ctx.message):
-            if msg.author == ctx.me:
-                await msg.delete()
-                count += 1
-        return { 'Bot': count }
+    count = 0
+    async for msg in ctx.history(limit=search, before=ctx.message):
+        if msg.author == ctx.me:
+            await msg.delete()
+            count += 1
+    return {"Bot": count}
+
 
 async def _complex_cleanup_strategy(ctx, search):
     prefix_for_this_guild = await client.db.fetchrow(
-            """
+        """
             SELECT prefix
             FROM guilds
             WHERE id=$1
             """,
-            ctx.message.guild.id 
-        )
+        ctx.message.guild.id,
+    )
     prefix = str(prefix_for_this_guild["prefix"])
 
     def check(m):
@@ -508,7 +541,11 @@ async def _complex_cleanup_strategy(ctx, search):
     deleted = await ctx.channel.purge(limit=search, check=check, before=ctx.message)
     return Counter(m.author.display_name for m in deleted)
 
-@client.command(aliases=["clnup"], description="Cleans the bot's messages and the person that executed that command's messages if bot has permissions to do that")
+
+@client.command(
+    aliases=["clnup"],
+    description="Cleans the bot's messages and the person that executed that command's messages if bot has permissions to do that",
+)
 @has_permissions(manage_messages=True)
 async def cleanup(ctx, search=100):
     """Cleans up the bot's messages from the channel.
@@ -529,19 +566,29 @@ async def cleanup(ctx, search=100):
     deleted = sum(spammers.values())
     messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
     if deleted:
-        messages.append('')
+        messages.append("")
         spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
-        messages.extend(f'- **{author}**: {count}' for author, count in spammers)
+        messages.extend(f"- **{author}**: {count}" for author, count in spammers)
 
-    await ctx.send('\n'.join(messages), delete_after=10)
+    await ctx.send("\n".join(messages), delete_after=10)
 
 
-
-@client.command(aliases=["yti", "ytinfo", "youtubei", "videoinfo", "youtubevideoinfo", "ytvi", "vi"], description=" See Details about a youtube video")
+@client.command(
+    aliases=[
+        "yti",
+        "ytinfo",
+        "youtubei",
+        "videoinfo",
+        "youtubevideoinfo",
+        "ytvi",
+        "vi",
+    ],
+    description=" See Details about a youtube video",
+)
 async def youtubeinfo(ctx, video_url: str):
     ops = {}
     msg = await ctx.send("Loading <a:typing:597589448607399949>")
-    with  ytdl.YoutubeDL(ops) as ydl:
+    with ytdl.YoutubeDL(ops) as ydl:
         infos = ydl.extract_info(video_url, download=False)
     await msg.delete()
     description = infos["description"]
@@ -551,27 +598,41 @@ async def youtubeinfo(ctx, video_url: str):
     embed.set_author(name=infos["uploader"], url=infos["uploader_url"])
     embed.set_image(url=infos["thumbnails"][-1]["url"])
     embed.add_field(name="View Count", value=f"{infos['view_count']:,}")
-    time = datetime.datetime.strptime(infos["upload_date"], '%Y%m%d')
+    time = datetime.datetime.strptime(infos["upload_date"], "%Y%m%d")
     embed.add_field(name="Uploaded On", value=time.strftime("%d %B, %Y"))
     embed.add_field(name="Duration", value=convert_sec_to_min(infos["duration"]))
     if infos["age_limit"]:
-        embed.add_field(name="Age Restriction", value=f"You must be {infos['age_limit']} or older in order to see this video")
+        embed.add_field(
+            name="Age Restriction",
+            value=f"You must be {infos['age_limit']} or older in order to see this video",
+        )
     if infos["categories"]:
         embed.add_field(name="Category", value="\n".join(infos["categories"]))
     if infos["tags"]:
-        tags = "". join([f"`{i}`, " for i in infos["tags"]][:-3])
+        tags = "".join([f"`{i}`, " for i in infos["tags"]][:-3])
         embed.add_field(name="Tags/Keywords", value=tags)
     if infos["average_rating"]:
-        embed.add_field(name="Likes", value=str(round(infos["average_rating"] * 20, 2)) + "%")
-    embed.add_field(name="Video Info", value=f"Video Quality: {infos['width']}x{infos['height']}@{infos['fps']}p\nVideo Codec: {infos['vcodec']}\nVideo File Extension: `.{infos['ext']}`")
-    embed.add_field(name="Audio Info", value=f"Audio Bitrate: {infos['abr']}Kbps\nAudio Codec: {infos['acodec']}")
+        embed.add_field(
+            name="Likes", value=str(round(infos["average_rating"] * 20, 2)) + "%"
+        )
+    embed.add_field(
+        name="Video Info",
+        value=f"Video Quality: {infos['width']}x{infos['height']}@{infos['fps']}p\nVideo Codec: {infos['vcodec']}\nVideo File Extension: `.{infos['ext']}`",
+    )
+    embed.add_field(
+        name="Audio Info",
+        value=f"Audio Bitrate: {infos['abr']}Kbps\nAudio Codec: {infos['acodec']}",
+    )
     await ctx.send(embed=embed)
 
-@client.command(description="Chooses between multiple choices N times.", aliases=["cbo"])
+
+@client.command(
+    description="Chooses between multiple choices N times.", aliases=["cbo"]
+)
 async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_content):
 
     if len(choices) < 2:
-        return await ctx.send('Not enough choices to pick from.')
+        return await ctx.send("Not enough choices to pick from.")
 
     if times is None:
         times = (len(choices) ** 2) + 1
@@ -580,17 +641,17 @@ async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_conte
     results = Counter(random.choice(choices) for i in range(times))
     builder = []
     if len(results) > 10:
-        builder.append('Only showing top 10 results...')
+        builder.append("Only showing top 10 results...")
     for index, (elem, count) in enumerate(results.most_common(10), start=1):
-        builder.append(f'{index}. {elem} ({plural(count):time}, {count/times:.2%})')
+        builder.append(f"{index}. {elem} ({plural(count):time}, {count/times:.2%})")
 
-    await ctx.send('\n'.join(builder))
+    await ctx.send("\n".join(builder))
 
 
 @client.command(aliases=["upt"], description="Shows how long the bot was up for")
 async def uptime(ctx):
     delta = datetime.datetime.utcnow() - ctx.bot.started_at
-    precisedelta = humanize.precisedelta(delta, minimum_unit = "seconds")
+    precisedelta = humanize.precisedelta(delta, minimum_unit="seconds")
     naturalday = humanize.naturalday(ctx.bot.started_at)
     if naturalday == "today":
         naturalday = ""
@@ -598,7 +659,9 @@ async def uptime(ctx):
         naturalday = f"Bot is online since {naturalday}"
     embed = discord.Embed(description=f"Bot is online for {precisedelta}\n{naturalday}")
     embed.set_author(name="Bot Uptime")
-    embed.set_footer(text=f"Note: This also means thr bot hasn’t been updated for {precisedelta} because the bot is restarted to update")
+    embed.set_footer(
+        text=f"Note: This also means thr bot hasn’t been updated for {precisedelta} because the bot is restarted to update"
+    )
     await ctx.send(embed=embed)
 
 
@@ -610,75 +673,101 @@ async def uwuify(ctx, *, text: commands.clean_content):
 @client.command(aliases=["webping", "pingweb", "wp", "pw"])
 async def websiteping(ctx, url: str):
     session = aiohttp.ClientSession()
-    if not url.startswith("http://") or url.startswith("https://"): url = "https://" + url
-    if re.match("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", url):
+    if not url.startswith("http://") or url.startswith("https://"):
+        url = "https://" + url
+    if re.match(
+        "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+        url,
+    ):
         start = datetime.datetime.utcnow()
         async with session.get(url) as r:
             status = r.status
         await session.close()
         end = datetime.datetime.utcnow()
         elapsed = end - start
-        embed = discord.Embed(description=f"Website took **{round((elapsed.total_seconds() * 1000), 2)}ms** to complete")
+        embed = discord.Embed(
+            description=f"Website took **{round((elapsed.total_seconds() * 1000), 2)}ms** to complete"
+        )
         embed.set_footer(text=f"Status Code: {status}")
         await ctx.send(embed=embed)
     else:
         await ctx.send(f"Invalid URL: {url}")
 
 
-@client.command(aliases=["flags"], description="Shows how many badges are in this guild")
+@client.command(
+    aliases=["flags"], description="Shows how many badges are in this guild"
+)
 @commands.cooldown(1, 60, BucketType.user)
-async def badges(ctx, server: discord.Guild=None):
+async def badges(ctx, server: discord.Guild = None):
     count = Counter()
     guild = server or ctx.guild
     for member in guild.members:
-      for flag in member.public_flags.all():
-        count[flag.name] += 1
-    
+        for flag in member.public_flags.all():
+            count[flag.name] += 1
+
     msg = ""
     count = dict(reversed(sorted(count.items(), key=lambda item: item[1])))
     for k, v in count.items():
         msg += f'{k.title().replace("_", " ")}: **{v}**\n\n'
-    
+
     embed = discord.Embed()
     embed.set_author(name=f"Badge Count in {guild.name}", icon_url=guild.icon_url)
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["usg", "usages"], description="Shows usage statistics about commands")
+@client.command(
+    aliases=["usg", "usages"], description="Shows usage statistics about commands"
+)
 @commands.cooldown(1, 10, BucketType.user)
 async def usage(ctx):
     command_usage = await client.db.fetch(
-                """
+        """
                 SELECT *
                 FROM usages;
                 """
-            )
+    )
     dict_command_usage = {}
     for i in command_usage:
         dict_command_usage[i["name"]] = i["usage"]
-    dict_c_u = list(reversed(sorted(dict_command_usage.items(), key=lambda item: item[1])))
+    dict_c_u = list(
+        reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
+    )
     tabular = tabulate(dict_c_u[:15], headers=["Name", "Usage"], tablefmt="fancy_grid")
-    await ctx.send(embed=discord.Embed(title="Top 15 Commands", description=f"```{tabular}```"))
+    await ctx.send(
+        embed=discord.Embed(title="Top 15 Commands", description=f"```{tabular}```")
+    )
 
 
-@client.command(aliases=["usr", "user"], description="Shows usage statistics about users")
+@client.command(
+    aliases=["usr", "user"], description="Shows usage statistics about users"
+)
 @commands.cooldown(1, 10, BucketType.user)
 async def users(ctx):
     command_usage = await client.db.fetch(
-                """
+        """
                 SELECT *
                 FROM users;
                 """
-            )
+    )
     dict_command_usage = {}
     for i in command_usage:
         user = client.get_user(i["user_id"])
         dict_command_usage[str(user)] = i["usage"]
-    dict_c_u = list(reversed(sorted(dict_command_usage.items(), key=lambda item: item[1])))
-    tabular = tabulate(dict_c_u[:10], headers=["User", "Commands Used"], tablefmt="fancy_grid")
-    await ctx.send(embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```"))
+    dict_c_u = list(
+        reversed(sorted(dict_command_usage.items(), key=lambda item: item[1]))
+    )
+    tabular = tabulate(
+        dict_c_u[:10], headers=["User", "Commands Used"], tablefmt="fancy_grid"
+    )
+    await ctx.send(
+        embed=discord.Embed(title="Top 10 Users", description=f"```{tabular}```")
+    )
 
-@client.command(aliases=["sae", "getallemojis", "gae"], description="Saves all emojis to a zip file and sends the zip file")
+
+@client.command(
+    aliases=["sae", "getallemojis", "gae"],
+    description="Saves all emojis to a zip file and sends the zip file",
+)
 @commands.max_concurrency(1, BucketType.channel, wait=True)
 async def saveallemojis(ctx):
     guild = ctx.guild
@@ -687,82 +776,114 @@ async def saveallemojis(ctx):
         shutil.rmtree(gn)
     os.makedirs(gn)
     emojis = guild.emojis
-    time_required = 0.25*len(emojis)
-    embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} seconds if all things go right")
-    msg=await ctx.send(embed = embed)
+    time_required = 0.25 * len(emojis)
+    embed = discord.Embed(
+        title="Saving <a:typing:597589448607399949>",
+        description=f"This should take {round(time_required, 2)} seconds if all things go right",
+    )
+    msg = await ctx.send(embed=embed)
     done = 0
-    embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
+    embed.add_field(
+        name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}"
+    )
     for item in emojis:
-        done +=1
+        done += 1
         name = item.name
         ext = "." + str(item.url).split(".")[-1]
         await item.url.save(gn + "/" + name + ext)
         if done // 5 == 0:
-            time_required = 0.25*(len(emojis)-done)
-            embed = discord.Embed(title="Saving <a:typing:597589448607399949>", description=f"This should take {round(time_required, 2)} more seconds if all things go right")
-            embed.add_field(name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}")
+            time_required = 0.25 * (len(emojis) - done)
+            embed = discord.Embed(
+                title="Saving <a:typing:597589448607399949>",
+                description=f"This should take {round(time_required, 2)} more seconds if all things go right",
+            )
+            embed.add_field(
+                name="Progress",
+                value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}",
+            )
             await msg.edit(embed=embed)
-    embed = discord.Embed(title="Zipping <a:typing:597589448607399949>", description=f"This should take a few more seconds if all things go right")
+    embed = discord.Embed(
+        title="Zipping <a:typing:597589448607399949>",
+        description=f"This should take a few more seconds if all things go right",
+    )
     await msg.edit(embed=embed)
-    def get_all_file_paths(directory): 
-        file_paths = [] 
-        for root, directories, files in os.walk(directory): 
-            for filename in files: 
-                filepath = os.path.join(root, filename) 
-                file_paths.append(filepath) 
+
+    def get_all_file_paths(directory):
+        file_paths = []
+        for root, directories, files in os.walk(directory):
+            for filename in files:
+                filepath = os.path.join(root, filename)
+                file_paths.append(filepath)
         return file_paths
-    directory = './' + gn
-    file_paths = get_all_file_paths(directory) 
+
+    directory = "./" + gn
+    file_paths = get_all_file_paths(directory)
     filename = gn + "_emojis" + ".zip"
-    with ZipFile(filename,'w') as zip: 
-        for file in file_paths: 
+    with ZipFile(filename, "w") as zip:
+        for file in file_paths:
             zip.write(file)
     size = os.path.getsize(filename)
     size = humanize.naturalsize(size, gnu=True)
-    size = size.replace('K', 'kB').replace('M', 'MB')
+    size = size.replace("K", "kB").replace("M", "MB")
     await msg.delete()
-    embed = discord.Embed(title="Completed", description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size}** zip file", color=discord.Colour.green())
+    embed = discord.Embed(
+        title="Completed",
+        description=f"Task finished\n\nMade a zip file containing **{len(emojis)}** emojis in a **{size}** zip file",
+        color=discord.Colour.green(),
+    )
     embed.add_field(name="Original File size", value=size)
-    embed.set_footer(text="Discord may show a different size since it stores some more metadata about the file in their database")
+    embed.set_footer(
+        text="Discord may show a different size since it stores some more metadata about the file in their database"
+    )
     await ctx.send(embed=embed, file=discord.File(filename))
     shutil.rmtree(gn)
 
-@client.command(aliases=["bfutb", "bfb", "blockfrombot"], description="Blocks a user from using the bot (Owner only)")
-async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
+
+@client.command(
+    aliases=["bfutb", "bfb", "blockfrombot"],
+    description="Blocks a user from using the bot (Owner only)",
+)
+async def blockfromusingthebot(ctx, task: str, user: discord.User = None):
     if ctx.author.id == 538332632535007244:
         if task.lower() == "add" and user:
             id_ = user.id
             await client.db.execute(
-                        """
+                """
                         INSERT INTO blocks (user_id)
                         VALUES ($1);
                         """,
-                        id_,
-                    )
+                id_,
+            )
         elif task.lower() == "remove" and user:
             id_ = user.id
             await client.db.execute(
-                        """
+                """
                         DELETE FROM blocks WHERE user_id=$1;
                         """,
-                        id_,
-                    )
+                id_,
+            )
         elif task.lower() == "list":
             list_of_users = await client.db.fetch(
-            """
+                """
             SELECT *
             FROM blocks
             """
-        )
+            )
             blocked_users = []
             for i in list_of_users:
                 user_id = list(i.values())[0]
                 user = client.get_user(user_id)
                 blocked_users.append(str(user))
-            nl = '\n'
-            await ctx.send(embed=discord.Embed(title="Blocked Users", description=f"```{nl.join(blocked_users)}```"))
+            nl = "\n"
+            await ctx.send(
+                embed=discord.Embed(
+                    title="Blocked Users", description=f"```{nl.join(blocked_users)}```"
+                )
+            )
         else:
-            return await ctx.send("Oh wasi, you forgot again didn\'t you?\n you need either add remove or list")
+            return await ctx.send(
+                "Oh wasi, you forgot again didn't you?\n you need either add remove or list"
+            )
         msg = await ctx.send("Ok Done")
         try:
             await ctx.message.delete()
@@ -775,13 +896,24 @@ async def blockfromusingthebot(ctx, task: str, user: discord.User=None):
 
 
 @client.command(aliases=["sp"], description="Spams random text (verified users only)")
-async def spam(ctx, amount: int=5):
-    allowed = [538332632535007244, 585827905939046415, 582893321870114824, 535807154678923285, 673350143655018498, 619482888823373824]
+async def spam(ctx, amount: int = 5):
+    allowed = [
+        538332632535007244,
+        585827905939046415,
+        582893321870114824,
+        535807154678923285,
+        673350143655018498,
+        619482888823373824,
+    ]
     if not ctx.author.id in allowed:
-        return await ctx.send("You don’t have permission to use this, you can ask for the permission via DMing the bot owner with a good reason to ask it for")
-    if amount > 5: amount = 5
+        return await ctx.send(
+            "You don’t have permission to use this, you can ask for the permission via DMing the bot owner with a good reason to ask it for"
+        )
+    if amount > 5:
+        amount = 5
     for i in range(amount):
         await ctx.send(secrets.token_hex(8))
+
 
 @client.command(description="Shows info about a file extension", aliases=["fe", "fi"])
 @commands.cooldown(1, 10, BucketType.user)
@@ -792,7 +924,7 @@ async def fileinfo(ctx, file_extension: str):
     soup = BeautifulSoup(data, "lxml")
 
     filename = soup.find_all("h2")[0].text.replace("File Type", "")
-    
+
     developer = soup.find_all("table")[0].find_all("td")[1].text
 
     fileType = soup.find_all("a")[10].text
@@ -820,26 +952,40 @@ async def fileinfo(ctx, file_extension: str):
 async def define(ctx, word: str):
     num = 0
     session = aiohttp.ClientSession()
-    async with session.get(f"https://owlbot.info/api/v1/dictionary/{word}?format=json") as r:
+    async with session.get(
+        f"https://owlbot.info/api/v1/dictionary/{word}?format=json"
+    ) as r:
         text = await r.text()
     fj = json.loads(text)
     if len(fj) > 1:
         results = fj
         term = results[num]
-        embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
+        embed = discord.Embed(
+            title=word, description=term["defenition"], color=0x2F3136
+        )
         embed.add_field(name="Type", value=term["type"])
         if not term["example"] is None:
-            embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+            embed.add_field(
+                name="Example",
+                value=term["example"].replace("<b>", "**").replace("</b>", "**"),
+            )
         embed.set_footer(text=f"Definition {num+1}/{len(results)}")
         message = await ctx.send(embed=embed)
         await message.add_reaction("\u25c0\ufe0f")
         await message.add_reaction("\u23f9\ufe0f")
         await message.add_reaction("\u25b6\ufe0f")
         while True:
+
             def check(reaction, user):
-                return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
+                return (
+                    user.id == ctx.author.id
+                    and reaction.message.channel.id == ctx.channel.id
+                )
+
             try:
-                reaction, user = await client.wait_for("reaction_add", check=check, timeout=120)
+                reaction, user = await client.wait_for(
+                    "reaction_add", check=check, timeout=120
+                )
             except asyncio.TimeoutError:
                 #  e.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
                 #  await message.edit(embed=embed)
@@ -862,10 +1008,17 @@ async def define(ctx, word: str):
                         term = results[num]
                     except IndexError:
                         pass
-                    embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
+                    embed = discord.Embed(
+                        title=word, description=term["defenition"], color=0x2F3136
+                    )
                     embed.add_field(name="Type", value=term["type"])
                     if not term["example"] is None:
-                        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+                        embed.add_field(
+                            name="Example",
+                            value=term["example"]
+                            .replace("<b>", "**")
+                            .replace("</b>", "**"),
+                        )
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u25b6\ufe0f":
@@ -878,16 +1031,30 @@ async def define(ctx, word: str):
                         term = results[num]
                     except IndexError:
                         pass
-                    embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
+                    embed = discord.Embed(
+                        title=word, description=term["defenition"], color=0x2F3136
+                    )
                     embed.add_field(name="Type", value=term["type"])
                     if not term["example"] is None:
-                        embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+                        embed.add_field(
+                            name="Example",
+                            value=term["example"]
+                            .replace("<b>", "**")
+                            .replace("</b>", "**"),
+                        )
                     embed.set_footer(text=f"Definition {num+1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u23f9\ufe0f":
-                    embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
+                    embed = discord.Embed(
+                        title=word, description=term["defenition"], color=0x2F3136
+                    )
                     embed.add_field(name="Type", value=term["type"])
-                    embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+                    embed.add_field(
+                        name="Example",
+                        value=term["example"]
+                        .replace("<b>", "**")
+                        .replace("</b>", "**"),
+                    )
                     await message.edit(embed=embed)
                     try:
                         return await message.clear_reactions()
@@ -902,10 +1069,15 @@ async def define(ctx, word: str):
         #  await ctx.send(embed=embeds[0])
     elif len(fj) == 1:
         term = fj[0]
-        embed = discord.Embed(title=word, description=term["defenition"], color=0x2F3136)
+        embed = discord.Embed(
+            title=word, description=term["defenition"], color=0x2F3136
+        )
         embed.add_field(name="Type", value=term["type"])
         if not term["example"] is None:
-            embed.add_field(name="Example", value=term["example"].replace("<b>", "**").replace("</b>", "**"))
+            embed.add_field(
+                name="Example",
+                value=term["example"].replace("<b>", "**").replace("</b>", "**"),
+            )
         #  embeds.append(embed)
         await ctx.send(embed=embed)
     else:
@@ -917,14 +1089,13 @@ async def define(ctx, word: str):
 async def invitetracker(ctx, log_channel: discord.TextChannel):
     channel = channel.id
     await client.db.execute(
-                """
+        """
                 INSERT INTO channel (guild_id, channel_id)
                 VALUES ($1, $2)
                 """,
-                ctx.guild.id,
-                channel.id
-            )
-    
+        ctx.guild.id,
+        channel.id,
+    )
 
 
 @client.command(aliases=["rj"], description="Shows raw json of a message")
@@ -948,7 +1119,7 @@ async def emojify(ctx, *, text: str):
         "!": ":grey_exclamation:",
         "#": ":hash:",
         "*": ":asterisk:",
-        "∞": ":infinity:"
+        "∞": ":infinity:",
     }
     for word in text:
         if word.isdigit():
@@ -960,66 +1131,101 @@ async def emojify(ctx, *, text: str):
         elif word in list(string.ascii_letters):
             list_.append(f":regional_indicator_{word.lower()}:")
     try:
-        await ctx.send(' '.join(list_))
+        await ctx.send(" ".join(list_))
     except:
-        await ctx.send("Message too long") 
+        await ctx.send("Message too long")
 
 
 @client.command(
-                aliases=["t"],
-                description="Test your timing! As soon as the message shows, click on the reaction after some amount of seconds"
-                )
+    aliases=["t"],
+    description="Test your timing! As soon as the message shows, click on the reaction after some amount of seconds",
+)
 async def timing(ctx, time=10):
     if time > 60:
         time = 60
     if time < 1:
         time = 1
-    embed = discord.Embed(title=f"Try to react to this message with :white_check_mark: exactly after {time} seconds")
+    embed = discord.Embed(
+        title=f"Try to react to this message with :white_check_mark: exactly after {time} seconds"
+    )
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u2705")
+
     def check(r, u):
-        return u.id == ctx.author.id and r.message.channel.id == ctx.channel.id and str(r.emoji) == "\u2705"
+        return (
+            u.id == ctx.author.id
+            and r.message.channel.id == ctx.channel.id
+            and str(r.emoji) == "\u2705"
+        )
+
     try:
-        reaction, user = await client.wait_for('reaction_add', check = check, timeout =time + (time/2))
-        embed = discord.Embed(title=f"You reacted to this message with :white_check_mark: after {round((datetime.datetime.utcnow() - message.created_at).total_seconds(), 2)} seconds")
-        embed.set_footer(text=f"Exact time is {(datetime.datetime.utcnow() - message.created_at).total_seconds()}")
+        reaction, user = await client.wait_for(
+            "reaction_add", check=check, timeout=time + (time / 2)
+        )
+        embed = discord.Embed(
+            title=f"You reacted to this message with :white_check_mark: after {round((datetime.datetime.utcnow() - message.created_at).total_seconds(), 2)} seconds"
+        )
+        embed.set_footer(
+            text=f"Exact time is {(datetime.datetime.utcnow() - message.created_at).total_seconds()}"
+        )
         await message.edit(embed=embed)
     except asyncio.TimeoutError:
-        await message.edit(embed=discord.Embed(title=f"{ctx.author}, you didnt react with a :white_check_mark:"))
+        await message.edit(
+            embed=discord.Embed(
+                title=f"{ctx.author}, you didnt react with a :white_check_mark:"
+            )
+        )
         return
 
 
-@client.command(description="Character Info :nerd:", aliases=["chrinf", "unicode", "characterinfo"])
+@client.command(
+    description="Character Info :nerd:", aliases=["chrinf", "unicode", "characterinfo"]
+)
 async def charinfo(ctx, *, characters: str):
     def to_string(c):
         l.append("a")
-        digit = f'{ord(c):x}'
-        name = unicodedata.name(c, 'Name not found.')
-        return f'`\\U{digit:>08}`: {name} - {c} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{digit}>'
-    msg = '\n'.join(map(to_string, characters))
+        digit = f"{ord(c):x}"
+        name = unicodedata.name(c, "Name not found.")
+        return f"`\\U{digit:>08}`: {name} - {c} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{digit}>"
+
+    msg = "\n".join(map(to_string, characters))
     if len(msg) > 2000:
-        return await ctx.send('Output too long to display.')
+        return await ctx.send("Output too long to display.")
     await ctx.send(msg)
 
 
 @client.command(aliases=["bin"], description="Converts text to binary")
 async def binary(ctx, number: int):
-    await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{bin(number).replace('0b', '')}```"))
+    await ctx.send(
+        embed=discord.Embed(
+            title=ctx.author.name,
+            description=f"```py\n{bin(number).replace('0b', '')}```",
+        )
+    )
 
 
 @client.command(aliases=["unbin"], description="Converts binary to text")
 async def unbinary(ctx, number: int):
-    await ctx.send(embed=discord.Embed(title=ctx.author.name, description=f"```py\n{int(str(number), 2)}```"))
+    await ctx.send(
+        embed=discord.Embed(
+            title=ctx.author.name, description=f"```py\n{int(str(number), 2)}```"
+        )
+    )
 
 
-@client.command(aliases=['ph', 'catch'], description='Tells you which pokemon it is that has been spawned by a bot')
-async def pokemonhack(ctx, channel: discord.TextChannel=None):
+@client.command(
+    aliases=["ph", "catch"],
+    description="Tells you which pokemon it is that has been spawned by a bot",
+)
+async def pokemonhack(ctx, channel: discord.TextChannel = None):
     #  msg1 = await ctx.send(f"Finding <a:typing:597589448607399949>")
-    channel = channel or ctx.channel 
+    channel = channel or ctx.channel
     url = None
     img_url = None
     raw_result = None
-    async for message in channel.history(limit=8, oldest_first=False, before=ctx.message):
+    async for message in channel.history(
+        limit=8, oldest_first=False, before=ctx.message
+    ):
         if not message.author == ctx.guild.me:
             if message.embeds:
                 embed = message.embeds[0]
@@ -1031,9 +1237,12 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
                 pass
         else:
             pass
-    if not img_url: return await ctx.send("Message containing a pokemon Not Found")
+    if not img_url:
+        return await ctx.send("Message containing a pokemon Not Found")
     url = f"https://www.google.com/searchbyimage?hl=en-US&image_url={img_url}&start=0"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0"
+    }
     msg1 = await ctx.send(f"Searching <a:typing:597589448607399949>")
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers, allow_redirects=True) as r:
@@ -1050,26 +1259,41 @@ async def pokemonhack(ctx, channel: discord.TextChannel=None):
         "tranquil": "tranquill",
         "shutterbug": "scatterbug",
         "fletching": "fletchling",
-        "oricorio baile style": "oricorio"
+        "oricorio baile style": "oricorio",
     }
-    soup = BeautifulSoup(q.decode('utf-8'), 'html.parser')
-    for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
+    soup = BeautifulSoup(q.decode("utf-8"), "html.parser")
+    for best_guess in soup.findAll("a", attrs={"class": "fKDtNb"}):
         #  await ctx.send(best_guess)
         if not best_guess.get_text().replace("pokemon", "").strip().isdigit():
             raw_result = best_guess.get_text()
-            result = best_guess.get_text().lower().replace("pokemon go", "").replace("pokemon", "").replace("png", "").replace("evolution", "").replace("shiny", "").replace("pokedex", "").strip()
-            if result in wrong: result = wrong[result]
+            result = (
+                best_guess.get_text()
+                .lower()
+                .replace("pokemon go", "")
+                .replace("pokemon", "")
+                .replace("png", "")
+                .replace("evolution", "")
+                .replace("shiny", "")
+                .replace("pokedex", "")
+                .strip()
+            )
+            if result in wrong:
+                result = wrong[result]
             break
         else:
             continue
     emby = discord.Embed(description=f"**p!catch {result}**", color=0x2F3136)
     emby.set_author(name=result)
     emby.set_image(url=img_url)
-    emby.set_footer(text=f"Long press the p!catch {result} on mobile to copy quickly\n\nCommand Invoked by {ctx.author}\nRaw Result: {raw_result}", icon_url=ctx.author.avatar_url)
-    await ctx.send(embed = emby)
+    emby.set_footer(
+        text=f"Long press the p!catch {result} on mobile to copy quickly\n\nCommand Invoked by {ctx.author}\nRaw Result: {raw_result}",
+        icon_url=ctx.author.avatar_url,
+    )
+    await ctx.send(embed=emby)
     await msg1.delete()
     #  kek = result.split(' ')
     #  await ctx.send(result[0])
+
 
 @client.command(description="Shows info about a emoji", aliases=["ei", "emoteinfo"])
 async def emojiinfo(ctx, emoji: discord.Emoji):
@@ -1081,20 +1305,23 @@ async def emojiinfo(ctx, emoji: discord.Emoji):
         embed.add_field(name="Added by", value=emoji.user)
     embed.add_field(name="Server", value=emoji.guild)
     embed.add_field(
-        name="Created at", value=f'{emoji.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - emoji.created_at)})'
+        name="Created at",
+        value=f'{emoji.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - emoji.created_at)})',
     )
     embed.add_field(name="URL", value=f"[Click Here]({emoji.url})")
     await ctx.send(embed=embed)
 
+
 @client.command(description="Converts a text to speech (TTS)", aliases=["tts"])
 @commands.cooldown(1, 5, BucketType.user)
-async def texttospeech(ctx, lang:str, *, text:str):
+async def texttospeech(ctx, lang: str, *, text: str):
     msg = await ctx.send("Generating <a:typing:597589448607399949>")
     await client.loop.run_in_executor(None, tts, lang, text)
     await msg.delete()
     await ctx.send(f"{ctx.author.mention} Here you go:", file=discord.File("tts.mp3"))
     os.remove("tts.mp3")
-    
+
+
 """
 @client.command(aliases=["recipes", "rec", "recipies"], description=" Search for a recipe ")
 async def recipe(ctx, task:str, food: Union[str, int]):
@@ -1124,15 +1351,20 @@ async def recipe(ctx, task:str, food: Union[str, int]):
 
 
 @client.command(description="Generates a minecraft style achievement image")
-async def achievement(ctx, text: str, icon: Union[int, str] = None): 
-    image = await (await alex_api.achievement(text=text, icon=icon)).read() # BytesIO
-    await ctx.send(f"Rendered by {ctx.author}", file=discord.File(image, filename="achievement.png"))
+async def achievement(ctx, text: str, icon: Union[int, str] = None):
+    image = await (await alex_api.achievement(text=text, icon=icon)).read()  # BytesIO
+    await ctx.send(
+        f"Rendered by {ctx.author}",
+        file=discord.File(image, filename="achievement.png"),
+    )
 
 
-
-@client.command(description="See the meaning of a texting abbreviation", aliases=["avs", "abs", "whatdoesitmean" "wdim"])
+@client.command(
+    description="See the meaning of a texting abbreviation",
+    aliases=["avs", "abs", "whatdoesitmean" "wdim"],
+)
 async def abbreviations(ctx, text: commands.clean_content):
-    with open ("abs.json") as f:
+    with open("abs.json") as f:
         fj = json.load(f)
     abs_str = [i for i in fj[0]]
     if text.upper() in abs_str:
@@ -1140,24 +1372,27 @@ async def abbreviations(ctx, text: commands.clean_content):
         embed = discord.Embed(title=text, description=result, color=0x2F3136)
         await ctx.send(embed=embed)
     else:
-        embed = discord.Embed(title=f"Abbreviation for {text} not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}", color=0x2F3136)
+        embed = discord.Embed(
+            title=f"Abbreviation for {text} not found",
+            description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(text, abs_str, n=5, cutoff=0.2))}",
+            color=0x2F3136,
+        )
         return await ctx.send(embed=embed)
-
 
 
 @client.command(description="Rolls a dice and gives you a number")
 async def dice(ctx):
-  msg = await ctx.send(":game_die: Rolling Dice <a:typing:597589448607399949>")
-  
-  dice_emoji = [":one:",":two:",":three:",":four:",":five:",":six:"]
-  dice = random.randint(0, 5)
-  await asyncio.sleep(2)
-  await msg.edit(content=f"Your number is  {dice_emoji[dice]}")
+    msg = await ctx.send(":game_die: Rolling Dice <a:typing:597589448607399949>")
+
+    dice_emoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:"]
+    dice = random.randint(0, 5)
+    await asyncio.sleep(2)
+    await msg.edit(content=f"Your number is  {dice_emoji[dice]}")
 
 
 @client.command(description="Adds a emoji from https://emoji.gg to your server")
 #  @commands.has_permissions(manage_emojis=True)
-async def emoji(ctx, task:str, emoji_name: str):
+async def emoji(ctx, task: str, emoji_name: str):
     if len(ctx.bot.emoji_list) == 0:
         msg1 = await ctx.send(f"Loading emojis <a:typing:597589448607399949>")
         session = aiohttp.ClientSession()
@@ -1171,40 +1406,59 @@ async def emoji(ctx, task:str, emoji_name: str):
     if task == "view" or task == "add":
         for i in ctx.bot.emoji_list:
             if i["title"].lower() == emoji_name.lower():
-                 emoji_from_api = i 
-                 break
+                emoji_from_api = i
+                break
             else:
                 continue
         if emoji_from_api is None:
-            embed = discord.Embed(title="Emoji not found", description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(emoji_name.lower(), ctx.bot.emoji_list_str, n=5, cutoff=0.2))}", color=0x2F3136)
+            embed = discord.Embed(
+                title="Emoji not found",
+                description=f"Did you mean any of these?\n{', '.join(difflib.get_close_matches(emoji_name.lower(), ctx.bot.emoji_list_str, n=5, cutoff=0.2))}",
+                color=0x2F3136,
+            )
             return await ctx.send(embed=embed)
         else:
             if task == "view":
-                embed = discord.Embed(title=emoji_name, url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"), color=0x2F3136)
+                embed = discord.Embed(
+                    title=emoji_name,
+                    url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"),
+                    color=0x2F3136,
+                )
                 embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
-                #await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
-                embed.set_thumbnail(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
-                embed.set_image(url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg"))
-                embed.set_footer(text="Because of a discord bug, we may bot be able to show the emoji as a big image, so here is the small version", icon_url=emoji_from_api["image"])
+                # await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
+                embed.set_thumbnail(
+                    url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg")
+                )
+                embed.set_image(
+                    url=emoji_from_api["image"].replace("discordemoji.com", "emoji.gg")
+                )
+                embed.set_footer(
+                    text="Because of a discord bug, we may bot be able to show the emoji as a big image, so here is the small version",
+                    icon_url=emoji_from_api["image"],
+                )
                 await ctx.send(embed=embed)
             elif task == "add":
                 if not ctx.author.guild_permissions.manage_emojis:
-                    return await ctx.send("You don't have the Manage Emojis permission to add a emoji to this server")
+                    return await ctx.send(
+                        "You don't have the Manage Emojis permission to add a emoji to this server"
+                    )
                 session = aiohttp.ClientSession()
                 async with session.get(emoji_from_api["image"]) as r:
                     try:
-                        emoji = await ctx.guild.create_custom_emoji(name=emoji_name, image= await r.read())
+                        emoji = await ctx.guild.create_custom_emoji(
+                            name=emoji_name, image=await r.read()
+                        )
                         await ctx.send(f"Emoji {emoji} added succesfully :)")
                     except discord.Forbidden:
-                        await ctx.send("Unable to add emoji, check my permissions and try again")
+                        await ctx.send(
+                            "Unable to add emoji, check my permissions and try again"
+                        )
     else:
         return await ctx.send("Invalid Task, task should be add or view")
 
 
-
-
 @client.command(description="See your/other user's messages in a channel")
-async def messages(ctx, limit = 500):
+async def messages(ctx, limit=500):
     msg1 = await ctx.send(f"Loading {limit} messages <a:typing:597589448607399949>")
     if limit > 5000:
         limit = 5000
@@ -1221,53 +1475,64 @@ async def messages(ctx, limit = 500):
     async with ctx.typing():
         messages = await channel.history(limit=limit).flatten()
         count = len([x for x in messages if x.author.id == member.id])
-        perc = ((100 * int(count))/int(limit))
-        emb = discord.Embed(description = f"{a} sent **{count} ({perc}%)** messages in {channel.mention} in the last **{limit}** messages.")
-        await ctx.send(embed = emb)
+        perc = (100 * int(count)) / int(limit)
+        emb = discord.Embed(
+            description=f"{a} sent **{count} ({perc}%)** messages in {channel.mention} in the last **{limit}** messages."
+        )
+        await ctx.send(embed=emb)
     await msg1.delete()
-
-
 
 
 @client.command(description="See a list of top active users in a channel")
 @commands.max_concurrency(1, BucketType.channel, wait=True)
-async def top(ctx, limit = 500, *, channel: discord.TextChannel = None):
-  msg1 = await ctx.send("Loading messages <a:typing:597589448607399949>")
+async def top(ctx, limit=500, *, channel: discord.TextChannel = None):
+    msg1 = await ctx.send("Loading messages <a:typing:597589448607399949>")
 
-  async with ctx.typing():
-    if not channel: channel = ctx.channel 
-    if limit > 1000:
-      limit = 1000
-    res = {} 
-    ch = await channel.history(limit = limit).flatten() 
-    for a in ch:
-      res[a.author] = {'messages': len([b for b in ch if b.author.id == a.author.id])}
-    lb = sorted(res, key=lambda x : res[x].get('messages', 0), reverse=True)
-    oof = ""
-    counter = 0
-    for a in lb:
-      counter += 1
-      if counter > 10:
-        pass
-      else:
-        oof += f"{str(a):<20} :: {res[a]['messages']}\n"
-    prolog = f"""```prolog
+    async with ctx.typing():
+        if not channel:
+            channel = ctx.channel
+        if limit > 1000:
+            limit = 1000
+        res = {}
+        ch = await channel.history(limit=limit).flatten()
+        for a in ch:
+            res[a.author] = {
+                "messages": len([b for b in ch if b.author.id == a.author.id])
+            }
+        lb = sorted(res, key=lambda x: res[x].get("messages", 0), reverse=True)
+        oof = ""
+        counter = 0
+        for a in lb:
+            counter += 1
+            if counter > 10:
+                pass
+            else:
+                oof += f"{str(a):<20} :: {res[a]['messages']}\n"
+        prolog = f"""```prolog
 {'User':<20} :: Messages
 
 {oof}
 ```
 """
-    emb = discord.Embed(description = f"Top {channel.mention} users (last {limit} messages): {prolog}", colour = discord.Color.blurple())
-    await ctx.send(embed = emb)
-    await msg1.delete()
-      
+        emb = discord.Embed(
+            description=f"Top {channel.mention} users (last {limit} messages): {prolog}",
+            colour=discord.Color.blurple(),
+        )
+        await ctx.send(embed=emb)
+        await msg1.delete()
+
+
 @client.command(description="Do math stuff")
-async def math(ctx, equation:str):
+async def math(ctx, equation: str):
     available = [" ", "*", "^", "+", "-", "/"]
     for i in equation:
         if not i in available or i.isdigit():
             return await ctx.send("Invalid Math Equation")
-    if not len(equation) > 15 and not equation.count("**") > 1 and not equation.count("^") < 1:
+    if (
+        not len(equation) > 15
+        and not equation.count("**") > 1
+        and not equation.count("^") < 1
+    ):
         try:
             result = await client.loop.run_in_executor(None, do_math, equation)
             if not humanize.fractional(result) == str(result):
@@ -1278,95 +1543,134 @@ async def math(ctx, equation:str):
             return await ctx.send("Math Operation Failed")
     else:
         await ctx.send("Too big task, not gonna do that :grin:")
+
+
 @client.command(description="Morse code :nerd:")
-async def morse(ctx, *, text:str):
-    MORSE_CODE_DICT = { 'A':'.-', 'B':'-...', 
-    
-                        'C':'-.-.', 'D':'-..', 'E':'.', 
-    
-                        'F':'..-.', 'G':'--.', 'H':'....', 
-    
-                        'I':'..', 'J':'.---', 'K':'-.-', 
-    
-                        'L':'.-..', 'M':'--', 'N':'-.', 
-    
-                        'O':'---', 'P':'.--.', 'Q':'--.-', 
-    
-                        'R':'.-.', 'S':'...', 'T':'-', 
-    
-                        'U':'..-', 'V':'...-', 'W':'.--', 
-    
-                        'X':'-..-', 'Y':'-.--', 'Z':'--..', 
-    
-                        '1':'.----', '2':'..---', '3':'...--', 
-    
-                        '4':'....-', '5':'.....', '6':'-....', 
-    
-                        '7':'--...', '8':'---..', '9':'----.', 
-    
-                        '0':'-----', ', ':'--..--', '.':'.-.-.-', 
-    
-                        '?':'..--..', '/':'-..-.', '-':'-....-', 
-    
-                        '(':'-.--.', ')':'-.--.-'}
+async def morse(ctx, *, text: str):
+    MORSE_CODE_DICT = {
+        "A": ".-",
+        "B": "-...",
+        "C": "-.-.",
+        "D": "-..",
+        "E": ".",
+        "F": "..-.",
+        "G": "--.",
+        "H": "....",
+        "I": "..",
+        "J": ".---",
+        "K": "-.-",
+        "L": ".-..",
+        "M": "--",
+        "N": "-.",
+        "O": "---",
+        "P": ".--.",
+        "Q": "--.-",
+        "R": ".-.",
+        "S": "...",
+        "T": "-",
+        "U": "..-",
+        "V": "...-",
+        "W": ".--",
+        "X": "-..-",
+        "Y": "-.--",
+        "Z": "--..",
+        "1": ".----",
+        "2": "..---",
+        "3": "...--",
+        "4": "....-",
+        "5": ".....",
+        "6": "-....",
+        "7": "--...",
+        "8": "---..",
+        "9": "----.",
+        "0": "-----",
+        ", ": "--..--",
+        ".": ".-.-.-",
+        "?": "..--..",
+        "/": "-..-.",
+        "-": "-....-",
+        "(": "-.--.",
+        ")": "-.--.-",
+    }
     message = text
-    cipher = '' 
-    for letter in message: 
-        if letter != ' ': 
-            cipher += MORSE_CODE_DICT[letter.upper()] + ' '
-        else: 
-            cipher += ' '
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=cipher, color=0x2F3136))
+    cipher = ""
+    for letter in message:
+        if letter != " ":
+            cipher += MORSE_CODE_DICT[letter.upper()] + " "
+        else:
+            cipher += " "
+    await ctx.send(
+        embed=discord.Embed(title=str(ctx.author), description=cipher, color=0x2F3136)
+    )
 
 
 @client.command(description="English to morse")
-async def unmorse(ctx, *, text:str):
-    MORSE_CODE_DICT = { 'A':'.-', 'B':'-...', 
-    
-                        'C':'-.-.', 'D':'-..', 'E':'.', 
-    
-                        'F':'..-.', 'G':'--.', 'H':'....', 
-    
-                        'I':'..', 'J':'.---', 'K':'-.-', 
-    
-                        'L':'.-..', 'M':'--', 'N':'-.', 
-    
-                        'O':'---', 'P':'.--.', 'Q':'--.-', 
-    
-                        'R':'.-.', 'S':'...', 'T':'-', 
-    
-                        'U':'..-', 'V':'...-', 'W':'.--', 
-    
-                        'X':'-..-', 'Y':'-.--', 'Z':'--..', 
-    
-                        '1':'.----', '2':'..---', '3':'...--', 
-    
-                        '4':'....-', '5':'.....', '6':'-....', 
-    
-                        '7':'--...', '8':'---..', '9':'----.', 
-    
-                        '0':'-----', ', ':'--..--', '.':'.-.-.-', 
-    
-                        '?':'..--..', '/':'-..-.', '-':'-....-', 
-    
-                        '(':'-.--.', ')':'-.--.-'}
+async def unmorse(ctx, *, text: str):
+    MORSE_CODE_DICT = {
+        "A": ".-",
+        "B": "-...",
+        "C": "-.-.",
+        "D": "-..",
+        "E": ".",
+        "F": "..-.",
+        "G": "--.",
+        "H": "....",
+        "I": "..",
+        "J": ".---",
+        "K": "-.-",
+        "L": ".-..",
+        "M": "--",
+        "N": "-.",
+        "O": "---",
+        "P": ".--.",
+        "Q": "--.-",
+        "R": ".-.",
+        "S": "...",
+        "T": "-",
+        "U": "..-",
+        "V": "...-",
+        "W": ".--",
+        "X": "-..-",
+        "Y": "-.--",
+        "Z": "--..",
+        "1": ".----",
+        "2": "..---",
+        "3": "...--",
+        "4": "....-",
+        "5": ".....",
+        "6": "-....",
+        "7": "--...",
+        "8": "---..",
+        "9": "----.",
+        "0": "-----",
+        ", ": "--..--",
+        ".": ".-.-.-",
+        "?": "..--..",
+        "/": "-..-.",
+        "-": "-....-",
+        "(": "-.--.",
+        ")": "-.--.-",
+    }
     message = text
-    message += ' '
-    decipher = '' 
-    citext = '' 
-    for letter in message: 
-        if (letter != ' '): 
+    message += " "
+    decipher = ""
+    citext = ""
+    for letter in message:
+        if letter != " ":
             i = 0
             citext += letter.upper()
-        else: 
+        else:
             i += 1
-            if i == 2 : 
-                decipher += ' '
-            else: 
-                decipher += list(MORSE_CODE_DICT.keys())[list(MORSE_CODE_DICT 
-                .values()).index(citext)] 
-                citext = '' 
-    await ctx.send(embed=discord.Embed(title=str(ctx.author), description=decipher, color=0x2F3136))
+            if i == 2:
+                decipher += " "
+            else:
+                decipher += list(MORSE_CODE_DICT.keys())[
+                    list(MORSE_CODE_DICT.values()).index(citext)
+                ]
+                citext = ""
+    await ctx.send(
+        embed=discord.Embed(title=str(ctx.author), description=decipher, color=0x2F3136)
+    )
 
 
 @client.command(description="Check who got banned")
@@ -1375,16 +1679,18 @@ async def bans(ctx, limit: int = 10):
     "Check who got banned"
 
     if limit > 20:
-      limit = 20
+        limit = 20
 
     bans = []
 
-    emb = discord.Embed(description = "", colour = 0x2F3136)
+    emb = discord.Embed(description="", colour=0x2F3136)
 
-    async for entry in ctx.guild.audit_logs(action=discord.AuditLogAction.ban, limit = limit):
+    async for entry in ctx.guild.audit_logs(
+        action=discord.AuditLogAction.ban, limit=limit
+    ):
         emb.description += f"[**{humanize.naturaltime(entry.created_at)}**] **{str(entry.user)}** banned **{str(entry.target)}**\n- {entry.reason}\n\n"
 
-    await ctx.send(embed = emb)
+    await ctx.send(embed=emb)
 
 
 @client.command(description="Spoilers a text letter by letter")
@@ -1399,22 +1705,22 @@ async def spoiler(ctx, *, text: str):
         await ctx.send(f"```{result}```")
 
 
-
 @client.command(aliases=["bsr"], description="Box shaped spoilers and repeats a text")
 @commands.cooldown(1, 15, BucketType.channel)
 async def boxspoilerrepeat(ctx, width: int, height: int, *, text: str):
     content = ""
-    for i in range (height):
+    for i in range(height):
         content += f"||{text}||" * width + "\n"
     if len(content) > 2000:
         await ctx.send("Too long")
     else:
         await ctx.send(f"```{content}```")
 
+
 @client.command(description="Repeats a text")
 @commands.cooldown(1, 15, BucketType.channel)
 async def repeat(ctx, amount: int, *, text: str):
-    if not len(text*amount) > 2000:
+    if not len(text * amount) > 2000:
         message = await ctx.send(f"```{text * amount}```")
         await asyncio.sleep(4)
         await message.delete()
@@ -1423,26 +1729,37 @@ async def repeat(ctx, amount: int, *, text: str):
     else:
         await ctx.send("Text too long")
 
+
 @client.command(description="Unmutes a muted user")
 @has_permissions(manage_roles=True)
 async def unmute(ctx, user: discord.Member):
     try:
-        await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted")) # removes muted role
+        await user.remove_roles(
+            discord.utils.get(ctx.guild.roles, name="Muted")
+        )  # removes muted role
         await ctx.send(f"{user.mention} has been unmuted")
     except discord.Forbidden:
         await ctx.send("No Permissions")
+
+
 @client.command(description="Blocks a user from chatting in current channel.")
 @has_permissions(manage_channels=True)
 async def block(ctx, user: discord.Member):
     try:
-        await ctx.set_permissions(user, send_messages=False) # sets permissions for current channel
+        await ctx.set_permissions(
+            user, send_messages=False
+        )  # sets permissions for current channel
     except discord.Forbidden:
         await ctx.send("No permissions")
+
+
 @client.command(description="Unblocks a user from current channel")
 @has_permissions(manage_channels=True)
 async def unblock(ctx, user: discord.Member):
     try:
-        await ctx.set_permissions(user, send_messages=True) # gives back send messages permissions
+        await ctx.set_permissions(
+            user, send_messages=True
+        )  # gives back send messages permissions
     except discord.Forbidden:
         await ctx.send("No permissions")
 
@@ -1456,11 +1773,21 @@ async def weather(ctx, *, location: str):
     async with session.get(url) as r:
         fj = json.loads(await r.text())
     if not fj["cod"] == "404":
-        embed = discord.Embed(title=fj["name"], description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}', color=0x2F3136)
-        embed.add_field(name="Temperature", value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C')
-        embed.add_field(name="Wind", value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°')
+        embed = discord.Embed(
+            title=fj["name"],
+            description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}',
+            color=0x2F3136,
+        )
+        embed.add_field(
+            name="Temperature",
+            value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C',
+        )
+        embed.add_field(
+            name="Wind",
+            value=f'Speed: {fj["wind"]["speed"]}Kmh\nDirection: {fj["wind"]["deg"]}°',
+        )
         embed.add_field(name="Cloudyness", value=str(fj["clouds"]["all"]) + "%")
-        #embed.add_field(name="Sun", value=f'Sunrise: {datetime.datetime.fromtimestamp(fj["sys"]["sunrise"]).strftime("%I:%M:%S")}\nSunset: {datetime.datetime.fromtimestamp(fj["sys"]["sunset"]).strftime("%I:%M:%S")}')
+        # embed.add_field(name="Sun", value=f'Sunrise: {datetime.datetime.fromtimestamp(fj["sys"]["sunrise"]).strftime("%I:%M:%S")}\nSunset: {datetime.datetime.fromtimestamp(fj["sys"]["sunset"]).strftime("%I:%M:%S")}')
         await ctx.send(embed=embed)
     elif fj["cod"] == "404":
         await ctx.send("Location not found")
@@ -1468,7 +1795,10 @@ async def weather(ctx, *, location: str):
         await ctx.send("Error")
     await session.close()
 
-@client.command(aliases=["chpfp","cp"], description="Change the bots profile picture on random" )
+
+@client.command(
+    aliases=["chpfp", "cp"], description="Change the bots profile picture on random"
+)
 @commands.cooldown(2, 900, BucketType.default)
 async def changepfp(ctx):
     pfps = ["pink.png", "red.png", "blue.png", "green.png", "cyan.png"]
@@ -1480,40 +1810,51 @@ async def changepfp(ctx):
         await ctx.send("Changed Profile picture to:", file=file)
         server = client.get_guild(576016234152198155)
         channel = server.get_channel(741371556277518427)
-        embed = discord.Embed(title=f"Avatar was changed by {ctx.author}", color=0x2F3136)
+        embed = discord.Embed(
+            title=f"Avatar was changed by {ctx.author}", color=0x2F3136
+        )
         await channel.send(embed=embed)
     f.close()
 
-@client.command(aliases=["lck", "lk"],description="Lock a channel")
+
+@client.command(aliases=["lck", "lk"], description="Lock a channel")
 @has_permissions(manage_channels=True)
-async def lock(ctx, *, role: discord.Role=None):
-    role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
+async def lock(ctx, *, role: discord.Role = None):
+    role = (
+        role or ctx.guild.default_role
+    )  # retrieves muted role returns none if there isn't
     channel = ctx.channel
     try:
-        await channel.set_permissions(role,send_messages=False,read_message_history=True,read_messages=True)
+        await channel.set_permissions(
+            role, send_messages=False, read_message_history=True, read_messages=True
+        )
         await ctx.send("Channel Locked")
     except discord.Forbidden:
-        return await ctx.send(
-                "I have no permissions to lock"
-            )
+        return await ctx.send("I have no permissions to lock")
 
 
 @client.command(aliases=["unlck", "ulk"], description=" Unlocks a channel")
 @has_permissions(manage_channels=True)
-async def unlock(ctx, *, role: discord.Role=None):
-    role = role or ctx.guild.default_role# retrieves muted role returns none if there isn't
+async def unlock(ctx, *, role: discord.Role = None):
+    role = (
+        role or ctx.guild.default_role
+    )  # retrieves muted role returns none if there isn't
     channel = ctx.channel
     try:
-        await channel.set_permissions(role, send_messages=True,read_message_history=True,read_messages=True)
+        await channel.set_permissions(
+            role, send_messages=True, read_message_history=True, read_messages=True
+        )
         await ctx.send("Channel Unlocked")
     except discord.Forbidden:
-        return await ctx.send(
-                "I have no permissions to lock"
-            )
+        return await ctx.send("I have no permissions to lock")
 
 
-@client.command(name="pypi", description="Searches pypi for python packages", aliases=["pypl", "pip"])
-async def pythonpackagingindex(ctx, package_name:str):
+@client.command(
+    name="pypi",
+    description="Searches pypi for python packages",
+    aliases=["pypl", "pip"],
+)
+async def pythonpackagingindex(ctx, package_name: str):
     session = aiohttp.ClientSession()
     url = f"https://pypi.org/pypi/{package_name}/json"
     async with session.get(url) as response:
@@ -1522,8 +1863,12 @@ async def pythonpackagingindex(ctx, package_name:str):
         else:
             fj = json.loads(await response.text())
     fj = fj["info"]
-    if not len(fj["summary"]) == 0: 
-        embed = discord.Embed(title=fj["name"], description=fj["summary"].replace("![", "["), color=0x2F3136)
+    if not len(fj["summary"]) == 0:
+        embed = discord.Embed(
+            title=fj["name"],
+            description=fj["summary"].replace("![", "["),
+            color=0x2F3136,
+        )
     else:
         embed = discord.Embed(title=fj["name"], color=0x2F3136)
     if len(fj["author_email"]) == 0:
@@ -1532,8 +1877,11 @@ async def pythonpackagingindex(ctx, package_name:str):
         email = fj["author_email"]
     embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
     embed.add_field(name="Version", value=fj["version"])
-    #embed.add_field(name="Summary", value=fj["summary"])
-    embed.add_field(name="Links", value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})")
+    # embed.add_field(name="Summary", value=fj["summary"])
+    embed.add_field(
+        name="Links",
+        value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})",
+    )
     if fj["license"] is None or len(fj["license"]) < 3:
         license = "Not Specified"
     else:
@@ -1543,16 +1891,24 @@ async def pythonpackagingindex(ctx, package_name:str):
         if len(fj["requires_dist"]) > 15:
             embed.add_field(name="Dependencies", value=len(fj["requires_dist"]))
         elif not len(fj["requires_dist"]) == 0:
-           embed.add_field(name=f"Dependencies ({len(fj['requires_dist'])})", value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]))
+            embed.add_field(
+                name=f"Dependencies ({len(fj['requires_dist'])})",
+                value="\n".join([i.split(" ")[0] for i in fj["requires_dist"]]),
+            )
     if not fj["requires_python"] is None:
         if len(fj["requires_python"]) > 2:
-            embed.add_field(name="<:python:596577462335307777> Python Version Required", value=fj["requires_python"])
+            embed.add_field(
+                name="<:python:596577462335307777> Python Version Required",
+                value=fj["requires_python"],
+            )
     await ctx.send(embed=embed)
     await session.close()
 
 
-@client.command(name="penis", aliases=["pp"], description="See someone's penis size (random)")
-async def pp(ctx, *, member: discord.Member=None):
+@client.command(
+    name="penis", aliases=["pp"], description="See someone's penis size (random)"
+)
+async def pp(ctx, *, member: discord.Member = None):
     member = member or ctx.author
     ppsize = random.randint(0, 30)
     if ppsize < 6:
@@ -1567,9 +1923,14 @@ async def pp(ctx, *, member: discord.Member=None):
         comment = "extremely big pp"
     else:
         comment = "tremendous pp "
-    embed = discord.Embed(title=f"{member.name}'s pp size", description="8" + "="*ppsize + "D", color=0x2F3136)
+    embed = discord.Embed(
+        title=f"{member.name}'s pp size",
+        description="8" + "=" * ppsize + "D",
+        color=0x2F3136,
+    )
     embed.set_footer(text=comment)
     await ctx.send(embed=embed)
+
 
 @client.command(name="gender", description="Get a gender by providing a name")
 @commands.cooldown(1, 30, BucketType.user)
@@ -1578,7 +1939,7 @@ async def gender(ctx, *, name: str):
     url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
     async with session.get(url) as r:
         fj = json.loads(await r.text())
-    if fj['gender'] == "male":
+    if fj["gender"] == "male":
         gender = "Male"
         color = 2929919
     elif fj["gender"] == "female":
@@ -1587,8 +1948,8 @@ async def gender(ctx, *, name: str):
     else:
         gender = "Unknown"
         color = 6579300
-    positive = str(fj['accuracy']) + "%"
-    negative = str(100 - fj['accuracy']) + "%"
+    positive = str(fj["accuracy"]) + "%"
+    negative = str(100 - fj["accuracy"]) + "%"
     if not gender == "Unknown":
         text = f"The name {fj['name_sanitized']} has a **{positive}** chance of being a  **{gender}** and a {negative} chance of not being a {gender}"
     else:
@@ -1613,10 +1974,17 @@ async def movie(ctx, *, query):
         mins = []
         embed.add_field(name="Duration", value=f"{fj['Runtime']}")
         embed.add_field(name="Genre", value=fj["Genre"])
-        embed.add_field(name="Credits", value=f"**Director**: {fj['Director']}\n**Writer**: {fj['Writer']}\n**Casts**: {fj['Actors']}")
-        embed.add_field(name="Language(s)", value=fj['Language'])
-        embed.add_field(name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}")
-        embed.add_field(name="Production", value=f"[{fj['Production']}]({fj['Website']})")
+        embed.add_field(
+            name="Credits",
+            value=f"**Director**: {fj['Director']}\n**Writer**: {fj['Writer']}\n**Casts**: {fj['Actors']}",
+        )
+        embed.add_field(name="Language(s)", value=fj["Language"])
+        embed.add_field(
+            name="IMDB", value=f"Rating: {fj['imdbRating']}\nVotes: {fj['imdbVotes']}"
+        )
+        embed.add_field(
+            name="Production", value=f"[{fj['Production']}]({fj['Website']})"
+        )
         await ctx.send(embed=embed)
         await session.close()
     else:
@@ -1631,12 +1999,19 @@ async def roleinfo(ctx, role: discord.Role = None):
     embed = discord.Embed(colour=role.colour.value)
     embed.set_author(name=f"Role Information for {role.name}")
     embed.add_field(
-        name="Created at", value=f"{role.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.datetime.utcnow() - role.created_at)}"
+        name="Created at",
+        value=f"{role.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.datetime.utcnow() - role.created_at)}",
     )
     embed.add_field(name="ID", value=role.id)
-    embed.add_field(name="Position", value=f"{len(ctx.guild.roles) - role.position}/{len(ctx.guild.roles)}")
+    embed.add_field(
+        name="Position",
+        value=f"{len(ctx.guild.roles) - role.position}/{len(ctx.guild.roles)}",
+    )
     embed.add_field(name="Members", value=len(role.members))
-    embed.add_field(name="Role Color", value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb()}")
+    embed.add_field(
+        name="Role Color",
+        value=f"INT: {role.color.value}\nHEX: {'#%02x%02x%02x' % role.color.to_rgb()}\nRGB: rgb{role.color.to_rgb()}",
+    )
     if role.hoist:
         embed.add_field(name="Displayed Separately?", value="Yes")
     else:
@@ -1648,11 +2023,15 @@ async def roleinfo(ctx, role: discord.Role = None):
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"], description=" Set your time zone to be used in the timr command")
+@client.command(
+    aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"],
+    description=" Set your time zone to be used in the timr command",
+)
 async def timeset(ctx, timezone: str):
     location = timezone
     continents = ["asia", "europe", "oceania", "australia", "africa"]
-    if location.lower() in continents: return await ctx.send('I need a area not a continent')
+    if location.lower() in continents:
+        return await ctx.send("I need a area not a continent")
     session = aiohttp.ClientSession()
     async with session.get(f"http://worldtimeapi.org/api/timezone/{location}") as r:
         fj = json.loads(await r.text())
@@ -1663,19 +2042,23 @@ async def timeset(ctx, timezone: str):
     except:
         error = False
     if not error:
-        savedtimezone = await client.db.fetchrow("""
+        savedtimezone = await client.db.fetchrow(
+            """
         SELECT * FROM timezones
         WHERE user_id = $1
             """,
-        ctx.author.id)
+            ctx.author.id,
+        )
         if not savedtimezone is None:
-            savedtimezone = await client.db.execute("""
+            savedtimezone = await client.db.execute(
+                """
             UPDATE timezones
             SET timezone = $2
             WHERE user_id = $1
                 """,
-            ctx.author.id,
-            timezone)
+                ctx.author.id,
+                timezone,
+            )
         else:
             await client.db.execute(
                 """
@@ -1683,44 +2066,69 @@ async def timeset(ctx, timezone: str):
                 VALUES ($1, $2)
                 """,
                 timezone,
-                ctx.author.id
+                ctx.author.id,
             )
-        embed = discord.Embed(title="Success", description=f"Timezone set to {location}", color=5028631)
-        await ctx.send(embed = embed)
+        embed = discord.Embed(
+            title="Success", description=f"Timezone set to {location}", color=5028631
+        )
+        await ctx.send(embed=embed)
     else:
         if fj["error"] == "unknown location":
-            locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
-            suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
+            locations = json.loads(
+                requests.get("http://worldtimeapi.org/api/timezone").text
+            )
+            suggestions = difflib.get_close_matches(
+                location, locations, n=5, cutoff=0.3
+            )
             suggestionstring = ""
-            embed = discord.Embed(title="Unknown Location", description="The location couldn't be found", color=14885931)
+            embed = discord.Embed(
+                title="Unknown Location",
+                description="The location couldn't be found",
+                color=14885931,
+            )
             for i in suggestions:
                 suggestionstring += f"`{i}`\n"
             #  embed.set_author(name="Location Not Found")
             embed.add_field(name="Did you mean?", value=suggestionstring)
             await ctx.send(embed=embed)
 
+
 @client.command(aliases=["tm"], description="See time")
-async def time(ctx, location_or_user: Union[discord.Member, str]=None):
+async def time(ctx, location_or_user: Union[discord.Member, str] = None):
     embed = discord.Embed(color=0x2F3136)
     location = location_or_user
     if location is None:
-        location = await client.db.fetchrow("""
+        location = await client.db.fetchrow(
+            """
         SELECT * FROM timezones
         WHERE user_id = $1""",
-        ctx.author.id)
-        if not location is None: location = location["timezone"]
+            ctx.author.id,
+        )
+        if not location is None:
+            location = location["timezone"]
         if location is None:
-            embed = discord.Embed(title="Timezone Not set", description="Set your time with the timeset command (shortest alias \"ts\")", color=14885931)
+            embed = discord.Embed(
+                title="Timezone Not set",
+                description='Set your time with the timeset command (shortest alias "ts")',
+                color=14885931,
+            )
             await ctx.send(embed=embed)
             return
     elif isinstance(location, discord.Member):
-        location = await client.db.fetchrow("""
+        location = await client.db.fetchrow(
+            """
         SELECT * FROM timezones
         WHERE user_id = $1""",
-        location.id)
-        if not location is None: location = location["timezone"]
+            location.id,
+        )
+        if not location is None:
+            location = location["timezone"]
         if location is None:
-            embed = discord.Embed(title=f"{location.name} has not yet set his tinezone", description="Set timezone with the timeset command (shortest alias \"ts\")", color=14885931)
+            embed = discord.Embed(
+                title=f"{location.name} has not yet set his tinezone",
+                description='Set timezone with the timeset command (shortest alias "ts")',
+                color=14885931,
+            )
             await ctx.send(embed=embed)
             return
     session = aiohttp.ClientSession()
@@ -1735,8 +2143,12 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
     if error:
         # await ctx.send(f"```json\n{fj}```")
         if fj["error"] == "unknown location":
-            locations = json.loads(requests.get("http://worldtimeapi.org/api/timezone").text)
-            suggestions = difflib.get_close_matches(location, locations, n=5, cutoff=0.3)
+            locations = json.loads(
+                requests.get("http://worldtimeapi.org/api/timezone").text
+            )
+            suggestions = difflib.get_close_matches(
+                location, locations, n=5, cutoff=0.3
+            )
             suggestionstring = ""
             for i in suggestions:
                 suggestionstring += f"`{i}`\n"
@@ -1745,13 +2157,19 @@ async def time(ctx, location_or_user: Union[discord.Member, str]=None):
             embed.add_field(name="Did you mean?", value=suggestionstring)
             await ctx.send(embed=embed)
     else:
-        currenttime = datetime.datetime.strptime(fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S")
+        currenttime = datetime.datetime.strptime(
+            fj["datetime"][:-13], "%Y-%m-%dT%H:%M:%S"
+        )
         gmt = fj["utc_offset"]
         embed.set_author(name="Time")
-        embed.add_field(name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S"))
+        embed.add_field(
+            name=location, value=currenttime.strftime("%a, %d %B %Y, %H:%M:%S")
+        )
         embed.add_field(name="UTC Offset", value=gmt)
         await ctx.send(embed=embed)
     await session.close()
+
+
 """
 @client.command(
     aliases=["ss"],
@@ -1776,22 +2194,32 @@ async def screenshot(ctx, website:str):
         session.close()
 """
 
+
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
-async def channelinfo(ctx, channel: Union[discord.TextChannel, discord.VoiceChannel] = None):
+async def channelinfo(
+    ctx, channel: Union[discord.TextChannel, discord.VoiceChannel] = None
+):
     channel = channel or ctx.channel
     embed = discord.Embed(color=0x2F3136)
     embed.set_author(name=f"Channel Information for {channel.name}")
     embed.add_field(
-        name="Created at", value=f'{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - channel.created_at)} old)'
+        name="Created at",
+        value=f'{channel.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - channel.created_at)} old)',
     )
     embed.add_field(name="ID", value=channel.id)
-    embed.add_field(name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)}")
+    embed.add_field(
+        name="Position", value=f"{channel.position}/{len(ctx.guild.text_channels)}"
+    )
     embed.add_field(name="Category", value=channel.category.name)
     if not channel.topic is None:
         embed.add_field(name="Topic", value=channel.topic)
     if not channel.slowmode_delay is None:
-        embed.add_field(name="Slowmode", value=f"{channel.slowmode_delay} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(channel.slowmode_delay)))})")
+        embed.add_field(
+            name="Slowmode",
+            value=f"{channel.slowmode_delay} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(channel.slowmode_delay)))})",
+        )
     await ctx.send(embed=embed)
+
 
 @client.command(
     aliases=["nk"],
@@ -1863,7 +2291,8 @@ async def clone(ctx, channel: discord.TextChannel = None):
 
 
 @client.command(
-    aliases=["sug", "suggestion", "rep", "report"], description="Suggest a thing to be added to the bot"
+    aliases=["sug", "suggestion", "rep", "report"],
+    description="Suggest a thing to be added to the bot",
 )
 @commands.cooldown(1, 3600, BucketType.user)
 async def suggest(ctx, *, suggestion: commands.clean_content):
@@ -2007,7 +2436,9 @@ async def perms(
         else:
             continue
             # permstr += f"{i.replace('_', ' ' ).title()}  <:redTick:596576672149667840>\n"
-    embed = discord.Embed(title=f"{member}'s Permissions", description=permstr, color=0x2F3136)
+    embed = discord.Embed(
+        title=f"{member}'s Permissions", description=permstr, color=0x2F3136
+    )
     await ctx.send(embed=embed)
 
 
@@ -2034,11 +2465,13 @@ async def firstmessage(ctx, channel: discord.TextChannel = None):
             attachments += f"[{i.filename}](i.url)\n"
         embed.add_field(name="Attatchments", value=attachments)
     embed.add_field(
-        name="Message sent at", value=f'{fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.created_at)})'
+        name="Message sent at",
+        value=f'{fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.created_at)})',
     )
     if not fmo.edited_at is None:
         embed.add_field(
-            name="Edited", value=f'{fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.edited_at)})'
+            name="Edited",
+            value=f'{fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.edited_at)})',
         )
     embed.add_field(name="Url", value=fmo.jump_url)
     embed.set_footer(
@@ -2065,7 +2498,7 @@ async def shutdown(ctx):
 """
 
 
-@client.command(aliases=["sd"],description="Custom Slow Mode")
+@client.command(aliases=["sd"], description="Custom Slow Mode")
 @has_permissions(manage_channels=True)
 async def slowmode(ctx, slowmode: int):
     if slowmode > 21600:
@@ -2173,7 +2606,9 @@ async def hitler(ctx, member: discord.Member = None):
         formatted_json = json.loads(loaded_response)
         await session.close()
     if formatted_json["succes"]:
-        embed = discord.Embed(title=f"{member.name} is Worse Than Hitler", color=0x2F3136)
+        embed = discord.Embed(
+            title=f"{member.name} is Worse Than Hitler", color=0x2F3136
+        )
         embed.set_image(url=formatted_json["url"])
         await ctx.send(embed=embed)
     else:
@@ -2228,10 +2663,14 @@ async def covid(ctx, *, area: str = "Global"):
     if not formatted_json is None:
         embed = discord.Embed(title=f"Covid 19 Stats ({area.title()})", color=0x2F3136)
         embed.add_field(name="New Cases", value=f"{formatted_json['NewConfirmed']:,}")
-        embed.add_field(name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}")
+        embed.add_field(
+            name="Total Cases", value=f"{formatted_json['TotalConfirmed']:,}"
+        )
         embed.add_field(name="New Deaths", value=f"{formatted_json['NewDeaths']:,}")
         embed.add_field(name="Total Deaths", value=f"{formatted_json['TotalDeaths']:,}")
-        embed.add_field(name="New Recovered", value=f"{formatted_json['NewRecovered']:,}")
+        embed.add_field(
+            name="New Recovered", value=f"{formatted_json['NewRecovered']:,}"
+        )
         embed.add_field(
             name="Total Recovered", value=f"{formatted_json['TotalRecovered']:,}"
         )
@@ -2375,7 +2814,11 @@ async def remind(ctx, time: str, *, text: str):
     await user.send(texttosend)
 
 
-@client.command(aliases=["makememe"], description="See or make a meme", usage="See a meme:\n,meme\n\nMake a meme:\n,meme `<format>`: `<text 1>`||`<text 2>`\n,meme drake: Other Bots||This Bot")
+@client.command(
+    aliases=["makememe"],
+    description="See or make a meme",
+    usage="See a meme:\n,meme\n\nMake a meme:\n,meme `<format>`: `<text 1>`||`<text 2>`\n,meme drake: Other Bots||This Bot",
+)
 async def meme(ctx, *, text: str = None):
     Make = True
     if not text is None:
@@ -2402,7 +2845,7 @@ async def meme(ctx, *, text: str = None):
         session = aiohttp.ClientSession()
         async with session.get("https://meme-api.herokuapp.com/gimme") as r:
             fj = json.loads(await r.text())
-        embed = discord.Embed(title=fj["title"], url=fj["postLink"], color=0xff5700)
+        embed = discord.Embed(title=fj["title"], url=fj["postLink"], color=0xFF5700)
         embed.set_image(url=fj["url"])
         await ctx.send(embed=embed)
         await session.close()
@@ -2499,7 +2942,9 @@ async def serverinfo(ctx):
 
 @client.command(aliases=["stats"], description="See info about the bot")
 async def info(ctx):
-    embed = discord.Embed(title="Info",description="Made by Wasi Master#4245", color=0x2F3136)
+    embed = discord.Embed(
+        title="Info", description="Made by Wasi Master#4245", color=0x2F3136
+    )
     await ctx.send(embed=embed)
 
 
@@ -2566,6 +3011,7 @@ async def spotify(ctx, *, member: discord.Member = None):
                 if max_results is not None and len(results) > max_results:
                     return results[:max_results]
                 return results
+
             videos = search()
             embed = discord.Embed(color=activity.color)
             embed.set_thumbnail(
@@ -2667,7 +3113,9 @@ async def randomcolour(ctx):
         rand_color = randomcolor.RandomColor()
         generated_color = rand_color.generate()[0]
         hexcol = generated_color.replace("#", "")
-        async with session.get(f"http://www.thecolorapi.com/id?hex={hexcol}") as response:
+        async with session.get(
+            f"http://www.thecolorapi.com/id?hex={hexcol}"
+        ) as response:
             data = json.loads(await response.text())
         color_name = data.get("name").get("value")
         link = f"http://singlecolorimage.com/get/{hexcol}/1x1"
@@ -2695,7 +3143,9 @@ async def colour(ctx, color: str):
     async with ctx.typing():
         generated_color = color
         hexcol = generated_color.replace("#", "")
-        async with session.get(f"http://www.thecolorapi.com/id?hex={hexcol}") as response:
+        async with session.get(
+            f"http://www.thecolorapi.com/id?hex={hexcol}"
+        ) as response:
             data = json.loads(await response.text())
         await session.close()
         color_name = data.get("name").get("value")
@@ -2734,14 +3184,14 @@ async def colour(ctx, color: str):
 @has_permissions(manage_guild=True)
 async def prefix(ctx, prefix: str):
     await client.db.execute(
-               """
+        """
                 UPDATE guilds
                 SET prefix = $2
                 WHERE id = $1;
                 """,
-                ctx.guild.id,
-                prefix
-           ) 
+        ctx.guild.id,
+        prefix,
+    )
     await ctx.send(f"prefix set to `{prefix}`")
 
 
@@ -2751,28 +3201,34 @@ async def hello(ctx):
 
 
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
-async def say(ctx, channel : Optional[discord.TextChannel] = None, *, text: commands.clean_content):
+async def say(
+    ctx, channel: Optional[discord.TextChannel] = None, *, text: commands.clean_content
+):
     if channel:
         channel = channel
         text = f"{text}\n\n    - sent by {ctx.author} from {ctx.channel.mention}"
     else:
         channel = ctx.channel
     m = await channel.send(text)
+
     def check(message):
         return message == ctx.message
+
     try:
         await client.wait_for("message_delete", timeout=30, check=check)
     except asyncio.TimeoutError:
         pass
     else:
-        await m.edit(content=f"{text}\n\n    - sent by {ctx.author} but he deleted his message")
+        await m.edit(
+            content=f"{text}\n\n    - sent by {ctx.author} but he deleted his message"
+        )
 
 
 @client.command(
     description="Changes role for a user (removes if he has the role, adds the role if he doesn't)"
 )
 @has_permissions(manage_roles=True)
-async def role(ctx, member: discord.Member,*,  role: discord.Role):
+async def role(ctx, member: discord.Member, *, role: discord.Role):
     if role in member.roles:  # checks all roles the member has
         await member.remove_roles(role)
         embed = discord.Embed(colour=16711680, timestamp=ctx.message.created_at)
@@ -2811,7 +3267,12 @@ async def google(ctx, *, search_term: commands.clean_content):
     num = 0
     results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw())
     result = results[num]
-    embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+    embed = discord.Embed(
+        title=result.title,
+        description=result.description,
+        url=result.url,
+        color=0x2F3136,
+    )
     embed.set_thumbnail(url=result.image_url)
     embed.set_footer(text=f"Page {num+1}/{len(results)}")
     message = await ctx.send(embed=embed)
@@ -2819,10 +3280,17 @@ async def google(ctx, *, search_term: commands.clean_content):
     await message.add_reaction("\u23f9\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
     while True:
+
         def check(reaction, user):
-            return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
+            return (
+                user.id == ctx.author.id
+                and reaction.message.channel.id == ctx.channel.id
+            )
+
         try:
-            reaction, user = await client.wait_for("reaction_add", check=check, timeout=120)
+            reaction, user = await client.wait_for(
+                "reaction_add", check=check, timeout=120
+            )
         except asyncio.TimeoutError:
             embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
             await message.edit(embed=embed)
@@ -2845,7 +3313,12 @@ async def google(ctx, *, search_term: commands.clean_content):
                     result = results[num]
                 except IndexError:
                     pass
-                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed = discord.Embed(
+                    title=result.title,
+                    description=result.description,
+                    url=result.url,
+                    color=0x2F3136,
+                )
                 embed.set_thumbnail(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
@@ -2859,12 +3332,22 @@ async def google(ctx, *, search_term: commands.clean_content):
                     result = results[num]
                 except KeyError:
                     pass
-                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed = discord.Embed(
+                    title=result.title,
+                    description=result.description,
+                    url=result.url,
+                    color=0x2F3136,
+                )
                 embed.set_thumbnail(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u23f9\ufe0f":
-                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed = discord.Embed(
+                    title=result.title,
+                    description=result.description,
+                    url=result.url,
+                    color=0x2F3136,
+                )
                 embed.set_thumbnail(url=result.image_url)
                 #  embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
@@ -2879,13 +3362,19 @@ async def google(ctx, *, search_term: commands.clean_content):
             else:
                 pass
 
-@client.command(aliases=["imagesearch", "is", "i"], description="Searched Google Images and returns the first image")
+
+@client.command(
+    aliases=["imagesearch", "is", "i"],
+    description="Searched Google Images and returns the first image",
+)
 @commands.cooldown(1, 5, BucketType.user)
 async def image(ctx, *, search_term: commands.clean_content):
     num = 0
-    results = await google_api.search(search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True)
+    results = await google_api.search(
+        search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True
+    )
     result = results[num]
-    embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
+    embed = discord.Embed(title=result.title, url=result.url, color=0x2F3136)
     embed.set_image(url=result.image_url)
     embed.set_footer(text=f"Page {num+1}/{len(results)}")
     message = await ctx.send(embed=embed)
@@ -2893,10 +3382,17 @@ async def image(ctx, *, search_term: commands.clean_content):
     await message.add_reaction("\u23f9\ufe0f")
     await message.add_reaction("\u25b6\ufe0f")
     while True:
+
         def check(reaction, user):
-            return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
+            return (
+                user.id == ctx.author.id
+                and reaction.message.channel.id == ctx.channel.id
+            )
+
         try:
-            reaction, user = await client.wait_for("reaction_add", check=check, timeout=120)
+            reaction, user = await client.wait_for(
+                "reaction_add", check=check, timeout=120
+            )
         except asyncio.TimeoutError:
             embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
             await message.edit(embed=embed)
@@ -2919,7 +3415,9 @@ async def image(ctx, *, search_term: commands.clean_content):
                     result = results[num]
                 except IndexError:
                     pass
-                embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
+                embed = discord.Embed(
+                    title=result.title, url=result.url, color=0x2F3136
+                )
                 embed.set_image(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
@@ -2933,12 +3431,19 @@ async def image(ctx, *, search_term: commands.clean_content):
                     result = results[num]
                 except KeyError:
                     pass
-                embed=discord.Embed(title=result.title, description=result.description, url=result.url, color=0x2F3136)
+                embed = discord.Embed(
+                    title=result.title,
+                    description=result.description,
+                    url=result.url,
+                    color=0x2F3136,
+                )
                 embed.set_image(url=result.image_url)
                 embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u23f9\ufe0f":
-                embed=discord.Embed(title=result.title, url=result.url, color=0x2F3136)
+                embed = discord.Embed(
+                    title=result.title, url=result.url, color=0x2F3136
+                )
                 embed.set_image(url=result.image_url)
                 #  embed.set_footer(text=f"Page {num+1}/{len(results)}")
                 await message.edit(embed=embed)
@@ -2976,7 +3481,7 @@ async def choose(ctx, *, choices):
 
 
 @client.command(aliases=["p"], description="Shows the bot's speed")
-async def ping (ctx):
+async def ping(ctx):
     start = timemodule.perf_counter()
     embed = discord.Embed(
         description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it took send this response to your message\n**Bot Latency** = Time needed to send/edit messages"
@@ -3067,7 +3572,9 @@ async def urban(ctx, *, word):
 
 @client.command(aliases=["members"], description="Get who are in a certain role")
 async def getusers(ctx, *, role: discord.Role):
-    embed = discord.Embed(color=0x2F3136 if str(role.colour) == "#000000" else role.colour)
+    embed = discord.Embed(
+        color=0x2F3136 if str(role.colour) == "#000000" else role.colour
+    )
     embed.set_footer(text=f"Asked by {ctx.author}")
     async with ctx.typing():
         empty = True
@@ -3081,7 +3588,9 @@ async def getusers(ctx, *, role: discord.Role):
         await ctx.send(embed=embed)
 
 
-@client.command(aliases=["q", "triv", " trivia"], description="Sends a quiz for you to answer")
+@client.command(
+    aliases=["q", "triv", " trivia"], description="Sends a quiz for you to answer"
+)
 async def quiz(ctx):
     answered = False
     session = aiohttp.ClientSession()
@@ -3093,8 +3602,11 @@ async def quiz(ctx):
                 and message.channel.id == ctx.channel.id
             )
 
-    ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
-    ordlist = [ordinal(n) for n in range(1,5)]
+    ordinal = lambda n: "%d%s" % (
+        n,
+        "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4],
+    )
+    ordlist = [ordinal(n) for n in range(1, 5)]
     async with ctx.typing():
         async with session.get(
             "https://opentdb.com/api.php?amount=1&type=multiple"
@@ -3116,7 +3628,11 @@ async def quiz(ctx):
             .replace("Entertainment: ", "")
             .replace("Science: ", "")
         )
-        embed = discord.Embed(title=question, description=f"Category: {category.title()}\nDifficulty: {difficulty.title()}", color=0x2F3136)
+        embed = discord.Embed(
+            title=question,
+            description=f"Category: {category.title()}\nDifficulty: {difficulty.title()}",
+            color=0x2F3136,
+        )
         embed.set_footer(text=f"Trivia/Quiz for {ctx.author}")
         correct_answer = "not found"
         randomint = secureRandom.randint(1, 4)
@@ -3124,104 +3640,121 @@ async def quiz(ctx):
             correct_answer = "a"
             embed.add_field(
                 name="A",
-                value=html.parser.unescape(data.get("results")[0].get("correct_answer")),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("correct_answer")
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="B",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[0]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[0]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="C",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[1]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[1]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="D",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[2]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[2]
+                ),
+                inline=False,
             )
         if randomint == 2:
             correct_answer = "b"
             embed.add_field(
                 name="A",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[0]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[0]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="B",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("correct_answer")),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("correct_answer")
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="C",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[1]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[1]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="D",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[2]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[2]
+                ),
+                inline=False,
             )
         if randomint == 3:
             correct_answer = "c"
             embed.add_field(
                 name="A",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[0]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[0]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="B",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[1]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[1]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="C",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("correct_answer")),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("correct_answer")
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="D",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[2]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[2]
+                ),
+                inline=False,
             )
         if randomint == 4:
             correct_answer = "d"
             embed.add_field(
                 name="A",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[0]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[0]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="B",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[1]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[1]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="C",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("incorrect_answers")[2]),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("incorrect_answers")[2]
+                ),
+                inline=False,
             )
             embed.add_field(
                 name="D",
-                value=html.parser.unescape(data.get("results")[0]
-                .get("correct_answer")),
-                inline=False
+                value=html.parser.unescape(
+                    data.get("results")[0].get("correct_answer")
+                ),
+                inline=False,
             )
     await ctx.send(embed=embed)
     try:
@@ -3245,7 +3778,9 @@ async def quiz(ctx):
 @client.command(aliases=["tr"], description="Translate a text")
 async def translate(ctx, lang: str, *, text: str):
     session = aiohttp.ClientSession()
-    async with session.get("https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json") as r:
+    async with session.get(
+        "https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json"
+    ) as r:
         languages = json.loads(await r.text())
     for i in languages:
         if i["English"].lower() == lang.lower():
@@ -3254,7 +3789,8 @@ async def translate(ctx, lang: str, *, text: str):
         else:
             lang = lang
             continue
-    if lang == "zh": language = "zh-CN"
+    if lang == "zh":
+        language = "zh-CN"
     result = await translate_api.translate(text, dest=lang)
     source = ""
     for i in languages:
@@ -3272,9 +3808,11 @@ async def translate(ctx, lang: str, *, text: str):
             dest = result.dest
             continue
     embed = discord.Embed(title=f"Translation", description=result.text, color=0x2F3136)
-    if not result.text == result.pronunciation: 
+    if not result.text == result.pronunciation:
         embed.add_field(name="Pronunciation", value=result.pronunciation)
-    embed.set_footer(text=f"Translated from {src.split(';')[0]} to {dest.split(';')[0]}")
+    embed.set_footer(
+        text=f"Translated from {src.split(';')[0]} to {dest.split(';')[0]}"
+    )
     await ctx.send(embed=embed)
 
 
@@ -3326,7 +3864,11 @@ async def mute(ctx, user: discord.Member, reason="No Reason Specified"):
 )
 async def invite(ctx):
     await ctx.send(
-        embed=discord.Embed(title="Invite", description="[Invite](https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640)", color=0x2F3136)
+        embed=discord.Embed(
+            title="Invite",
+            description="[Invite](https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640)",
+            color=0x2F3136,
+        )
     )
 
 
@@ -3353,17 +3895,17 @@ async def helpcommand(ctx, command: str = None):
     if command is None:
         all_commands += "".join(sorted([f"`{i.name}`, " for i in client.commands]))
         if ctx.guild is None:
-            color = 0x2f3136
+            color = 0x2F3136
         else:
             color = ctx.guild.me.color
         embed = discord.Embed(
             title=f"All Commands ({len(client.commands)})",
             description=all_commands,
-            colour=color
+            colour=color,
         )
         embed.add_field(
-                    name="Help",
-                    value=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```"
+            name="Help",
+            value=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```",
         )
         await ctx.send(embed=embed)
     else:
@@ -3372,18 +3914,26 @@ async def helpcommand(ctx, command: str = None):
         command_for_use = None
         for i in client.commands:
             all_commands_name_list.append(i.name)
-            if i.name == command.strip().lower() or command.strip().lower() in i.aliases:
+            if (
+                i.name == command.strip().lower()
+                or command.strip().lower() in i.aliases
+            ):
                 command_for_use = i
         if not command_for_use is None:
             aliases = ""
             for i in command_for_use.aliases:
                 aliases += f"`{i}`, "
-            embed = discord.Embed(color=0x2F3136, description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help for a list of commands!```")
+            embed = discord.Embed(
+                color=0x2F3136,
+                description=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help for a list of commands!```",
+            )
 
             embed.set_author(name=str(command_for_use.name))
 
             embed.add_field(name="Name", value=command_for_use.name)
-            embed.add_field(name="Description", value=command_for_use.description, inline=False)
+            embed.add_field(
+                name="Description", value=command_for_use.description, inline=False
+            )
             if not len(aliases) == 0:
                 embed.add_field(name="Aliases", value=aliases[:-2])
             else:
@@ -3391,11 +3941,27 @@ async def helpcommand(ctx, command: str = None):
             if not command_for_use.usage is None:
                 embed.add_field(name="Usage", value=ctx.prefix + command_for_use.usage)
             else:
-                embed.add_field(name="Usage", value=ctx.prefix + command_for_use.name + " " + " ".join([f"`{i}`" for i in client.get_command(command_for_use.name).signature.split(" ")]))
+                embed.add_field(
+                    name="Usage",
+                    value=ctx.prefix
+                    + command_for_use.name
+                    + " "
+                    + " ".join(
+                        [
+                            f"`{i}`"
+                            for i in client.get_command(
+                                command_for_use.name
+                            ).signature.split(" ")
+                        ]
+                    ),
+                )
             if command_for_use._buckets._cooldown is None:
                 embed.add_field(name="Cooldown", value="None")
             else:
-                embed.add_field(name="Cooldown", value=f"{command_for_use._buckets._cooldown.per} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(command_for_use._buckets._cooldown.per)))}) per {command_for_use._buckets._cooldown.rate} commands per {str(command_for_use._buckets._cooldown.type).split('.')[1].title()}")
+                embed.add_field(
+                    name="Cooldown",
+                    value=f"{command_for_use._buckets._cooldown.per} seconds ({humanize.naturaldelta(datetime.timedelta(seconds=int(command_for_use._buckets._cooldown.per)))}) per {command_for_use._buckets._cooldown.rate} commands per {str(command_for_use._buckets._cooldown.type).split('.')[1].title()}",
+                )
             await ctx.send(embed=embed)
         else:
             try:
@@ -3471,9 +4037,10 @@ async def wikipedia(ctx, *, search_term):
     description=" clears a certain amount of messages",
 )
 @commands.has_permissions(manage_messages=True)
-async def purge(ctx, amount: int, member: discord.Member=None):
+async def purge(ctx, amount: int, member: discord.Member = None):
     def check(message):
         return message.author == member
+
     amount += 1
     if not member:
         deleted = await ctx.channel.purge(limit=amount)
@@ -3482,15 +4049,16 @@ async def purge(ctx, amount: int, member: discord.Member=None):
         message = deleted = sum(spammers.values())
         messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
         if deleted:
-            messages.append('')
+            messages.append("")
             spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
-            messages.extend(f'- {count} by **{author}**' for author, count in spammers)
-        await ctx.send('\n'.join(messages), delete_after=10)
+            messages.extend(f"- {count} by **{author}**" for author, count in spammers)
+        await ctx.send("\n".join(messages), delete_after=10)
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
-        await ctx.send(f"Deleted `{len(deleted) - 1}` messages by {member}", delete_after=3)
-
+        await ctx.send(
+            f"Deleted `{len(deleted) - 1}` messages by {member}", delete_after=3
+        )
 
 
 @purge.error
@@ -3542,17 +4110,19 @@ async def unban(ctx, *, member: str):
         await ctx.send("User not found")
 
 
-@client.command(aliases=["ui", "whois", "wi", "whoami", "me"], description="Shows info about a user")
+@client.command(
+    aliases=["ui", "whois", "wi", "whoami", "me"], description="Shows info about a user"
+)
 async def userinfo(ctx, *, member: discord.Member = None):
     member = member or ctx.message.author
     status = await client.db.fetchrow(
-            """
+        """
             SELECT *
             FROM status
             WHERE user_id=$1
             """,
-            member.id 
-        )
+        member.id,
+    )
     if not len(member.roles) == 1:
         roles = [role for role in reversed(member.roles)]
         roles = roles[:-1]
@@ -3577,26 +4147,33 @@ async def userinfo(ctx, *, member: discord.Member = None):
     if not len(flaglist) == 0:
         embed.add_field(name="Badges", value=flagstr, inline=False)
     if not status is None and str(member.status) == "offline":
-        embed.add_field(name="Last Seen",
-                        value=humanize.precisedelta(datetime.datetime.utcnow() - status["last_seen"]) + " ago"
-    )
+        embed.add_field(
+            name="Last Seen",
+            value=humanize.precisedelta(
+                datetime.datetime.utcnow() - status["last_seen"]
+            )
+            + " ago",
+        )
     embed.add_field(
         name="Online Status",
         value=f"{get_status(member.desktop_status.name)} Desktop\n{get_status(member.web_status.name)} Web\n{get_status(member.mobile_status.name)} Mobile",
     )
     embed.add_field(
-        name="Created at", value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.created_at)})',
-        inline=False
+        name="Created at",
+        value=f'{member.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.created_at)})',
+        inline=False,
     )
 
     embed.add_field(
-        name="Joined at:", value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.joined_at)})',
-        inline=False
+        name="Joined at:",
+        value=f'{member.joined_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - member.joined_at)})',
+        inline=False,
     )
     if not len(member.roles) == 1:
         embed.add_field(
-        name=f"Roles ({len(roles)})", value=" | ".join([role.mention for role in roles])
-    )
+            name=f"Roles ({len(roles)})",
+            value=" | ".join([role.mention for role in roles]),
+        )
     if not member.bot:
         member_type = ":blond_haired_man: Human"
     else:
