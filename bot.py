@@ -498,7 +498,7 @@ async def _complex_cleanup_strategy(ctx, search):
             FROM guilds
             WHERE id=$1
             """,
-            message.guild.id 
+            ctx.message.guild.id 
         )
     prefix = str(prefix_for_this_guild["prefix"])
 
