@@ -3478,13 +3478,19 @@ async def purge(ctx, amount: int, member: discord.Member=None):
     if not member:
         deleted = await ctx.channel.purge(limit=amount)
         a = "message" if len(deleted) else "messages"
-        message = await ctx.send(f"Deleted `{len(deleted) - 1}` {a}")
+        counter = Counter(m.author.display_name for m in deleted)
+        message = deleted = sum(spammers.values())
+        messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
+        if deleted:
+            messages.append('')
+            spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
+            messages.extend(f'- {count} by **{author}**' for author, count in spammers)
+        await ctx.send('\n'.join(messages), delete_after=10)
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
-        message = await ctx.send(f"Deleted `{len(deleted) - 1}` messages by {member}")
-    await asyncio.sleep(2)
-    await message.delete()
+        await ctx.send(f"Deleted `{len(deleted) - 1}` messages by {member}", delete_after=3)
+
 
 
 @purge.error
