@@ -3429,7 +3429,7 @@ async def servers(ctx):
     aliases=["eightball", "eight ball", "question", "answer", "8b"],
     description="Sends a yes/no type answer to a question",
 )
-async def _8ball(ctx, *, question):
+async def _8ball(ctx, *, question: commands.clean_content):
     answers = [
         "It is certain",
         "It is decidedly so",
