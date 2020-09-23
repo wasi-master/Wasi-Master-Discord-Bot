@@ -6,7 +6,7 @@ async_cse
 asyncpg
 bs4
 dblpy
-discord.py>=1.4.1
+git+git://github.com/Rapptz/discord.py.git
 gTTS
 git+git://github.com/jmoiron/humanize.git
 jishaku
