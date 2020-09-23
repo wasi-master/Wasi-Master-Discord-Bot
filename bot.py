@@ -1183,7 +1183,7 @@ async def timing(ctx, time=10):
 )
 async def charinfo(ctx, *, characters: str):
     def to_string(c):
-        l.append("a")
+        #  l.append("a")
         digit = f"{ord(c):x}"
         name = unicodedata.name(c, "Name not found.")
         return f"`\\U{digit:>08}`: {name} - {c} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{digit}>"
@@ -4043,16 +4043,20 @@ async def purge(ctx, amount: int, member: discord.Member = None):
 
     amount += 1
     if not member:
+        def reaction_check(r, u):
+            return r.channel.id == ctx.channel.id and u.id = ctx.author.id and r.emoji == "\U0001f6ab"
         deleted = await ctx.channel.purge(limit=amount)
         a = "message" if len(deleted) else "messages"
-        counter = Counter(m.author.display_name for m in deleted)
+        spammers = Counter(m.author.display_name for m in deleted)
         message = deleted = sum(spammers.values())
         messages = [f'{deleted} message{" was" if deleted == 1 else "s were"} removed.']
         if deleted:
             messages.append("")
             spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
             messages.extend(f"- {count} by **{author}**" for author, count in spammers)
-        await ctx.send("\n".join(messages), delete_after=10)
+        msg = await ctx.send("\n".join(messages), delete_after=10)
+        await msg.add_reaction("\U0001f6ab")
+        reaction, user = await client.wait_for("reaction_add", check=reaction_check, timeout=10)
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
