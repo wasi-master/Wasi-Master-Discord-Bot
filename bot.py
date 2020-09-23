@@ -4044,7 +4044,7 @@ async def purge(ctx, amount: int, member: discord.Member = None):
     amount += 1
     if not member:
         def reaction_check(r, u):
-            return r.channel.id == ctx.channel.id and u.id = ctx.author.id and r.emoji == "\U0001f6ab"
+            return r.channel.id == ctx.channel.id and u.id == ctx.author.id and str(r.emoji) == "\U0001f6ab"
         deleted = await ctx.channel.purge(limit=amount)
         a = "message" if len(deleted) else "messages"
         spammers = Counter(m.author.display_name for m in deleted)
