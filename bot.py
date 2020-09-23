@@ -154,7 +154,12 @@ def str_to_sec(text: str):
     return times[match[2]](int(match[1]))
 
 
-client = commands.Bot(command_prefix=get_prefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+intents = discord.Intents(members=True, presences=True, guilds=True,
+                        emojis=True, invites=True, messages=True, 
+                        reactions=True
+)
+
+client = commands.Bot(command_prefix=get_prefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False), intents=intents)
 dblpy = dbl.DBLClient(
     client,
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs",
