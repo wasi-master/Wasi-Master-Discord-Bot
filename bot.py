@@ -546,6 +546,18 @@ async def _complex_cleanup_strategy(ctx, search):
     deleted = await ctx.channel.purge(limit=search, check=check, before=ctx.message)
     return Counter(m.author.display_name for m in deleted)
 
+"""
+async def whatidisthisid(ctx, id: int):
+    if not len(id) == 18:
+        return await ctx.send("Invalid ID")
+
+
+@client.command(description="Bot will send the name of every emoji reacted to the bot's message")
+async def emojiyay(ctx):
+    message = await ctx.send("React to this message with any emoji")
+    while True:
+        reaction, user = client.wait_for("reaction_add")
+"""
 
 @client.command(
     aliases=["clnup"],
@@ -4061,7 +4073,10 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             messages.extend(f"- {count} by **{author}**" for author, count in spammers)
         msg = await ctx.send("\n".join(messages), delete_after=10)
         await msg.add_reaction("\U0001f6ab")
-        reaction, user = await client.wait_for("reaction_add", check=reaction_check, timeout=10)
+        try:
+            reaction, user = await client.wait_for("reaction_add", check=reaction_check, timeout=10)
+        except:
+            return
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
