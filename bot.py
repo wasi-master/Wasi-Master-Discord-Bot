@@ -685,14 +685,14 @@ async def _eval(ctx, *, cmd):
 @_eval.error
 async def eval_error(ctx, exc):
     traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
+    try:
+        await ctx.author.send(f"```py\n{traceback}```")
+    except discord.HTTPException:
+        traceback = ''.join(traceback.format_tb(e.__traceback__))
         try:
             await ctx.author.send(f"```py\n{traceback}```")
         except discord.HTTPException:
-            traceback = ''.join(traceback.format_tb(e.__traceback__))
-            try:
-                await ctx.author.send(f"```py\n{traceback}```")
-            except discord.HTTPException:
-                await ctx.author.send(str(exc))
+            await ctx.author.send(str(exc))
 
 
 @client.command(
