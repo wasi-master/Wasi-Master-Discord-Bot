@@ -95,8 +95,8 @@ def convert_sec_to_min(seconds):
 
 
 def get_p(percent: int):
-    total = 18
-    percent = percent * 0.18
+    total = 15
+    percent = percent * 0.15
     rn = round(percent / 4)
     body = "☐" * total
     li = list(body)
@@ -4299,7 +4299,7 @@ async def purge(ctx, amount: int, member: discord.Member = None):
     await ctx.message.delete()
     if not member:
         def reaction_check(r, u):
-            return r.channel.id == ctx.channel.id
+            return r.message.channel.id == ctx.channel.id
         deleted = await ctx.channel.purge(limit=amount)
         a = "message" if len(deleted) else "messages"
         spammers = Counter(m.author.display_name for m in deleted)
