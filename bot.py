@@ -583,7 +583,7 @@ async def whatsthispokemon(ctx):
         try:
             message = await client.wait_for("message", check=check, timeout=20)
             if message.content.lower() == fj["pokemon"]["name"].lower():
-                embed = discord.Embed(title="You got it right", description="The pokemon was {fj['pokemon']['name']}")
+                embed = discord.Embed(title="You got it right", description=f"The pokemon was {fj['pokemon']['name']}")
                 embed.set_image(url=fj["answer_image"])
                 await ctx.send(embed=embed)
                 return
@@ -4141,7 +4141,7 @@ async def avatar(
     name="help",
     aliases=["halp", "h"],
     description="Sends help :)",
-    usage="help `[command]`\n\nhelp\nhelp userinfo",
+    usage="help `[command]`",
 )
 async def helpcommand(ctx, command: str = None):
     all_commands = ""
