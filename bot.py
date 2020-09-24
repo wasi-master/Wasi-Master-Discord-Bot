@@ -4077,9 +4077,10 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             reaction, user = await client.wait_for("reaction_add", check=reaction_check, timeout=10)
             if reaction.emoji == "\U0001f6ab":
                 await msg.delete()
-            elif reaction.emoji == "\U0001f512":
+            else:
                 try:
-                    return await msg.clear_reactions()
+                    await msg.clear_reactions()
+                    return
                 except:
                     await msg.remove_reaction("\U0001f512", ctx.guild.me)
                     await msg.remove_reaction("\U0001f6ab", ctx.guild.me)
