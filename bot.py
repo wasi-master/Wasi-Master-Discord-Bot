@@ -610,6 +610,7 @@ async def whatsthispokemon(ctx):
                     return
         except asyncio.TimeoutError:
             await ctx.send(f"{ctx.author.mention}, you didn\'t reply within time")
+            return
 
 
 @client.command(description="Shows random cute . pictures :)")
@@ -1516,7 +1517,8 @@ async def pokemonhack(ctx, channel: discord.TextChannel = None):
         "shutterbug": "scatterbug",
         "fletching": "fletchling",
         "oricorio baile style": "oricorio",
-        "sword and shield coal": "rolycoly"
+        "sword and shield coal": "rolycoly",
+        "psychic type cute physic pokemon": "skitty"
     }
     soup = BeautifulSoup(q.decode("utf-8"), "html.parser")
     for best_guess in soup.findAll("a", attrs={"class": "fKDtNb"}):
