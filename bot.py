@@ -582,8 +582,8 @@ async def whatsthispokemon(ctx):
     while True:
         try:
             message = await client.wait_for("message", check=check, timeout=20)
-            if message.content.lower() == fj["name"].lower():
-                embed = discord.Embed(title="You got it right", description="The pokemon was {fj['name']}")
+            if message.content.lower() == fj["pokemon"]["name"].lower():
+                embed = discord.Embed(title="You got it right", description="The pokemon was {fj['pokemon']['name']}")
                 embed.set_image(url=fj["answer_image"])
                 await ctx.send(embed=embed)
                 return
@@ -593,7 +593,7 @@ async def whatsthispokemon(ctx):
                 if counter == 0:
                     await ctx.send("You can't get a hint without guessing")
                 elif counter > 1:
-                    name = fj['name']
+                    name = fj['pokemon']['name']
                     for index, i in enumrate(name):
                         if random.randint(0, 100) > 33:
                             name[index] == "_"
@@ -603,7 +603,7 @@ async def whatsthispokemon(ctx):
                 if counter >= 1:
                     await ctx.send(f"Wrong, you can try `hint` to get a hint`")
                 elif counter == max_tries:
-                    embed = discord.Embed(title="You lost", description="The pokemon was {fj['name']}")
+                    embed = discord.Embed(title="You lost", description="The pokemon was {fj['pokemon']['name']}")
                     embed.set_image(url=fj["answer_image"])
                     await ctx.send(embed=embed)
                     return
@@ -2031,7 +2031,7 @@ async def weather(ctx, *, location: str):
         fj = json.loads(await r.text())
     if not fj["cod"] == "404":
         embed = discord.Embed(
-            title=fj["name"],
+            title=fj["pokemon"]["name"],
             description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}',
             color=0x2F3136,
         )
@@ -2122,7 +2122,7 @@ async def pythonpackagingindex(ctx, package_name: str):
     fj = fj["info"]
     if not len(fj["summary"]) == 0:
         embed = discord.Embed(
-            title=fj["name"],
+            title=fj["pokemon"]["name"],
             description=fj["summary"].replace("![", "["),
             color=0x2F3136,
         )
