@@ -16,6 +16,7 @@ import secrets
 import shutil
 import string
 import time as timemodule
+import traceback
 import unicodedata
 from zipfile import ZipFile
 
@@ -640,27 +641,59 @@ async def _eval(ctx, *, cmd):
         '__import__': __import__
     }
     await ctx.message.add_reaction("\U0001f7e1")
+
     if not ctx.guild is None:
         me = ctx.guild.me
     else:
         me = client.user
+
     try:
         exec(compile(parsed, filename="<ast>", mode="exec"), env)
         result = (await eval(f"{fn_name}()", env))
     except Exception as exc:
+        await ctx.message.remove_reaction("\U0001f7e1", me)
         await ctx.message.add_reaction("\U0001f534")
         traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
-        await ctx.author.send(f"```py\n{traceback}```")
+        try:
+            await ctx.author.send(f"```py\n{traceback}```")
+        except discord.HTTPException:
+            traceback = ''.join(traceback.format_tb(e.__traceback__))
+            try:
+                await ctx.author.send(f"```py\n{traceback}```")
+            except discord.HTTPException:
+                await ctx.author.send(str(exc))
         return
+
     if isinstance(result, str):
         parsed_result = "‌" + result.replace(client.http.token, "[token ommitted]")
     elif isinstance(result, (int, float,  bool, list, dict)):
         parsed_result = "‌" + str(result)
+    elif isinstance(result, discord.File):
+        await ctx.send(file=result)
+    elif isinstance(result, discord.Embed):
+        await ctx.send(embed=embed)
+    elif isinstance(result, None):
+        parsed_result = "None"
     else:
         parsed_result = result
+
+
     await ctx.send(parsed_result)
-    await ctx.message.add_reaction("\U0001f7e2")
     await ctx.message.remove_reaction("\U0001f7e1", me)
+    await ctx.message.add_reaction("\U0001f7e2")
+    
+@_eval.error
+async def eval_error(ctx, exc):
+    traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
+        try:
+            await ctx.author.send(f"```py\n{traceback}```")
+        except discord.HTTPException:
+            traceback = ''.join(traceback.format_tb(e.__traceback__))
+            try:
+                await ctx.author.send(f"```py\n{traceback}```")
+            except discord.HTTPException:
+                await ctx.author.send(str(exc))
+
 
 @client.command(
     aliases=["clnup"],
