@@ -590,18 +590,19 @@ async def whatsthispokemon(ctx):
             elif message.content.lower() == "hint":
                 guessed += 1
                 counter += 1
-                if counter == 0:
+                if counter == 1:
                     await ctx.send("You can't get a hint without guessing")
                 elif counter > 1:
-                    name = fj['pokemon']['name']
+                    name = list(fj['pokemon']['name'])
                     for index, i in enumerate(name):
-                        if random.randint(0, 100) > 33:
-                            name[index] == "_"
+                        if random.randint(0, 100) >= 40:
+                            name[index] = "_"
+                    name = "". join(name)
                     await ctx.send(f"The pokemon name is {name}")
             else:
                 await ctx.send(f"Wrong, you have {max_tries - counter} tries left")
                 if counter >= 1:
-                    await ctx.send(f"Wrong, you can try `hint` to get a hint`")
+                    await ctx.send(f"Wrong, you can try `hint` to get a hint")
                 elif counter == max_tries:
                     embed = discord.Embed(title="You lost", description="The pokemon was {fj['pokemon']['name']}")
                     embed.set_image(url=fj["answer_image"])
