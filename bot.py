@@ -651,11 +651,11 @@ async def _eval(ctx, *, cmd):
         await ctx.message.add_reaction("\U0001f534")
         traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
         await ctx.author.send(f"```py\n{traceback}```")
-    finally:
-        await ctx.message.remove_reaction("\U0001f7e1", me)
+        return
     parsed_result = "‌" + result.replace(client.http.token, "[token ommitted]")
     await ctx.send(parsed_result)
     await ctx.message.add_reaction("\U0001f7e2")
+    await ctx.message.remove_reaction("\U0001f7e1", me)
 
 @client.command(
     aliases=["clnup"],
