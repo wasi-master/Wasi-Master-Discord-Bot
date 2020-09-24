@@ -672,10 +672,10 @@ async def emojiparty(ctx):
             return
         else:
             if not isinstance(reaction.emoji, discord.Emoji):
-                if not isinstance(reaction.emoji, str):
+                try:
                     _list.append(f"{reaction.emoji} - {unicodedata.name(reaction.emoji).title()}")
                     await message.edit(content="\n".join(_list))
-                else:
+                except:
                     try:
                         await message.remove_reaction(reaction.emoji, ctx.author)
                     except discord.Forbidden:
