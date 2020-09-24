@@ -563,6 +563,54 @@ async def whatidisthisid(ctx, id: int):
         return await ctx.send("Invalid ID")
 """
 
+@client.command(aliases=["wtp"], description="You have to guess the pokemon")
+async def whatsthispokemon(ctx):
+    session = aiohttp.ClientSession()
+    headers = {
+        "token": "VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB"
+    }
+    def check(m):
+        return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+    async with session.get("https://dagpi.tk/api/wtp", headers=headers) as cs:
+        fj = await cs.json()
+    embed = discord.Embed(title="What\'s this pokemon?")
+    embed.set_image(url=fj["question_image"])
+    await ctx.send(embed=embed)
+    counter = 0
+    max_tries = 3
+    guessed = 0
+    while True:
+        try:
+            message = await client.wait_for("message", check=check, timeout=20)
+            if message.content.lower() == fj["name"].lower():
+                embed = discord.Embed(title="You got it right", description="The pokemon was {fj['name']}")
+                embed.set_image(url=fj["answer_image"])
+                await ctx.send(embed=embed)
+                return
+            elif message.content.lower() == "hint":
+                guessed += 1
+                counter += 1
+                if counter == 0:
+                    await ctx.send("You can't get a hint without guessing")
+                elif counter > 1:
+                    name = fj['name']
+                    for index, i in enumrate(name):
+                        if random.randint(0, 100) > 33:
+                            name[index] == "_"
+                    await ctx.send(f"The pokemon name is {name}")
+            else:
+                await ctx.send(f"Wrong, you have {max_tries - counter} tries left")
+                if counter >= 1:
+                    await ctx.send(f"Wrong, you can try `hint` to get a hint`")
+                elif counter == max_tries:
+                    embed = discord.Embed(title="You lost", description="The pokemon was {fj['name']}")
+                    embed.set_image(url=fj["answer_image"])
+                    await ctx.send(embed=embed)
+                    return
+        except asyncio.TimeoutError:
+            await ctx.send(f"{ctx.author.mention}, you didn\'t reply within time")
+
+
 @client.command(description="Shows random cute . pictures :)")
 async def cat(ctx):
     url = "https://api.thecatapi.com/v1/images/search"
@@ -575,6 +623,7 @@ async def cat(ctx):
             title="Heres a cat picture"
         ).set_image(url=img_url)
     )
+    await session.close()
 
 
 @client.command(description="Shows random cute dog pictures :)")
@@ -589,6 +638,7 @@ async def dog(ctx):
             title="Heres a dog picture"
         ).set_image(url=img_url)
     )
+    await session.close()
 
 
 @client.command(description="Shows random cute fox pictures :)")
@@ -603,6 +653,7 @@ async def fox(ctx):
             title="Heres a fox picture"
         ).set_image(url=img_url)
     )
+    await session.close()
 
 
 @client.command(description="Bot will send the name of every emoji reacted to the bot's message")
@@ -4043,11 +4094,7 @@ async def mute(ctx, user: discord.Member, reason="No Reason Specified"):
             muted = await ctx.guild.create_role(
                 name="Muted", reason="To use for muting"
             )
-            for (
-                channel
-            ) in (
-                ctx.guild.channels
-            ):  # removes permission to view and send in the channels
+            for channel in ctx.guild.channels:  # removes permission to view and send in the channels
                 await channel.set_permissions(
                     muted,
                     send_messages=False,
