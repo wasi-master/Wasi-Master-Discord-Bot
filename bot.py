@@ -4072,12 +4072,20 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             messages.extend(f"- {count} by **{author}**" for author, count in spammers)
         msg = await ctx.send("\n".join(messages), delete_after=10)
         await msg.add_reaction("\U0001f6ab")
+        await msg.add_reaction("\U0001f512")
         try:
             reaction, user = await client.wait_for("reaction_add", check=reaction_check, timeout=10)
+            if reaction.emoji == "\U0001f6ab":
+                await msg.delete()
+            elif reaction.emoji == "\U0001f512":
+                try:
+                    return await msg.clear_reactions()
+                except:
+                    await msg.remove_reaction("\U0001f512", ctx.guild.me)
+                    await msg.remove_reaction("\U0001f6ab", ctx.guild.me)
+                    return
         except:
             return
-        else:
-            await msg.delete()
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
