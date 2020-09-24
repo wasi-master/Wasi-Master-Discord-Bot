@@ -9,7 +9,6 @@ import difflib
 import discord
 import html
 import json
-import numexpr
 import os
 import random
 import secrets
@@ -31,6 +30,7 @@ import dbl
 import DiscordUtils
 import gtts
 import humanize
+import numexpr
 import prettify_exceptions
 import psutil
 import randomcolor
@@ -53,7 +53,16 @@ ytdl.utils.but_reports_message = lambda: ""
 
 class BlackListed(commands.CheckFailure):
     pass
-
+class plural:
+    def __init__(self, value):
+        self.value = value
+    def __format__(self, format_spec):
+        v = self.value
+        singular, sep, plural = format_spec.partition('|')
+        plural = plural or f'{singular}s'
+        if abs(v) != 1:
+            return f'{v} {plural}'
+        return f'{v} {singular}'
 
 async def get_prefix(client, message):
     if isinstance(message.channel, discord.DMChannel):
@@ -554,12 +563,54 @@ async def whatidisthisid(ctx, id: int):
         return await ctx.send("Invalid ID")
 """
 
+@client.command(description="Shows random cute . pictures :)")
+async def cat(ctx):
+    url = "https://api.thecatapi.com/v1/images/search"
+    session = aiohttp.ClientSession()
+    async with session.get(url) as cs:
+            fj = await cs.json()
+    img_url = fj["url"]
+    await ctx.send(
+        embed=discord.Embed(
+            title="Heres a cat picture"
+        ).set_image(url=img_url)
+    )
+
+
+@client.command(description="Shows random cute dog pictures :)")
+async def dog(ctx):
+    url = "https://dog.ceo/api/breeds/image/random"
+    session = aiohttp.ClientSession()
+    async with session.get(url) as cs:
+            fj = await cs.json()
+    img_url = fj["message"].replace("\\/", "/")
+    await ctx.send(
+        embed=discord.Embed(
+            title="Heres a dog picture"
+        ).set_image(url=img_url)
+    )
+
+
+@client.command(description="Shows random cute fox pictures :)")
+async def fox(ctx):
+    url = "https://randomfox.ca/floof/"
+    session = aiohttp.ClientSession()
+    async with session.get(url) as cs:
+            fj = await cs.json()
+    img_url = fj["image"].replace("\\/", "/")
+    await ctx.send(
+        embed=discord.Embed(
+            title="Heres a fox picture"
+        ).set_image(url=img_url)
+    )
+
+
 @client.command(description="Bot will send the name of every emoji reacted to the bot's message")
 async def emojiparty(ctx):
     message = await ctx.send("React to this message with any emoji")
     _list = []
     def check(r, u):
-        return r.channel.id == ctx.channel.id and r.message.id == message.id
+        return r.message.channel.id == ctx.channel.id and r.message.id == message.id
     while True:
         try:
             reaction, user = await client.wait_for("reaction_add", check=check, timeout=15)
@@ -657,7 +708,7 @@ async def _eval(ctx, *, cmd):
         try:
             await ctx.author.send(f"```py\n{traceback}```")
         except discord.HTTPException:
-            traceback = ''.join(traceback.format_tb(e.__traceback__))
+            traceback = ''.join(traceback.format_tb(exc.__traceback__))
             try:
                 await ctx.author.send(f"```py\n{traceback}```")
             except discord.HTTPException:
@@ -671,7 +722,7 @@ async def _eval(ctx, *, cmd):
     elif isinstance(result, discord.File):
         await ctx.send(file=result)
     elif isinstance(result, discord.Embed):
-        await ctx.send(embed=embed)
+        await ctx.send(embed=result)
     elif isinstance(result, None):
         parsed_result = "None"
     else:
@@ -688,7 +739,7 @@ async def eval_error(ctx, exc):
     try:
         await ctx.author.send(f"```py\n{traceback}```")
     except discord.HTTPException:
-        traceback = ''.join(traceback.format_tb(e.__traceback__))
+        traceback = ''.join(traceback.format_tb(exc.__traceback__))
         try:
             await ctx.author.send(f"```py\n{traceback}```")
         except discord.HTTPException:
@@ -1413,6 +1464,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel = None):
         "shutterbug": "scatterbug",
         "fletching": "fletchling",
         "oricorio baile style": "oricorio",
+        "sword and shield coal": "rolycoly"
     }
     soup = BeautifulSoup(q.decode("utf-8"), "html.parser")
     for best_guess in soup.findAll("a", attrs={"class": "fKDtNb"}):
@@ -4181,7 +4233,7 @@ async def wikipedia(ctx, *, search_term):
         if len(result) < 1997:
             await ctx.send(result)
         else:
-            await paginator(ctx, result.split("\n"), 5)
+            await ctx.send(result[0:2000])
 
 
 @client.command(
