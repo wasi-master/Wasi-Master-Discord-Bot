@@ -4080,8 +4080,9 @@ async def purge(ctx, amount: int, member: discord.Member = None):
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
+        await ctx.message.delete()
         await ctx.send(
-            f"Deleted `{len(deleted) - 1}` messages by {member}", delete_after=3
+            f"Deleted `{len(deleted)}` messages by {member}", delete_after=3
         )
 
 
