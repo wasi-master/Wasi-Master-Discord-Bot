@@ -560,7 +560,7 @@ async def emojiparty(ctx):
         return r.channel.id == ctx.channel.id and r.message.id == message.id
     while True:
         try:
-            reaction, user = client.wait_for("reaction_add", check=check, timeout=15)
+            reaction, user = await client.wait_for("reaction_add", check=check, timeout=15)
         except asyncio.TimeoutError:
             await message.edit(content="You were too late :(")
             return
@@ -638,9 +638,17 @@ async def _eval(ctx, *, cmd):
         '_client': client,
         '__import__': __import__
     }
-    exec(compile(parsed, filename="<ast>", mode="exec"), env)
-
-    result = (await eval(f"{fn_name}()", env))
+    await ctx.message.add_reaction("\U0001f7e1")
+    try:
+        exec(compile(parsed, filename="<ast>", mode="exec"), env)
+        result = (await eval(f"{fn_name}()", env))
+    except Exception as e:
+        await ctx.message.add_reaction("\U0001f534")
+        await ctx.author.send(f"```py\n{e.__traceback__}```")
+    else:
+        await ctx.message.add_reaction("\U0001f7e2")
+    finally:
+        await ctx.message.remove_reaction("\U0001f7e1", ctx.guild.me)
     await ctx.send(result.replace(client.http.token, "[good eval :)]"))
 
 
