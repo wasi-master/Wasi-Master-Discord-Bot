@@ -652,7 +652,12 @@ async def _eval(ctx, *, cmd):
         traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
         await ctx.author.send(f"```py\n{traceback}```")
         return
-    parsed_result = "‌" + result.replace(client.http.token, "[token ommitted]")
+    if isinstance(result, str):
+        parsed_result = "‌" + result.replace(client.http.token, "[token ommitted]")
+    elif isinstance(result, (int, float,  bool, list, dict)):
+        parsed_result = "‌" + result
+    else:
+        parsed_result = result
     await ctx.send(parsed_result)
     await ctx.message.add_reaction("\U0001f7e2")
     await ctx.message.remove_reaction("\U0001f7e1", me)
