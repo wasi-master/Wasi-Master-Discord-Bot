@@ -620,10 +620,10 @@ async def emojiparty(ctx):
         else:
             if reaction.message.guild is None:
                 _list.append(f"{reaction.emoji} - {unicodedata.name(reaction.emoji).title()}")
-                await message.edit("\n".join(_list))
+                await message.edit(content="\n".join(_list))
             else:
                 _list.append(f"{reaction.emoji} - {reaction.emoji.name}")
-                await message.edit("\n".join(_list))
+                await message.edit(content="\n".join(_list))
 
 
 def insert_returns(body):
