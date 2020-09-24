@@ -594,7 +594,7 @@ async def whatsthispokemon(ctx):
                     await ctx.send("You can't get a hint without guessing")
                 elif counter > 1:
                     name = fj['pokemon']['name']
-                    for index, i in enumrate(name):
+                    for index, i in enumerate(name):
                         if random.randint(0, 100) > 33:
                             name[index] == "_"
                     await ctx.send(f"The pokemon name is {name}")
