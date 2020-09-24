@@ -356,7 +356,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command} command")
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("I can't do that")
+        await ctx.send("I don't have permissions to do that")
     elif isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
             f"The {str(error.param).split(':')[0].strip()} argument is missing"
@@ -550,14 +550,99 @@ async def _complex_cleanup_strategy(ctx, search):
 async def whatidisthisid(ctx, id: int):
     if not len(id) == 18:
         return await ctx.send("Invalid ID")
-
+"""
 
 @client.command(description="Bot will send the name of every emoji reacted to the bot's message")
-async def emojiyay(ctx):
+async def emojiparty(ctx):
     message = await ctx.send("React to this message with any emoji")
+    _list = []
+    def check(r, u):
+        return r.channel.id == ctx.channel.id and r.message.id == message.id
     while True:
-        reaction, user = client.wait_for("reaction_add")
-"""
+        try:
+            reaction, user = client.wait_for("reaction_add", check=check, timeout=15)
+        except asyncio.TimeoutError:
+            await message.edit(content="You were too late :(")
+            return
+        else:
+            if reaction.guild is None:
+                _list.append(f"{reaction.emoji} - {unicodedata.name(reaction.emoji).title()}")
+                await message.edit("\n".join(_list))
+            else:
+                _list.append(f"{reaction.emoji} - {reaction.emoji.name}")
+                await message.edit("\n".join(_list))
+
+
+def insert_returns(body):
+    # insert return stmt if the last expression is a expression statement
+    if isinstance(body[-1], ast.Expr):
+        body[-1] = ast.Return(body[-1].value)
+        ast.fix_missing_locations(body[-1])
+
+    # for if statements, we insert returns into the body and the orelse
+    if isinstance(body[-1], ast.If):
+        insert_returns(body[-1].body)
+        insert_returns(body[-1].orelse)
+
+    # for with blocks, again we insert returns into the body
+    if isinstance(body[-1], ast.With):
+        insert_returns(body[-1].body)
+
+
+@client.command(name="eval", aliases=["e"])
+async def _eval(ctx, *, cmd):
+    """Evaluates input.
+    Input is interpreted as newline seperated statements.
+    If the last statement is an expression, that is the return value.
+    Usable globals:
+      - `bot`: the bot instance
+      - `discord`: the discord module
+      - `commands`: the discord.ext.commands module
+      - `ctx`: the invokation context
+      - `__import__`: the builtin `__import__` function
+    Such that `>eval 1 + 1` gives `2` as the result.
+    The following invokation will cause the bot to send the text '9'
+    to the channel of invokation and return '3' as the result of evaluating
+    >eval ```
+    a = 1 + 2
+    b = a * 2
+    await ctx.send(a + b)
+    a
+    ```
+    """
+    if not ctx.author.id == 538332632535007244:
+        return await ctx.send("**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad")
+    fn_name = "_eval_expr"
+
+    cmd = cmd.strip("` ")
+
+    # add a layer of indentation
+    cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
+
+    # wrap in async def body
+    body = f"async def {fn_name}():\n{cmd}"
+
+    parsed = ast.parse(body)
+    body = parsed.body[0].body
+
+    insert_returns(body)
+
+    env = {
+        '_bot': ctx.bot,
+        'discord': discord,
+        'commands': commands,
+        '_ctx': ctx,
+        '_guild': ctx.guild,
+        '_author': ctx.author,
+        '_channel': ctx.channel,
+        '_client': client,
+        '__import__': __import__
+    }
+    exec(compile(parsed, filename="<ast>", mode="exec"), env)
+
+    result = (await eval(f"{fn_name}()", env))
+    await ctx.send(result.replace(client.http.token, "[good eval :)]"))
+
 
 @client.command(
     aliases=["clnup"],
