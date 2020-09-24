@@ -4057,11 +4057,10 @@ async def wikipedia(ctx, *, search_term):
 async def purge(ctx, amount: int, member: discord.Member = None):
     def check(message):
         return message.author == member
-
-    amount += 1
+    await ctx.message.delete()
     if not member:
         def reaction_check(r, u):
-            return r.channel.id == ctx.channel.id and u.id == ctx.author.id and str(r.emoji) == "\U0001f6ab"
+            return r.channel.id == ctx.channel.id and u.author.id == ctx.author.id and str(r.emoji) == "\U0001f6ab"
         deleted = await ctx.channel.purge(limit=amount)
         a = "message" if len(deleted) else "messages"
         spammers = Counter(m.author.display_name for m in deleted)
@@ -4077,6 +4076,8 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             reaction, user = await client.wait_for("reaction_add", check=reaction_check, timeout=10)
         except:
             return
+        else:
+            await msg.delete()
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
         a = "message" if len(deleted) else "messages"
