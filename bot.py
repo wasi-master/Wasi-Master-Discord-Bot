@@ -30,6 +30,7 @@ import dbl
 import DiscordUtils
 import gtts
 import humanize
+import prettify_exceptions
 import psutil
 import randomcolor
 import re
@@ -639,16 +640,21 @@ async def _eval(ctx, *, cmd):
         '__import__': __import__
     }
     await ctx.message.add_reaction("\U0001f7e1")
+    if not ctx.guild is None:
+        me = ctx.guild.me
+    else:
+        me = client.user
     try:
         exec(compile(parsed, filename="<ast>", mode="exec"), env)
         result = (await eval(f"{fn_name}()", env))
-    except Exception as e:
+    except Exception as exc:
         await ctx.message.add_reaction("\U0001f534")
-        await ctx.author.send(f"```py\n{e.__traceback__}```")
+        traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
+        await ctx.author.send(f"```py\n{traceback}```")
     else:
         await ctx.message.add_reaction("\U0001f7e2")
     finally:
-        await ctx.message.remove_reaction("\U0001f7e1", ctx.guild.me)
+        await ctx.message.remove_reaction("\U0001f7e1", me)
     await ctx.send(result.replace(client.http.token, "[good eval :)]"))
 
 
