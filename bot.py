@@ -4070,7 +4070,7 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             messages.append("")
             spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
             messages.extend(f"- {count} by **{author}**" for author, count in spammers)
-        msg = await ctx.send("\n".join(messages), delete_after=10)
+        msg = await ctx.send("\n".join(messages))
         await msg.add_reaction("\U0001f6ab")
         await msg.add_reaction("\U0001f512")
         try:
@@ -4085,7 +4085,8 @@ async def purge(ctx, amount: int, member: discord.Member = None):
                     await msg.remove_reaction("\U0001f512", ctx.guild.me)
                     await msg.remove_reaction("\U0001f6ab", ctx.guild.me)
                     return
-        except:
+        except asyncio.TimeoutError:
+            await msg.delete()
             return
     else:
         deleted = await ctx.channel.purge(limit=amount, check=check)
