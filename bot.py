@@ -4306,7 +4306,7 @@ async def purge(ctx, amount: int, member: discord.Member = None):
     if not member:
         def reaction_check(r, u):
             return r.message.channel.id == ctx.channel.id
-        deleted = await ctx.channel.purge(limit=amount)
+        deleted = await ctx.channel.purge(limit=amount, reason=f"Done by {ctx.author} (ID: {ctx.author.id})")
         a = "message" if len(deleted) else "messages"
         spammers = Counter(m.author.display_name for m in deleted)
         message = deleted = sum(spammers.values())
@@ -4334,7 +4334,7 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             await msg.delete()
             return
     else:
-        deleted = await ctx.channel.purge(limit=amount, check=check)
+        deleted = await ctx.channel.purge(limit=amount, check=check, reason=f"Deleted {member} (ID: {member.id})'s messages by {ctx.author} (ID: {ctx.author.id})")
         a = "message" if len(deleted) else "messages"
         await ctx.message.delete()
         await ctx.send(
