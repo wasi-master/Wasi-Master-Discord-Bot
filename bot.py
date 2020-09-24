@@ -569,7 +569,7 @@ async def cat(ctx):
     session = aiohttp.ClientSession()
     async with session.get(url) as cs:
             fj = await cs.json()
-    img_url = fj["url"]
+    img_url = fj[0]["url"]
     await ctx.send(
         embed=discord.Embed(
             title="Heres a cat picture"
@@ -618,7 +618,7 @@ async def emojiparty(ctx):
             await message.edit(content="You were too late :(")
             return
         else:
-            if reaction.guild is None:
+            if reaction.message.guild is None:
                 _list.append(f"{reaction.emoji} - {unicodedata.name(reaction.emoji).title()}")
                 await message.edit("\n".join(_list))
             else:
@@ -1480,6 +1480,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel = None):
                 .replace("evolution", "")
                 .replace("shiny", "")
                 .replace("pokedex", "")
+                .replace("pokémon", "")
                 .strip()
             )
             if result in wrong:
