@@ -671,9 +671,15 @@ async def emojiparty(ctx):
             await message.edit(content="You were too late :(")
             return
         else:
-            if reaction.message.guild is None:
-                _list.append(f"{reaction.emoji} - {unicodedata.name(reaction.emoji).title()}")
-                await message.edit(content="\n".join(_list))
+            if not isinstance(reaction.emoji, discord.Emoji):
+                if not isinstance(reaction.emoji, str):
+                    _list.append(f"{reaction.emoji} - {unicodedata.name(reaction.emoji).title()}")
+                    await message.edit(content="\n".join(_list))
+                else:
+                    try:
+                        await message.remove_reaction(reaction.emoji, ctx.author)
+                    except discord.Forbidden:
+                        pass
             else:
                 _list.append(f"{reaction.emoji} - {reaction.emoji.name}")
                 await message.edit(content="\n".join(_list))
@@ -4277,7 +4283,7 @@ async def _8ball(ctx, *, question: commands.clean_content):
     await ctx.send(f"`Question:` {question}\n`Answer:` {secureRandom.choice(answers)}")
 
 
-@client.command(aliases=["wiki", "searchwiki"])
+@client.command(aliases=["wiki", "searchwiki"], description="Searches Wikipedia")
 async def wikipedia(ctx, *, search_term):
     async with ctx.typing():
         result = wikimodule.summary(search_term)
