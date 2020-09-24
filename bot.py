@@ -655,7 +655,7 @@ async def _eval(ctx, *, cmd):
     if isinstance(result, str):
         parsed_result = "‌" + result.replace(client.http.token, "[token ommitted]")
     elif isinstance(result, (int, float,  bool, list, dict)):
-        parsed_result = "‌" + result
+        parsed_result = "‌" + str(result)
     else:
         parsed_result = result
     await ctx.send(parsed_result)
