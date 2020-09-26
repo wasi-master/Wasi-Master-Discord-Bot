@@ -47,15 +47,17 @@ from discord.ext.commands import has_permissions
 from discord.ext.commands.cooldowns import BucketType
 import urllib.parse
 
-
 ytdl.utils.but_reports_message = lambda: ""
 
 
 class BlackListed(commands.CheckFailure):
     pass
+
+
 class plural:
     def __init__(self, value):
         self.value = value
+
     def __format__(self, format_spec):
         v = self.value
         singular, sep, plural = format_spec.partition('|')
@@ -63,6 +65,7 @@ class plural:
         if abs(v) != 1:
             return f'{v} {plural}'
         return f'{v} {singular}'
+
 
 async def get_prefix(client, message):
     if isinstance(message.channel, discord.DMChannel):
@@ -110,7 +113,8 @@ def get_p(percent: int):
 
 def get_flag(flag: str):
     if flag == "hypesquad_brilliance":
-        return "<:hypesquadbrilliance:724328585363456070> | HypeSquad Brilliance"
+        return "<:hypesquadbrilliance:724328585363456070> \
+        | HypeSquad Brilliance"
     elif flag == "hypesquad_bravery":
         return "<:hypesquadbravery:724328585040625667> | HypeSquad Bravery"
     elif flag == "hypesquad_balance":
@@ -125,7 +129,8 @@ def get_flag(flag: str):
         return "<:bughunt2:726775007908462653> | Bug Hunter Level 2"
     elif flag == "verified_bot_developer":
         return (
-            "<:verifiedbotdeveloper:740854331154235444> | Early Verified Bot Developer"
+            "<:verifiedbotdeveloper:740854331154235444> \
+            | Early Verified Bot Developer"
         )
     elif flag == "verified_bot":
         return "<:verifiedbot:740855315985072189> | Verified Bot"
@@ -165,15 +170,30 @@ def str_to_sec(text: str):
     return times[match[2]](int(match[1]))
 
 
-intents = discord.Intents(members=True, presences=True, guilds=True,
-                        emojis=True, invites=True, messages=True, 
-                        reactions=True
-)
+intents = discord.Intents(members=True,
+                          presences=True,
+                          guilds=True,
+                          emojis=True,
+                          invites=True,
+                          messages=True,
+                          reactions=True
+                          )
 
-client = commands.Bot(command_prefix=get_prefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False), intents=intents)
+client = commands.Bot(command_prefix=get_prefix,
+                      case_insensitive=True,
+                      allowed_mentions=discord.AllowedMentions(
+                          everyone=False,
+                          users=False,
+                          roles=False
+                      ),
+                      intents=intents)
 dblpy = dbl.DBLClient(
     client,
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLaGSfAPs",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.\
+    eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsIm\
+    JvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ.\
+    E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLa\
+    GSfAPs",
 )
 cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 secureRandom = secrets.SystemRandom()
@@ -284,6 +304,7 @@ async def create_db_pool():
 
 client.loop.run_until_complete(create_db_pool())
 
+
 #  @client.event
 async def fake_on_ready():
     await client.wait_until_ready()
@@ -328,7 +349,25 @@ async def on_guild_join(guild):
         features += "\n" + i.title().replace("_", " ")
     embed = discord.Embed(
         title=f"Bot Added To {guild.name}",
-        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')} ({humanize.precisedelta(datetime.datetime.utcnow() - guild.created_at)})\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}",
+        description=f"Name: {guild.name}\n \
+        Created At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')} \
+        ({humanize.precisedelta(datetime.datetime.utcnow() - guild.created_at)})\
+        \nID: {guild.id}\nOwner: {guild_owner}\n \
+        Icon Url: [click here]({guild.icon_url})\n \
+        Region: {str(guild.region)}\n \
+        Verification Level: {str(guild.verification_level)}\n \
+        Members: {len(guild.members)}\n \
+        Boost Level: {guild.premium_tier}\n \
+        Boosts: {guild.premium_subscription_count}\n \
+        Boosters: {len(guild.premium_subscribers)}\n \
+        Total Channels: {len(guild.channels)}\n \
+        Text Channels: {len(guild.text_channels)}\n \
+        Voice Channels: {len(guild.voice_channels)}\n \
+        Categories: {len(guild.categories)}\n \
+        Roles: {len(guild.roles)}\n \
+        Emojis: {len(guild.emojis)}/{guild.emoji_limit}\n \
+        Upload Limit: {round(guild.filesize_limit / 1048576)} Megabytes (MB)\n \
+        **Features:** {features}",
     )
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
@@ -351,7 +390,25 @@ async def on_guild_remove(guild):
         features += "\n" + i.title().replace("_", " ")
     embed = discord.Embed(
         title=f"Bot Removed From {guild.name}",
-        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.datetime.now() - guild.created_at)})\nID: {guild.id}\nOwner: {guild_owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nMembers: {len(guild.members)}\nBoost Level: {guild.premium_tier}\nBoosts: {guild.premium_subscription_count}\nBoosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\nText Channels: {len(guild.text_channels)}\nVoice Channels: {len(guild.voice_channels)}\nCategories: {len(guild.categories)}\nRoles: {len(guild.roles)}\nEmojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n**Features:** {features}",
+        description=f"Name: {guild.name}\n \
+            Created At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')} \
+            ({humanize.precisedelta(datetime.datetime.utcnow() - guild.created_at)})\
+            \nID: {guild.id}\nOwner: {guild_owner}\n \
+            Icon Url: [click here]({guild.icon_url})\n \
+            Region: {str(guild.region)}\n \
+            Verification Level: {str(guild.verification_level)}\n \
+            Members: {len(guild.members)}\n \
+            Boost Level: {guild.premium_tier}\n \
+            Boosts: {guild.premium_subscription_count}\n \
+            Boosters: {len(guild.premium_subscribers)}\n \
+            Total Channels: {len(guild.channels)}\n \
+            Text Channels: {len(guild.text_channels)}\n \
+            Voice Channels: {len(guild.voice_channels)}\n \
+            Categories: {len(guild.categories)}\n \
+            Roles: {len(guild.roles)}\n \
+            Emojis: {len(guild.emojis)}/{guild.emoji_limit}\n \
+            Upload Limit: {round(guild.filesize_limit / 1048576)} Megabytes (MB)\n \
+            **Features:** {features}",
     )
     embed.set_thumbnail(url=guild.icon_url)
     await owner.send(embed=embed)
@@ -482,10 +539,10 @@ async def on_member_join(member):
 @client.event
 async def on_member_update(old, new):
     if not (
-        new.status != old.status
-        and str(old.status) != "offline"
-        and str(new.status) == "offline"
-        and len(new.guild.members) < 500
+            new.status != old.status
+            and str(old.status) != "offline"
+            and str(new.status) == "offline"
+            and len(new.guild.members) < 500
     ):
         return
     time = datetime.datetime.utcnow()
@@ -557,11 +614,13 @@ async def _complex_cleanup_strategy(ctx, search):
     deleted = await ctx.channel.purge(limit=search, check=check, before=ctx.message)
     return Counter(m.author.display_name for m in deleted)
 
+
 """
 async def whatidisthisid(ctx, id: int):
     if not len(id) == 18:
         return await ctx.send("Invalid ID")
 """
+
 
 @client.command(aliases=["wtp"], description="You have to guess the pokemon")
 async def whatsthispokemon(ctx):
@@ -569,8 +628,10 @@ async def whatsthispokemon(ctx):
     headers = {
         "token": "VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB"
     }
+
     def check(m):
         return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
     async with session.get("https://dagpi.tk/api/wtp", headers=headers) as cs:
         fj = await cs.json()
     embed = discord.Embed(title="What\'s this pokemon?")
@@ -597,7 +658,7 @@ async def whatsthispokemon(ctx):
                     for index, i in enumerate(name):
                         if random.randint(0, 100) >= 40:
                             name[index] = "_"
-                    name = "". join(name)
+                    name = "".join(name)
                     await ctx.send(f"The pokemon name is {name}")
             else:
                 await ctx.send(f"Wrong, you have {max_tries - counter} tries left")
@@ -618,7 +679,7 @@ async def cat(ctx):
     url = "https://api.thecatapi.com/v1/images/search"
     session = aiohttp.ClientSession()
     async with session.get(url) as cs:
-            fj = await cs.json()
+        fj = await cs.json()
     img_url = fj[0]["url"]
     await ctx.send(
         embed=discord.Embed(
@@ -633,7 +694,7 @@ async def dog(ctx):
     url = "https://dog.ceo/api/breeds/image/random"
     session = aiohttp.ClientSession()
     async with session.get(url) as cs:
-            fj = await cs.json()
+        fj = await cs.json()
     img_url = fj["message"].replace("\\/", "/")
     await ctx.send(
         embed=discord.Embed(
@@ -648,7 +709,7 @@ async def fox(ctx):
     url = "https://randomfox.ca/floof/"
     session = aiohttp.ClientSession()
     async with session.get(url) as cs:
-            fj = await cs.json()
+        fj = await cs.json()
     img_url = fj["image"].replace("\\/", "/")
     await ctx.send(
         embed=discord.Embed(
@@ -662,8 +723,10 @@ async def fox(ctx):
 async def emojiparty(ctx):
     message = await ctx.send("React to this message with any emoji")
     _list = []
+
     def check(r, u):
         return r.message.channel.id == ctx.channel.id and r.message.id == message.id
+
     while True:
         try:
             reaction, user = await client.wait_for("reaction_add", check=check, timeout=15)
@@ -723,7 +786,8 @@ async def _eval(ctx, *, cmd):
     ```
     """
     if not ctx.author.id == 538332632535007244:
-        return await ctx.send("**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad")
+        return await ctx.send(
+            "**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad")
     fn_name = "_eval_expr"
 
     cmd = cmd.strip("` ")
@@ -763,11 +827,11 @@ async def _eval(ctx, *, cmd):
     except Exception as exc:
         await ctx.message.remove_reaction("\U0001f7e1", me)
         await ctx.message.add_reaction("\U0001f534")
-        traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
+        tb = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
         try:
             await ctx.author.send(f"```py\n{traceback}```")
         except discord.HTTPException:
-            traceback = ''.join(traceback.format_tb(exc.__traceback__))
+            tb = ''.join(traceback.format_tb(exc.__traceback__))
             try:
                 await ctx.author.send(f"```py\n{traceback}```")
             except discord.HTTPException:
@@ -776,7 +840,7 @@ async def _eval(ctx, *, cmd):
 
     if isinstance(result, str):
         parsed_result = "‌" + result.replace(client.http.token, "[token ommitted]")
-    elif isinstance(result, (int, float,  bool, list, dict)):
+    elif isinstance(result, (int, float, bool, list, dict)):
         parsed_result = "‌" + str(result)
     elif isinstance(result, discord.File):
         await ctx.send(file=result)
@@ -787,11 +851,11 @@ async def _eval(ctx, *, cmd):
     else:
         parsed_result = result
 
-
     await ctx.send(parsed_result)
     await ctx.message.remove_reaction("\U0001f7e1", me)
     await ctx.message.add_reaction("\U0001f7e2")
-    
+
+
 @_eval.error
 async def eval_error(ctx, exc):
     traceback = ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(exc), exc, exc.__traceback__))
@@ -893,7 +957,6 @@ async def youtubeinfo(ctx, video_url: str):
     description="Chooses between multiple choices N times.", aliases=["cbo"]
 )
 async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_content):
-
     if len(choices) < 2:
         return await ctx.send("Not enough choices to pick from.")
 
@@ -906,7 +969,7 @@ async def choosebestof(ctx, times: Optional[int], *choices: commands.clean_conte
     if len(results) > 10:
         builder.append("Only showing top 10 results...")
     for index, (elem, count) in enumerate(results.most_common(10), start=1):
-        builder.append(f"{index}. {elem} ({plural(count):time}, {count/times:.2%})")
+        builder.append(f"{index}. {elem} ({plural(count):time}, {count / times:.2%})")
 
     await ctx.send("\n".join(builder))
 
@@ -939,8 +1002,8 @@ async def websiteping(ctx, url: str):
     if not url.startswith("http://") or url.startswith("https://"):
         url = "https://" + url
     if re.match(
-        "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
-        url,
+            "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+            url,
     ):
         start = datetime.datetime.utcnow()
         async with session.get(url) as r:
@@ -1047,7 +1110,7 @@ async def saveallemojis(ctx):
     msg = await ctx.send(embed=embed)
     done = 0
     embed.add_field(
-        name="Progress", value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}"
+        name="Progress", value=f"{done} {get_p(done / (len(emojis) / 100))} {len(emojis)}"
     )
     for item in emojis:
         done += 1
@@ -1062,7 +1125,7 @@ async def saveallemojis(ctx):
             )
             embed.add_field(
                 name="Progress",
-                value=f"{done} {get_p(done/(len(emojis)/100))} {len(emojis)}",
+                value=f"{done} {get_p(done / (len(emojis) / 100))} {len(emojis)}",
             )
             await msg.edit(embed=embed)
     embed = discord.Embed(
@@ -1216,7 +1279,7 @@ async def define(ctx, word: str):
     num = 0
     session = aiohttp.ClientSession()
     async with session.get(
-        f"https://owlbot.info/api/v1/dictionary/{word}?format=json"
+            f"https://owlbot.info/api/v1/dictionary/{word}?format=json"
     ) as r:
         text = await r.text()
     fj = json.loads(text)
@@ -1232,7 +1295,7 @@ async def define(ctx, word: str):
                 name="Example",
                 value=term["example"].replace("<b>", "**").replace("</b>", "**"),
             )
-        embed.set_footer(text=f"Definition {num+1}/{len(results)}")
+        embed.set_footer(text=f"Definition {num + 1}/{len(results)}")
         message = await ctx.send(embed=embed)
         await message.add_reaction("\u25c0\ufe0f")
         await message.add_reaction("\u23f9\ufe0f")
@@ -1241,8 +1304,8 @@ async def define(ctx, word: str):
 
             def check(reaction, user):
                 return (
-                    user.id == ctx.author.id
-                    and reaction.message.channel.id == ctx.channel.id
+                        user.id == ctx.author.id
+                        and reaction.message.channel.id == ctx.channel.id
                 )
 
             try:
@@ -1279,10 +1342,10 @@ async def define(ctx, word: str):
                         embed.add_field(
                             name="Example",
                             value=term["example"]
-                            .replace("<b>", "**")
-                            .replace("</b>", "**"),
+                                .replace("<b>", "**")
+                                .replace("</b>", "**"),
                         )
-                    embed.set_footer(text=f"Definition {num+1}/{len(results)}")
+                    embed.set_footer(text=f"Definition {num + 1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u25b6\ufe0f":
                     try:
@@ -1302,10 +1365,10 @@ async def define(ctx, word: str):
                         embed.add_field(
                             name="Example",
                             value=term["example"]
-                            .replace("<b>", "**")
-                            .replace("</b>", "**"),
+                                .replace("<b>", "**")
+                                .replace("</b>", "**"),
                         )
-                    embed.set_footer(text=f"Definition {num+1}/{len(results)}")
+                    embed.set_footer(text=f"Definition {num + 1}/{len(results)}")
                     await message.edit(embed=embed)
                 elif reaction.emoji == "\u23f9\ufe0f":
                     embed = discord.Embed(
@@ -1315,8 +1378,8 @@ async def define(ctx, word: str):
                     embed.add_field(
                         name="Example",
                         value=term["example"]
-                        .replace("<b>", "**")
-                        .replace("</b>", "**"),
+                            .replace("<b>", "**")
+                            .replace("</b>", "**"),
                     )
                     await message.edit(embed=embed)
                     try:
@@ -1350,7 +1413,7 @@ async def define(ctx, word: str):
 @client.command(aliases=["il", "it", "invitelogger"], description="Tracks Invites")
 @has_permissions(manage_guild=True)
 async def invitetracker(ctx, log_channel: discord.TextChannel):
-    channel = channel.id
+    channel = log_channel.id
     await client.db.execute(
         """
                 INSERT INTO channel (guild_id, channel_id)
@@ -1416,9 +1479,9 @@ async def timing(ctx, time=10):
 
     def check(r, u):
         return (
-            u.id == ctx.author.id
-            and r.message.channel.id == ctx.channel.id
-            and str(r.emoji) == "\u2705"
+                u.id == ctx.author.id
+                and r.message.channel.id == ctx.channel.id
+                and str(r.emoji) == "\u2705"
         )
 
     try:
@@ -1487,7 +1550,7 @@ async def pokemonhack(ctx, channel: discord.TextChannel = None):
     img_url = None
     raw_result = None
     async for message in channel.history(
-        limit=8, oldest_first=False, before=ctx.message
+            limit=8, oldest_first=False, before=ctx.message
     ):
         if not message.author == ctx.guild.me:
             if message.embeds:
@@ -1533,15 +1596,15 @@ async def pokemonhack(ctx, channel: discord.TextChannel = None):
             raw_result = best_guess.get_text()
             result = (
                 best_guess.get_text()
-                .lower()
-                .replace("pokemon go", "")
-                .replace("pokemon", "")
-                .replace("png", "")
-                .replace("evolution", "")
-                .replace("shiny", "")
-                .replace("pokedex", "")
-                .replace("pokémon", "")
-                .strip()
+                    .lower()
+                    .replace("pokemon go", "")
+                    .replace("pokemon", "")
+                    .replace("png", "")
+                    .replace("evolution", "")
+                    .replace("shiny", "")
+                    .replace("pokedex", "")
+                    .replace("pokémon", "")
+                    .strip()
             )
             if result in wrong:
                 result = wrong[result]
@@ -1795,9 +1858,9 @@ async def math(ctx, equation: str):
         if not i in available or i.isdigit():
             return await ctx.send("Invalid Math Equation")
     if (
-        not len(equation) > 15
-        and not equation.count("**") > 1
-        and not equation.count("^") < 1
+            not len(equation) > 15
+            and not equation.count("**") > 1
+            and not equation.count("^") < 1
     ):
         try:
             result = await client.loop.run_in_executor(None, do_math, equation)
@@ -1952,7 +2015,7 @@ async def bans(ctx, limit: int = 10):
     emb = discord.Embed(description="", colour=0x2F3136)
 
     async for entry in ctx.guild.audit_logs(
-        action=discord.AuditLogAction.ban, limit=limit
+            action=discord.AuditLogAction.ban, limit=limit
     ):
         emb.description += f"[**{humanize.naturaltime(entry.created_at)}**] **{str(entry.user)}** banned **{str(entry.target)}**\n- {entry.reason}\n\n"
 
@@ -2046,7 +2109,7 @@ async def weather(ctx, *, location: str):
         )
         embed.add_field(
             name="Temperature",
-            value=f'Main: {round(fj["main"]["temp"]-273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"]-273.15, 2)}°C',
+            value=f'Main: {round(fj["main"]["temp"] - 273.15, 2)}°C\nFeels Like: {round(fj["main"]["feels_like"] - 273.15, 2)}°C',
         )
         embed.add_field(
             name="Wind",
@@ -2087,7 +2150,7 @@ async def changepfp(ctx):
 @has_permissions(manage_channels=True)
 async def lock(ctx, *, role: discord.Role = None):
     role = (
-        role or ctx.guild.default_role
+            role or ctx.guild.default_role
     )  # retrieves muted role returns none if there isn't
     channel = ctx.channel
     try:
@@ -2103,7 +2166,7 @@ async def lock(ctx, *, role: discord.Role = None):
 @has_permissions(manage_channels=True)
 async def unlock(ctx, *, role: discord.Role = None):
     role = (
-        role or ctx.guild.default_role
+            role or ctx.guild.default_role
     )  # retrieves muted role returns none if there isn't
     channel = ctx.channel
     try:
@@ -2404,7 +2467,7 @@ async def time(ctx, location_or_user: Union[discord.Member, str] = None):
     try:
         fj["error"]
         error = True
-    except:
+    except KeyError:
         error = False
     if error:
         # await ctx.send(f"```json\n{fj}```")
@@ -2463,7 +2526,7 @@ async def screenshot(ctx, website:str):
 
 @client.command(aliases=["ci", "chi"], description=" See info about a channel")
 async def channelinfo(
-    ctx, channel: Union[discord.TextChannel, discord.VoiceChannel] = None
+        ctx, channel: Union[discord.TextChannel, discord.VoiceChannel] = None
 ):
     channel = channel or ctx.channel
     embed = discord.Embed(color=0x2F3136)
@@ -2588,9 +2651,9 @@ async def upscale(ctx, scaletype, *, member: discord.Member = None):
     session = aiohttp.ClientSession()
     message = await ctx.send("May take up to 15 seconds, Wait till then")
     async with session.post(
-        url,
-        data={"image": str(member.avatar_url),},
-        headers={"api-key": "quickstart-QUdJIGlzIGNvbWluZy4uLi4K"},
+            url,
+            data={"image": str(member.avatar_url), },
+            headers={"api-key": "quickstart-QUdJIGlzIGNvbWluZy4uLi4K"},
     ) as resp:
         fj = json.loads(await resp.text())
         url = fj["output_url"]
@@ -2606,7 +2669,7 @@ async def upscale(ctx, scaletype, *, member: discord.Member = None):
 async def fact(ctx):
     session = aiohttp.ClientSession()
     async with session.get(
-        "https://uselessfacts.jsph.pl/random.json?language=en"
+            "https://uselessfacts.jsph.pl/random.json?language=en"
     ) as resp:
         fj = json.loads(await resp.text())
     embed = discord.Embed(title="Random Fact", description=fj["text"], color=0x2F3136)
@@ -2667,7 +2730,8 @@ async def waifu(ctx):
             )
             await message.edit(embed=embed)
             return await ctx.send(
-                f":couple_with_heart: {ctx.author.mention} is now married with **{name.replace('&quot;', '')}** :couple_with_heart:"
+                f":couple_with_heart: {ctx.author.mention} is now married with \
+                **{name.replace('&quot;', '')}** :couple_with_heart:"
             )
 
 
@@ -2685,7 +2749,7 @@ async def emojiid(ctx, *, name: str):
     usage="perms `[@mention]`\n\nperms\nperms @Wasi Master",
 )
 async def perms(
-    ctx, member: discord.Member = None, channel: discord.TextChannel = None
+        ctx, member: discord.Member = None, channel: discord.TextChannel = None
 ):
     channel = channel or ctx.channel
     member = member or ctx.author
@@ -2697,7 +2761,7 @@ async def perms(
     for i in perms:
         if perms[i]:
             permstr += (
-                f"<:greenTick:596576670815879169> {i.replace('_', ' ' ).title()}\n"
+                f"<:greenTick:596576670815879169> {i.replace('_', ' ').title()}\n"
             )
         else:
             continue
@@ -2732,12 +2796,14 @@ async def firstmessage(ctx, channel: discord.TextChannel = None):
         embed.add_field(name="Attatchments", value=attachments)
     embed.add_field(
         name="Message sent at",
-        value=f'{fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.created_at)})',
+        value=f'{fmo.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}   \
+        ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.created_at)})',
     )
     if not fmo.edited_at is None:
         embed.add_field(
             name="Edited",
-            value=f'{fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S")}   ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.edited_at)})',
+            value=f'{fmo.edited_at.strftime("%a, %d %B %Y, %H:%M:%S")}   \
+            ({humanize.precisedelta(datetime.datetime.utcnow() - fmo.edited_at)})',
         )
     embed.add_field(name="Url", value=fmo.jump_url)
     embed.set_footer(
@@ -2814,7 +2880,7 @@ async def truthordare(ctx, questype: str = "random"):
     levels = ["Disgusting", "Stupid", "Normal", "Soft", "Sexy", "Hot"]
     session = aiohttp.ClientSession()
     async with session.get(
-        "https://raw.githubusercontent.com/sylhare/Truth-or-Dare/master/src/output.json"
+            "https://raw.githubusercontent.com/sylhare/Truth-or-Dare/master/src/output.json"
     ) as r:
         fj = json.loads(await r.text())
     await session.close()
@@ -2843,7 +2909,7 @@ async def wanted(ctx, member: discord.Member = None):
     }
     async with ctx.typing():
         async with session.post(
-            "https://dagpi.tk/api/wanted", headers=headers
+                "https://dagpi.tk/api/wanted", headers=headers
         ) as response:
             loaded_response = await response.text()
         formatted_json = json.loads(loaded_response)
@@ -2866,7 +2932,7 @@ async def hitler(ctx, member: discord.Member = None):
     }
     async with ctx.typing():
         async with session.post(
-            "https://dagpi.tk/api/hitler", headers=headers
+                "https://dagpi.tk/api/hitler", headers=headers
         ) as response:
             loaded_response = await response.text()
         formatted_json = json.loads(loaded_response)
@@ -2894,7 +2960,7 @@ async def tweet(ctx, member: discord.Member = None, *, text):
     }
     async with ctx.typing():
         async with session.post(
-            "https://dagpi.tk/api/tweet", headers=headers
+                "https://dagpi.tk/api/tweet", headers=headers
         ) as response:
             loaded_response = await response.text()
         formatted_json = json.loads(loaded_response)
@@ -3032,8 +3098,8 @@ async def gif(ctx, *, query: str):
     session = aiohttp.ClientSession()
     async with ctx.typing():
         async with session.get(
-            "https://api.tenor.com/v1/search?q=%s&key=%s&contentfilter=high&limit=%s"
-            % (search_term, apikey, lmt)
+                "https://api.tenor.com/v1/search?q=%s&key=%s&contentfilter=high&limit=%s"
+                % (search_term, apikey, lmt)
         ) as r:
             gifs = json.loads(await r.text())
             gif: str = gifs["results"][0]["media"][0]["gif"]["url"]
@@ -3091,12 +3157,12 @@ async def meme(ctx, *, text: str = None):
         base_url = "https://memegen.link/api/templates"
         text = (
             text.strip()
-            .replace(" ", "-")
-            .replace("?", "~q")
-            .replace("#", "~h")
-            .replace("%", "~p")
-            .replace("/", "~s")
-            .replace("''", '"')
+                .replace(" ", "-")
+                .replace("?", "~q")
+                .replace("#", "~h")
+                .replace("%", "~p")
+                .replace("/", "~s")
+                .replace("''", '"')
         )
         textlist = text.split(":")[1].split("||")
         template = text.split(":")[0].strip().replace(" ", "").lower()
@@ -3140,9 +3206,9 @@ async def youtube(ctx, *, search_term: str):
     def parse_html(response):
         results = []
         start = (
-            response.index('window["ytInitialData"]')
-            + len('window["ytInitialData"]')
-            + 3
+                response.index('window["ytInitialData"]')
+                + len('window["ytInitialData"]')
+                + 3
         )
         end = response.index("};", start) + 1
         json_str = response[start:end]
@@ -3200,7 +3266,7 @@ async def serverinfo(ctx):
         features += "\n" + i.title().replace("_", " ")
     embed = discord.Embed(
         title=f"Server Information for {guild.name}",
-        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.datetime.utcnow() - guild.created_at)})\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nTotal Members: {len(guild.members)}\nBots: {len([member for member in ctx.guild.members if member.bot])}\nHumans: {len(ctx.guild.members) - len([member for member in ctx.guild.members if member.bot])}\n<:boost4:724328585137225789> Boost Level: {guild.premium_tier}\n<:boost1:724328584893956168> Boosts: {guild.premium_subscription_count}\n<:boost1:724328584893956168> Boosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\n<:textchannel:724637677395116072> Text Channels: {len(guild.text_channels)}\n<:voicechannel:724637677130875001> Voice Channels: {len(guild.voice_channels)}\n<:category:724330131421659206> Categories: {len(guild.categories)}\nRoles: {len(guild.roles)}\n:slight_smile: Emojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit /1048576 )} Megabytes (MB)\n\n**Features:** {features}",
+        description=f"Name: {guild.name}\nCreated At: {guild.created_at.strftime('%a, %d %B %Y, %H:%M:%S')}  ({humanize.precisedelta(datetime.datetime.utcnow() - guild.created_at)})\nID: {guild.id}\nOwner: {owner}\nIcon Url: [click here]({guild.icon_url})\nRegion: {str(guild.region)}\nVerification Level: {str(guild.verification_level)}\nTotal Members: {len(guild.members)}\nBots: {len([member for member in ctx.guild.members if member.bot])}\nHumans: {len(ctx.guild.members) - len([member for member in ctx.guild.members if member.bot])}\n<:boost4:724328585137225789> Boost Level: {guild.premium_tier}\n<:boost1:724328584893956168> Boosts: {guild.premium_subscription_count}\n<:boost1:724328584893956168> Boosters: {len(guild.premium_subscribers)}\nTotal Channels: {len(guild.channels)}\n<:textchannel:724637677395116072> Text Channels: {len(guild.text_channels)}\n<:voicechannel:724637677130875001> Voice Channels: {len(guild.voice_channels)}\n<:category:724330131421659206> Categories: {len(guild.categories)}\nRoles: {len(guild.roles)}\n:slight_smile: Emojis: {len(guild.emojis)}/{guild.emoji_limit}\nUpload Limit: {round(guild.filesize_limit / 1048576)} Megabytes (MB)\n\n**Features:** {features}",
     )
     embed.set_thumbnail(url=guild.icon_url)
     await ctx.send(embed=embed)
@@ -3227,9 +3293,9 @@ async def spotify(ctx, *, member: discord.Member = None):
             def parse_html(response):
                 results = []
                 start = (
-                    response.index('window["ytInitialData"]')
-                    + len('window["ytInitialData"]')
-                    + 3
+                        response.index('window["ytInitialData"]')
+                        + len('window["ytInitialData"]')
+                        + 3
                 )
                 end = response.index("};", start) + 1
                 json_str = response[start:end]
@@ -3305,7 +3371,7 @@ async def spotify(ctx, *, member: discord.Member = None):
             try:
                 embed.add_field(
                     name="Time",
-                    value=f"{convert_sec_to_min((datetime.datetime.utcnow() - activity.start).total_seconds())} {get_p((abs((datetime.datetime.utcnow() - activity.start).total_seconds()))/(abs(((activity.start - activity.end)).total_seconds())/100))} {str(activity.duration)[2:-7]}",
+                    value=f"{convert_sec_to_min((datetime.datetime.utcnow() - activity.start).total_seconds())} {get_p((abs((datetime.datetime.utcnow() - activity.start).total_seconds())) / (abs(((activity.start - activity.end)).total_seconds()) / 100))} {str(activity.duration)[2:-7]}",
                 )
             except IndexError:
                 pass
@@ -3380,7 +3446,7 @@ async def randomcolour(ctx):
         generated_color = rand_color.generate()[0]
         hexcol = generated_color.replace("#", "")
         async with session.get(
-            f"http://www.thecolorapi.com/id?hex={hexcol}"
+                f"http://www.thecolorapi.com/id?hex={hexcol}"
         ) as response:
             data = json.loads(await response.text())
         color_name = data.get("name").get("value")
@@ -3410,7 +3476,7 @@ async def colour(ctx, color: str):
         generated_color = color
         hexcol = generated_color.replace("#", "")
         async with session.get(
-            f"http://www.thecolorapi.com/id?hex={hexcol}"
+                f"http://www.thecolorapi.com/id?hex={hexcol}"
         ) as response:
             data = json.loads(await response.text())
         await session.close()
@@ -3468,7 +3534,7 @@ async def hello(ctx):
 
 @client.command(aliases=["speak", "echo", "s"], description="Sends a message")
 async def say(
-    ctx, channel: Optional[discord.TextChannel] = None, *, text: commands.clean_content
+        ctx, channel: Optional[discord.TextChannel] = None, *, text: commands.clean_content
 ):
     if channel:
         channel = channel
@@ -3540,7 +3606,7 @@ async def google(ctx, *, search_term: commands.clean_content):
         color=0x2F3136,
     )
     embed.set_thumbnail(url=result.image_url)
-    embed.set_footer(text=f"Page {num+1}/{len(results)}")
+    embed.set_footer(text=f"Page {num + 1}/{len(results)}")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
     await message.add_reaction("\u23f9\ufe0f")
@@ -3549,8 +3615,8 @@ async def google(ctx, *, search_term: commands.clean_content):
 
         def check(reaction, user):
             return (
-                user.id == ctx.author.id
-                and reaction.message.channel.id == ctx.channel.id
+                    user.id == ctx.author.id
+                    and reaction.message.channel.id == ctx.channel.id
             )
 
         try:
@@ -3586,7 +3652,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                     color=0x2F3136,
                 )
                 embed.set_thumbnail(url=result.image_url)
-                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                embed.set_footer(text=f"Page {num + 1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u25b6\ufe0f":
                 try:
@@ -3605,7 +3671,7 @@ async def google(ctx, *, search_term: commands.clean_content):
                     color=0x2F3136,
                 )
                 embed.set_thumbnail(url=result.image_url)
-                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                embed.set_footer(text=f"Page {num + 1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u23f9\ufe0f":
                 embed = discord.Embed(
@@ -3642,7 +3708,7 @@ async def image(ctx, *, search_term: commands.clean_content):
     result = results[num]
     embed = discord.Embed(title=result.title, url=result.url, color=0x2F3136)
     embed.set_image(url=result.image_url)
-    embed.set_footer(text=f"Page {num+1}/{len(results)}")
+    embed.set_footer(text=f"Page {num + 1}/{len(results)}")
     message = await ctx.send(embed=embed)
     await message.add_reaction("\u25c0\ufe0f")
     await message.add_reaction("\u23f9\ufe0f")
@@ -3651,8 +3717,8 @@ async def image(ctx, *, search_term: commands.clean_content):
 
         def check(reaction, user):
             return (
-                user.id == ctx.author.id
-                and reaction.message.channel.id == ctx.channel.id
+                    user.id == ctx.author.id
+                    and reaction.message.channel.id == ctx.channel.id
             )
 
         try:
@@ -3685,7 +3751,7 @@ async def image(ctx, *, search_term: commands.clean_content):
                     title=result.title, url=result.url, color=0x2F3136
                 )
                 embed.set_image(url=result.image_url)
-                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                embed.set_footer(text=f"Page {num + 1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u25b6\ufe0f":
                 try:
@@ -3704,7 +3770,7 @@ async def image(ctx, *, search_term: commands.clean_content):
                     color=0x2F3136,
                 )
                 embed.set_image(url=result.image_url)
-                embed.set_footer(text=f"Page {num+1}/{len(results)}")
+                embed.set_footer(text=f"Page {num + 1}/{len(results)}")
                 await message.edit(embed=embed)
             elif reaction.emoji == "\u23f9\ufe0f":
                 embed = discord.Embed(
@@ -3762,7 +3828,7 @@ async def ping(ctx):
     embed.set_footer(text=f"Asked by {ctx.author}")
     embed.add_field(
         name="Response Time",
-        value=f"{round((message.created_at - ctx.message.created_at).total_seconds()/1000, 4)}ms",
+        value=f"{round((message.created_at - ctx.message.created_at).total_seconds() / 1000, 4)}ms",
     )
     embed.add_field(name="Bot Latency", value=f"{round(message_ping)}ms")
     await message.edit(embed=embed)
@@ -3776,7 +3842,7 @@ async def synonyms(ctx, *, word):
         embed = discord.Embed(timestamp=ctx.message.created_at)
         embed.set_author(name=f"Synonyms for {word}")
         async with session.get(
-            f"https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key={api_key}&lang=en-en&text={word.lower()}"
+                f"https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key={api_key}&lang=en-en&text={word.lower()}"
         ) as response:
             data = await response.json()
         await session.close()
@@ -3812,9 +3878,9 @@ async def urban(ctx, *, word):
         session = aiohttp.ClientSession()
         async with ctx.typing():
             async with session.get(
-                "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
-                params=params,
-                headers=headers,
+                    "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
+                    params=params,
+                    headers=headers,
             ) as response:
                 parsed_json = json.loads(await response.text())
             await session.close()
@@ -3826,8 +3892,8 @@ async def urban(ctx, *, word):
                         embed.add_field(
                             name=f"Definition {num}",
                             value=i.get("definition")
-                            .replace("[", "**")
-                            .replace("]", "**"),
+                                .replace("[", "**")
+                                .replace("]", "**"),
                         )
                     else:
                         embed.add_field(name=i.get("definition")[0:1024], value="‌")
@@ -3864,35 +3930,35 @@ async def quiz(ctx):
     def check(message=discord.Message):
         if not message.author.bot:
             return (
-                message.author == ctx.message.author
-                and message.channel.id == ctx.channel.id
+                    message.author == ctx.message.author
+                    and message.channel.id == ctx.channel.id
             )
 
     ordinal = lambda n: "%d%s" % (
         n,
-        "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4],
+        "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10:: 4],
     )
     ordlist = [ordinal(n) for n in range(1, 5)]
     async with ctx.typing():
         async with session.get(
-            "https://opentdb.com/api.php?amount=1&type=multiple"
+                "https://opentdb.com/api.php?amount=1&type=multiple"
         ) as response:
             data = json.loads(await response.text())
         await session.close()
         question = (
             data.get("results")[0]
-            .get("question")
-            .replace("&#039;", "'")
-            .replace("&quot;", '"')
-            .replace("&amp;", " &")
-            .replace("&eacute;", "é")
+                .get("question")
+                .replace("&#039;", "'")
+                .replace("&quot;", '"')
+                .replace("&amp;", " &")
+                .replace("&eacute;", "é")
         )
         difficulty = data.get("results")[0].get("difficulty")
         category = (
             data.get("results")[0]
-            .get("category")
-            .replace("Entertainment: ", "")
-            .replace("Science: ", "")
+                .get("category")
+                .replace("Entertainment: ", "")
+                .replace("Science: ", "")
         )
         embed = discord.Embed(
             title=question,
@@ -4036,7 +4102,7 @@ async def quiz(ctx):
                 await ctx.message.channel.send("Correct you big brain")
             else:
                 await ctx.send(
-                    f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({ordlist[randomint-1]} option)"
+                    f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({ordlist[randomint - 1]} option)"
                 )
             answered = True
 
@@ -4045,7 +4111,7 @@ async def quiz(ctx):
 async def translate(ctx, lang: str, *, text: str):
     session = aiohttp.ClientSession()
     async with session.get(
-        "https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json"
+            "https://pkgstore.datahub.io/core/language-codes/language-codes_json/data/97607046542b532c395cf83df5185246/language-codes_json.json"
     ) as r:
         languages = json.loads(await r.text())
     for i in languages:
@@ -4139,7 +4205,7 @@ async def invite(ctx):
     description="Sends your or another users avatar",
 )
 async def avatar(
-    ctx, *, avamember: discord.Member = None,
+        ctx, *, avamember: discord.Member = None,
 ):
     avamember = avamember or ctx.message.author
     userAvatarUrl = avamember.avatar_url
@@ -4177,8 +4243,8 @@ async def helpcommand(ctx, command: str = None):
         for i in client.commands:
             all_commands_name_list.append(i.name)
             if (
-                i.name == command.strip().lower()
-                or command.strip().lower() in i.aliases
+                    i.name == command.strip().lower()
+                    or command.strip().lower() in i.aliases
             ):
                 command_for_use = i
         if not command_for_use is None:
@@ -4206,14 +4272,14 @@ async def helpcommand(ctx, command: str = None):
                 embed.add_field(
                     name="Usage",
                     value=ctx.prefix
-                    + command_for_use.name
-                    + " "
-                    + " ".join(
+                          + command_for_use.name
+                          + " "
+                          + " ".join(
                         [
                             f"`{i}`"
                             for i in client.get_command(
-                                command_for_use.name
-                            ).signature.split(" ")
+                            command_for_use.name
+                        ).signature.split(" ")
                         ]
                     ),
                 )
@@ -4302,10 +4368,12 @@ async def wikipedia(ctx, *, search_term):
 async def purge(ctx, amount: int, member: discord.Member = None):
     def check(message):
         return message.author == member
+
     await ctx.message.delete()
     if not member:
         def reaction_check(r, u):
             return r.message.channel.id == ctx.channel.id and reaction.message.id == ctx.message.id and reaction.message.author.permissions.manage_messages
+
         deleted = await ctx.channel.purge(limit=amount)
         a = "message" if len(deleted) else "messages"
         spammers = Counter(m.author.display_name for m in deleted)
@@ -4334,7 +4402,8 @@ async def purge(ctx, amount: int, member: discord.Member = None):
             await msg.delete()
             return
     else:
-        deleted = await ctx.channel.purge(limit=amount, check=check, reason=f"Deleted {member} (ID: {member.id})'s messages by {ctx.author} (ID: {ctx.author.id})")
+        deleted = await ctx.channel.purge(limit=amount, check=check,
+                                          reason=f"Deleted {member} (ID: {member.id})'s messages by {ctx.author} (ID: {ctx.author.id})")
         a = "message" if len(deleted) else "messages"
         await ctx.message.delete()
         await ctx.send(
@@ -4433,7 +4502,7 @@ async def userinfo(ctx, *, member: discord.Member = None):
             value=humanize.precisedelta(
                 datetime.datetime.utcnow() - status["last_seen"]
             )
-            + " ago",
+                  + " ago",
         )
     embed.add_field(
         name="Online Status",
