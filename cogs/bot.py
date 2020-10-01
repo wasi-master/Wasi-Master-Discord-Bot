@@ -174,14 +174,16 @@ class Bot(commands.Cog):
                 if bot_member.activity.type == 1:
                     # Add the URL too
                     fields.append({"name":"Stream URL","value":"[Watch Now]({})".format(bot_member.activity.url),"inline":True})
-        # Update the embed
-        await message.edit(embed=discord.Embed(
+        embed = discord.Embed(
             title=ctx.guild.me.display_name + " Info",
             color=color,
             description="Current Bot Information",
-            fields=fields,
             thumbnail=avatar
-        ))
+        )
+        for field in fields:
+            embed.add_field(name=field["name"], value=field["value"], inline=field["inline"])
+        # Update the embed
+        await message.edit(embed=embed)
     @commands.command(
         aliases=["sug", "suggestion", "rep", "report"],
         description="Suggest a thing to be added to the bot",
