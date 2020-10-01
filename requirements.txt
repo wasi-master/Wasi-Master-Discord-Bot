@@ -10,6 +10,7 @@ git+git://github.com/Rapptz/discord.py.git
 git+git://github.com/ShineyDev/prettify.py.git
 gTTS
 git+git://github.com/jmoiron/humanize.git
+git+git://github.com/Rapptz/discord-ext-menus
 jishaku
 lxml
 numexpr
