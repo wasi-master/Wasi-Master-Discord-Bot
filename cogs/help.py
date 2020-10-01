@@ -27,10 +27,10 @@ class Help(commands.Cog):
                 cog = self.bot.get_cog(cog_name)
                 cog_commands = cog.get_commands()
                 text += f"**{cog_name}: **"
-                if len(cog_commands) > 3:
-                    text += "\n"
                 text_alt = ", ".join([f'`{command}`' for command in cog_commands])
                 text += f"\n{text_alt}"
+                if len(cog_commands) > 3:
+                    text += "\n"
             embed = discord.Embed(title="Help", description=text)
             embed.add_field(
                 name="Help for the Help Command",
