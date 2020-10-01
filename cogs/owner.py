@@ -22,6 +22,11 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
+class Source(menus.GroupByPageSource):
+    async def format_page (self,  menu, entry):
+        joined = ' \n '.join ( str(i)  for  i  in  entry)
+        return f'** { entry } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
+
 
 class Owner(commands.Cog):
     def __init__(self, bot):
@@ -122,11 +127,6 @@ class Owner(commands.Cog):
 
 
 
-    class Source(menus.GroupByPageSource):
-        async  def  format_page (self,  menu, entry):
-            joined  =  ' \n '.join ( str(i)  for  i  in  entry)
-            return  f'** { entry } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
-
 
     @commands.command(name="eval", aliases=["e"])
     async def _eval(self, ctx, *, cmd):
@@ -198,7 +198,7 @@ class Owner(commands.Cog):
                 )
             )
             pages = menus.MenuPages(source = Source(list(tb),  key = lambda  t :  t, per_page = 12 ),  clear_reactions_after = True )
-            await pages.start( ctx )
+            await pages.start(ctx)
             return
 
         if isinstance(result, str):
@@ -219,23 +219,16 @@ class Owner(commands.Cog):
         await ctx.send(parsed_result)
         await ctx.message.remove_reaction("\U0001f7e1", me)
         await ctx.message.add_reaction("\U0001f7e2")
-
+"""
     @_eval.error
     async def eval_error(self, ctx, exc):
-        traceback = "".join(
-            prettify_exceptions.DefaultFormatter().format_exception(
-                type(exc), exc, exc.__traceback__
+        tb = "".join(
+                prettify_exceptions.DefaultFormatter().format_exception(
+                    type(exc), exc, exc.__traceback__
+                )
             )
-        )
-        try:
-            await ctx.author.send(f"```py\n{traceback}```")
-        except discord.HTTPException:
-            traceback = "".join(traceback.format_tb(exc.__traceback__))
-            try:
-                await ctx.author.send(f"```py\n{traceback}```")
-            except discord.HTTPException:
-                await ctx.author.send(str(exc))
-
-
+            pages = menus.MenuPages(source = Source(list(tb),  key = lambda  t :  t, per_page = 12 ),  clear_reactions_after = True )
+            await pages.start(ctx)
+"""
 def setup(bot):
     bot.add_cog(Owner(bot))
