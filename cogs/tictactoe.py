@@ -11,6 +11,8 @@ class TicTacToe(commands.Cog):
 		self.ttt_games = {}
 		
 	@commands.command(aliases=["ttt"])
+	@commands.Cooldown(1, 10, commands.cooldowns.BucketType.user)
+	@commands.max_concurrency(1, commands.cooldowns.BucketType.default)
 	async def tictactoe(self, ctx, move=""):
 		""" Tic Tac Toe """
 		await self.ttt_new(ctx.message.author, ctx.message.channel)
