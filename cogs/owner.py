@@ -164,9 +164,8 @@ class Owner(commands.Cog):
                 "**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad"
             )
         fn_name = "_eval_expr"
-        cmd = cmd.replace(";", "\n")
         cmd = cmd.rstrip("```").lstrip("```").lstrip("py")
-
+        cmd = cmd.replace(";", "\n").replace("; ", " \n")
         # add a layer of indentation
         cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
 
