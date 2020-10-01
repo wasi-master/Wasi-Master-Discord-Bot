@@ -278,6 +278,9 @@ class PaginatedHelpCommand(commands.HelpCommand):
 class Bot(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self._original_help_command = bot.help_command
+        bot.help_command = PaginatedHelpCommand()
+        bot.help_command.cog = self
 
     @commands.command(description="Used to test if bot is online")
     async def hello(
