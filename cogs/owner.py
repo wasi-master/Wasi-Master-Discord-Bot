@@ -52,7 +52,7 @@ def convert_sec_to_min(seconds):
     return "%02d:%02d" % (minutes, sec)
 
 
-def progressbar(percent: int):
+def progressbar(percent: int, empty: str="☐", filled: str = "■"):
     """Generates a progressbar
 
     Args:
@@ -64,11 +64,11 @@ def progressbar(percent: int):
     total_percentage = 15
     percent = percent * 0.15
     right_now = round(percent / 4)
-    body = "☐" * total_percentage
+    body = empty * total_percentage
     percentage_list = list(body)
 
     for i, _ in enumerate(percentage_list[:right_now]):
-        percentage_list[i] = "■"
+        percentage_list[i] = filled
 
     result = "".join(percentage_list)
     return f"{result}"
