@@ -33,7 +33,7 @@ class MadLibs(commands.Cog):
 
 		# Folder exists - let's see if it has any files
 		choices = [] # Empty array
-		for file in os.listdir("./assets/madlibs"):
+		for file in os.listdir("./assets/madlibs/"):
 			if file.endswith(".txt"):
 				choices.append(file)
 		
