@@ -27,7 +27,17 @@ class Source(menus.GroupByPageSource):
         joined = entry
         return f'** { entry.key } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
 
-
+def split_by_slice(inp: str, length: int) -> list:
+    size = length # renaming the variable
+    result = [] # declaring a list
+    
+    for index, item in enumerate(inp): # looping through the string
+        if size == length: # checking if we already reached the limit
+            size = 0 # we reset the limit
+            result.append(inp[index:index+length]) # we cut the string based on the limit
+        size += 1 # we increase the size
+        
+    return result # we return the result
 class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -197,7 +207,8 @@ class Owner(commands.Cog):
                     type(exc), exc, exc.__traceback__
                 )
             )
-            pages = menus.MenuPages(source = Source(tb.split("\n"), key = lambda m: m, per_page = 12 ),  clear_reactions_after = True )
+            
+            pages = menus.MenuPages(source = Source(tb, key = lambda m: m, per_page = 12 ),  clear_reactions_after = True )
             await pages.start(ctx)
             return
 
