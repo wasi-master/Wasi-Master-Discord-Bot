@@ -75,6 +75,8 @@ def progressbar(percent: int, empty: str="☐", filled: str = "■"):
 
 
 class Owner(commands.Cog):
+    """Commands only available to be used by the bot owner
+    """
     def __init__(self, bot):
         self.bot = bot
 

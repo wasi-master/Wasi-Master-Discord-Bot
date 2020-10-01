@@ -4,7 +4,9 @@ import discord
 from discord.ext import commands
 
 
-class Reddit(commands.Cog):
+class Colors(commands.Cog):
+    """Color releated commands
+    """
     def __init__(self, bot):
         self.bot = bot
 
@@ -84,4 +86,4 @@ class Reddit(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Reddit(bot))
+    bot.add_cog(Colors(bot))

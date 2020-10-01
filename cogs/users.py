@@ -67,6 +67,8 @@ def convert_sec_to_min(seconds):
 
 
 class Users(commands.Cog):
+    """Details About Users
+    """    
     def __init__(self, bot):
         self.bot = bot
 
@@ -78,10 +80,10 @@ class Users(commands.Cog):
         self,
         ctx,
         *,
-        avamember: discord.Member = None,
+        member: discord.Member = None,
     ):
-        avamember = avamember or ctx.message.author
-        userAvatarUrl = avamember.avatar_url
+        member = member or ctx.message.author
+        userAvatarUrl = member.avatar_url
         await ctx.send(userAvatarUrl)
 
     @commands.command(

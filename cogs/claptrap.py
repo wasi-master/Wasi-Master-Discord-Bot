@@ -3,7 +3,8 @@ from discord.ext import commands
 import random
 
 class Claptrap(commands.Cog):
-
+    """Absurd nonsensical talk
+    """
     def __init__(self, bot):
         self.bot = bot
 

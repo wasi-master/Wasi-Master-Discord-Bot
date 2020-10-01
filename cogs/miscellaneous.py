@@ -7,6 +7,8 @@ import re
 from typing import Optional
 
 class Miscellaneous(commands.Cog):
+    """For commands that don\'t fit in any other category
+    """
     def __init__(self, bot):
         self.bot = bot
 

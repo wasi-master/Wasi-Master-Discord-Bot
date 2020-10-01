@@ -332,6 +332,8 @@ class PaginatedHelpCommand(commands.HelpCommand):
         menu = HelpMenu(source)
         await menu.start(self.context)
 class Bot(commands.Cog):
+    """All the bot rleated commands
+    """
     def __init__(self, bot):
         self.bot = bot
         self._original_help_command = bot.help_command

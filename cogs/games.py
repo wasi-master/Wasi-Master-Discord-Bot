@@ -4,6 +4,8 @@ from discord.ext import commands
 
 
 class Games(commands.Cog):
+    """Game Releated commands (most games have their own separate cog)
+    """
     def __init__(self, bot):
         self.bot = bot
 

@@ -9,6 +9,8 @@ import datetime
 from discord.ext.commands import BucketType
 
 class Server(commands.Cog):
+    """Server releated commands
+    """
     def __init__(self, bot):
         self.bot = bot
 

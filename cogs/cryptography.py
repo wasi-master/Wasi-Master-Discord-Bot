@@ -4,6 +4,8 @@ import base64 as base64module
 
 
 class Cryptography(commands.Cog):
+    """Encoding and Decoding text releated commands
+    """
     def __init__(self, bot):
         self.bot = bot
 

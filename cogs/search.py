@@ -13,6 +13,8 @@ def convert_sec_to_min(seconds):
 
 
 class Search(commands.Cog):
+    """For searching for things in the worls wide web
+    """
     def __init__(self, bot):
         self.bot = bot
 

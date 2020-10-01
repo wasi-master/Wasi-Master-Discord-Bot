@@ -9,6 +9,8 @@ from typing import Union
 from discord.ext.commands.cooldowns import BucketType
 
 class Information(commands.Cog):
+    """Information commands releated to discord
+    """
     def __init__(self, bot):
         self.bot = bot
 

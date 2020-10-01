@@ -24,6 +24,8 @@ def str_to_sec(text: str):
 
 
 class Time(commands.Cog):
+    """Commands releated to time
+    """
     def __init__(self, bot):
         self.bot = bot
 

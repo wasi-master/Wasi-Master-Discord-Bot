@@ -7,6 +7,8 @@ import json
 from discord.ext.commands import BucketType
 
 class Messages(commands.Cog):
+    """Message releated commands
+    """
     def __init__(self, bot):
         self.bot = bot
 

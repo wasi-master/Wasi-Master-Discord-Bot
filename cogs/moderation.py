@@ -6,6 +6,8 @@ from typing import Union
 
 
 class Moderation(commands.Cog):
+    """commands to help you moderate a server
+    """
     def __init__(self, bot):
         self.bot = bot
 

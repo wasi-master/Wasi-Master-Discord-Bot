@@ -9,6 +9,8 @@ import json
 
 
 class Fun(commands.Cog):
+    """Fun commands :)
+    """
     def __init__(self, bot):
         self.bot = bot
 

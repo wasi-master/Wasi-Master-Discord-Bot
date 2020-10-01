@@ -20,6 +20,8 @@ class plural:
 
 
 class Random(commands.Cog):
+    """commands that have to do something with the word random (made, done, or happening without method or conscious decision.)
+    """
     def __init__(self, bot):
         self.bot = bot
 

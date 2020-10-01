@@ -4,6 +4,8 @@ from discord.ext import commands
 
 
 class English(commands.Cog):
+    """Commands for the english language
+    """
     def __init__(self, bot):
         self.bot = bot
 

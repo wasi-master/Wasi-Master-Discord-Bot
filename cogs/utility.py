@@ -28,6 +28,8 @@ def get_p(percent: int):
 
 
 class Utility(commands.Cog):
+    """General utilities
+    """
     def __init__(self, bot):
         self.bot = bot
     @commands.command(pass_context=True)

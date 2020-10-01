@@ -20,20 +20,22 @@ def tts(lang: str, text: str):
     speech.save("tts.mp3")
     return
 
+def _zalgo(self, text):
+    words = text.split()
+    zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
+            for _ in range(i // 2 + 1)) * c.isalnum()
+            for c in word)
+            for i, word in enumerate(words))
+    return zalgo
 
 class Text(commands.Cog):
+    """Commands that take a inpu as text and send a output as text
+    """
     def __init__(self, bot):
         self.bot = bot
         marks = map(chr, range(768, 879))
         self.marks = list(marks)
 
-    def _zalgo(self, text):
-        words = text.split()
-        zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
-                for _ in range(i // 2 + 1)) * c.isalnum()
-                for c in word)
-                for i, word in enumerate(words))
-        return zalgo
         
     @commands.command(description="Spoilers a text letter by letter")
     @commands.cooldown(1, 15, BucketType.channel)

@@ -100,8 +100,9 @@ class NumericStringParser(object):
         val=self.evaluateStack( self.exprStack[:] )
         return val
 
-class Calc(commands.Cog):
-
+class Calculator(commands.Cog):
+    """Calculator calculates stuff (math)
+    """
     # Init with the bot reference, and a reference to the settings var
     def __init__(self, bot):
         self.bot = bot
@@ -138,4 +139,4 @@ class Calc(commands.Cog):
 
 def setup(bot):
 	# Add the bot
-	bot.add_cog(Calc(bot))
+	bot.add_cog(Calculator(bot))

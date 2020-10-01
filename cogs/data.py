@@ -6,6 +6,8 @@ import re
 from discord.ext.commands import BucketType
 
 class Data(commands.Cog):
+    """Commands to get some data
+    """
     def __init__(self, bot):
         self.bot = bot
 

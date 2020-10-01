@@ -6,6 +6,8 @@ from typing import Union
 from discord.ext.commands import BucketType
 
 class Image(commands.Cog):
+    """Image releated commands
+    """
     def __init__(self, bot):
         self.bot = bot
 

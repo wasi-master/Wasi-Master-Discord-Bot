@@ -3,6 +3,8 @@ from discord.ext import commands
 
 
 class Animals(commands.Cog):
+    """Shows cute pictures of animals
+    """
     def __init__(self, bot):
         self.bot = bot
 
