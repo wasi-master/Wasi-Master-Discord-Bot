@@ -217,7 +217,7 @@ class TicTacToe(commands.Cog):
         return False
 
     def tttCheckDraw(self, board):
-        return not "" in board
+        return not " " in board
 
     # Don't touch anything here. I forgot how it worked, it just does.
     def tttAIThink(self, m):
