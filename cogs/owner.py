@@ -4,8 +4,9 @@ import discord
 import prettify_exceptions
 import traceback
 
-from  discord.ext import commands
-from  discord.ext  import  menus
+from discord.ext import commands
+from discord.ext import menus
+
 
 def insert_returns(body):
     # insert return stmt if the last expression is a expression statement
@@ -22,23 +23,28 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
+
 class Source(menus.GroupByPageSource):
-    async def format_page (self,  menu, entry):
+    async def format_page(self, menu, entry):
         joined = entry
-        return f'** { entry.key } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
+        return f"** { entry.key } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } "
+
 
 def split_by_slice(inp: str, length: int) -> list:
-    size = length # renaming the variable
-    result = [] # declaring a list
-    
-    for index, item in enumerate(inp): # looping through the string
-        if size == length: # checking if we already reached the limit
-            size = 0 # we reset the limit
-            result.append(inp[index:index+length]) # we cut the string based on the limit
-        size += 1 # we increase the size
-        
-    return result # we return the result
-    
+    size = length  # renaming the variable
+    result = []  # declaring a list
+
+    for index, item in enumerate(inp):  # looping through the string
+        if size == length:  # checking if we already reached the limit
+            size = 0  # we reset the limit
+            result.append(
+                inp[index : index + length]
+            )  # we cut the string based on the limit
+        size += 1  # we increase the size
+
+    return result  # we return the result
+
+
 def convert_sec_to_min(seconds):
     """returns 1:30 if 90 is passed
 
@@ -52,7 +58,7 @@ def convert_sec_to_min(seconds):
     return "%02d:%02d" % (minutes, sec)
 
 
-def progressbar(percent: int, empty: str="☐", filled: str = "■"):
+def progressbar(percent: int, empty: str = "☐", filled: str = "■"):
     """Generates a progressbar
 
     Args:
@@ -75,8 +81,8 @@ def progressbar(percent: int, empty: str="☐", filled: str = "■"):
 
 
 class Owner(commands.Cog):
-    """Commands only available to be used by the bot owner
-    """
+    """Commands only available to be used by the bot owner"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -170,11 +176,7 @@ class Owner(commands.Cog):
             await asyncio.sleep(2)
             await msg.delete()
         else:
-            await ctx.send("It\'s for the bot owner only and ur not my owner :grin:")
- 
-
-
-
+            await ctx.send("It's for the bot owner only and ur not my owner :grin:")
 
     @commands.command(name="eval", aliases=["e"])
     async def eval_command(self, ctx, *, cmd):
@@ -216,18 +218,19 @@ class Owner(commands.Cog):
         insert_returns(body)
 
         env = {
-            "_bot": ctx.bot,
+            "bot": ctx.bot,
             "discord": discord,
             "commands": commands,
-            "_ctx": ctx,
-            "_guild": ctx.guild,
-            "_author": ctx.author,
-            "_channel": ctx.channel,
-            "_client": self.bot,
+            "ctx": ctx,
+            "guild": ctx.guild,
+            "author": ctx.author,
+            "channel": ctx.channel,
+            "message": ctx.message,
+            "client": ctx.bot,
             "__import__": __import__,
             "progressbar": progressbar,
             "split_by_slice": split_by_slice,
-            "convert_sec_to_min": convert_sec_to_min
+            "convert_sec_to_min": convert_sec_to_min,
         }
         await ctx.message.add_reaction("\U0001f7e1")
 
@@ -241,8 +244,13 @@ class Owner(commands.Cog):
         except BaseException as exc:
             await ctx.message.remove_reaction("\U0001f7e1", me)
             await ctx.message.add_reaction("\U0001f534")
-            tb = ''.join(traceback.format_exc())
-            tb = tb.replace("/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/")
+            tb = "".join(traceback.format_exc())
+            tb = tb.replace(
+                "/app/.heroku/python/lib/python3.8/site-packages",
+                "C:/Users/Wasi/AppData/Roaming/Python/Python38/site-packages",
+            ).replace(
+                "/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/"
+            )
             if len(tb) < 1000:
                 embed = discord.Embed(title="Traceback", description=tb)
                 await ctx.send(embed=embed)
@@ -256,19 +264,21 @@ class Owner(commands.Cog):
             await message.add_reaction("\u23f9\ufe0f")
             await message.add_reaction("\u25b6\ufe0f")
             while True:
-    
+
                 def check(reaction, user):
                     return (
                         user.id == ctx.author.id
                         and reaction.message.channel.id == ctx.channel.id
                     )
-    
+
                 try:
                     reaction, user = await self.bot.wait_for(
                         "reaction_add", check=check, timeout=120
                     )
                 except asyncio.TimeoutError:
-                    embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
+                    embed.set_footer(
+                        icon_url=str(ctx.author.avatar_url), text="Timed out"
+                    )
                     await message.edit(embed=embed)
                     try:
                         return await message.clear_reactions()
@@ -289,7 +299,9 @@ class Owner(commands.Cog):
                             result = results[num]
                         except IndexError:
                             pass
-                        embed = discord.Embed(title="Traceback", description=results[num])
+                        embed = discord.Embed(
+                            title="Traceback", description=results[num]
+                        )
                         embed.set_footer(text=f"Page {num + 1}/{len(results)}")
                         await message.edit(embed=embed)
                     elif reaction.emoji == "\u25b6\ufe0f":
@@ -302,11 +314,15 @@ class Owner(commands.Cog):
                             result = results[num]
                         except IndexError:
                             pass
-                        embed = discord.Embed(title="Traceback", description=results[num])
+                        embed = discord.Embed(
+                            title="Traceback", description=results[num]
+                        )
                         embed.set_footer(text=f"Page {num + 1}/{len(results)}")
                         await message.edit(embed=embed)
                     elif reaction.emoji == "\u23f9\ufe0f":
-                        embed = discord.Embed(title="Traceback", description=results[num])
+                        embed = discord.Embed(
+                            title="Traceback", description=results[num]
+                        )
                         await message.edit(embed=embed)
                         try:
                             return await message.clear_reactions()
@@ -322,9 +338,7 @@ class Owner(commands.Cog):
             return
         else:
             if isinstance(result, str):
-                parsed_result = result.replace(
-                    self.bot.http.token, "**[TOKEN]**"
-                )
+                parsed_result = result.replace(self.bot.http.token, "**[TOKEN]**")
             elif isinstance(result, (int, float, bool, list, dict)):
                 parsed_result = str(result)
             elif isinstance(result, discord.File):
@@ -335,10 +349,11 @@ class Owner(commands.Cog):
                 parsed_result = "None"
             else:
                 parsed_result = repr(result)
-    
+
             await ctx.send(parsed_result)
             await ctx.message.remove_reaction("\U0001f7e1", me)
             await ctx.message.add_reaction("\U0001f7e2")
+
 
 def setup(bot):
     bot.add_cog(Owner(bot))
