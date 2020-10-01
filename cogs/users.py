@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import requests, asyncio, json, urllib, datetime, humanize
 
+from io import BytesIO
 
 def get_status(status: str):
     if str(status) == "online":
@@ -80,11 +81,10 @@ class Users(commands.Cog):
         self,
         ctx,
         *,
-        member: discord.Member = None,
+        user: discord.User = None,
     ):
-        member = member or ctx.message.author
-        userAvatarUrl = member.avatar_url
-        await ctx.send(userAvatarUrl)
+        ext = 'gif' if user.is_avatar_animated() else 'png'
+        await ctx.send(file=discord.File(BytesIO(await user.avatar_url.read()), f"{user.id}.{ext}")) 
 
     @commands.command(
         aliases=["ui", "whois", "wi", "whoami", "me"],
