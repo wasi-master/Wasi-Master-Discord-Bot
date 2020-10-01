@@ -63,6 +63,7 @@ class Help(commands.Cog):
                 embed.add_field(
                     name="Description", value=command_for_use.description, inline=False
                 )
+                embed.add_field(name="Category", value=command_for_use.cog_name)
                 if not len(aliases) == 0:
                     embed.add_field(name="Aliases", value=aliases[:-2])
                 else:
