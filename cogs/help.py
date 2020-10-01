@@ -28,7 +28,7 @@ class Help(commands.Cog):
                 cog_commands = cog.get_commands()
                 if len(cog_commands) > 3:
                     text += "\n"
-                text += f"**{cog_name}: **"
+                text += f"\n**{cog_name}: **"
                 text_alt = ", ".join([f'`{command}`' for command in cog_commands])
                 text += f"\n{text_alt}"
             embed = discord.Embed(title="Help", description=text)
