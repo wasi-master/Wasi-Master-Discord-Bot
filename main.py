@@ -254,7 +254,7 @@ async def bot_check(
 
 
 async def create_db_pool():
-    """connects to the db and sets it as a variable
+    """Connects to the db and sets it as a variable
     """
     client.db = await asyncpg.create_pool(
      host="ec2-52-23-86-208.compute-1.amazonaws.com",
@@ -262,7 +262,6 @@ async def create_db_pool():
      user="poladbevzydxyx",
      password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8",
     )
-    client.db = None
 
 
 client.loop.run_until_complete(create_db_pool())
