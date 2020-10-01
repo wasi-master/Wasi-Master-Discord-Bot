@@ -16,21 +16,23 @@ class Help(commands.Cog):
     async def helpcommand(self, ctx, command: str = None):
         all_commands = ""
         if command is None:
-            all_commands += "".join(
-                sorted([f"`{i.name}`, " for i in self.bot.commands])
-            )
+            command_list = ""
             if ctx.guild is None:
                 color = 0x2F3136
             else:
                 color = ctx.guild.me.color
-            embed = discord.Embed(
-                title=f"All Commands ({len(self.bot.commands)})",
-                description=all_commands,
-                colour=color,
-            )
+            for cog_name in list(iter(self.bot.cogs)):
+                cog = self.bot.get_cog(cog_name)
+                cog_commands = cog.commands
+                text += f"**{cog_name}: **"
+                if len(cog_commands) =< 3:
+                    text += "\n"
+                text_alt += ", ".join([f'`{command}`' for command in cog_commands])
+                text += f"\n{text_alt}"
+            embed = discord.Embed(title="Help", description=text)
             embed.add_field(
-                name="Help",
-                value=f"```diff\n- [] = optional argument\n- <> = required argument\n- Do NOT type these when using commands!\n+ Type {ctx.prefix}help [command] for more help on a command!```",
+                name="Help for the Help Command",
+                value=f"```diff\n+ Type {ctx.prefix}help <command> for more help on a command!\n+ Type {ctx.prefix}help <cog> for help on a Cog```",
             )
             await ctx.send(embed=embed)
         else:
