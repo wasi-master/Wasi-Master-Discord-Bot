@@ -197,7 +197,7 @@ class Owner(commands.Cog):
                     type(exc), exc, exc.__traceback__
                 )
             )
-            pages = menus.MenuPages(source = Source(list(tb), per_page = 12 ),  clear_reactions_after = True )
+            pages = menus.MenuPages(source = Source(tb.split("\n"), key = lambda m: m, per_page = 12 ),  clear_reactions_after = True )
             await pages.start(ctx)
             return
 
