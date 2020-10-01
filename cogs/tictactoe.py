@@ -68,15 +68,15 @@ class TicTacToe(commands.Cog):
 		return "{0}\n{1}\n".format(author.mention, self.tttTable(self.ttt_games[author.id]))
 	
 	async def makeButtons(self, msg):
-		await self.bot.add_reaction(msg, u"\u2196") # 0 tl
-		await self.bot.add_reaction(msg, u"\u2B06") # 1 t
-		await self.bot.add_reaction(msg, u"\u2197") # 2 tr
-		await self.bot.add_reaction(msg, u"\u2B05") # 3 l
-		await self.bot.add_reaction(msg, u"\u23FA") # 4 mid
-		await self.bot.add_reaction(msg, u"\u27A1") # 5 r
-		await self.bot.add_reaction(msg, u"\u2199") # 6 bl
-		await self.bot.add_reaction(msg, u"\u2B07") # 7 b
-		await self.bot.add_reaction(msg, u"\u2198") # 8 br
+		await msg.add_reaction(u"\u2196") # 0 tl
+		await msg.add_reaction(u"\u2B06") # 1 t
+		await msg.add_reaction(u"\u2197") # 2 tr
+		await msg.add_reaction(u"\u2B05") # 3 l
+		await msg.add_reaction(u"\u23FA") # 4 mid
+		await msg.add_reaction(u"\u27A1") # 5 r
+		await msg.add_reaction(u"\u2199") # 6 bl
+		await msg.add_reaction(u"\u2B07") # 7 b
+		await msg.add_reaction(u"\u2198") # 8 br
 	
 	async def on_reaction_add(self, reaction, user):
 		if reaction.message.author.id == self.bot.user.id and not user.id == self.bot.user.id:
