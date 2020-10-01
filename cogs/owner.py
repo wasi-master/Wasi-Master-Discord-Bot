@@ -24,7 +24,7 @@ def insert_returns(body):
 
 class Source(menus.GroupByPageSource):
     async def format_page (self,  menu, entry):
-        joined = ' \n '.join ( i  for  i  in entry) 
+        joined = entry
         return f'** { entry.key } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
 
 
