@@ -78,6 +78,7 @@ class TicTacToe(commands.Cog):
 		await msg.add_reaction(u"\u2B07") # 7 b
 		await msg.add_reaction(u"\u2198") # 8 br
 	
+	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):
 		if reaction.message.author.id == self.bot.user.id and not user.id == self.bot.user.id:
 			move = self.decodeMove(str(reaction.emoji))
