@@ -197,9 +197,9 @@ class Owner(commands.Cog):
             me = self.bot.user
 
         try:
-            exec(compile(parsed, filename="<ast>", mode="exec"), env)
+            exec(compile(parsed, filename="eval", mode="exec"), env)
             result = await eval(f"{fn_name}()", env)
-        except Exception as exc:
+        except BaseException as exc:
             await ctx.message.remove_reaction("\U0001f7e1", me)
             await ctx.message.add_reaction("\U0001f534")
             tb = ''.join(traceback.format_exc())
