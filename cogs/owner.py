@@ -202,11 +202,7 @@ class Owner(commands.Cog):
         except Exception as exc:
             await ctx.message.remove_reaction("\U0001f7e1", me)
             await ctx.message.add_reaction("\U0001f534")
-            tb = "".join(
-                prettify_exceptions.DefaultFormatter().format_exception(
-                    type(exc), exc, exc.__traceback__
-                )
-            )
+            tb = ''.join(traceback.format_tb(exc.__traceback__))
             
             results = split_by_slice(tb, 2000)
             num = 0
