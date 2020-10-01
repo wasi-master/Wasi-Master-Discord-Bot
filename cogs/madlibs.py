@@ -6,8 +6,6 @@ import random
 import string
 from   discord.ext import commands
 
-def setup(bot):
-	bot.add_cog(MadLibs(bot))
 
 class MadLibs(commands.Cog):
 
@@ -28,14 +26,14 @@ class MadLibs(commands.Cog):
 		server  = ctx.guild
 
 		# Check if our folder exists
-		if not os.path.isdir("assets/madlibs"):
+		if not os.path.isdir("./assets/madlibs"):
 			msg = 'I\'m not configured for MadLibs yet...'
 			await channel.send(msg)
 			return
 
 		# Folder exists - let's see if it has any files
 		choices = [] # Empty array
-		for file in os.listdir("assets/madlibs"):
+		for file in os.listdir("./assets/madlibs"):
 			if file.endswith(".txt"):
 				choices.append(file)
 		
@@ -52,7 +50,7 @@ class MadLibs(commands.Cog):
 		randLib = choices[randnum]
 
 		# Let's load our text and get to work
-		with open("assets/madlibs/{}".format(randLib), 'r') as myfile:
+		with open("./assets/madlibs/{}".format(randLib), 'r') as myfile:
 			data = myfile.read()
 
 		# Set up an empty arry
@@ -135,3 +133,6 @@ class MadLibs(commands.Cog):
 		# Reset playing status and display error
 		msg = 'MadLibs Errored: {}'.format(ctx)
 		await error.send(msg)
+
+def setup(bot):
+	bot.add_cog(MadLibs(bot))
