@@ -96,7 +96,7 @@ class Search(commands.Cog):
                     num += 1
                     try:
                         result = results[num]
-                    except KeyError:
+                    except IndexError:
                         pass
                     embed = discord.Embed(
                         title=result.title,
@@ -194,7 +194,7 @@ class Search(commands.Cog):
                     num += 1
                     try:
                         result = results[num]
-                    except KeyError:
+                    except IndexError:
                         pass
                     embed = discord.Embed(
                         title=result.title,
