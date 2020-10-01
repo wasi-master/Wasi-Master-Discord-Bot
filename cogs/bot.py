@@ -85,7 +85,7 @@ class Bot(commands.Cog):
     async def botinfo(self, ctx):
         """Lists some general stats about the bot."""
         bot_member = self.bot.user if not ctx.guild else ctx.guild.me
-        color = bot_member if isinstance(bot_member,discord.Member) else None
+        color = bot_member.color if isinstance(bot_member,discord.Member) else 0x2F3136
         message = await ctx.send(embed=discord.Embed(title="Gathering info...", color=color))
         
         # Get guild count
