@@ -4,8 +4,8 @@ import discord
 import prettify_exceptions
 import traceback
 
-from discord.ext import commands
-
+from  discord.ext import commands
+from  discord.ext  import  menus
 
 def insert_returns(body):
     # insert return stmt if the last expression is a expression statement
@@ -117,7 +117,16 @@ class Owner(commands.Cog):
             await asyncio.sleep(2)
             await msg.delete()
         else:
-            await ctx.send("It\+'s for the bot owner only and ur not my owner :grin:")
+            await ctx.send("It\'s for the bot owner only and ur not my owner :grin:")
+ 
+
+
+
+ class Source(menus.GroupByPageSource):
+     async  def  format_page (self,  menu, entry):
+         joined  =  ' \n '.join ( str(i)  for  i  in  entry)
+         return  f'** { entry } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
+
 
     @commands.command(name="eval", aliases=["e"])
     async def _eval(self, ctx, *, cmd):
@@ -188,22 +197,16 @@ class Owner(commands.Cog):
                     type(exc), exc, exc.__traceback__
                 )
             )
-            try:
-                await ctx.author.send(f"```py\n{traceback}```")
-            except discord.HTTPException:
-                tb = "".join(traceback.format_tb(exc.__traceback__))
-                try:
-                    await ctx.author.send(f"```py\n{traceback}```")
-                except discord.HTTPException:
-                    await ctx.author.send(str(exc))
+            pages = menus.MenuPages(source = Source(list(tb),  key = lambda  t :  t, per_page = 12 ),  clear_reactions_after = True )
+            await pages.start( ctx )
             return
 
         if isinstance(result, str):
-            parsed_result = "‌" + result.replace(
+            parsed_result = result.replace(
                 self.bot.http.token, "[token ommitted]"
             )
         elif isinstance(result, (int, float, bool, list, dict)):
-            parsed_result = "‌" + str(result)
+            parsed_result = str(result)
         elif isinstance(result, discord.File):
             await ctx.send(file=result)
         elif isinstance(result, discord.Embed):
@@ -211,7 +214,7 @@ class Owner(commands.Cog):
         elif isinstance(result, None):
             parsed_result = "None"
         else:
-            parsed_result = result
+            parsed_result = repr(result)
 
         await ctx.send(parsed_result)
         await ctx.message.remove_reaction("\U0001f7e1", me)
