@@ -16,13 +16,13 @@ class Help(commands.Cog):
     async def helpcommand(self, ctx, command: str = None):
         all_commands = ""
         if command is None:
-            command_list = ""
             if ctx.guild is None:
                 color = 0x2F3136
             else:
                 color = ctx.guild.me.color
             cogs = list(iter(self.bot.cogs))
             cogs.sort()
+            text = ""
             for cog_name in cogs:
                 cog = self.bot.get_cog(cog_name)
                 cog_commands = cog.get_commands()
