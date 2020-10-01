@@ -122,10 +122,10 @@ class Owner(commands.Cog):
 
 
 
- class Source(menus.GroupByPageSource):
-     async  def  format_page (self,  menu, entry):
-         joined  =  ' \n '.join ( str(i)  for  i  in  entry)
-         return  f'** { entry } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
+    class Source(menus.GroupByPageSource):
+        async  def  format_page (self,  menu, entry):
+            joined  =  ' \n '.join ( str(i)  for  i  in  entry)
+            return  f'** { entry } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } ' 
 
 
     @commands.command(name="eval", aliases=["e"])
