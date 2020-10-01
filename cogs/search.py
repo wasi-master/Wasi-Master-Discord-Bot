@@ -328,8 +328,8 @@ class Search(commands.Cog):
         fj = fj["info"]
         if not len(fj["summary"]) == 0:
             embed = discord.Embed(
-                title=fj["pokemon"]["name"],
-                description=fj["summary"].replace("![", "["),
+                title=fj["name"],
+                description=fj["summary"].replace("![", "[").replace("]", ""),
                 color=0x2F3136,
             )
         else:
