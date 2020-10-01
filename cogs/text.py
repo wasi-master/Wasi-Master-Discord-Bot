@@ -20,13 +20,6 @@ def tts(lang: str, text: str):
     speech.save("tts.mp3")
     return
 
-def _zalgo(self, text):
-        words = text.split()
-        zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
-                for _ in range(i // 2 + 1)) * c.isalnum()
-                for c in word)
-                for i, word in enumerate(words))
-        return zalgo
 
 class Text(commands.Cog):
     def __init__(self, bot):
@@ -34,6 +27,13 @@ class Text(commands.Cog):
         marks = map(chr, range(768, 879))
         self.marks = list(marks)
 
+    def _zalgo(self, text):
+        words = text.split()
+        zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
+                for _ in range(i // 2 + 1)) * c.isalnum()
+                for c in word)
+                for i, word in enumerate(words))
+        return zalgo
         
     @commands.command(description="Spoilers a text letter by letter")
     @commands.cooldown(1, 15, BucketType.channel)
@@ -320,7 +320,7 @@ class Text(commands.Cog):
         """Ỉ s̰hͨo̹u̳lͪd͆ r͈͍e͓̬a͓͜lͨ̈l̘̇y̡͟ h͚͆a̵͢v͐͑eͦ̓ i͋̍̕n̵̰ͤs͖̟̟t͔ͤ̉ǎ͓͐ḻ̪ͨl̦͒̂ḙ͕͉d͏̖̏ ṡ̢ͬö̹͗m̬͔̌e̵̤͕ a̸̫͓͗n̹ͥ̓͋t̴͍͊̍i̝̿̾̕v̪̈̈͜i̷̞̋̄r̦̅́͡u͓̎̀̿s̖̜̉͌..."""
         words = message.split()
         try:
-            iterations = int(words[len(words)-1])
+            iterations = len(words)-1
             words = words[:-1]
         except IndexError:
             iterations = 1
