@@ -33,7 +33,7 @@ class BlackListed(commands.CheckFailure):
 
 
 async def get_prefix(bot, message) -> str:
-    """used to fetch the current servers prefix from the db
+    """Used to fetch the current servers prefix from the db
 
     Args:
         bot (commands.Bot): The bot to get the prefix of
@@ -256,12 +256,12 @@ async def bot_check(
 async def create_db_pool():
     """connects to the db and sets it as a variable
     """
-    # client.db = await asyncpg.create_pool(
-    #     host="ec2-52-23-86-208.compute-1.amazonaws.com",
-    #     database="d5squd8cvojua1",
-    #     user="poladbevzydxyx",
-    #     password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8",
-    # )
+    client.db = await asyncpg.create_pool(
+     host="ec2-52-23-86-208.compute-1.amazonaws.com",
+     database="d5squd8cvojua1",
+     user="poladbevzydxyx",
+     password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8",
+    )
     client.db = None
 
 
