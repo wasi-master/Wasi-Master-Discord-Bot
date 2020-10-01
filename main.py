@@ -494,6 +494,7 @@ async def on_message(message):
     prefix = await client.command_prefix(client, message)
     prefix = ", ".join([x for x in prefix if not x == "<@!{}> ".format(client.user.id)])
     await message.channel.send(f"Hello, I see that you mentioned me, my prefix here is \n\n{prefix}")
+    await client.process_commands(message)
 
 @client.event
 async def on_member_update(old, new):
