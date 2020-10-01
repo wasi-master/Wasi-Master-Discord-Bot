@@ -27,6 +27,8 @@ class Help(commands.Cog):
                 cog = self.bot.get_cog(cog_name)
                 cog_commands = cog.get_commands()
                 text += f"\n**{cog_name}: **"
+                if len(cog_commands) > 5:
+                    text += "\n"
                 text_alt = ", ".join([f'`{command}`' for command in cog_commands])
                 if len(cog_commands) > 5:
                     text += "\n"
