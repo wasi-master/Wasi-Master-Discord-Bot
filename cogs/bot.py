@@ -5,7 +5,7 @@ import datetime
 from tabulate import tabulate
 import random
 import time as timemodule
-import menus
+from discord.ext import menus
 
 from discord.ext import commands
 from collections import Counter
