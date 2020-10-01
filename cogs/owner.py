@@ -250,7 +250,7 @@ class Owner(commands.Cog):
                 "C:/Users/Wasi/AppData/Roaming/Python/Python38/site-packages",
             ).replace(
                 "/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/"
-            )
+            ).replace('File "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/cogs/owner.py", line 240, in eval_command\nresult = await eval(f"{fn_name}()", env)\nFile "<eval>",', 'In')
             if len(tb) < 1000:
                 embed = discord.Embed(title="Traceback", description=tb)
                 await ctx.send(embed=embed)
