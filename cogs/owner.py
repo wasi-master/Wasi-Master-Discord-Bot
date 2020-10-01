@@ -38,6 +38,42 @@ def split_by_slice(inp: str, length: int) -> list:
         size += 1 # we increase the size
         
     return result # we return the result
+    
+def convert_sec_to_min(seconds):
+    """returns 1:30 if 90 is passed
+
+    Args:
+        seconds (int): the seconds to convert the data from
+
+    Returns:
+        str: the 1:30
+    """
+    minutes, sec = divmod(seconds, 60)
+    return "%02d:%02d" % (minutes, sec)
+
+
+def progressbar(percent: int):
+    """Generates a progressbar
+
+    Args:
+        percent (int): Percentage
+
+    Returns:
+        str: a progressbar
+    """
+    total_percentage = 15
+    percent = percent * 0.15
+    right_now = round(percent / 4)
+    body = "☐" * total_percentage
+    percentage_list = list(body)
+
+    for i, _ in enumerate(percentage_list[:right_now]):
+        percentage_list[i] = "■"
+
+    result = "".join(percentage_list)
+    return f"{result}"
+
+
 class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -187,6 +223,9 @@ class Owner(commands.Cog):
             "_channel": ctx.channel,
             "_client": self.bot,
             "__import__": __import__,
+            "progressbar": progressbar,
+            "split_by_slice": split_by_slice,
+            "convert_sec_to_min": convert_sec_to_min
         }
         await ctx.message.add_reaction("\U0001f7e1")
 
