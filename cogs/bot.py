@@ -9,6 +9,20 @@ from discord.ext import commands
 from collections import Counter
 from discord.ext.commands import BucketType
 
+def get_status(status: str):
+    if str(status) == "online":
+        return "<:status_online:596576749790429200>"
+    elif str(status) == "dnd":
+        return "<:status_dnd:596576774364856321>"
+    elif str(status) == "streaming":
+        return "<:status_streaming:596576747294818305>"
+    elif str(status) == "idle":
+        return "<:status_idle:596576773488115722>"
+    elif str(status) == "offline":
+        return "<:status_offline:596576752013279242>"
+    else:
+        return status
+
 async def _basic_cleanup_strategy(self, ctx, search):
     count = 0
     async for msg in ctx.history(limit=search, before=ctx.message):
@@ -155,13 +169,7 @@ class Bot(commands.Cog):
         ]
         if isinstance(bot_member,discord.Member):
             # Get status
-            status_text = ":green_heart:"
-            if bot_member.status == discord.Status.offline:
-                status_text = ":black_heart:"
-            elif bot_member.status == discord.Status.dnd:
-                status_text = ":heart:"
-            elif bot_member.status == discord.Status.idle:
-                status_text = ":yellow_heart:"
+            status_text = get_status(str(bot_member.status))
             fields.append({"name":"Status","value":status_text,"inline":True})
 
             if bot_member.activity and bot_member.activity.name:
