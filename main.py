@@ -131,7 +131,6 @@ client.alex_api = alexflipnote.Client()
 client.google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 client.translate_api = translator.Translator()
 
-client.remove_command("help")
 client.emoji_list = []
 client.emoji_list_str = []
 
