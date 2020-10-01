@@ -10,8 +10,8 @@ class TicTacToe(commands.Cog):
 		self.bot = bot
 		self.ttt_games = {}
 		
-	@commands.command(pass_context=True)
-	async def ttt(self, ctx, move=""):
+	@commands.command(aliases=["ttt"])
+	async def tictactoe(self, ctx, move=""):
 		""" Tic Tac Toe """
 		await self.ttt_new(ctx.message.author, ctx.message.channel)
 
@@ -19,7 +19,7 @@ class TicTacToe(commands.Cog):
 		self.ttt_games[user.id] = [" "]*9
 		response = self.ttt_make_board(user)
 		response += "Your move:"
-		msg = await self.bot.send_message(channel, response)
+		msg = await channel.send(response)
 		await self.makeButtons(msg)
 	
 	async def ttt_move(self, user, message, move):
@@ -43,7 +43,7 @@ class TicTacToe(commands.Cog):
 		if check is not None:
 			msgAppend = "It's a draw!" if check == "draw" else "{0} wins!".format(check[-1])
 			print(msgAppend)
-			await self.bot.edit_message(message, new_content="{0}{1}".format(self.ttt_make_board(user), msgAppend))
+			await message.edit( content="{0}{1}".format(self.ttt_make_board(user), msgAppend))
 			return None
 		print("Check passed")
 		
@@ -53,7 +53,7 @@ class TicTacToe(commands.Cog):
 		print("AI moved")
 		
 		# Update board
-		await self.bot.edit_message(message, new_content=self.ttt_make_board(user))
+		await message.edit( content=self.ttt_make_board(user))
 		print("Board updated")
 		
 		# Check winner again
@@ -61,7 +61,7 @@ class TicTacToe(commands.Cog):
 		if check is not None:
 			msgAppend = "It's a draw!" if check == "draw" else "{0} wins!".format(check[-1])
 			print(msgAppend)
-			await self.bot.edit_message(message, new_content="{0}{1}".format(self.ttt_make_board(user), msgAppend))
+			await message.edit( content="{0}{1}".format(self.ttt_make_board(user), msgAppend))
 		print("Check passed")
 	
 	def ttt_make_board(self, author):
