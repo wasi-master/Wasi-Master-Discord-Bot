@@ -139,7 +139,7 @@ class Owner(commands.Cog):
 
 
     @commands.command(name="eval", aliases=["e"])
-    async def _eval(self, ctx, *, cmd):
+    async def eval_command(self, ctx, *, cmd):
         """Evaluates input.
         Input is interpreted as newline seperated statements.
         If the last statement is an expression, that is the return value.
@@ -279,25 +279,25 @@ class Owner(commands.Cog):
                         pass
 
             return
-
-        if isinstance(result, str):
-            parsed_result = result.replace(
-                self.bot.http.token, "[token ommitted]"
-            )
-        elif isinstance(result, (int, float, bool, list, dict)):
-            parsed_result = str(result)
-        elif isinstance(result, discord.File):
-            await ctx.send(file=result)
-        elif isinstance(result, discord.Embed):
-            await ctx.send(embed=result)
-        elif reault is None:
-            parsed_result = "None"
         else:
-            parsed_result = repr(result)
-
-        await ctx.send(parsed_result)
-        await ctx.message.remove_reaction("\U0001f7e1", me)
-        await ctx.message.add_reaction("\U0001f7e2")
+            if isinstance(result, str):
+                parsed_result = result.replace(
+                    self.bot.http.token, "**[TOKEN]**"
+                )
+            elif isinstance(result, (int, float, bool, list, dict)):
+                parsed_result = str(result)
+            elif isinstance(result, discord.File):
+                await ctx.send(file=result)
+            elif isinstance(result, discord.Embed):
+                await ctx.send(embed=result)
+            elif result is None:
+                parsed_result = "None"
+            else:
+                parsed_result = repr(result)
+    
+            await ctx.send(parsed_result)
+            await ctx.message.remove_reaction("\U0001f7e1", me)
+            await ctx.message.add_reaction("\U0001f7e2")
 
 def setup(bot):
     bot.add_cog(Owner(bot))
