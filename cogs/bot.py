@@ -136,20 +136,9 @@ class Bot(commands.Cog):
         prefix = ", ".join([x for x in prefix if not x == "<@!{}> ".format(self.bot.user.id)])
 
         # Get the owners
-        ownerList = self.settings.getGlobalStat('Owner',[])
-        owners = "Unclaimed..."
-        if len(ownerList):
-            userList = []
-            for owner in ownerList:
-                # Get the owner's name
-                user = self.bot.get_user(int(owner))
-                if not user:
-                    userString = "Unknown User ({})".format(owner)
-                else:
-                    userString = "{}#{}".format(user.name, user.discriminator)
-                userList.append(userString)
-            owners = ', '.join(userList)
-            
+        
+        
+        owners = "Wasi Master#4245"
         # Get bot's avatar url
         avatar = bot_member.avatar_url
         if not len(avatar):
