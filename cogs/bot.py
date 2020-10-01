@@ -189,7 +189,7 @@ class BotHelpPageSource(menus.ListPageSource):
         prefix = menu.ctx.prefix
         description = f'Use "{prefix}help command" for more info on a command.\n' \
                       f'Use "{prefix}help category" for more info on a category.\n' \
-                       'For more help, join the official bot support server: https://discord.gg/DWEaqMy'
+                       'For more help, join the official bot support server: https://discord.gg/5jn3bQX'
 
         embed = discord.Embed(title='Categories', description=description, colour=get_random_color())
 
@@ -307,10 +307,10 @@ class PaginatedHelpCommand(commands.HelpCommand):
 
     def common_command_formatting(self, embed_like, command):
         embed_like.title = self.get_command_signature(command)
-        if command.description:
+        if not command.help is None:
             embed_like.description = f'{command.description}\n\n{command.help}'
         else:
-            embed_like.description = command.help or 'No help found...'
+            embed_like.description = command.description or 'No help found...'
 
     async def send_command_help(self, command):
         # No pagination necessary for a single command.
