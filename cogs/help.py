@@ -21,9 +21,11 @@ class Help(commands.Cog):
                 color = 0x2F3136
             else:
                 color = ctx.guild.me.color
-            for cog_name in list(iter(self.bot.cogs)):
+            cogs = list(iter(self.bot.cogs))
+            cogs.sort()
+            for cog_name in cogs:
                 cog = self.bot.get_cog(cog_name)
-                cog_commands = cog.commands
+                cog_commands = cog.get_commands()
                 text += f"**{cog_name}: **"
                 if len(cog_commands) > 3:
                     text += "\n"
