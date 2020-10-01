@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class TicTacToe:
+class TicTacToe(commands.Cog):
 	"""
 	The classic Tic Tac Toe game
 	"""
