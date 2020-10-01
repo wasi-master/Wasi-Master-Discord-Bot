@@ -164,8 +164,8 @@ class Owner(commands.Cog):
                 "**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad"
             )
         fn_name = "_eval_expr"
-
-        cmd = cmd.strip("` ")
+        cmd = cmd.replace(";", "\n")
+        cmd = cmd.rstrip("```").lstrip("```").lstrip("py")
 
         # add a layer of indentation
         cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
@@ -195,9 +195,8 @@ class Owner(commands.Cog):
             me = ctx.guild.me
         else:
             me = self.bot.user
-
         try:
-            exec(compile(parsed, filename="eval", mode="exec"), env)
+            exec(compile(parsed, filename="<eval>", mode="exec"), env)
             result = await eval(f"{fn_name}()", env)
         except BaseException as exc:
             await ctx.message.remove_reaction("\U0001f7e1", me)
@@ -292,7 +291,7 @@ class Owner(commands.Cog):
             await ctx.send(file=result)
         elif isinstance(result, discord.Embed):
             await ctx.send(embed=result)
-        elif isinstance(result, None):
+        elif reault is None:
             parsed_result = "None"
         else:
             parsed_result = repr(result)
