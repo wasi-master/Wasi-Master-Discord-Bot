@@ -202,8 +202,12 @@ class Owner(commands.Cog):
         except Exception as exc:
             await ctx.message.remove_reaction("\U0001f7e1", me)
             await ctx.message.add_reaction("\U0001f534")
-            tb = ''.join(traceback.format_tb(exc.__traceback__))
-            
+            tb = ''.join(traceback.format_exc())
+            tb = tb.replace("/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/")
+            if len(tb) < 1000:
+                embed = discord.Embed(title="Traceback", description=tb)
+                await ctx.send(embed=embed)
+                return
             results = split_by_slice(tb, 2000)
             num = 0
             embed = discord.Embed(title="Traceback", description=results[num])
@@ -257,7 +261,7 @@ class Owner(commands.Cog):
                         num += 1
                         try:
                             result = results[num]
-                        except KeyError:
+                        except IndexError:
                             pass
                         embed = discord.Embed(title="Traceback", description=results[num])
                         embed.set_footer(text=f"Page {num + 1}/{len(results)}")
@@ -296,16 +300,6 @@ class Owner(commands.Cog):
         await ctx.send(parsed_result)
         await ctx.message.remove_reaction("\U0001f7e1", me)
         await ctx.message.add_reaction("\U0001f7e2")
-"""
-    @_eval.error
-    async def eval_error(self, ctx, exc):
-        tb = "".join(
-                prettify_exceptions.DefaultFormatter().format_exception(
-                    type(exc), exc, exc.__traceback__
-                )
-            )
-            pages = menus.MenuPages(source = Source(list(tb),  key = lambda  t :  t, per_page = 12 ),  clear_reactions_after = True )
-            await pages.start(ctx)
-"""
+
 def setup(bot):
     bot.add_cog(Owner(bot))
