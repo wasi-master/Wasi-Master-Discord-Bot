@@ -337,6 +337,7 @@ class Owner(commands.Cog):
 
             return
         else:
+            parsed_result = None
             if isinstance(result, str):
                 parsed_result = result.replace(self.bot.http.token, "**[TOKEN]**")
             elif isinstance(result, (int, float, bool, list, dict)):
@@ -349,8 +350,8 @@ class Owner(commands.Cog):
                 parsed_result = "None"
             else:
                 parsed_result = repr(result)
-
-            await ctx.send(parsed_result)
+            if parsed_result:
+                await ctx.send(parsed_result)
             await ctx.message.remove_reaction("\U0001f7e1", me)
             await ctx.message.add_reaction("\U0001f7e2")
 
