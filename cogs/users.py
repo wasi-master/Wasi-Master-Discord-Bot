@@ -85,7 +85,7 @@ class Users(commands.Cog):
     ):
         user = user or ctx.author
         ext = 'gif' if user.is_avatar_animated() else 'png'
-        await ctx.send(file=discord.File(BytesIO(await user.avatar_url.read()), f"{user.id}.{ext}")) 
+        await ctx.send(file=discord.File(BytesIO(await user.avatar_url.read()), f"{user}.{ext}")) 
 
     @commands.command(
         aliases=["ui", "whois", "wi", "whoami", "me"],
