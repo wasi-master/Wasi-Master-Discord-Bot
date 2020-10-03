@@ -505,7 +505,7 @@ async def on_message(message):
         pass
     else:
         for record in afk_people:
-            await ctx.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']})
+            await ctx.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
     if not (message.guild.me).mentioned_in(message):
         return
     prefix = await client.command_prefix(client, message)
