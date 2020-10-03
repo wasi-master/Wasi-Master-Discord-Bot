@@ -490,6 +490,22 @@ async def on_message(message):
     await client.process_commands(message)
     if message.guild is None:
         return
+    afk_people = []
+    for user in message.mentions:
+        is_afk = await bot.db.fetchrow(
+                """
+                SELECT *
+                FROM afk
+                WHERE user_id=$1;
+                """,
+                user.id
+            )
+        afk_people.append(is_afk)
+    if not afk_people:
+        pass
+    else:
+        for record in afk_people:
+            await ctx.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']})
     if not (message.guild.me).mentioned_in(message):
         return
     prefix = await client.command_prefix(client, message)
