@@ -72,7 +72,47 @@ class Users(commands.Cog):
     """    
     def __init__(self, bot):
         self.bot = bot
-
+    
+    
+    @commands.command(aliases=["afk"])
+    async def awayfromkeyboard(ctx, reason: commands.clean_content =None):
+        if reason:
+            await ctx.send(f"{ctx.author.mention}, You are now afk for {reason} :)")
+        else:
+            await ctx.send(f"{ctx.author.mention}, You are now afk :)")
+        is_afk = await bot.db.fetchrow(
+            """
+                SELECT *
+                FROM afk
+                WHERE user_id=$1
+                """,
+            ctx.author.id,
+        )
+        time = datetime.datetime.utcnow()
+        if is_afk is None:
+            await bot.db.execute(
+                """
+                    INSERT INTO afk (last_seen, user_id, reason)
+                    VALUES ($1, $2, $3)
+                    """,
+                time
+                ctx.author.id,
+                reason,
+            )
+        else:
+            await client.db.execute(
+            """
+                UPDATE afk
+                SET last_seen = $1,
+                reason = $2
+                WHERE user_id = $3;
+                """,
+            time,
+            reason,
+            ctx.author.id,
+        )
+    
+    
     @commands.command(
         aliases=["pfp", "av", "profilepicture", "profile"],
         description="Sends your or another users avatar",
