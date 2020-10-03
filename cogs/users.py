@@ -86,7 +86,7 @@ class Users(commands.Cog):
                 FROM afk
                 WHERE user_id=$1
                 """,
-            user.id,
+            ctx.author.id,
         )
         time = datetime.datetime.utcnow()
         if is_afk is None:
