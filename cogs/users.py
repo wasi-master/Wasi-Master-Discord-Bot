@@ -80,7 +80,7 @@ class Users(commands.Cog):
             await ctx.send(f"{ctx.author.mention}, You are now afk for {reason} :)")
         else:
             await ctx.send(f"{ctx.author.mention}, You are now afk :)")
-        is_afk = await bot.db.fetchrow(
+        is_afk = await self.bot.db.fetchrow(
             """
                 SELECT *
                 FROM afk
@@ -90,7 +90,7 @@ class Users(commands.Cog):
         )
         time = datetime.datetime.utcnow()
         if is_afk is None:
-            await bot.db.execute(
+            await self.bot.db.execute(
                 """
                     INSERT INTO afk (last_seen, user_id, reason)
                     VALUES ($1, $2, $3)
