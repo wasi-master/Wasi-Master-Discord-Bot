@@ -100,7 +100,7 @@ class Users(commands.Cog):
                 reason,
             )
         else:
-            await client.db.execute(
+            await slef.bot.db.execute(
             """
                 UPDATE afk
                 SET last_seen = $1,
