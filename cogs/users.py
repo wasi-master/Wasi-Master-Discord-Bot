@@ -80,15 +80,14 @@ class Users(commands.Cog):
             await ctx.send(f"{ctx.author.mention}, You are now afk for {reason} :)")
         else:
             await ctx.send(f"{ctx.author.mention}, You are now afk :)")
-        for usrr in message.mentions:
-            is_afk = await bot.db.fetchrow(
-                """
-                    SELECT *
-                    FROM afk
-                    WHERE user_id=$1
-                    """,
-                user.id,
-            )
+        is_afk = await bot.db.fetchrow(
+            """
+                SELECT *
+                FROM afk
+                WHERE user_id=$1
+                """,
+            user.id,
+        )
         time = datetime.datetime.utcnow()
         if is_afk is None:
             await bot.db.execute(
