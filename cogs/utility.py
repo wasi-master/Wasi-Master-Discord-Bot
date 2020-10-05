@@ -6,11 +6,12 @@ import humanize
 import random
 import asyncio
 import json
+import datetime
 
-from zipfile import ZipFile
-from discord.ext import commands
+from  zipfile import ZipFile
+from  discord.ext import commands
 from  discord.ext.commands import BucketType
-from bs4 import BeautifulSoup
+from  bs4 import BeautifulSoup
 
 def get_p(percent: int):
     total = 15
@@ -32,6 +33,42 @@ class Utility(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command()
+    async def snowflake(self, ctx, *, snowflake_id : str = None):
+        """show the date a snowflake ID was created"""
+
+        snowflake_id = int(snowflake_id)
+        timestamp = ((snowflake_id >> 22) + 1420070400000) / 1000 # python uses seconds not milliseconds
+        cdate = datetime.datetime.utcfromtimestamp(timestamp)
+        msg = "Snowflake created {}".format(cdate.strftime('%A, %B %d %Y at %H:%M:%S UTC'))
+        return await ctx.send(msg)
+
+    @commands.command(pass_context=True)
+    async def fullsnowflake(self, ctx, *, snowflake_id : str = None):
+        """show all available data about a snowflake ID"""
+        snowflake_id = int(snowflake_id)
+        timestamp = ((snowflake_id >> 22) + 1420070400000) / 1000 # python uses seconds not milliseconds
+        iwid = (snowflake_id & 0x3E0000) >> 17
+        ipid = (snowflake_id & 0x1F000) >> 12
+        icount = snowflake_id & 0xFFF
+
+        cdate = datetime.datetime.utcfromtimestamp(timestamp)
+        fdate = cdate.strftime('%A, %B %d %Y at %H:%M:%S UTC')
+
+        embed = discord.Embed(title=snowflake_id, description='Discord snowflake ID')
+        embed.add_field(name="Date created", value=fdate)
+        embed.add_field(name="Internal worker/process", value="{}/{}".format(iwid,ipid))
+        embed.add_field(name="Internal counter", value=icount)
+        embed.add_field(name="As user ping", value="<@{}>".format(snowflake_id))
+        embed.add_field(name="As channel ping", value="<#{}>".format(snowflake_id))
+        embed.add_field(name="As role ping", value="<@&{}>".format(snowflake_id))
+        embed.add_field(name="As custom emote", value="<:test:{}>".format(snowflake_id))
+        embed.add_field(name="As animated emote", value="<a:test:{}>".format(snowflake_id))
+
+        await ctx.send(embed=embed)
+
+
     @commands.command(pass_context=True)
     async def embed(self, ctx, *, embed = None):
         """Builds an embed using json formatting.
