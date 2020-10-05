@@ -50,8 +50,7 @@ def get_flag(flag: str):
 
 def get_p(percent: int):
     total = 15
-    percent = percent * 0.15
-    rn = round(percent / 4)
+    rn = percent * 0.15
     body = "☐" * total
     li = list(body)
 
@@ -214,6 +213,7 @@ class Users(commands.Cog):
         successfull = False
         for activity in activity.activities:
             if isinstance(activity, discord.Spotify):
+                success = True
                 search_terms = activity.artist + " - " + activity.title
                 max_results = 1
 
@@ -308,10 +308,9 @@ class Users(commands.Cog):
                     pass
                 embed.set_footer(text="Track ID:" + activity.track_id)
                 await ctx.send(embed=embed)
-                successfull = True
             else:
-                successfull = False
-        if not successfull:
+                success = False
+        if not success:
             await ctx.send("Not listening to spotify :(")
 
 
