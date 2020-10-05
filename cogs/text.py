@@ -20,7 +20,7 @@ def tts(lang: str, text: str):
     speech.save("tts.mp3")
     return
 
-def _zalgo(self, text):
+def _zalgo(text):
     words = text.split()
     zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
             for _ in range(i // 2 + 1)) * c.isalnum()
