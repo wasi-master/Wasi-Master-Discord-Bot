@@ -8,10 +8,10 @@ import asyncio
 import json
 import datetime
 
-from  zipfile import ZipFile
-from  discord.ext import commands
-from  discord.ext.commands import BucketType
-from  bs4 import BeautifulSoup
+from   zipfile import ZipFile
+from   discord.ext import commands
+from   discord.ext.commands import BucketType
+from   bs4 import BeautifulSoup
 
 def get_p(percent: int):
     total = 15
@@ -34,19 +34,19 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command()
+    @commands.command(name="id", aliases=["snowflake", "snf"])
     async def snowflake(self, ctx, *, snowflake_id : str = None):
-        """show the date a snowflake ID was created"""
+        """Show the date a snowflake ID was created"""
 
         snowflake_id = int(snowflake_id)
         timestamp = ((snowflake_id >> 22) + 1420070400000) / 1000 # python uses seconds not milliseconds
         cdate = datetime.datetime.utcfromtimestamp(timestamp)
-        msg = "Snowflake created {}".format(cdate.strftime('%A, %B %d %Y at %H:%M:%S UTC'))
+        msg = "ID created {}".format(cdate.strftime('%A, %B %d %Y at %H:%M:%S UTC'))
         return await ctx.send(msg)
 
-    @commands.command(pass_context=True)
-    async def fullsnowflake(self, ctx, *, snowflake_id : str = None):
-        """show all available data about a snowflake ID"""
+    @commands.command(aliases=["snowflakeinfo", "snfi", "idi"])
+    async def idinfo(self, ctx, *, snowflake_id : str = None):
+        """Show all available data about a snowflake ID"""
         snowflake_id = int(snowflake_id)
         timestamp = ((snowflake_id >> 22) + 1420070400000) / 1000 # python uses seconds not milliseconds
         iwid = (snowflake_id & 0x3E0000) >> 17
