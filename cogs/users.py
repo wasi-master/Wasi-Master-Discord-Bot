@@ -50,7 +50,7 @@ def get_flag(flag: str):
 
 def get_p(percent: int):
     total = 15
-    rn = percent * 0.15
+    rn = round(percent * 0.15)
     body = "☐" * total
     li = list(body)
 
@@ -211,7 +211,6 @@ class Users(commands.Cog):
         success = False
         member = member or ctx.message.author
         activity = ctx.message.guild.get_member(member.id)
-        successfull = False
         for activity in activity.activities:
             if isinstance(activity, discord.Spotify):
                 success = True
