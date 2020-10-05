@@ -32,7 +32,7 @@ class Fun(commands.Cog):
         # Build our groots
         groot_max = 1
         groot = " ".join([random.choice(groots) + (random.choice(punct)*random.randint(0, 5))])
-        print(groot)
+        await ctx.send(groot)
 
     @commands.command(
         aliases=["q", "triv", " trivia"], description="Sends a quiz for you to answer"
@@ -313,7 +313,7 @@ class Fun(commands.Cog):
                     "reaction_add", check=check, timeout=15
                 )
             except asyncio.TimeoutError:
-                await message.edit(content="You were too late :(")
+                await message.edit(content=message.content + "\n\nOkay I stopped now :)")
                 return
             else:
                 if not isinstance(reaction.emoji, discord.Emoji):
