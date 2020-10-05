@@ -208,6 +208,7 @@ class Users(commands.Cog):
         aliases=["spt"], description="See your or another users spotify info"
     )
     async def spotify(self, ctx, *, member: discord.Member = None):
+        success = False
         member = member or ctx.message.author
         activity = ctx.message.guild.get_member(member.id)
         successfull = False
