@@ -49,8 +49,8 @@ def get_flag(flag: str):
 
 
 def get_p(percent: int):
-    total = 15
-    rn = round(percent * 0.15)
+    total = 22
+    rn = round(percent * 0.22)
     body = "☐" * total
     li = list(body)
 
