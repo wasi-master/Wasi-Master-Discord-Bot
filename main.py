@@ -475,7 +475,7 @@ async def on_command_error(ctx, error):
                 embed.add_field(name="Guild", value=ctx.guild.name)
                 embed.add_field(name="Message", value=ctx.message.content)
                 embed.add_field(name="Error", value=f"```{str(error)}```")
-                embed.add_field(name="Tracebavj", value=str(error.__traceback__)
+                embed.add_field(name="Tracebavk", value=str(error.__traceback__))
                 embed.add_field(
                     name="Message Links",
                     value=(f"[User Message]({ctx.message.jump_url})\n"
