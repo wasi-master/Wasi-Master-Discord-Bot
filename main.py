@@ -489,6 +489,7 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_message(message):
     await client.process_commands(message)
+    message.content = message.content.replace("@everyone", "").replace("@here", "")
     if message.guild is None:
         return
     afk_people = []
