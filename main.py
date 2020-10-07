@@ -475,11 +475,14 @@ async def on_command_error(ctx, error):
                 embed.add_field(name="Guild", value=ctx.guild.name)
                 embed.add_field(name="Message", value=ctx.message.content)
                 embed.add_field(name="Error", value=f"```{str(error)}```")
-                embed.add_field(name="Tracebavk", value=str(error.__traceback__))
+                try:
+                    embed.add_field(name="Traceback", value=str(error.__traceback__))
+                except:
+                    pass
                 embed.add_field(
                     name="Message Links",
                     value=(f"[User Message]({ctx.message.jump_url})\n"
-                           f"[Bot Message]({message.jump_url})"),
+                           f"[Bot Message]({message.jump_url})")
                 )
                 await channel.send(embed=embed)
                 return
