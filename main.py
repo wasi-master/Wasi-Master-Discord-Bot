@@ -481,8 +481,7 @@ async def on_command_error(ctx, error):
                     pass
                 embed.add_field(
                     name="Message Links",
-                    value=(f"[User Message]({ctx.message.jump_url})\n"
-                           f"[Bot Message]({message.jump_url})")
+                    value=(f"[User Message]({ctx.message.jump_url})\n[Bot Message]({message.jump_url})")
                 )
                 await channel.send(embed=embed)
                 return
