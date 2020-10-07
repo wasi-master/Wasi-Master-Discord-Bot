@@ -313,7 +313,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
         command_usage = await self.context.bot.db.fetchrow("""
                     SELECT *
                     FROM usages
-                    WHERE command_name = $1;
+                    WHERE name = $1;
                     """,
                     command.name,
         )
