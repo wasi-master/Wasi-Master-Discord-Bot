@@ -261,8 +261,7 @@ class HelpMenu(PaginationMaster):
         self.bot.loop.create_task(go_back_to_current_page())
 
 class PaginatedHelpCommand(commands.HelpCommand):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self):
         super().__init__(command_attrs={
             'cooldown': commands.Cooldown(1, 3.0, commands.BucketType.member),
             'help': 'Shows help about the bot, a command, or a category',
@@ -311,7 +310,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
         embed_like.title = self.get_command_signature(command)
         if command._buckets._cooldown:
             embed_like.add_field(name="Cooldown", value=f"{command._buckets._cooldown.per} seconds per {command._buckets._cooldown.rate} commands per {str(command._buckets._cooldown.type).split('.')[1]}")
-        command_usage = await .db.fetchrow("""
+        command_usage = await self.context.bot.db.fetchrow("""
                     SELECT *
                     FROM usages
                     WHERE command_name = $1;
@@ -349,7 +348,7 @@ class Bot(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._original_help_command = bot.help_command
-        bot.help_command = PaginatedHelpCommand(bot)
+        bot.help_command = PaginatedHelpCommand()
         bot.help_command.cog = self
 
     @commands.command(description="Used to test if bot is online")
