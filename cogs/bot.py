@@ -317,7 +317,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
                     """,
                     command.name,
         )
-        embed.add_field(name="Popularity", value=f"Used {command_usage['usage']} times")
+        embed_like.add_field(name="Popularity", value=f"Used {command_usage['usage']} times")
         if not command.help is None:
             embed_like.description = f'{command.description}\n\n{command.help}'
         else:
