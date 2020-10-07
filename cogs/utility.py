@@ -34,6 +34,25 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
+    
+    @commands.command(aliases=["redirect", "unshort", "us"])
+    async def unshorten(ctx, url: str):
+        async with ctx.bot.session.get(url, allow_redirects=True) as cs:
+            if cs.url == url:
+                await ctx.send("The url didn't redirect me to any website")
+                return
+            result_url = cs.url
+        embed = discord.Embed(
+            title=f"{url} redirected me to",
+            description=result_url,
+            color = discord.Colour.red()
+            )
+        embed.set_footer(
+            icon_url=ctx.author.avatar_url,
+            text="Command executed by " + str(ctx.author)
+        )
+        await ctx.send(embed=embed) 
+    
     @commands.command(name="id", aliases=["snowflake", "snf"])
     async def snowflake(self, ctx, *, snowflake_id : str = None):
         """Show the date a snowflake ID was created"""
