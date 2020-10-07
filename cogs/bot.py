@@ -306,7 +306,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
         menu = HelpMenu(GroupHelpPageSource(cog, entries, prefix=self.clean_prefix))
         await menu.start(self.context)
 
-    def common_command_formatting(self, embed_like, command):
+    async def common_command_formatting(self, embed_like, command):
         embed_like.title = self.get_command_signature(command)
         embed_like.add_field(name="Cooldown", value=f"{command._buckets._cooldown.per} seconds per {command._buckets._cooldown.rate} commands per {str(command._buckets._cooldown.type).split('.', '')[1]}")
         command_usage = await self.bot.db.fetchrow("""
@@ -325,7 +325,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
     async def send_command_help(self, command):
         # No pagination necessary for a single command.
         embed = discord.Embed(colour=get_random_color())
-        self.common_command_formatting(embed, command)
+        await self.common_command_formatting(embed, command)
         await self.context.send(embed=embed)
 
     async def send_group_help(self, group):
@@ -338,7 +338,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
             return await self.send_command_help(group)
 
         source = GroupHelpPageSource(group, entries, prefix=self.clean_prefix)
-        self.common_command_formatting(source, group)
+        await self.common_command_formatting(source, group)
         menu = HelpMenu(source)
         await menu.start(self.context)
 class Bot(commands.Cog):
