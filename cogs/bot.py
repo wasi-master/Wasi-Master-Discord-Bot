@@ -308,7 +308,8 @@ class PaginatedHelpCommand(commands.HelpCommand):
 
     async def common_command_formatting(self, embed_like, command):
         embed_like.title = self.get_command_signature(command)
-        embed_like.add_field(name="Cooldown", value=f"{command._buckets._cooldown.per} seconds per {command._buckets._cooldown.rate} commands per {str(command._buckets._cooldown.type).split('.', '')[1]}")
+        if command._buckets.cooldown:
+            embed_like.add_field(name="Cooldown", value=f"{command._buckets._cooldown.per} seconds per {command._buckets._cooldown.rate} commands per {str(command._buckets._cooldown.type).split('.', '')[1]}")
         command_usage = await self.bot.db.fetchrow("""
                     SELECT *
                     FROM usages
