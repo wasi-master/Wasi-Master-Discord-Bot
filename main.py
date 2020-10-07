@@ -489,7 +489,6 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_message(message):
     await client.process_commands(message)
-    message.content = message.content.replace("@everyone", "").replace("@here", "")
     if message.guild is None:
         return
     afk_people = []
@@ -508,7 +507,7 @@ async def on_message(message):
     else:
         for record in afk_people:
             await ctx.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
-    if not (message.guild.me).mentioned_in(message):
+    if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
     prefix = ", ".join([x for x in prefix if not x == "<@!{}> ".format(client.user.id)])
