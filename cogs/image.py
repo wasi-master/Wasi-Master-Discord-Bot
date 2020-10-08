@@ -63,7 +63,7 @@ class Image(commands.Cog):
 
     @commands.command(description="Generates a minecraft style achievement image")
     async def achievement(self, ctx, icon: Optional[int]=None, text: str = None):
-        if text = None:
+        if text == None:
             text = "Dumb, didn't provide a text to go here"
         image = await (
             await self.bot.alex_api.achievement(text=text, icon=icon)
