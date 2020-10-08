@@ -2,7 +2,7 @@ import discord
 import json
 from discord.ext import commands
 
-from typing import Union
+from typing import Union, Optional
 from discord.ext.commands import BucketType
 
 class Image(commands.Cog):
@@ -62,7 +62,7 @@ class Image(commands.Cog):
         await ctx.send(embed=e)
 
     @commands.command(description="Generates a minecraft style achievement image")
-    async def achievement(self, ctx, text: commands.Greedy[str], icon: int=None):
+    async def achievement(self, ctx, icon: Optional[int]=None, text: str):
         image = await (
             await self.bot.alex_api.achievement(text=text, icon=icon)
         ).read()  # BytesIO
