@@ -524,6 +524,11 @@ class Bot(commands.Cog):
             "profile_pics/cyan.png",
         ]
         pfp = random.choice(pfps)
+        if hasattr(ctx.bot, "pfp"):
+            while ctx.bot.pfp == pfp:
+                pfp = random.choice(pfps)
+        ctx.bot.pfp = pfp
+        ctx.bot.pfp_color = pfp.split(".")[0].split("/")[1]
         with open(pfp, "rb") as f:
             avatar = f.read()
             await self.bot.user.edit(avatar=avatar)
