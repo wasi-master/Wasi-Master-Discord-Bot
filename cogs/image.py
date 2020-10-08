@@ -62,7 +62,7 @@ class Image(commands.Cog):
         await ctx.send(embed=e)
 
     @commands.command(description="Generates a minecraft style achievement image")
-    async def achievement(self, ctx, text: str, icon: Union[int, str] = None):
+    async def achievement(self, ctx, text: commands.Greedy[str], icon: int=None):
         image = await (
             await self.bot.alex_api.achievement(text=text, icon=icon)
         ).read()  # BytesIO
@@ -86,7 +86,7 @@ class Image(commands.Cog):
                 loaded_response = await response.text()
             formatted_json = json.loads(loaded_response)
 
-        if formatted_json["succes"]:
+        if formatted_json["success"]:
             embed = discord.Embed(
                 title=f"{member.name} is Worse Than Hitler", color=0x2F3136
             )
@@ -113,7 +113,7 @@ class Image(commands.Cog):
                 loaded_response = await response.text()
             formatted_json = json.loads(loaded_response)
 
-        if formatted_json["succes"]:
+        if formatted_json["success"]:
             embed = discord.Embed(
                 title=f"{member.name} Posted a new tweet", color=0x2F3136
             )
@@ -137,7 +137,7 @@ class Image(commands.Cog):
                 loaded_response = await response.text()
             formatted_json = json.loads(loaded_response)
 
-        if formatted_json["succes"]:
+        if formatted_json["success"]:
             embed = discord.Embed(title=f"{member.name} Wanted", color=0x2F3136)
             embed.set_image(url=formatted_json["url"])
             await ctx.send(embed=embed)
