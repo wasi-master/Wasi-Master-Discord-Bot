@@ -30,7 +30,22 @@ class BlackListed(commands.CheckFailure):
     """Don't respond if the user is blocked from using the bot
     """
 
+class WMBotContext(commands.Context):
+    @property
+    def intents(self):
+        text = "```diff\n"
+        for intent in self.bot.intents:
+            if intent[1]:
+                text += f"\n+ {intent[0].replace('dm', 'DM').title().replace('_', ' ')} -  {intent[1]}"
+            else:
+                text += f"\n- {intent[0].replace('dm', 'DM').title().replace('_', ' ')} -  {intent[1]}"
+        text += "```"
+        return text
 
+class WMBot(commands.Bot):
+    async def on_message(self, message):
+        ctx = await self.get_context(message, cls=WMBotContext)
+        await self.invoke(ctx)
 
 async def get_prefix(bot, message) -> str:
     """Used to fetch the current servers prefix from the db
@@ -111,7 +126,7 @@ intents = discord.Intents(
     reactions=True,
 )
 
-client = commands.Bot(
+client = WMBot(
     command_prefix=get_prefix,
     case_insensitive=True,
     allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False),
@@ -495,7 +510,7 @@ async def on_message(message):
         return
     afk_people = []
     for user in message.mentions:
-        is_afk = await bot.db.fetchrow(
+        is_afk = await client.db.fetchrow(
                 """
                 SELECT *
                 FROM afk
@@ -508,7 +523,7 @@ async def on_message(message):
         pass
     else:
         for record in afk_people:
-            await ctx.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
+            await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
     if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
