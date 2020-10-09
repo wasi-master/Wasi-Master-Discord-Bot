@@ -6,6 +6,7 @@ async_cse
 asyncpg
 bs4
 dblpy
+discord-flags
 git+git://github.com/Rapptz/discord.py.git
 git+git://github.com/ShineyDev/prettify.py.git
 gTTS
