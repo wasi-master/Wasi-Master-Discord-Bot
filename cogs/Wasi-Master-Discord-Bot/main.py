@@ -31,6 +31,8 @@ class BlackListed(commands.CheckFailure):
     """
 
 class WMBotContext(commands.Context):
+    def __init__(self):
+        super().__init__()
     @property
     def intents(self):
         text = "```diff\n"
@@ -43,8 +45,6 @@ class WMBotContext(commands.Context):
         return text
 
 class WMBot(commands.Bot):
-    def __init__(self):
-        super().__init__()
     async def on_message(self, message):
         ctx = await self.get_context(message, cls=WMBotContext)
         await self.invoke(ctx)
