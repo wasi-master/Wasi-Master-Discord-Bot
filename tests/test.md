@@ -1,0 +1,1 @@
+*class* discord.Member[Â¶](#discord.Member "Permalink to this definition")

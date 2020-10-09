@@ -1,0 +1,406 @@
+<dl class="class">
+  <dt id="discord.AuditLogEntry">
+    <em class="property"> class </em>
+    <code class="descclassname"> discord. </code>
+    <code class="descname"> AuditLogEntry </code>
+    <span class="sig-paren"> ( </span>
+    <em> * </em>
+    ,
+    <em> users </em>
+    ,
+    <em> data </em>
+    ,
+    <em> guild </em>
+    <span class="sig-paren"> ) </span>
+    <a
+      class="headerlink"
+      href="#discord.AuditLogEntry"
+      title="Permalink to this definition"
+    >
+      Â¶
+    </a>
+  </dt>
+  <dd>
+    <p>Represents an Audit Log entry.</p>
+    <p>
+      You retrieve these via
+      <a
+        class="reference internal"
+        href="#discord.Guild.audit_logs"
+        title="discord.Guild.audit_logs"
+      >
+        <code class="xref py py-meth docutils literal notranslate">
+          <span class="pre"> Guild.audit_logs() </span>
+        </code>
+      </a>
+      .
+    </p>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.action">
+        <code class="descname"> action </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.action"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The action that was done.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference internal"
+                href="#discord.AuditLogAction"
+                title="discord.AuditLogAction"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> AuditLogAction </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.user">
+        <code class="descname"> user </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.user"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>
+          The user who initiated this action. Usually a
+          <a
+            class="reference internal"
+            href="#discord.Member"
+            title="discord.Member"
+          >
+            <code class="xref py py-class docutils literal notranslate">
+              <span class="pre"> Member </span>
+            </code>
+          </a>
+          , unless gone then itâs a
+          <a
+            class="reference internal"
+            href="#discord.User"
+            title="discord.User"
+          >
+            <code class="xref py py-class docutils literal notranslate">
+              <span class="pre"> User </span>
+            </code>
+          </a>
+          .
+        </p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference internal"
+                href="#discord.abc.User"
+                title="discord.abc.User"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> abc.User </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.id">
+        <code class="descname"> id </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.id"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The entry ID.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference external"
+                href="https://docs.python.org/3/library/functions.html#int"
+                title="(in Python v3.8)"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> int </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.target">
+        <code class="descname"> target </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.target"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>
+          The target that got changed. The exact type of this depends on the
+          action being done.
+        </p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>Any</p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.reason">
+        <code class="descname"> reason </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.reason"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The reason this action was done.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              Optional[
+              <a
+                class="reference external"
+                href="https://docs.python.org/3/library/stdtypes.html#str"
+                title="(in Python v3.8)"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> str </span>
+                </code>
+              </a>
+              ]
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.extra">
+        <code class="descname"> extra </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.extra"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>
+          Extra information that this entry has that might be useful. For most
+          actions, this is
+          <code class="docutils literal notranslate">
+            <span class="pre"> None </span>
+          </code>
+          . However in some cases it contains extra information. See
+          <a
+            class="reference internal"
+            href="#discord.AuditLogAction"
+            title="discord.AuditLogAction"
+          >
+            <code class="xref py py-class docutils literal notranslate">
+              <span class="pre"> AuditLogAction </span>
+            </code>
+          </a>
+          for which actions have this field filled out.
+        </p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>Any</p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.created_at">
+        <code class="descname"> created_at </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.created_at"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>Returns the entryâs creation time in UTC.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference external"
+                href="https://docs.python.org/3/library/datetime.html#datetime.datetime"
+                title="(in Python v3.8)"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> datetime.datetime </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.category">
+        <code class="descname"> category </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.category"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The category of the action, if applicable.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              Optional[
+              <a
+                class="reference internal"
+                href="#discord.AuditLogActionCategory"
+                title="discord.AuditLogActionCategory"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> AuditLogActionCategory </span>
+                </code>
+              </a>
+              ]
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.changes">
+        <code class="descname"> changes </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.changes"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The list of changes this entry has.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference internal"
+                href="#discord.AuditLogChanges"
+                title="discord.AuditLogChanges"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> AuditLogChanges </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.before">
+        <code class="descname"> before </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.before"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The targetâs prior state.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference internal"
+                href="#discord.AuditLogDiff"
+                title="discord.AuditLogDiff"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> AuditLogDiff </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+    <dl class="attribute">
+      <dt id="discord.AuditLogEntry.after">
+        <code class="descname"> after </code>
+        <a
+          class="headerlink"
+          href="#discord.AuditLogEntry.after"
+          title="Permalink to this definition"
+        >
+          Â¶
+        </a>
+      </dt>
+      <dd>
+        <p>The targetâs subsequent state.</p>
+        <dl class="field-list simple">
+          <dt class="field-odd">Type</dt>
+          <dd class="field-odd">
+            <p>
+              <a
+                class="reference internal"
+                href="#discord.AuditLogDiff"
+                title="discord.AuditLogDiff"
+              >
+                <code class="xref py py-class docutils literal notranslate">
+                  <span class="pre"> AuditLogDiff </span>
+                </code>
+              </a>
+            </p>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+  </dd>
+</dl>
