@@ -512,6 +512,7 @@ async def on_message(message):
     await client.process_commands(message)
     if message.guild is None:
         return
+    """
     afk_people = []
     for user in message.mentions:
         is_afk = await client.db.fetchrow(
@@ -531,6 +532,7 @@ async def on_message(message):
                 await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
             except TypeError:
                 pass
+    """
     if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
