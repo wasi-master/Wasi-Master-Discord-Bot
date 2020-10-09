@@ -239,7 +239,7 @@ class Image(commands.Cog):
                 loaded_response = await response.text()
             formatted_json = json.loads(loaded_response)
 
-        try::
+        try:
             embed = discord.Embed(title=f"{member.name} Wanted", color=0x2F3136)
             embed.set_image(url=formatted_json["url"])
             await ctx.send(embed=embed)
