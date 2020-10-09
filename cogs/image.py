@@ -1,6 +1,6 @@
 import discord
 import json
-import vacefron
+
 
 from discord.ext import commands
 from typing import Union, Optional
@@ -13,35 +13,35 @@ class Image(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=["dbf"])
-    async def distractedbf(self, ctx, girlfriend_name: Union[discord.Member, str], boyfriend_name: Union[discord.Member, str], another_girl: Union[discord.Member, str]):
+    async def distractedbf(self, ctx, girlfriend: Union[discord.Member, str], boyfriend: Union[discord.Member, str], another_girl: Union[discord.Member, str]):
         """Makes a **distracted boyfriend** meme from the given arguments
         parameters passed can be a user or a name 
         
         the meme basically is a boyfriend being distracted by another girl while his girlfriend is watching him 
         can be used when someone is disregarding something and going for another thing
         """
-        if isinstance(girlfriend_name, discord.Member):
-            gf_name = girlfriend_name.display_name
-        if isinstance(boyfriend_name, discord.Member):
-            gf_name = boyfriend_name.display_name
+        if isinstance(girlfriend, discord.Member):
+            girlfriend = girlfriend.avatar_url
+        if isinstance(boyfriend, discord.Member):
+            boyfriend = boyfriend.avatar_url
         if isinstance(another_girl, discord.Member):
-            gf_name = another_girl.display_name
+            another = another_girl.avatar_url
         
-        result = await vacefron.distracted_bf(boyfriend_name, girlfriend_name,  another_girl)
-        await ctx.send(f"{boyfriend_name} is distractes at {another_girl} while {girlfriend_name} is watching\n\nRendered by {ctx.author}", file=discord.File(await result.read()))
+        result = await self.bot.vacefron.distracted_bf(boyfriend, girlfriend,  another_girl)
+        await ctx.send(f"{boyfriend} is distracted at {another_girl} while {girlfriend} is watching\n\nRendered by {ctx.author}", file=discord.File(await result.read()))
 
 
     @commands.command()
-    async def changemymind(self, ctx, text):
+    async def changemymind(self, ctx, *, text):
         """Makes a change my mind meme from the text
         """
-        result = await vacefron.change_my_mind(text)
+        result = await self.bot.vacefron.change_my_mind(text)
         await ctx.send(f"Invoked by {ctx.author}", file=await result.read())
 
 
     @commands.command(aliases=["em"])
     async def emergency_meeting(self, ctx, text):
-        result = await vacefron.emergency_meeting(text)
+        result = await self.bot.vacefron.emergency_meeting(text)
         await ctx.send(f"Invoked by {ctx.author}", file=await result.read())
     
     
@@ -50,7 +50,7 @@ class Image(commands.Cog):
         color = color.lower()
         if isinstance(person, discord.User):
             person = person.display_name
-        r = await vacefron.ejected(person, color)
+        r = await self.bot.vacefron.ejected(person, color)
         await ctx.send(f"{ctx.author} asked for this", file=discord.File(await r.read()))
     
     @commands.command(aliases=["ft"])
@@ -62,7 +62,7 @@ class Image(commands.Cog):
                 avatar = ctx.message.attachments[0].url
             if isinstance(user, str):
                 avatar = user
-        r = await vacefron.first_time(avatar)
+        r = await self.bot.vacefron.first_time(avatar)
         await ctx.send(f"{ctx.author} made this", file=discord.File(await r.read()))
 
     @commands.command(aliases=["milkyou", "canmilkyou", "milkable", "icmy"])
@@ -75,14 +75,14 @@ class Image(commands.Cog):
             milker = str(milker.avatar_url)
         if isinstance(to_milk, discord.User):
             to_milk = str(to_milk.avatar_url)
-        r = await vacefron.i_can_milk_you(milker, to_milk)
+        r = await self.bot.vacefron.i_can_milk_you(milker, to_milk)
         await ctx.send(f"{ctx.author} asked for this", file=disocrd.File(await r.read()))
     
     @commands.command(aliases=["ias"])
     async def iamspeed(ctx, whoisspeed: Union[discord.User, str]):
         if isinstance(whoisspeed, discord.User):
             whoisspeed = str(whoisspeed.avatar_url)
-        r = await vacefron.iam_speed(whoisspeed)
+        r = await self.bot.vacefron.iam_speed(whoisspeed)
         await ctx.send(f"Command Invoked by {ctx.author}", file=discord.File(r.read()))
     
     
@@ -95,7 +95,7 @@ class Image(commands.Cog):
                 avatar = ctx.message.attachments[0].url
             if isinstance(user, str):
                 avatar = user
-        r = await vacefron.wide(avatar)
+        r = await self.bot.vacefron.wide(avatar)
         await ctx.send(f"{ctx.author} made this wide", file=discord.File(await r.read()))
 
 
@@ -108,7 +108,7 @@ class Image(commands.Cog):
                 avatar = ctx.message.attachments[0].url
             if isinstance(user, str):
                 avatar = user
-        r = await vacefron.stonks(avatar)
+        r = await self.bot.vacefron.stonks(avatar)
         await ctx.send(f"{ctx.author} made this", file=discord.File(await r.read()))
 
     @commands.command(description="Invert your or another users profile picture")
