@@ -131,7 +131,7 @@ intents = discord.Intents(
 client = WMBot(
     command_prefix=get_prefix,
     case_insensitive=True,
-    allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False),
+    allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False),
     intents=intents,
 )
 dblpy = dbl.DBLClient(
