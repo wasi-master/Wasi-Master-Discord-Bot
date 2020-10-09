@@ -4,7 +4,7 @@ import vacefron
 
 from discord.ext import commands
 from typing import Union, Optional
-from discord.ext.commands import BucketType, Greedy
+from discord.ext.commands import BucketType
 
 class Image(commands.Cog):
     """Image releated commands
@@ -46,7 +46,7 @@ class Image(commands.Cog):
     
     
     @commands.command(aliases=["eject", "ejection"])
-    async def ejected(self, ctx, person: Union[Greedy[discord.User], str], color="random"):
+    async def ejected(self, ctx, person: Union[discord.User, str], color="random"):
         color = color.lower()
         if isinstance(person, discord.User):
             person = person.display_name
@@ -68,8 +68,8 @@ class Image(commands.Cog):
     @commands.command(aliases=["milkyou", "canmilkyou", "milkable", "icmy"])
     async def icanmilkyou(
         self, ctx, 
-        milker: Union[Greedy[discord.User], str],
-        to_milk: Union[Greedy[discord.User], str]
+        milker: Union[discord.User, str],
+        to_milk: Union[discord.User, str]
     ):
         if isinstance(milker, discord.User):
             milker = str(milker.avatar_url)
@@ -79,7 +79,7 @@ class Image(commands.Cog):
         await ctx.send(f"{ctx.author} asked for this", file=disocrd.File(await r.read()))
     
     @commands.command(aliases=["ias"])
-    async def iamspeed(ctx, whoisspeed: Union[Greedy[discord.User], str]):
+    async def iamspeed(ctx, whoisspeed: Union[discord.User, str]):
         if isinstance(whoisspeed, discord.User):
             whoisspeed = str(whoisspeed.avatar_url)
         r = await vacefron.iam_speed(whoisspeed)
