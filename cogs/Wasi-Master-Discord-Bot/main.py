@@ -15,6 +15,7 @@ import asyncpg
 import dbl
 import discord
 import humanize
+import vacefron
 import youtube_dl as ytdl
 from discord.ext import commands, tasks
 
@@ -147,6 +148,7 @@ client.secureRandom = secrets.SystemRandom()
 client.alex_api = alexflipnote.Client()
 client.google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 client.translate_api = translator.Translator()
+client.vacefron = vacefron.Client()
 
 client.emoji_list = []
 client.emoji_list_str = []
@@ -525,8 +527,10 @@ async def on_message(message):
         pass
     else:
         for record in afk_people:
-            if not record is None:
+            try:
                 await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
+            except TypeError:
+                pass
     if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
