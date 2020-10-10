@@ -36,7 +36,7 @@ class Image(commands.Cog):
                 )
 
 
-    @commands.command()
+    @commands.command(aliases=["cmm"])
     async def changemymind(self, ctx, *, text):
         """Makes a change my mind meme from the text
         """
@@ -50,7 +50,7 @@ class Image(commands.Cog):
 
 
     @commands.command(aliases=["em"])
-    async def emergency_meeting(self, ctx, text):
+    async def emergency_meeting(self, ctx, *, text):
         result = await self.bot.vacefron.emergency_meeting(text)
         await ctx.send(
             f"Invoked by {ctx.author}",
@@ -62,6 +62,13 @@ class Image(commands.Cog):
     
     @commands.command(aliases=["eject", "ejection"])
     async def ejected(self, ctx, person: Union[discord.User, str], color="random"):
+        """Makes a image of ejecting the mentioned user or the name passed
+        person can be a user (id, name, name#discriminatir, @mention) or a string
+        you can provide a color for the crewmate, defaults to random
+        possible colors are the ones available in among us
+        example would be `eject @Wasi Master red` to make a ejection image containing Wasi Master and the crewmate color being red
+        another example would ne `eject "Donald Trump" red` to make a image with the name being Donald Trump
+        """
         color = color.lower()
         if isinstance(person, discord.User):
             person = person.display_name
