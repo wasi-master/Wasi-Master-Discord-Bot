@@ -28,7 +28,12 @@ class Image(commands.Cog):
             another_img = another_girl.avatar_url
         
         result = await self.bot.vacefron.distracted_bf(boyfriend_img, girlfriend_img,  another_img)
-        await ctx.send(f"{boyfriend} is distracted at {another_girl} while {girlfriend} is watching\n\nRendered by {ctx.author}", file=discord.File(await result.read(bytesio=True), filename="Distracted Boyfriend"))
+        await ctx.send(
+            f"{boyfriend} is distracted at {another_girl} while {girlfriend} is watching\n\nRendered by {ctx.author}",
+            file=discord.File(
+                await result.read(bytesio=True),
+                filename="Distracted Boyfriend.png")
+                )
 
 
     @commands.command()
