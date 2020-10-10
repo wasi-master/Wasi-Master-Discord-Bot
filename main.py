@@ -32,6 +32,8 @@ class BlackListed(commands.CheckFailure):
     """
 
 class WMBotContext(commands.Context):
+    def __init(self, **kwargs):
+        super().__init__(**kwargs)
     @property
     def intents(self):
         text = "```diff\n"
