@@ -24,11 +24,8 @@ class Miscellaneous(commands.Cog):
         if ctx.author.permissions_in(channel).manage_messages:
             await channel.send(text)
             return
-        if channel:
-            channel = channel
+        if channel != ctx.channel:
             text = f"{text}\n\n    - sent by {ctx.author} from {ctx.channel.mention}"
-        else:
-            channel = ctx.channel
         m = await channel.send(text)
 
         def check(message):
