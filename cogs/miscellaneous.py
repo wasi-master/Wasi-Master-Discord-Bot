@@ -22,6 +22,10 @@ class Miscellaneous(commands.Cog):
     ):
         channel = channel or ctx.channel
         if ctx.author.permissions_in(channel).manage_messages:
+            try:
+                await ctx.message.delete()
+            except discord.Forbidden:
+                pass
             await channel.send(text)
             return
         if channel != ctx.channel:
