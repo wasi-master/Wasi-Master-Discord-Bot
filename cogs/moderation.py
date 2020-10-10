@@ -72,7 +72,7 @@ class Moderation(commands.Cog):
             def reaction_check(r, u):
                 return (
                     r.message.channel.id == ctx.channel.id and
-                    r.message.id == msg.id
+                    r.message.id == msg.id and
                     u.permissions_in(ctx.channel).manage_messages and
                     not u.bot
                 )
