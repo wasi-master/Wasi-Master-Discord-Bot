@@ -145,6 +145,7 @@ client.secureRandom = secrets.SystemRandom()
 client.alex_api = alexflipnote.Client()
 client.google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 client.translate_api = translator.Translator()
+client.vacefron = vacefron.Client()
 
 client.emoji_list = []
 client.emoji_list_str = []
@@ -523,7 +524,8 @@ async def on_message(message):
         pass
     else:
         for record in afk_people:
-            await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
+            if not record is None:
+                await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
     if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
