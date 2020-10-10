@@ -21,7 +21,7 @@ class Miscellaneous(commands.Cog):
         text: commands.clean_content,
     ):
         channel = channel or ctx.channel
-        if ctx.author.permissions_in(channel).manage_message:
+        if ctx.author.permissions_in(channel).manage_messages:
             await channel.send(text)
             return
         if channel:
