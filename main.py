@@ -15,6 +15,7 @@ import asyncpg
 import dbl
 import discord
 import humanize
+import vacefron
 import youtube_dl as ytdl
 from discord.ext import commands, tasks
 
