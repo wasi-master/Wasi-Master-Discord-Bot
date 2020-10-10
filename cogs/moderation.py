@@ -71,9 +71,10 @@ class Moderation(commands.Cog):
 
             def reaction_check(r, u):
                 return (
-                    r.message.channel.id == ctx.channel.id
-                    and r.message.id == msg.id
-                    and u.permissions_in(ctx.channel).manage_messages
+                    r.message.channel.id == ctx.channel.id and
+                    r.message.id == msg.id
+                    u.permissions_in(ctx.channel).manage_messages and
+                    not u.bot
                 )
 
             deleted = await ctx.channel.purge(limit=amount)
