@@ -466,7 +466,7 @@ async def on_command_error(ctx, error):
             try:
                 botembed.set_footer(
                     icon_url=ctx.author.avatar_url,
-                    text="You were too late to amswer",
+                    text="You were too late to answer",
                 )
                 await message.edit(embed=botembed)
                 return await message.clear_reactions()
