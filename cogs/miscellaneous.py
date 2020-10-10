@@ -20,6 +20,10 @@ class Miscellaneous(commands.Cog):
         *,
         text: commands.clean_content,
     ):
+        channel = channel or ctx.channel
+        if ctx.author.permissions_in(channel).manage_message:
+            await channel.send(text)
+            return
         if channel:
             channel = channel
             text = f"{text}\n\n    - sent by {ctx.author} from {ctx.channel.mention}"
