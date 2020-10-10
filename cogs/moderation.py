@@ -64,7 +64,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, amount: int, member: discord.Member = None):
         def check(message):
-            return message.author == member
+            return message.author.id == member.id
 
         await ctx.message.delete()
         if not member:
@@ -72,8 +72,8 @@ class Moderation(commands.Cog):
             def reaction_check(r, u):
                 return (
                     r.message.channel.id == ctx.channel.id
-                    and reaction.message.id == ctx.message.id
-                    and reaction.message.author.permissions.manage_messages
+                    and r.message.id == ctx.message.id
+                    and u.permissions_in(ctx.channel).manage_messages
                 )
 
             deleted = await ctx.channel.purge(limit=amount)
