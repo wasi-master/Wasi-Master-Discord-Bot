@@ -35,7 +35,7 @@ class WMBotContext(commands.Context):
 
     @property
     def owner(self):
-        _owner = await self.bot.get_user(538332632535007244)
+        _owner = self.bot.get_user(538332632535007244)
         return _owner
 
     @property
