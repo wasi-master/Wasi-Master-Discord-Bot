@@ -540,7 +540,7 @@ async def on_message(message):
         return
     prefix = await client.command_prefix(client, message)
     prefix = "\n".join([x for x in prefix if not x == "<@!{}> ".format(client.user.id)])
-    await message.channel.send(f"Hello, I see that you mentioned me, my prefix here is \n\n{prefix}")
+    await message.channel.send(f"Hello, I see that you mentioned me, my prefixes here are \n\n{prefix}")
  
 
 @client.event
