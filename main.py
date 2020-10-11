@@ -32,8 +32,12 @@ class BlackListed(commands.CheckFailure):
     """
 
 class WMBotContext(commands.Context):
-    def __init(self, **kwargs):
-        super().__init__(**kwargs)
+
+    @property
+    def owner(self):
+        _owner = await self.bot.get_user(538332632535007244)
+        return _owner
+
     @property
     def intents(self):
         text = "```diff\n"
@@ -46,9 +50,12 @@ class WMBotContext(commands.Context):
         return text
 
 class WMBot(commands.Bot):
-    async def on_message(self, message):
-        ctx = await self.get_context(message, cls=WMBotContext)
-        await self.invoke(ctx)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    async def get_context(self, message, *, cls=None):
+        return await super().get_context(message, cls=cls or WMBotContext)
+
 
 async def get_prefix(bot, message) -> str:
     """Used to fetch the current servers prefix from the db
