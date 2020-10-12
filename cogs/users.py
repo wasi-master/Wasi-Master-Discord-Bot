@@ -93,7 +93,7 @@ class Users(commands.Cog):
         )
             await ctx.send("Removed your afk")
     @commands.command(aliases=["afk"])
-    async def awayfromkeyboard(self, ctx, reason: commands.clean_content =None):
+    async def awayfromkeyboard(self, ctx, *, reason: commands.clean_content =None):
         if reason:
             await ctx.send(f"{ctx.author.mention}, You are now afk for {reason} :)")
         else:
