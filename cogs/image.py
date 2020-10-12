@@ -72,7 +72,11 @@ class Image(commands.Cog):
         color = color.lower()
         if isinstance(person, discord.User):
             person = person.display_name
-        r = await self.bot.vacefron.ejected(person, color, bool(imposter))
+        try:
+            r = await self.bot.vacefron.ejected(person, color, bool(imposter))
+        except Exception as e:
+            await ctx.send(str(e))
+            return
         await ctx.send(
             f"{ctx.author} asked for this",
             file=discord.File(
