@@ -134,6 +134,8 @@ class Image(commands.Cog):
     
     @commands.command(aliases=["wd"])
     async def wide(self, ctx, *, user: Union[discord.User, str] = None):
+        if user is None:
+            user = ctx.author
         if isinstance(user, discord.User):
             avatar = str(user.avatar_url)
         else:
