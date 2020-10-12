@@ -85,7 +85,7 @@ class Users(commands.Cog):
         if not is_afk:
             await ctx.send("You are not afk")
         else:
-            await bot.db.execute(
+            await self.bot.db.execute(
             """
             DELETE FROM afk WHERE user_id=$1
             """,
