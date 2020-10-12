@@ -321,7 +321,7 @@ class PaginatedHelpCommand(commands.HelpCommand):
             if not command_usage is None:
                 embed_like.add_field(name="Popularity", value=f"Used {command_usage['usage']} times")
             else:
-                embed_like.add_field("Popularity", value="Command never used by anyone")
+                embed_like.add_field(name="Popularity", value="Command never used by anyone")
         if not command.help is None:
             embed_like.description = f'{command.description}\n\n{command.help}'
         else:
