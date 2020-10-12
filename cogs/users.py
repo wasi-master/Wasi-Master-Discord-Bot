@@ -72,7 +72,26 @@ class Users(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    
+    @commands.command(aliases=["nafk", "unafk", "rafk", "removeafk", "dafk", "disableafk"])
+    async def notawayfromkeyboard(self, ctx)
+        is_afk = await self.bot.db.fetchrow(
+            """
+                SELECT *
+                FROM afk
+                WHERE user_id=$1
+                """,
+            ctx.author.id,
+        )
+        if not is_afk:
+            await ctx.send("You are not afk")
+        else:
+            await self.bot.db.execute(
+            """
+            DELETE FROM afk WHERE user_id=$1
+            """,
+            ctx.author.id,
+        )
+            await ctx.send("Removed your afk")
     @commands.command(aliases=["afk"])
     async def awayfromkeyboard(self, ctx, reason: commands.clean_content =None):
         if reason:
@@ -99,7 +118,7 @@ class Users(commands.Cog):
                 reason,
             )
         else:
-            await slef.bot.db.execute(
+            await self.bot.db.execute(
             """
                 UPDATE afk
                 SET last_seen = $1,
