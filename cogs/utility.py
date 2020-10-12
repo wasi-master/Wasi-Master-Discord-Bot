@@ -160,12 +160,12 @@ class Utility(commands.Cog):
             await ctx.send(title="Something went wrong...", description=e)
 
     @commands.command(
-        aliases=["link", "message"],
+        aliases=["link", "message", "ml"],
         description="Generates a link to a message (usefull in mobile)",
     )
     async def messagelink(self, ctx, message: int, channel: discord.TextChannel = None):
         channel = channel or ctx.channel
-        message = channel.fetch_message(message)
+        message = await channel.fetch_message(message)
         await ctx.send(message.jump_url)
 
     @commands.command(description="Sends you stuff")
