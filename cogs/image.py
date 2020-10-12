@@ -120,7 +120,7 @@ class Image(commands.Cog):
                 )
     
     @commands.command(aliases=["ias"])
-    async def iamspeed(ctx, whoisspeed: Union[discord.User, str]):
+    async def iamspeed(self, ctx, whoisspeed: Union[discord.User, str]):
         if isinstance(whoisspeed, discord.User):
             whoisspeed = str(whoisspeed.avatar_url)
         r = await self.bot.vacefron.iam_speed(whoisspeed)
