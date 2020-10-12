@@ -515,6 +515,8 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_message(message):
+    if message.author.bot:
+        return
     await client.process_commands(message)
     if message.guild is None:
         return
