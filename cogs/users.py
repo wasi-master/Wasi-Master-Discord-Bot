@@ -73,7 +73,7 @@ class Users(commands.Cog):
         self.bot = bot
     
     @commands.command(aliases=["nafk", "unafk", "rafk", "removeafk", "dafk", "disableafk"])
-    async def notawayfromkeyboard(self, ctx)
+    async def notawayfromkeyboard(self, ctx):
         is_afk = await self.bot.db.fetchrow(
             """
                 SELECT *
