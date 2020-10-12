@@ -127,7 +127,7 @@ class Image(commands.Cog):
         await ctx.send(
             f"Command Invoked by {ctx.author}",
             file=discord.File(
-                r.read(bytesio=True),
+                await r.read(bytesio=True),
                 filename="I am speed.png")
                 )
     
