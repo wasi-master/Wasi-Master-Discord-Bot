@@ -32,8 +32,12 @@ class BlackListed(commands.CheckFailure):
     """
 
 class WMBotContext(commands.Context):
-    def __init__(self):
-        super().__init__()
+
+    @property
+    def owner(self):
+        _owner = self.bot.get_user(538332632535007244)
+        return _owner
+
     @property
     def intents(self):
         text = "```diff\n"
@@ -46,9 +50,12 @@ class WMBotContext(commands.Context):
         return text
 
 class WMBot(commands.Bot):
-    async def on_message(self, message):
-        ctx = await self.get_context(message, cls=WMBotContext)
-        await self.invoke(ctx)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    async def get_context(self, message, *, cls=None):
+        return await super().get_context(message, cls=cls or WMBotContext)
+
 
 async def get_prefix(bot, message) -> str:
     """Used to fetch the current servers prefix from the db
@@ -132,7 +139,6 @@ intents = discord.Intents(
 client = WMBot(
     command_prefix=get_prefix,
     case_insensitive=True,
-    allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False),
     intents=intents,
 )
 dblpy = dbl.DBLClient(
@@ -468,7 +474,7 @@ async def on_command_error(ctx, error):
             try:
                 botembed.set_footer(
                     icon_url=ctx.author.avatar_url,
-                    text="You were too late to amswer",
+                    text="You were too late to answer",
                 )
                 await message.edit(embed=botembed)
                 return await message.clear_reactions()
@@ -509,10 +515,11 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_message(message):
+    if message.author.bot:
+        return
     await client.process_commands(message)
     if message.guild is None:
         return
-    """
     afk_people = []
     for user in message.mentions:
         is_afk = await client.db.fetchrow(
@@ -528,16 +535,13 @@ async def on_message(message):
         pass
     else:
         for record in afk_people:
-            try:
+            if not record is None:
                 await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
-            except TypeError:
-                pass
-    """
     if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
-    prefix = ", ".join([x for x in prefix if not x == "<@!{}> ".format(client.user.id)])
-    await message.channel.send(f"Hello, I see that you mentioned me, my prefix here is \n\n{prefix}")
+    prefix = "\n".join([x for x in prefix if not x == "<@!{}> ".format(client.user.id)])
+    await message.channel.send(f"Hello, I see that you mentioned me, my prefixes here are \n\n{prefix}")
  
 
 @client.event
