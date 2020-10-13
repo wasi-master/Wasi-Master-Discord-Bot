@@ -14,6 +14,7 @@ git+git://github.com/jmoiron/humanize.git
 git+git://github.com/Rapptz/discord-ext-menus.git
 git+git://github.com/Gorialis/jishaku.git
 git+git://github.com/LiBa001/disputils.git
+mystbin.py
 lxml
 numexpr
 psutil

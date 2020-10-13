@@ -13,11 +13,11 @@ class Animals(commands.Cog):
         self,
         ctx,
     ):
-        url = "https://api.thecatapi.com/v1/images/search"
+        url = "https://some-random-api.ml/img/cat"
 
         async with self.bot.session.get(url) as cs:
             fj = await cs.json()
-        img_url = fj[0]["url"]
+        img_url = fj["link"]
         await ctx.send(
             embed=discord.Embed(title="Heres a cat picture").set_image(url=img_url)
         )
@@ -27,11 +27,95 @@ class Animals(commands.Cog):
         self,
         ctx,
     ):
-        url = "https://dog.ceo/api/breeds/image/random"
+        url = "https://some-random-api.ml/img/dog"
 
         async with self.bot.session.get(url) as cs:
             fj = await cs.json()
-        img_url = fj["message"].replace("\\/", "/")
+        img_url = fj["link"]
+        await ctx.send(
+            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+        )
+
+    @commands.command(description="Shows random cute dog pictures :)")
+    async def panda(
+        self,
+        ctx,
+    ):
+        url = "https://some-random-api.ml/img/panda"
+
+        async with self.bot.session.get(url) as cs:
+            fj = await cs.json()
+        img_url = fj["link"]
+        await ctx.send(
+            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+        )
+
+    @commands.command(description="Shows random cute dog pictures :)")
+    async def redpanda(
+        self,
+        ctx,
+    ):
+        url = "https://some-random-api.ml/img/red_panda"
+
+        async with self.bot.session.get(url) as cs:
+            fj = await cs.json()
+        img_url = fj["link"]
+        await ctx.send(
+            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+        )
+
+    @commands.command(description="Shows random cute dog pictures :)")
+    async def koala(
+        self,
+        ctx,
+    ):
+        url = "https://some-random-api.ml/img/koala"
+
+        async with self.bot.session.get(url) as cs:
+            fj = await cs.json()
+        img_url = fj["link"]
+        await ctx.send(
+            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+        )
+
+    @commands.command(aliases=["bird"], description="Shows random cute dog pictures :)")
+    async def bird(
+        self,
+        ctx,
+    ):
+        url = "https://some-random-api.ml/img/birb"
+
+        async with self.bot.session.get(url) as cs:
+            fj = await cs.json()
+        img_url = fj["link"]
+        await ctx.send(
+            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+        )
+
+    @commands.command(description="Shows random cute dog pictures :)")
+    async def racoon(
+        self,
+        ctx,
+    ):
+        url = "https://some-random-api.ml/img/racoon"
+
+        async with self.bot.session.get(url) as cs:
+            fj = await cs.json()
+        img_url = fj["link"]
+        await ctx.send(
+            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+        )
+
+    @commands.command(description="Shows random cute dog pictures :)")
+    async def kangaroo(
+        self,
+        ctx,
+    ):
+        url = "https://some-random-api.ml/img/kangaroo"
+
+        async with self.bot.session.get(url) as cs:
+            fj = await cs.json()
+        img_url = fj["link"]
         await ctx.send(
             embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
         )
