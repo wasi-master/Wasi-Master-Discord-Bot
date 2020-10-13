@@ -15,6 +15,7 @@ import asyncpg
 import dbl
 import discord
 import humanize
+import mystbin
 import vacefron
 import youtube_dl as ytdl
 from discord.ext import commands, tasks
@@ -155,6 +156,7 @@ client.alex_api = alexflipnote.Client()
 client.google_api = ag.Search("AIzaSyCHpVwmhfCBX6sDTqMNYVfCZaOdsXp9BFk")
 client.translate_api = translator.Translator()
 client.vacefron = vacefron.Client()
+mystbin_client = mystbin.MystbinClient()
 
 client.emoji_list = []
 client.emoji_list_str = []

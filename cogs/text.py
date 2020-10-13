@@ -29,14 +29,39 @@ def _zalgo(text):
     return zalgo
 
 class Text(commands.Cog):
-    """Commands that take a inpu as text and send a output as text
+    """Commands that take a input as text and send a output as text
     """
     def __init__(self, bot):
         self.bot = bot
         marks = map(chr, range(768, 879))
         self.marks = list(marks)
 
-        
+
+    @commands.command()
+    @commands.cooldown(1, 15, BucketType.default)
+    async def mystbin(self, ctx, *, text):
+        if text.startswith("```"):
+            if text.startswith("```\n"):
+                syntax = text
+            else:
+                syntax = text.split("\n")[0].replace("```", "")
+        paste = await ctx.bot.mystbin_client.post(text, syntax=syntax)
+        embed = discord.Embed(
+            title="Paste Succesfull", 
+            description=paste.url)
+    
+    @commands.command()
+    @commands.cooldown(1, 15, BucketType.default)
+    async def hastebin(self, data):
+        data = bytes(data, 'utf-8')
+        async with self.bot.session.post('https://hastebin.com/documents', data = data) as r:
+            res = await r.json()
+            key = res["key"]
+            url = "https://hastebin.com/{key}"
+    embed = discord.Embed(
+            title="Paste Succesfull", 
+            description=url)
+    
     @commands.command(description="Spoilers a text letter by letter")
     @commands.cooldown(1, 15, BucketType.channel)
     async def spoiler(self, ctx, *, text: str):
