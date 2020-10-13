@@ -12,7 +12,7 @@ class MadLibs(commands.Cog):
     """
     # Init with the bot reference, and a reference to the settings var
     def __init__(self, bot):
-        
+        self.prefix = "ml"
         self.bot = bot
         # Setup/compile our regex
         self.regex = re.compile(r"\[\[[^\[\]]+\]\]")
