@@ -14,7 +14,7 @@ class Data(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=["lc"])
-    async def lyrics(ctx, song_name: str):
+    async def lyrics(self, ctx, song_name: str):
         song_name = quote(song_name)
         async with self.bot.session.get(f"https://some-random-api.ml/lyrics?title={song_name}") as cs:
             fj = await cs.json()
@@ -25,6 +25,24 @@ class Data(commands.Cog):
                 )
         embed.set_thumbnail(url=list(fj["thumbnail"].values())[0])
         embed.set_author(name=fj["author"])
+        await ctx.send(embed=embed)
+    
+    @commands.command(aliases=["pd"])
+    async def pokedex(self, ctx, pokemon:str):
+        pokemon = quote(pokemon)
+        async with self.bot.session.get(f"https://some-random-api.ml/pokedex?pokemon={pokemon}") as cs:
+            fj = await cs.json()
+        stats = fj["stats"]
+        embed = discord.Embed(
+            title=fj["name"].title(),
+            description=fj["description"]
+            )
+        embed.add_field(name="Type", value=", ".join(fj["type"]))
+        embed.add_field(name="Abilities", value=", ".join(fj["abilities"]))
+        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n    Male: {fj['gender']['male']}\n    Female:{fj['gender']['female'}")
+        embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {fj['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}")
+        embed.add_field(name="Evoloution", value="\n".join(fj["family"]["evolutionLine"]).replace(fj["family"]["evolutionLine"][fj["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["evolutionStage"]-1]}**'))
+        embed.set_thumbnail(url=fj["sprites"]["animated"])
         await ctx.send(embed=embed)
 
     @commands.command(description="Find details about a music")
