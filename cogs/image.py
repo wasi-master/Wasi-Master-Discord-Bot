@@ -89,6 +89,12 @@ class Image(commands.Cog):
         embed = discord.Embed(title=wasted.name + " Wasted")
         embed.set_image(url=f"https://some-random-api.ml/canvas/wasted?avatar={wasted.avatar_url}")
         await ctx.send(embed=embed)
+
+    @commands.command(aliases=["trigger"])
+    async def triggered(self, ctx, to_trigger: discord.User):
+        embed = discord.Embed(title=to_trigger.name + " is **Triggered**")
+        embed.set_image(url=f"https://some-random-api.ml/canvas/triggered?avatar={to_trigger.avatar_url}")
+        await ctx.send(embed=embed)
     
     @commands.command(aliases=["ytcmnt", "cmnt"])
     async def comment(self, ctx, commenter: Union[discord.User, str], comment):
