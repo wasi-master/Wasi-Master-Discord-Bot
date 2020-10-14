@@ -97,9 +97,13 @@ class English(commands.Cog):
         if len(fj) > 1:
             results = fj
             term = results[num]
-            embed = discord.Embed(
-                title=word, description=term["defenition"], color=0x2F3136
-            )
+            try:
+                embed = discord.Embed(
+                    title=word, description=term["defenition"], color=0x2F3136
+                )
+            except KeyError:
+                await ctx.send("No definition found")
+                return
             embed.add_field(name="Type", value=term["type"])
             if not term["example"] is None:
                 embed.add_field(
