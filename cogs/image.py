@@ -2,9 +2,9 @@ import discord
 import json
 
 
-from discord.ext import commands
-from typing import Union, Optional
-from discord.ext.commands import BucketType
+from  discord.ext import commands
+from  typing import Union, Optional
+from  discord.ext.commands import BucketType
 
 class Image(commands.Cog):
     """Image releated commands
@@ -83,7 +83,35 @@ class Image(commands.Cog):
                 await r.read(bytesio=True),
                 filename="Ejected.png")
                 )
+
+    @commands.command(aliases=["waste"])
+    async def wasted(self, ctx, wasted: discord.User):
+        embed = discord.Embed(title=wasted.name + " Wasted")
+        embed.set_image(url=f"https://some-random-api.ml/canvas/wasted?avatar={wasted.avatar_url}")
+        await ctx.send(embed=embed)
     
+    @commands.command(aliases=["ytcmnt", "cmnt"])
+    async def comment(self, ctx, commenter: Union[discord.User, str], comment):
+        if isinstance(commenter, discord.User):
+            avatar = commenter.avatar_url
+            name = commenter.display_name
+        else:
+            commenter = str(commenter)
+            avatar = "https://www.shit.jpg"
+
+        url = ("https://some-random-api.ml/canvas/youtube-comment"
+              f"?avatar={avatar}&username={name}&comment={comment}")
+        async with self.bot.session.get(url) as result:
+            async with self.bot.session.get(result) as cs:
+                file = await cs.read()
+        
+        await ctx.send(
+            f"{ctx.author} asked for this",
+            file=discord.File(
+                file,
+                filename="Comment.png")
+                )
+
     @commands.command(aliases=["ft"])
     async def firsttime(self, ctx, *, user: Union[discord.User, str] = None):
         if isinstance(user, discord.User):
@@ -163,7 +191,7 @@ class Image(commands.Cog):
                 avatar = user
         r = await self.bot.vacefron.stonks(avatar)
         await ctx.send(
-            f"{ctx.author} made this",
+            f"{ctx.author} made me do this",
             file=discord.File(
                 await r.read(bytesio=True),
                 filename="Stonks.png")
