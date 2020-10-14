@@ -86,15 +86,31 @@ class Image(commands.Cog):
 
     @commands.command(aliases=["waste"])
     async def wasted(self, ctx, wasted: discord.User):
-        embed = discord.Embed(title=wasted.name + " Wasted")
-        embed.set_image(url=f"https://some-random-api.ml/canvas/wasted?avatar={wasted.avatar_url}")
-        await ctx.send(embed=embed)
+        text = wasted.name + " Wasted"
+        url=f"https://some-random-api.ml/canvas/wasted?avatar={wasted.avatar_url}"
+        async with self.bot.session.get(url) as result:
+            file = await result.read()
+        
+        await ctx.send(
+            text,
+            file=discord.File(
+                file,
+                filename="Comment.png")
+                )
 
     @commands.command(aliases=["trigger"])
     async def triggered(self, ctx, to_trigger: discord.User):
-        embed = discord.Embed(title=to_trigger.name + " is **Triggered**")
-        embed.set_image(url=f"https://some-random-api.ml/canvas/triggered?avatar={to_trigger.avatar_url}")
-        await ctx.send(embed=embed)
+        text = to_trigger.name + " is **Triggered**"
+        url=f"https://some-random-api.ml/canvas/triggered?avatar={to_trigger.avatar_url}"
+        async with self.bot.session.get(url) as result:
+            file = await result.read()
+        
+        await ctx.send(
+            text,
+            file=discord.File(
+                file,
+                filename="Comment.png")
+                )
     
     @commands.command(aliases=["ytcmnt", "cmnt"])
     async def comment(self, ctx, commenter: Union[discord.User, str], comment):
@@ -108,8 +124,7 @@ class Image(commands.Cog):
         url = ("https://some-random-api.ml/canvas/youtube-comment"
               f"?avatar={avatar}&username={name}&comment={comment}")
         async with self.bot.session.get(url) as result:
-            async with self.bot.session.get(result) as cs:
-                file = await cs.read()
+            file = await result.read()
         
         await ctx.send(
             f"{ctx.author} asked for this",
