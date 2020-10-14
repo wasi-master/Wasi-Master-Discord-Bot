@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import json
 import re
+from urllib.parse import quote
+
 
 from discord.ext.commands import BucketType
 
@@ -10,6 +12,20 @@ class Data(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(aliases=["lc"])
+    async def lyrics(ctx, song_name: str):
+        song_name = quote(song_name)
+        async with self.bot.session.get(f"https://some-random-api.ml/lyrics?title={song_name}") as cs:
+            fj = await cs.json()
+        embed = discord.Embed(
+                title=fj["title"],
+                description=fj["lyrics"],
+                url = list(fj["links"].values())[0]
+                )
+        embed.set_thumbnail(url=list(fj["thumbnail"].values())[0])
+        embed.set_author(name=fj["author"])
+        await ctx.send(embed=embed)
 
     @commands.command(description="Find details about a music")
     async def music(self, ctx, *, music_name: str):
