@@ -20,7 +20,7 @@ def split_by_slice(inp: str, length: int) -> list:
         
     return result # we return the result
 
-def uniqe(input):
+def unique(input):
     output = []
     for x in input:
         if x not in output:
@@ -43,7 +43,7 @@ class Data(commands.Cog):
                 description=fj["lyrics"][:2000],
                 url = list(fj["links"].values())[0]
                 )
-        if fj["lyrics"] > 2000:
+        if len(fj["lyrics"]) > 2000:
             for slice in split_by_slice(fj["lyrics"][2000:], 1024):
                 embed.add_field(name="‌", value=slice, inline=False)
         embed.set_thumbnail(url=list(fj["thumbnail"].values())[0])
