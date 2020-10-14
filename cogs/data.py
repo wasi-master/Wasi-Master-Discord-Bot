@@ -34,7 +34,7 @@ class Data(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=["lc"])
-    async def lyrics(self, ctx, song_name: str):
+    async def lyrics(self, ctx, *, song_name: str):
         song_name = quote(song_name)
         async with self.bot.session.get(f"https://some-random-api.ml/lyrics?title={song_name}") as cs:
             fj = await cs.json()
