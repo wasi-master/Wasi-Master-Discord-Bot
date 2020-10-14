@@ -78,7 +78,7 @@ class Animals(commands.Cog):
             embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
         )
 
-    @commands.command(aliases=["bird"], description="Shows random cute dog pictures :)")
+    @commands.command(aliases=["birb"], description="Shows random cute dog pictures :)")
     async def bird(
         self,
         ctx,
