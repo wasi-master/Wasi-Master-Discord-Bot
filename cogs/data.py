@@ -7,6 +7,19 @@ from urllib.parse import quote
 
 from discord.ext.commands import BucketType
 
+
+def split_by_slice(inp: str, length: int) -> list:
+    size = length # renaming the variable
+    result = [] # declaring a list
+    
+    for index, item in enumerate(inp): # looping through the string
+        if size == length: # checking if we already reached the limit
+            size = 0 # we reset the limit
+            result.append(inp[index:index+length]) # we cut the string based on the limit
+        size += 1 # we increase the size
+        
+    return result # we return the result
+
 def uniqe(input):
     output = []
     for x in input:
@@ -27,9 +40,12 @@ class Data(commands.Cog):
             fj = await cs.json()
         embed = discord.Embed(
                 title=fj["title"],
-                description=fj["lyrics"],
+                description=fj["lyrics"][:2000],
                 url = list(fj["links"].values())[0]
                 )
+        if fj["lyrics"] > 2000:
+            for slice in split_by_slice(fj["lyrics"][2000:], 1024):
+                embed.add_field(name="‌", value=slice, inline=False)
         embed.set_thumbnail(url=list(fj["thumbnail"].values())[0])
         embed.set_author(name=fj["author"])
         await ctx.send(embed=embed)
