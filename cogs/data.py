@@ -40,7 +40,7 @@ class Data(commands.Cog):
         embed.add_field(name="Type", value=", ".join(fj["type"]))
         embed.add_field(name="Abilities", value=", ".join(fj["abilities"]))
         embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n    Male: {fj['gender'][0][:-5]}\n    Female:{fj['gender'][1][-7]}")
-        embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {fj['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}")
+        embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {stats['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}")
         embed.add_field(name="Evoloution", value="\n".join(fj["family"]["evolutionLine"]).replace(fj["family"]["evolutionLine"][fj["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["evolutionStage"]-1]}**'))
         embed.set_thumbnail(url=fj["sprites"]["animated"])
         await ctx.send(embed=embed)
