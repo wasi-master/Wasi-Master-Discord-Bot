@@ -47,7 +47,7 @@ class Animals(commands.Cog):
             fj = await cs.json()
         img_url = fj["link"]
         await ctx.send(
-            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+            embed=discord.Embed(title="Heres a panda picture").set_image(url=img_url)
         )
 
     @commands.command(description="Shows random cute dog pictures :)")
@@ -61,10 +61,10 @@ class Animals(commands.Cog):
             fj = await cs.json()
         img_url = fj["link"]
         await ctx.send(
-            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+            embed=discord.Embed(title="Heres a red panda picture").set_image(url=img_url)
         )
 
-    @commands.command(description="Shows random cute dog pictures :)")
+    @commands.command(description="Shows random cute koala pictures :)")
     async def koala(
         self,
         ctx,
@@ -75,10 +75,10 @@ class Animals(commands.Cog):
             fj = await cs.json()
         img_url = fj["link"]
         await ctx.send(
-            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+            embed=discord.Embed(title="Heres a koala picture").set_image(url=img_url)
         )
 
-    @commands.command(aliases=["birb"], description="Shows random cute dog pictures :)")
+    @commands.command(aliases=["birb"], description="Shows random cute bird pictures :)")
     async def bird(
         self,
         ctx,
@@ -89,10 +89,10 @@ class Animals(commands.Cog):
             fj = await cs.json()
         img_url = fj["link"]
         await ctx.send(
-            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+            embed=discord.Embed(title="Heres a bird picture").set_image(url=img_url)
         )
 
-    @commands.command(description="Shows random cute dog pictures :)")
+    @commands.command(description="Shows random cute racoon pictures :)")
     async def racoon(
         self,
         ctx,
@@ -103,10 +103,10 @@ class Animals(commands.Cog):
             fj = await cs.json()
         img_url = fj["link"]
         await ctx.send(
-            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+            embed=discord.Embed(title="Heres a racoon picture").set_image(url=img_url)
         )
 
-    @commands.command(description="Shows random cute dog pictures :)")
+    @commands.command(description="Shows random cute kangaroo pictures :)")
     async def kangaroo(
         self,
         ctx,
@@ -117,7 +117,7 @@ class Animals(commands.Cog):
             fj = await cs.json()
         img_url = fj["link"]
         await ctx.send(
-            embed=discord.Embed(title="Heres a dog picture").set_image(url=img_url)
+            embed=discord.Embed(title="Heres a kangaroo picture").set_image(url=img_url)
         )
 
     @commands.command(description="Shows random cute fox pictures :)")
