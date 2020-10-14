@@ -7,6 +7,13 @@ from urllib.parse import quote
 
 from discord.ext.commands import BucketType
 
+def uniqe(input):
+    output = []
+    for x in input:
+        if x not in output:
+            output.append(x)
+    return output
+
 class Data(commands.Cog):
     """Commands to get some data
     """
@@ -39,9 +46,9 @@ class Data(commands.Cog):
             )
         embed.add_field(name="Type", value=", ".join(fj["type"]))
         embed.add_field(name="Abilities", value=", ".join(fj["abilities"]))
-        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n    Male: {fj['gender'][0][:-5]}\n    Female:{fj['gender'][1][:-7]}", inline=False)
+        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n        Male: {fj['gender'][0][:-5]}\n        Female:{fj['gender'][1][:-7]}", inline=False)
         embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {stats['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}",inline=False)
-        embed.add_field(name="Evoloution", value="\n".join(set(fj["family"]["evolutionLine"])).replace(fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1]}**'), inline=False)
+        embed.add_field(name="Evoloution", value="\n".join(unique(fj["family"]["evolutionLine"])).replace(fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1]}**'), inline=False)
         embed.set_thumbnail(url=fj["sprites"]["animated"])
         await ctx.send(embed=embed)
 
