@@ -39,7 +39,7 @@ class Data(commands.Cog):
             )
         embed.add_field(name="Type", value=", ".join(fj["type"]))
         embed.add_field(name="Abilities", value=", ".join(fj["abilities"]))
-        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n    Male: {fj['gender']['male']}\n    Female:{fj['gender']['female'}")
+        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n    Male: {fj['gender']['male']}\n    Female:{fj['gender']['female']}")
         embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {fj['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}")
         embed.add_field(name="Evoloution", value="\n".join(fj["family"]["evolutionLine"]).replace(fj["family"]["evolutionLine"][fj["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["evolutionStage"]-1]}**'))
         embed.set_thumbnail(url=fj["sprites"]["animated"])
@@ -212,7 +212,7 @@ class Data(commands.Cog):
             fj = json.loads(await r.text())
         if not fj["cod"] == "404":
             embed = discord.Embed(
-                title=fj["pokemon"]["name"],
+                title=fj["name"],
                 description=f'**{fj["weather"][0]["main"]}**\n{fj["weather"][0]["description"]}',
                 color=0x2F3136,
             )
