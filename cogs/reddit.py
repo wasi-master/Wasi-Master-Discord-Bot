@@ -38,21 +38,17 @@ class Reddit(commands.Cog):
             js = await cs.json()
         data = js["data"]["children"]
         post = random.choice(data)["data"]
-        dv = post['ups']*(1-post['upvote_ratio'])
+        dv = round(post['ups']*(1-post['upvote_ratio']))
         embed = discord.Embed(
             title = post["title"],
-            description = f":white_check_mark: Score {post['score']}\n:thumbsup: Upvotes: ~{post['ups'] - dv}\n:thumbsdown: Downvotes: ~{dv}",
+            description = f":white_check_mark: Score {post['score']}\n:thumbsup: Upvotes: ~ {round(post['ups'] - dv)}\n:thumbsdown: Downvotes: ~ {dv}",
             timestamp = datetime.utcfromtimestamp(post["created"]),
             url = base + post["permalink"]
         )
         try:
-            embed.set_image(
-                url=post["preview"]
-                    ["images"][0]
-                    ["source"]["url"]
-                )
-        except:
-            pass
+            embed.set_image(url=post["preview"]["images"][0]["source"]["url"])
+        except Exception as e:
+            raise e
         await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Reddit(bot))
