@@ -42,7 +42,7 @@ class Reddit(commands.Cog):
         embed = discord.Embed(
             title = post["title"],
             description = f":white_check_mark: Score {post['score']}\n:thumbsup: Upvotes: ~{post['ups'] - dv}\n:thumbsdown: Downvotes: ~{dv}",
-            timestamp = datetime.utcfromtimestamp(post["created"])
+            timestamp = datetime.utcfromtimestamp(post["created"]),
             url = base + post["permalink"]
         )
         try:
