@@ -49,8 +49,8 @@ class Reddit(commands.Cog):
                 ["images"][0]
                 ["source"]["url"]
                 )
-        except:
-            pass
+        except Exception as e:
+            raise e
         await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Reddit(bot))
