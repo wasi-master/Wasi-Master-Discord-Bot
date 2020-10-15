@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from datetime import datetime
 import random
+import json
+
 
 class Reddit(commands.Cog):
     """Needs to be worked upon
@@ -48,7 +50,7 @@ class Reddit(commands.Cog):
         try:
             embed.set_image(url=post["preview"]["images"][0]["source"]["url"])
         except Exception as e:
-            raise e
+            await ctx.send("```json\n" + json.dumps(post, indent=4) + "```")
         await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Reddit(bot))
