@@ -36,7 +36,7 @@ class Reddit(commands.Cog):
             return
         async with self.bot.session.get(url, allow_redirects=True) as cs:
             js = await cs.json()
-        data = cs["data"]["children"]
+        data = js["data"]["children"]
         post = random.choice(data)["data"]
         embed = discord.Embed(
             title=post["title"],
