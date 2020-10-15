@@ -29,7 +29,7 @@ class Reddit(commands.Cog):
             url = f"{base}{subreddit}.json"
         elif post_filter == "hot":
             url = f"{base}{subreddit}/hot.json"
-        elif post_filter == "top"
+        elif post_filter == "top":
             url = f"{base}{subreddit}/top.json"
         else:
             await ctx.send("Invalid post filter")
