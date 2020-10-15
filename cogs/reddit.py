@@ -40,9 +40,10 @@ class Reddit(commands.Cog):
         post = random.choice(data)["data"]
         dv = post['ups']*(1-post['upvote_ratio'])
         embed = discord.Embed(
-            title=post["title"],
-            description=f":white_check_mark: Score {post['score']}\n:thumbsup: Upvotes: ~{post['ups'] - dvs}\n:thumbsdown: Downvotes: ~{dv}",
-            timetsamp=datetime.utcfromtimestamp(post["created"])
+            title = post["title"],
+            description = f":white_check_mark: Score {post['score']}\n:thumbsup: Upvotes: ~{post['ups'] - dv}\n:thumbsdown: Downvotes: ~{dv}",
+            timestamp = datetime.utcfromtimestamp(post["created"])
+            url = base + post["permalink"]
         )
         try:
             embed.set_image(
