@@ -12,7 +12,7 @@ def split_by_slice(inp: str, length: int) -> list:
     size = length # renaming the variable
     result = [] # declaring a list
     
-    for index, item in enumerate(inp): # looping through the string
+    for index, item in enumerate(inp.splitlines()): # looping through the string
         if size == length: # checking if we already reached the limit
             size = 0 # we reset the limit
             result.append(inp[index:index+length]) # we cut the string based on the limit
@@ -38,13 +38,14 @@ class Data(commands.Cog):
         song_name = quote(song_name)
         async with self.bot.session.get(f"https://some-random-api.ml/lyrics?title={song_name}") as cs:
             fj = await cs.json()
+        lyrics = split_by_slice(fj["lyrics"], 30)
         embed = discord.Embed(
                 title=fj["title"],
-                description=fj["lyrics"][:2000],
+                description=lyrics[0],
                 url = list(fj["links"].values())[0]
                 )
-        if len(fj["lyrics"]) > 2000:
-            for slice in split_by_slice(fj["lyrics"][2000:], 1024):
+        if len(lyrics) > 1:
+            for slice in lyrics:
                 embed.add_field(name="‌", value=slice, inline=False)
         embed.set_thumbnail(url=list(fj["thumbnail"].values())[0])
         embed.set_author(name=fj["author"])
@@ -62,7 +63,15 @@ class Data(commands.Cog):
             )
         embed.add_field(name="Type", value=", ".join(fj["type"]))
         embed.add_field(name="Abilities", value=", ".join(fj["abilities"]))
-        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n        Male: {fj['gender'][0][:-5]}\n        Female:{fj['gender'][1][:-7]}", inline=False)
+        try:
+            male = fj['gender'][0][:-5]
+        except IndexError:
+            male = "0%"
+        try:
+            female = fj['gender'][1][:-7]
+        except IndexError:
+            female = "0%"
+        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n        Male: {male}\n        Female:{female}", inline=False)
         embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {stats['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}",inline=False)
         embed.add_field(name="Evoloution", value="\n".join(unique(fj["family"]["evolutionLine"])).replace(fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1]}**'), inline=False)
         embed.set_thumbnail(url=fj["sprites"]["animated"])
