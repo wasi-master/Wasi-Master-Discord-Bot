@@ -45,12 +45,12 @@ class Reddit(commands.Cog):
         )
         try:
             embed.set_image(
-                post["preview"]
-                ["images"][0]
-                ["source"]["url"]
+                url=post["preview"]
+                    ["images"][0]
+                    ["source"]["url"]
                 )
-        except Exception as e:
-            raise e
+        except:
+            pass
         await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Reddit(bot))
