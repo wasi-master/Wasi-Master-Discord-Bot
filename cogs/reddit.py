@@ -51,5 +51,6 @@ class Reddit(commands.Cog):
                 )
         except:
             pass
+        await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Reddit(bot))
