@@ -38,9 +38,10 @@ class Reddit(commands.Cog):
             js = await cs.json()
         data = js["data"]["children"]
         post = random.choice(data)["data"]
+        dv = post['ups']*(1-post['upvote_ratio'])
         embed = discord.Embed(
             title=post["title"],
-            description=f":thumbsup: Upvotes: {post['ups']}\n:thumbsdown: Downvotes: {post['downs']}",
+            description=f":white_check_mark: Score {post['score']}\n:thumbsup: Upvotes: ~{post['ups'] - dvs}\n:thumbsdown: Downvotes: ~{dv}",
             timetsamp=datetime.utcfromtimestamp(post["created"])
         )
         try:
