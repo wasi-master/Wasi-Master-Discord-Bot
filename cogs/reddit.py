@@ -40,7 +40,7 @@ class Reddit(commands.Cog):
         post = random.choice(data)["data"]
         embed = discord.Embed(
             title=post["title"],
-            description=f":thumbsup: Upvotes: {post['ups']}\n:thumbsdown: Downvotes: {post['downs']}"
+            description=f":thumbsup: Upvotes: {post['ups']}\n:thumbsdown: Downvotes: {post['downs']}",
             timetsamp=datetime.utcfromtimestamp(post["created"])
         )
         try:
