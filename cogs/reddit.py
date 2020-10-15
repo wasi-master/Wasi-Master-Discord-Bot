@@ -27,7 +27,7 @@ class Reddit(commands.Cog):
         base = "https://www.reddit.com/"
         if post_filter is None:
             url = f"{base}{subreddit}.json"
-        elif post_filter == "hot:
+        elif post_filter == "hot":
             url = f"{base}{subreddit}/hot.json"
         elif post_filter == "top"
             url = f"{base}{subreddit}/top.json"
