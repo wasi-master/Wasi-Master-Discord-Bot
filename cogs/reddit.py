@@ -34,7 +34,7 @@ class Reddit(commands.Cog):
         else:
             await ctx.send("Invalid post filter")
             return
-        async with self.bot.session.get("url"  allow_redirects=True) as cs:
+        async with self.bot.session.get(url, allow_redirects=True) as cs:
             js = await cs.json()
         data = cs["data"]["children"]
         post = random.choice(data)["data"]
