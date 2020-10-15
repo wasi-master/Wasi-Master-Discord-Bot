@@ -63,17 +63,16 @@ class Data(commands.Cog):
             )
         embed.add_field(name="Type", value=", ".join(fj["type"]))
         embed.add_field(name="Abilities", value=", ".join(fj["abilities"]))
-        try:
-            male = fj['gender'][0][:-5]
-        except IndexError:
-            male = "0%"
-        try:
-            female = fj['gender'][1][:-7]
-        except IndexError:
-            female = "0%"
-        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\nGender Ratio:\n        Male: {male}\n        Female:{female}", inline=False)
+        if not fj["gender"][0] == "Genderless":
+            gender = f"Gender Ratio:\n        Male: {fj['gender'][0][:-5]}\n        Female:{fj['gender'][1][:-7]}"
+        else:
+            gender = f"Gender:\n        Genderless"
+        embed.add_field(name="Stats", value=f"Height: {fj['height']}\nWeight: {fj['weight']}\n{gender}", inline=False)
         embed.add_field(name="More Stats", value=f"HP: {stats['hp']}\nAttack: {stats['attack']}\nDefense: {stats['defense']}\nSpecial Attack: {stats['sp_atk']}\nSpecial Defense: {stats['sp_def']}\nSpeed: {stats['speed']}\n**Total**: {stats['total']}",inline=False)
-        embed.add_field(name="Evoloution", value="\n".join(unique(fj["family"]["evolutionLine"])).replace(fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1]}**'), inline=False)
+        try:
+            embed.add_field(name="Evoloution", value="\n".join(unique(fj["family"]["evolutionLine"])).replace(fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1], f'**{fj["family"]["evolutionLine"][fj["family"]["evolutionStage"]-1]}**'), inline=False)
+        except:
+            pass
         embed.set_thumbnail(url=fj["sprites"]["animated"])
         await ctx.send(embed=embed)
 
