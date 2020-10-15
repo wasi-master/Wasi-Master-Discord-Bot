@@ -49,8 +49,8 @@ class Reddit(commands.Cog):
         )
         try:
             embed.set_image(url=post["preview"]["images"][0]["source"]["url"])
-        except Exception as e:
-            await ctx.send("```json\n" + json.dumps(post, indent=4) + "```")
-        await ctx.send(embed=embed)
+        except Exception:
+            pass
+        await ctx.send(base + post["permalink"], embed=embed)
 def setup(bot):
     bot.add_cog(Reddit(bot))
