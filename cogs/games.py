@@ -15,13 +15,15 @@ class Games(commands.Cog):
     async def guessthenumber(self, ctx, number_range: str):
         if len(number_range.split(",")) == 1:
             start_range = 1
-            end_range = int(number_range)
+            end_range = int(number_range.strip())
         elif len(number_range.split(",")) == 2:
-            start_range, end_range = [int(i) for i in number_range.split(",")]
+            start_range, end_range = [int(i.strip()) for i in number_range.split(",")]
         else:
             await ctx.send("Invalid range")
+            return
         if not end_range > start_range:
-             await ctx.send("End is smaller than start")
+            await ctx.send("End is smaller than start")
+            return
         # start_range, end_range = abs(start_range), abs(end_range)
         num = random.randint(start_range, end_range)
         await ctx.send(f"Okay, I picked a number between {start_range} and {end_range}, now try to guess what it is")
@@ -41,7 +43,7 @@ class Games(commands.Cog):
                         await msg.delete()
                         await msg.author.send(f"You sent {guess} which is lower than the smallest nunber possible ({start_range})")
                     if guess == num:
-                        await ctx.send(f"{msg.author.mention}, You nailed it, the number was {num}")
+                        await ctx.send(f"{msg.author.mention}, You nailed it, the number was {num}\n\n Tries: {tries}")
                         await ctx.send(":party::party::party::party::party:")
                         return
                     else:
