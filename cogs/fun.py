@@ -7,6 +7,7 @@ from discord.ext import commands
 import async_cleverbot as ac
 import json
 
+from urllib.parse import quote
 
 class Fun(commands.Cog):
     """Fun commands :)
@@ -252,21 +253,33 @@ class Fun(commands.Cog):
     @commands.command(
         name="chatbot", aliases=["cb"], description=" Talk with a chat bot"
     )
-    async def cleverbot_(self, ctx, *, query: str):
-        """Ask Cleverbot a question!"""
-        try:
-            async with ctx.typing():
-                r = await ctx.bot.cleverbot.ask(
-                    query, ctx.author.id
-                )  # the ID is for context
-        except ac.InvalidKey:
-            return await ctx.send(
-                "An error has occurred. The API key provided was not valid."
+    async def chatbot(self, ctx):
+        """Talk to AI Chatbot"""
+        def check(m):
+            return m.author == ctx.author.id and m.channel.id == ctx.channel.id
+        e = discord.Embed(
+            title="Session has started",
+            description="Say anything you like and chatbot will respond, may take up to 5 seconds for it to respond, say `wm,chatbot cancel` or `wm,cb cancel` to cancel"
+        )
+        e.set_footer(text="Timeout in 60 secs")
+        await ctx.send(embed=e)
+        while True:
+            try:
+                msg = await self.bot.wait_for("message", timeout=60, check=check)
+            except asyncio.TimeoutError:
+                await ctx.send(f"{ctx.author.mention}, what about the chatbot, you didn\'t respond'")
+                return
+            base = "https://some-random-api.ml/chatbot"
+            content = quote(msg.content)
+            url = f"{base}?message={content}&key=kGZctCjadvtFTM0nBxhpSGCbr"
+            async with self.bot.session.get(url) as r:
+                js = await r.json()
+            e = discord.Embed(
+            title="AI Responded",
+            description=js["response"]
             )
-        except ac.APIDown:
-            return await ctx.send("I have to sleep sometimes. Please ask me later!")
-        else:
-            await ctx.send("{}, {}".format(ctx.author.mention, r.text))
+            e.set_footer(text="Timeout in 60 secs")
+            await ctx.send(ctx.author.mention, embed=e)
 
     @commands.command(
         name="penis", aliases=["pp"], description="See someone's penis size (random)"
