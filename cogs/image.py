@@ -72,7 +72,7 @@ class Image(commands.Cog):
         if imposter is None:
             imposter = True
         else:
-            if imposter.lower() == "false" or imposter.lower() == "f:
+            if imposter.lower() == "false" or imposter.lower() == "f":
                 imposter = False
             else:
                 imposter = True
