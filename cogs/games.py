@@ -45,6 +45,7 @@ class Games(commands.Cog):
                         await msg.delete()
                         await msg.author.send(f"You sent {guess} which is lower than the smallest nunber possible ({start_range})")
                     if guess == num:
+                        await msg.pin(reason="Won the guess the number game")
                         await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
                         embed = discord.Embed(
                             title=f":tada: {msg.author.name} Won the game",
