@@ -40,10 +40,10 @@ class Games(commands.Cog):
                     guess = int(msg.content)
                     if guess > end_range:
                         await msg.delete()
-                        await msg.author.send(f"You sent {guess} which is higher than the highest nunber possible ({end_range})")
+                        await msg.author.send(f"You sent {guess} which is higher than the highest number possible (**{end_range}**)")
                     elif guess < start_range:
                         await msg.delete()
-                        await msg.author.send(f"You sent {guess} which is lower than the smallest nunber possible ({start_range})")
+                        await msg.author.send(f"You sent {guess} which is lower than the smallest number possible (**{start_range}**)")
                     if guess == num:
                         await msg.pin(reason="Won the guess the number game")
                         await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
@@ -93,7 +93,7 @@ class Games(commands.Cog):
                         
                     else:
                         await msg.delete()
-                        await msg.author.send("You can't send that message there because a guess the number is going on there")
+                        await msg.author.send("You can't send that message there because a guess the number is going on there and **you're only allowed to send numbers** there")
             except asyncio.TimeoutError:
                 await ctx.send(embed=discord.Embed(title="Guess The Number Timed out", description=f"No one sent a message in thr last 15 minutes so I assume everyone left the game\n\nThe number was {num}"))
                 return
