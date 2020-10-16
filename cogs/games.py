@@ -13,7 +13,8 @@ class Games(commands.Cog):
     @commands.command(aliases=["gtn"])
     @commands.has_permissions(manage_messages=True)
     async def guessthenumber(self, ctx, number_range: str):
-        if len(number_range.split("-")) == 1:
+        if len(number_range.split("-")) == 1 and number_range.isdigit():
+            
             start_range = 1
             end_range = int(number_range.strip())
         elif len(number_range.split("-")) == 2:
@@ -28,12 +29,12 @@ class Games(commands.Cog):
         num = random.randint(start_range, end_range)
         await ctx.send(f"Okay, I picked a number between {start_range} and {end_range}, now try to guess what it is")
         await ctx.author.send(f"The number is ||{num}||\n\nDon\'t click on the spoiler if you want to participate")
-        allowed_words = ["end", "stop", "hint", "h", "reduce", "r", "change", "c"]
+        allowed_words = ["end", "stop", "cancel", "hint", "h"]
         tries = 0
         last_hint = 0
         while True:
             try:
-                msg = await self.bot.wait_for("message", check=lambda m: m.channel == ctx.channel and not m.author.bot, timeout=60)
+                msg = await self.bot.wait_for("message", check=lambda m: m.channel == ctx.channel and not m.author.bot, timeout=900)
                 if msg.content.isdigit():
                     guess = int(msg.content)
                     if guess > end_range:
@@ -52,7 +53,7 @@ class Games(commands.Cog):
                     if msg.content in allowed_words:
                         # if (not msg.author.permissions_in(ctx.channel).manage_guild) and (not msg.content in ("hint", "h"))
                             # await ctx.send(f"{msg.author.mention}, lYou can\'t do that")
-                        if msg.content in ("stop", "end"):
+                        if msg.content in ("stop", "end", "cancel"):
                             if msg.author.permissions_in(ctx.channel).manage_guild:
                                 await ctx.send("Okay stopped the guessing game :(")
                             else:
@@ -82,7 +83,8 @@ class Games(commands.Cog):
                         await msg.delete()
                         await msg.author.send("You can't send that message there because a guess the number is going on there")
             except asyncio.TimeoutError:
-                await ctx.send(embed=discord.Embed(title="Guess The Number Timed out", description=f"No one sent a message in thr last 60 seconds so I assume everyone left the game\n\nThe number was {num}"))
+                await ctx.send(embed=discord.Embed(title="Guess The Number Timed out", description=f"No one sent a message in thr last 15 minutes so I assume everyone left the game\n\nThe number was {num}"))
+                return
 
     @commands.command(aliases=["tod"], description="Truth Or Dare")
     async def truthordare(self, ctx, questype: str = "random"):
