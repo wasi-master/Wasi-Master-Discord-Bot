@@ -33,7 +33,7 @@ class Games(commands.Cog):
         last_hint = 0
         while True:
             try:
-                msg = await self.bot.wait_for("message", check=lambda m: m.channel == ctx.channel, timeout=60)
+                msg = await self.bot.wait_for("message", check=lambda m: m.channel == ctx.channel and not m.author.bot, timeout=60)
                 if msg.content.isdigit():
                     guess = int(msg.content)
                     if guess > end_range:
@@ -44,7 +44,7 @@ class Games(commands.Cog):
                         await msg.author.send(f"You sent {guess} which is lower than the smallest nunber possible ({start_range})")
                     if guess == num:
                         await ctx.send(f"{msg.author.mention}, You nailed it, the number was {num}\n\n Tries: {tries}")
-                        await ctx.send(":party::party::party::party::party:")
+                        await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
                         return
                     else:
                         tries += 1
