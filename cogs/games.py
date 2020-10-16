@@ -51,7 +51,7 @@ class Games(commands.Cog):
                         await msg.pin(reason="Won the guess the number game")
                         await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
                         embed = discord.Embed(
-                            title=f":tada: {msg.author.name} Won the game",
+                            title=f":partying_face: {msg.author.name} Won the game",
                             description=f":tada: congrats, {ctx.author.name} "
                         )
                         d = dict(Counter(users))
@@ -61,6 +61,7 @@ class Games(commands.Cog):
                         embed.add_field(name="Tries", value=parti)
                         embed.add_field(name="Total Tries", value=str(tries))
                         await ctx.send(msg.author.mention, embed=embed)
+                        return
                     else:
                         tries += 1
                         users.append(msg.author.id)
@@ -71,12 +72,13 @@ class Games(commands.Cog):
                         if msg.content in ("stop", "end", "cancel"):
                             if msg.author.permissions_in(ctx.channel).manage_guild:
                                 await ctx.send("Okay stopped the guessing game :(")
+                                return
                             else:
                                 await ctx.send(f"{msg.author.mention}, You don't have the permissions required to stop the guessing game")
                         elif msg.content in ("hint", "h"):
-                            if not last_hint == 0:
+                            if last_hint == 0:
                                 last_hint = tries
-                            if not (tries - last_hint) < 5:
+                            if not (tries - last_hint) < 3:
                                 hint_num = random.randint(1, 2)
                                 if hint_num == 1:
                                     if not len(str(start_range)) == len(str(end_range)):
