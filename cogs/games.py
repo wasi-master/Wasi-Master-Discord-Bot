@@ -13,11 +13,11 @@ class Games(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_messages=True)
     async def guessthenumber(self, ctx, number_range: str):
-        if len(number_range.split(",")) == 1:
+        if len(number_range.split("-")) == 1:
             start_range = 1
             end_range = int(number_range.strip())
-        elif len(number_range.split(",")) == 2:
-            start_range, end_range = [int(i.strip()) for i in number_range.split(",")]
+        elif len(number_range.split("-")) == 2:
+            start_range, end_range = [int(i.strip()) for i in number_range.split("-")]
         else:
             await ctx.send("Invalid range")
             return
