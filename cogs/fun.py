@@ -3,6 +3,7 @@ import random
 import asyncio
 import unicodedata
 import html
+import json
 from discord.ext import commands
 import async_cleverbot as ac
 import json
@@ -267,7 +268,7 @@ class Fun(commands.Cog):
             try:
                 msg = await self.bot.wait_for("message", timeout=60, check=check)
             except asyncio.TimeoutError:
-                await ctx.send(f"{ctx.author.mention}, what about the chatbot, you didn\'t respond'")
+                await ctx.send(f"{ctx.author.mention}, what about the chatbot, you didn\'t respond")
                 return
             if msg.content == f"{ctx.prefix}chatbot cancel" or msg.content == f"{ctx.prefix}cb cancel":
                 await ctx.send("Okay, stopped")
@@ -277,7 +278,11 @@ class Fun(commands.Cog):
             content = quote(msg.content)
             url = f"{base}?message={content}&key=kGZctCjadvtFTM0nBxhpSGCbr"
             async with self.bot.session.get(url) as r:
-                js = await r.json()
+                try:
+                    js = json.loads(r)
+                except:
+                    await ctx.send("{ctx.author.mention}, Error")
+                    return
             e = discord.Embed(
             title="AI Responded",
             description=js["response"]
