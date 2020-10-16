@@ -6,6 +6,7 @@ from  discord.ext import commands
 from  typing import Union, Optional
 from  discord.ext.commands import BucketType
 from  io import BytesIO
+from  urllib.parse import quote
 
 class Image(commands.Cog):
     """Image releated commands
@@ -83,6 +84,7 @@ class Image(commands.Cog):
         if not color in ["black", "blue", "brown", "cyan", "darkgreen", "lime", "orange", "pink", "purple", "red", "white", "yellow"]:
             await ctx.send("Invalid color")
             return
+        person = quote(person)
         url = f"https://vacefron.nl/api/ejected?name={person}&impostor={imposter}&crewmate={color}"
         async with self.bot.session.get(url) as j:
             r = await j.read()
