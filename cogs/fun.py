@@ -256,10 +256,10 @@ class Fun(commands.Cog):
     async def chatbot(self, ctx):
         """Talk to AI Chatbot"""
         def check(m):
-            return m.author == ctx.author.id and m.channel.id == ctx.channel.id
+            return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
         e = discord.Embed(
             title="Session has started",
-            description="Say anything you like and chatbot will respond, may take up to 5 seconds for it to respond, say `wm,chatbot cancel` or `wm,cb cancel` to cancel"
+            description=f"Say anything you like and chatbot will respond, may take up to 5 seconds for it to respond, say `{ctx.prefix}chatbot cancel` or `{ctx.prefix}cb cancel` to cancel"
         )
         e.set_footer(text="Timeout in 60 secs")
         await ctx.send(embed=e)
@@ -269,6 +269,10 @@ class Fun(commands.Cog):
             except asyncio.TimeoutError:
                 await ctx.send(f"{ctx.author.mention}, what about the chatbot, you didn\'t respond'")
                 return
+            if msg.content == f"{ctx.prefix}chatbot cancel" or msg.content == f"{ctx.prefix}cb cancel":
+                await ctx.send("Okay, stopped")
+                return
+            
             base = "https://some-random-api.ml/chatbot"
             content = quote(msg.content)
             url = f"{base}?message={content}&key=kGZctCjadvtFTM0nBxhpSGCbr"
