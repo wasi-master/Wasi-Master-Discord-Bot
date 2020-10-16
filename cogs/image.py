@@ -70,24 +70,25 @@ class Image(commands.Cog):
         another example would ne `eject "Donald Trump" red` to make a image with the name being Donald Trump
         """
         if imposter is None:
-            imposter = True
+            imposter = "true"
         else:
             if imposter.lower() == "false" or imposter.lower() == "f":
-                imposter = False
+                imposter = "false"
             else:
-                imposter = True
-        color = color.lower()
+                imposter = "true"
+        color = color.lower().replace("green", "darkgreen").replace("dark green", "darkgreen")
         if isinstance(person, discord.User):
             person = person.display_name
-        try:
-            r = await self.bot.vacefron.ejected(person, color, imposter)
-        except Exception as e:
-            await ctx.send(str(e))
+        if not color in ["black", "blue", "brown", "cyan", "darkgreen", "lime", "orange", "pink", "purple", "red", "white", "yellow"]:
+            await ctx.send("Invalid color")
             return
+        url = f"https://vacefron.nl/api/ejected?name={person}&impostor={imposter}&crewmate={color}"
+        async with self.bot.session.get(url) as j:
+            r = await j.read()
         await ctx.send(
             f"{ctx.author} asked for this",
             file=discord.File(
-                await r.read(bytesio=True),
+                r,
                 filename="Ejected.png")
                 )
 
