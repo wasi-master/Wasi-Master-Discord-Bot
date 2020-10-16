@@ -61,7 +61,7 @@ class Image(commands.Cog):
     
     
     @commands.command(aliases=["eject", "ejection"])
-    async def ejected(self, ctx, person: Union[discord.User, str], color="random", imposter=False):
+    async def ejected(self, ctx, person: Union[discord.User, str], color="random", imposter: str = None):
         """Makes a image of ejecting the mentioned user or the name passed
         person can be a user (id, name, name#discriminatir, @mention) or a string
         you can provide a color for the crewmate, defaults to random
@@ -69,11 +69,18 @@ class Image(commands.Cog):
         example would be `eject @Wasi Master red` to make a ejection image containing Wasi Master and the crewmate color being red
         another example would ne `eject "Donald Trump" red` to make a image with the name being Donald Trump
         """
+        if imposter is None:
+            imposter = True
+        else:
+            if imposter.lower() == "false" or imposter.lower() == "f:
+                imposter = False
+            else:
+                imposter = True
         color = color.lower()
         if isinstance(person, discord.User):
             person = person.display_name
         try:
-            r = await self.bot.vacefron.ejected(person, color, bool(imposter))
+            r = await self.bot.vacefron.ejected(person, color, imposter)
         except Exception as e:
             await ctx.send(str(e))
             return
