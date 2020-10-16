@@ -32,6 +32,7 @@ class Games(commands.Cog):
         allowed_words = ["end", "stop", "cancel", "hint", "h"]
         tries = 0
         last_hint = 0
+        users = []
         while True:
             try:
                 msg = await self.bot.wait_for("message", check=lambda m: m.channel == ctx.channel and not m.author.bot, timeout=900)
@@ -44,11 +45,21 @@ class Games(commands.Cog):
                         await msg.delete()
                         await msg.author.send(f"You sent {guess} which is lower than the smallest nunber possible ({start_range})")
                     if guess == num:
-                        await ctx.send(f"{msg.author.mention}, You nailed it, the number was {num}\n\n Tries: {tries}")
                         await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
-                        return
+                        embed = discord.Embed(
+                            title=f":tada: {msg.author.name} Won the game",
+                            description=f":tada: congrats, {ctx.author.name} "
+                        )
+                        d = dict(Counter(users))
+                        parti = "\n".join(
+                            [f"{ctx.guild.get_member(id).display_name} - {d[id]}" for id in d]
+                            )
+                        embed.add_field(name="Tries", value=parti)
+                        embed.add_field(name="Total Tries", value=str(tries))
+                        await ctx.send(msg.author.mention, embed=embed)
                     else:
                         tries += 1
+                        users.append(msg.author.id)
                 else:
                     if msg.content in allowed_words:
                         # if (not msg.author.permissions_in(ctx.channel).manage_guild) and (not msg.content in ("hint", "h"))
