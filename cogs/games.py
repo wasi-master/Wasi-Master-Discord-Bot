@@ -1,7 +1,7 @@
 import json
 import discord
 from discord.ext import commands
-
+import random, asyncio
 
 class Games(commands.Cog):
     """Game Releated commands (most games have their own separate cog)
@@ -10,7 +10,7 @@ class Games(commands.Cog):
         self.bot = bot
 
 
-    @commands.command()
+    @commands.command(aliases=["gtn"])
     @commands.has_permissions(manage_messages=True)
     async def guessthenumber(self, ctx, number_range: str):
         if len(number_range.split("-")) == 1:
