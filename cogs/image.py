@@ -5,7 +5,7 @@ import json
 from  discord.ext import commands
 from  typing import Union, Optional
 from  discord.ext.commands import BucketType
-from  io import bytesIO
+from  io import BytesIO
 
 class Image(commands.Cog):
     """Image releated commands
