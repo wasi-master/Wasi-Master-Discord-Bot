@@ -99,9 +99,9 @@ class Games(commands.Cog):
                         
                     else:
                         await msg.delete()
-                        await msg.author.send("You can't send that message there because a guess the number is going on there and **you're only allowed to send numbers** there")
+                        await msg.author.send("**you're only allowed to send numbers** there")
             except asyncio.TimeoutError:
-                await ctx.send(embed=discord.Embed(title="Guess The Number Timed out", description=f"No one sent a message in thr last 15 minutes so I assume everyone left the game\n\nThe number was {num}"))
+                await ctx.send(embed=discord.Embed(color=discord.Colour.red(), title="Guess The Number Timed out", description=f"No one sent a message in thr last 15 minutes so I assume everyone left the game\n\nThe number was {num}"))
                 return
 
     @commands.command(aliases=["tod"], description="Truth Or Dare")
