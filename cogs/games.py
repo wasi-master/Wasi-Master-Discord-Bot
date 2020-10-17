@@ -52,7 +52,7 @@ class Games(commands.Cog):
                         await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
                         embed = discord.Embed(
                             title=f":partying_face: {msg.author.name} Won the game",
-                            description=f":tada: congrats, {ctx.author.name} "
+                            description=f":tada: Congrats, {msg.author.name}, the number was {num}"
                         )
                         d = dict(Counter(users))
                         parti = "\n".join(
