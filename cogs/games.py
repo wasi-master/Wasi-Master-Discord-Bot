@@ -48,6 +48,18 @@ class Games(commands.Cog):
                         await msg.delete()
                         await msg.author.send(f"You sent {guess} which is lower than the smallest number possible (**{start_range}**)")
                     if guess == num:
+                        try:
+                            await ctx.channel.edit(
+                            overwrites={
+                                ctx.guild.default_role: 
+                                    discord.PermissionOverwrite(
+                                        send_messages=False
+                                    )
+                            }
+                            )
+                        except discord.Forbidden:
+                            pass
+
                         await msg.pin(reason="Won the guess the number game")
                         await ctx.send(":partying_face::partying_face::partying_face::partying_face::partying_face:")
                         embed = discord.Embed(
