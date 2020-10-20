@@ -16,6 +16,30 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commmands.command(aliases=["bsm", "bsmap"])
+    @commands.cooldown(1, 2, BucketType.default)
+    async def brawlstarsmap(ctx, *, provided_map: str):
+        embed = discord.Embed()
+        maplist = provided_map.split(" ")
+        map = ""
+        for i in maplist:
+            preps = ["on", "the", "of"]
+            if not i.strip().lower() in preps:
+                map += " " + i.lower().capitalize()
+            else:
+                map += " " + i.lower()
+        map = map.strip().replace(" ", "-")
+        url = f"https://www.starlist.pro/assets/map/{map}.png"
+        # session = aiohttp.ClientSession()
+        async with self.bot.session.get(url) as response:
+            text = await response.text()
+        if "Not Found" in text:
+            embed.add_field(name="Map not found", value=f"The map `{map.replace('-', ' ')}` is not found")
+        else:
+            embed.set_image(url=url)
+        embed.title = map.replace('-', ' ')
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def groot(self, ctx):
         """Who... who are you?"""
