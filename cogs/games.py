@@ -30,6 +30,18 @@ class Games(commands.Cog):
             return
         # start_range, end_range = abs(start_range), abs(end_range)
         num = random.randint(start_range, end_range)
+        if not ctx.channel.overwrites_for(ctx.guild.default_role).send_messages:
+            try:
+                await ctx.channel.edit(
+                overwrites={
+                    ctx.guild.default_role: 
+                        discord.PermissionOverwrite(
+                            send_messages=True
+                        )
+                }
+                )
+            except discord.Forbidden:
+                await ctx.send("Send messages permission for \@everyone is denied")
         await ctx.send(f"Okay, I picked a number between {start_range} and {end_range}, now try to guess what it is")
         await ctx.author.send(f"The number is ||{num}||\n\nDon\'t click on the spoiler if you want to participate")
         allowed_words = ["end", "stop", "cancel", "hint", "h"]
