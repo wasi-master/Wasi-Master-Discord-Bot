@@ -16,7 +16,7 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commmands.command(aliases=["bsm", "bsmap"])
+    @commands.command(aliases=["bsm", "bsmap"])
     @commands.cooldown(1, 2, BucketType.default)
     async def brawlstarsmap(ctx, *, provided_map: str):
         embed = discord.Embed()
