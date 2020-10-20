@@ -218,7 +218,7 @@ class English(commands.Cog):
                 await ctx.send("Word not found")
                 return
             embed.add_field(name="Type", value=term["type"])
-            if not term["example"] is None:
+            if not (term["example"] is None or len(term["example"]) == 0):
                 embed.add_field(
                     name="Example",
                     value=term["example"].replace("<b>", "**").replace("</b>", "**"),
