@@ -210,9 +210,13 @@ class English(commands.Cog):
             #  await ctx.send(embed=embeds[0])
         elif len(fj) == 1:
             term = fj[0]
-            embed = discord.Embed(
-                title=word, description=term["defenition"], color=0x2F3136
-            )
+            try:
+                embed = discord.Embed(
+                    title=word, description=term["defenition"], color=0x2F3136
+                )
+            except:
+                await ctx.send("Word not found")
+                return
             embed.add_field(name="Type", value=term["type"])
             if not term["example"] is None:
                 embed.add_field(
