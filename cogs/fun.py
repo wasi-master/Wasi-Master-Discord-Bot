@@ -17,7 +17,7 @@ class Fun(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=["bsm", "bsmap"])
-    @commands.cooldown(1, 2, BucketType.default)
+    @commands.cooldown(1, 2, commands.BucketType.default)
     async def brawlstarsmap(ctx, *, provided_map: str):
         embed = discord.Embed()
         maplist = provided_map.split(" ")
