@@ -33,10 +33,10 @@ class Fun(commands.Cog):
         # session = aiohttp.ClientSession()
         async with self.bot.session.get(url) as response:
             text = await response.text()
-        if "Not Found" in text:
-            embed.add_field(name="Map not found", value=f"The map `{map.replace('-', ' ')}` is not found")
-        else:
-            embed.set_image(url=url)
+            if "Not Found" in text:
+                embed.add_field(name="Map not found", value=f"The map `{map.replace('-', ' ')}` is not found")
+            else:
+                embed.set_image(url=url)
         embed.title = map.replace('-', ' ')
         await ctx.send(embed=embed)
 
