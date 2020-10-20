@@ -251,7 +251,7 @@ async def on_command(
             usage,
         )
 
-
+@client.check
 async def bot_check(
     ctx,
 ):
