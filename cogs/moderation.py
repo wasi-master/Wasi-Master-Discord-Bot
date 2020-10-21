@@ -128,6 +128,7 @@ class Moderation(commands.Cog):
             await ctx.send("Please specify the amount of messages to delete")
 
     @commands.command()
+    @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, user: discord.Member, reason="No Reason Specified"):
         role = discord.utils.get(
             ctx.guild.roles, name="Muted"
