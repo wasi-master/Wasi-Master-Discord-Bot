@@ -203,158 +203,159 @@ class Owner(commands.Cog):
             return await ctx.send(
                 "**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad"
             )
-        fn_name = "_eval_expr"
-        cmd = cmd.rstrip("```").lstrip("```").lstrip("py")
-        cmd = cmd.replace(";", "\n").replace("; ", " \n")
-        # add a layer of indentation
-        cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
+        # fn_name = "_eval_expr"
+        # cmd = cmd.rstrip("```").lstrip("```").lstrip("py")
+        # cmd = cmd.replace(";", "\n").replace("; ", " \n")
+        # # add a layer of indentation
+        # cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
 
-        # wrap in async def body
-        body = f"async def {fn_name}():\n{cmd}"
+        # # wrap in async def body
+        # body = f"async def {fn_name}():\n{cmd}"
 
-        parsed = ast.parse(body)
-        body = parsed.body[0].body
+        # parsed = ast.parse(body)
+        # body = parsed.body[0].body
 
-        insert_returns(body)
+        # insert_returns(body)
 
-        env = {
-            "bot": ctx.bot,
-            "discord": discord,
-            "commands": commands,
-            "ctx": ctx,
-            "guild": ctx.guild,
-            "author": ctx.author,
-            "channel": ctx.channel,
-            "message": ctx.message,
-            "client": ctx.bot,
-            "__import__": __import__,
-            "progressbar": progressbar,
-            "split_by_slice": split_by_slice,
-            "convert_sec_to_min": convert_sec_to_min,
-        }
-        await ctx.message.add_reaction("\U0001f7e1")
+        # env = {
+        #     "bot": ctx.bot,
+        #     "discord": discord,
+        #     "commands": commands,
+        #     "ctx": ctx,
+        #     "guild": ctx.guild,
+        #     "author": ctx.author,
+        #     "channel": ctx.channel,
+        #     "message": ctx.message,
+        #     "client": ctx.bot,
+        #     "__import__": __import__,
+        #     "progressbar": progressbar,
+        #     "split_by_slice": split_by_slice,
+        #     "convert_sec_to_min": convert_sec_to_min,
+        # }
+        # await ctx.message.add_reaction("\U0001f7e1")
 
-        if not ctx.guild is None:
-            me = ctx.guild.me
-        else:
-            me = self.bot.user
-        try:
-            exec(compile(parsed, filename="<eval>", mode="exec"), env)
-            result = await eval(f"{fn_name}()", env)
-        except BaseException as exc:
-            await ctx.message.remove_reaction("\U0001f7e1", me)
-            await ctx.message.add_reaction("\U0001f534")
-            tb = "".join(traceback.format_exc())
-            tb = tb.replace(
-                "/app/.heroku/python/lib/python3.8/site-packages",
-                "C:/Users/Wasi/AppData/Roaming/Python/Python38/site-packages",
-            ).replace(
-                "/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/"
-            ).replace('File "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/cogs/owner.py", line 240, in eval_command\nresult = await eval(f"{fn_name}()", env)\nFile "<eval>",', 'In')
-            if len(tb) < 1000:
-                embed = discord.Embed(title="Traceback", description=tb)
-                await ctx.send(embed=embed)
-                return
-            results = split_by_slice(tb, 2000)
-            num = 0
-            embed = discord.Embed(title="Traceback", description=results[num])
-            embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-            message = await ctx.send(embed=embed)
-            await message.add_reaction("\u25c0\ufe0f")
-            await message.add_reaction("\u23f9\ufe0f")
-            await message.add_reaction("\u25b6\ufe0f")
-            while True:
+        # if not ctx.guild is None:
+        #     me = ctx.guild.me
+        # else:
+        #     me = self.bot.user
+        # try:
+        #     exec(compile(parsed, filename="<eval>", mode="exec"), env)
+        #     result = await eval(f"{fn_name}()", env)
+        # except BaseException as exc:
+        #     await ctx.message.remove_reaction("\U0001f7e1", me)
+        #     await ctx.message.add_reaction("\U0001f534")
+        #     tb = "".join(traceback.format_exc())
+        #     tb = tb.replace(
+        #         "/app/.heroku/python/lib/python3.9/site-packages",
+        #         "C:/Users/Wasi/AppData/Roaming/Python/Python38/site-packages",
+        #     ).replace(
+        #         "/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/"
+        #     ).replace('File "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/cogs/owner.py", line 240, in eval_command\nresult = await eval(f"{fn_name}()", env)\nFile "<eval>",', 'In')
+        #     if len(tb) < 1000:
+        #         embed = discord.Embed(title="Traceback", description=tb)
+        #         await ctx.send(embed=embed)
+        #         return
+        #     results = split_by_slice(tb, 2000)
+        #     num = 0
+        #     embed = discord.Embed(title="Traceback", description=results[num])
+        #     embed.set_footer(text=f"Page {num + 1}/{len(results)}")
+        #     message = await ctx.send(embed=embed)
+        #     await message.add_reaction("\u25c0\ufe0f")
+        #     await message.add_reaction("\u23f9\ufe0f")
+        #     await message.add_reaction("\u25b6\ufe0f")
+        #     while True:
 
-                def check(reaction, user):
-                    return (
-                        user.id == ctx.author.id
-                        and reaction.message.channel.id == ctx.channel.id
-                    )
+        #         def check(reaction, user):
+        #             return (
+        #                 user.id == ctx.author.id
+        #                 and reaction.message.channel.id == ctx.channel.id
+        #             )
 
-                try:
-                    reaction, user = await self.bot.wait_for(
-                        "reaction_add", check=check, timeout=120
-                    )
-                except asyncio.TimeoutError:
-                    embed.set_footer(
-                        icon_url=str(ctx.author.avatar_url), text="Timed out"
-                    )
-                    await message.edit(embed=embed)
-                    try:
-                        return await message.clear_reactions()
-                    except:
-                        await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                        await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-                        await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-                        break
-                        return
-                else:
-                    if reaction.emoji == "\u25c0\ufe0f":
-                        try:
-                            message.remove_reaction("\u25c0\ufe0f", ctx.author)
-                        except discord.Forbidden:
-                            pass
-                        num -= 1
-                        try:
-                            result = results[num]
-                        except IndexError:
-                            pass
-                        embed = discord.Embed(
-                            title="Traceback", description=results[num]
-                        )
-                        embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-                        await message.edit(embed=embed)
-                    elif reaction.emoji == "\u25b6\ufe0f":
-                        try:
-                            await message.remove_reaction("\u25b6\ufe0f", ctx.author)
-                        except discord.Forbidden:
-                            pass
-                        num += 1
-                        try:
-                            result = results[num]
-                        except IndexError:
-                            pass
-                        embed = discord.Embed(
-                            title="Traceback", description=results[num]
-                        )
-                        embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-                        await message.edit(embed=embed)
-                    elif reaction.emoji == "\u23f9\ufe0f":
-                        embed = discord.Embed(
-                            title="Traceback", description=results[num]
-                        )
-                        await message.edit(embed=embed)
-                        try:
-                            return await message.clear_reactions()
-                        except:
-                            await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                            await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-                            await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-                            break
-                            return
-                    else:
-                        pass
+        #         try:
+        #             reaction, user = await self.bot.wait_for(
+        #                 "reaction_add", check=check, timeout=120
+        #             )
+        #         except asyncio.TimeoutError:
+        #             embed.set_footer(
+        #                 icon_url=str(ctx.author.avatar_url), text="Timed out"
+        #             )
+        #             await message.edit(embed=embed)
+        #             try:
+        #                 return await message.clear_reactions()
+        #             except:
+        #                 await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+        #                 await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+        #                 await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
+        #                 break
+        #                 return
+        #         else:
+        #             if reaction.emoji == "\u25c0\ufe0f":
+        #                 try:
+        #                     message.remove_reaction("\u25c0\ufe0f", ctx.author)
+        #                 except discord.Forbidden:
+        #                     pass
+        #                 num -= 1
+        #                 try:
+        #                     result = results[num]
+        #                 except IndexError:
+        #                     pass
+        #                 embed = discord.Embed(
+        #                     title="Traceback", description=results[num]
+        #                 )
+        #                 embed.set_footer(text=f"Page {num + 1}/{len(results)}")
+        #                 await message.edit(embed=embed)
+        #             elif reaction.emoji == "\u25b6\ufe0f":
+        #                 try:
+        #                     await message.remove_reaction("\u25b6\ufe0f", ctx.author)
+        #                 except discord.Forbidden:
+        #                     pass
+        #                 num += 1
+        #                 try:
+        #                     result = results[num]
+        #                 except IndexError:
+        #                     pass
+        #                 embed = discord.Embed(
+        #                     title="Traceback", description=results[num]
+        #                 )
+        #                 embed.set_footer(text=f"Page {num + 1}/{len(results)}")
+        #                 await message.edit(embed=embed)
+        #             elif reaction.emoji == "\u23f9\ufe0f":
+        #                 embed = discord.Embed(
+        #                     title="Traceback", description=results[num]
+        #                 )
+        #                 await message.edit(embed=embed)
+        #                 try:
+        #                     return await message.clear_reactions()
+        #                 except:
+        #                     await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
+        #                     await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
+        #                     await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
+        #                     break
+        #                     return
+        #             else:
+        #                 pass
 
-            return
-        else:
-            parsed_result = None
-            if isinstance(result, str):
-                parsed_result = result.replace(self.bot.http.token, "**[TOKEN]**")
-            elif isinstance(result, (int, float, bool, list, dict)):
-                parsed_result = str(result)
-            elif isinstance(result, discord.File):
-                await ctx.send(file=result)
-            elif isinstance(result, discord.Embed):
-                await ctx.send(embed=result)
-            elif result is None:
-                parsed_result = "None"
-            else:
-                parsed_result = repr(result)
-            if parsed_result:
-                await ctx.send(parsed_result)
-            await ctx.message.remove_reaction("\U0001f7e1", me)
-            await ctx.message.add_reaction("\U0001f7e2")
-
+        #     return
+        # else:
+        #     parsed_result = None
+        #     if isinstance(result, str):
+        #         parsed_result = result.replace(self.bot.http.token, "**[TOKEN]**")
+        #     elif isinstance(result, (int, float, bool, list, dict)):
+        #         parsed_result = str(result)
+        #     elif isinstance(result, discord.File):
+        #         await ctx.send(file=result)
+        #     elif isinstance(result, discord.Embed):
+        #         await ctx.send(embed=result)
+        #     elif result is None:
+        #         parsed_result = "None"
+        #     else:
+        #         parsed_result = repr(result)
+        #     if parsed_result:
+        #         await ctx.send(parsed_result)
+        #     await ctx.message.remove_reaction("\U0001f7e1", me)
+        #     await ctx.message.add_reaction("\U0001f7e2")
+        jsk = await self.bot.get_command("jishaku py")
+        await jsk(ctx, cmd)
 
 def setup(bot):
     bot.add_cog(Owner(bot))
