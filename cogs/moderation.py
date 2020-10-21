@@ -156,7 +156,7 @@ class Moderation(commands.Cog):
             await ctx.send(f"{user.mention} has been muted for {reason}")
 
     @commands.command(aliases=["sd"], description="Custom Slow Mode")
-    @commands.has_permissions(manage_guild=True)
+    
     async def slowmode(self, ctx, slowmode: int):
         if slowmode > 21600:
             await ctx.send("Slow Mode too long")
@@ -220,7 +220,7 @@ class Moderation(commands.Cog):
     aliases=["nk"],
     description="Nuke a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ",
 )
-@commands.has_permissions(manage_guild=True)
+
 async def nuke(self, ctx, channel: discord.TextChannel = None):
     channel = channel or ctx.channel
     await ctx.send(
@@ -255,7 +255,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
         aliases=["cln"],
         description="Clone a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ",
     )
-    @commands.has_permissions(manage_guild=True)
+    
     async def clone(self, ctx, channel: discord.TextChannel = None):
         channel = channel or ctx.channel
         await ctx.send(
@@ -284,7 +284,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
                 )
 
     @commands.command(aliases=["lck", "lk"], description="Lock a channel")
-    @commands.has_permissions(manage_guild=True)
+    
     async def lock(self, ctx, *, role: discord.Role = None):
         role = (
             role or ctx.guild.default_role
@@ -299,7 +299,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
             return await ctx.send("I have no permissions to lock")
 
     @commands.command(aliases=["unlck", "ulk"], description=" Unlocks a channel")
-    @commands.has_permissions(manage_guild=True)
+    
     async def unlock(self, ctx, *, role: discord.Role = None):
         role = (
             role or ctx.guild.default_role
@@ -325,7 +325,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
             await ctx.send("No Permissions")
 
     @commands.command(description="Blocks a user from chatting in current channel.")
-    @commands.has_permissions(manage_guild=True)
+    
     async def block(self, ctx, user: discord.Member):
         try:
             await ctx.set_permissions(
@@ -335,7 +335,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
             await ctx.send("No permissions")
 
     @commands.command(description="Unblocks a user from current channel")
-    @commands.has_permissions(manage_guild=True)
+    
     async def unblock(self, ctx, user: discord.Member):
         try:
             await ctx.set_permissions(
