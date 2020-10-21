@@ -128,7 +128,6 @@ class Moderation(commands.Cog):
             await ctx.send("Please specify the amount of messages to delete")
 
     @commands.command()
-    @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, user: discord.Member, reason="No Reason Specified"):
         role = discord.utils.get(
             ctx.guild.roles, name="Muted"
@@ -156,7 +155,7 @@ class Moderation(commands.Cog):
             await ctx.send(f"{user.mention} has been muted for {reason}")
 
     @commands.command(aliases=["sd"], description="Custom Slow Mode")
-    
+    @commands.has_permissions(manage_channels=True)
     async def slowmode(self, ctx, slowmode: int):
         if slowmode > 21600:
             await ctx.send("Slow Mode too long")
@@ -216,46 +215,46 @@ class Moderation(commands.Cog):
         await ctx.send(embed=embed)
 
 
-@commands.command(
-    aliases=["nk"],
-    description="Nuke a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ",
-)
-
-async def nuke(self, ctx, channel: discord.TextChannel = None):
-    channel = channel or ctx.channel
-    await ctx.send(
-        "Are you sure you want to nuke this channel?\n type `yes` to confirm or `no` to decline"
+    @commands.command(
+        aliases=["nk"],
+        description="Nuke a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ",
     )
+    @commands.has_permissions(manage_channels=True)
+    async def nuke(self, ctx, channel: discord.TextChannel = None):
+        channel = channel or ctx.channel
+        await ctx.send(
+            "Are you sure you want to nuke this channel?\n type `yes` to confirm or `no` to decline"
+        )
 
-    def check(m):  
-        return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+        def check(m):  
+            return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
 
-    try:
-        name = await self.bot.wait_for("message", check=check, timeout=20)
-    except asyncio.TimeoutError:
-        await ctx.send(f"You didnt respond in 30 seconds :(\n{ctx.author.mention}!")
-        return
-    else:
-        if name.content == "yes":
-            message = await ctx.send(f"Okay, Nuking {channel.name}...")
-            position = channel.position
-            await channel.delete()
-            newchannel = await channel.clone(reason=f"Nuked by {ctx.author}")
-            await message.delete()
-            newchannel.edit(position=position)
-            await ctx.send("Channel Nuked")
-        elif name.content == "no":
-            return await ctx.send("Okay then")
+        try:
+            name = await self.bot.wait_for("message", check=check, timeout=20)
+        except asyncio.TimeoutError:
+            await ctx.send(f"You didnt respond in 30 seconds :(\n{ctx.author.mention}!")
+            return
         else:
-            return await ctx.send(
-                "I was hoping for `yes` or `no` but you said something else :("
-            )
+            if name.content == "yes":
+                message = await ctx.send(f"Okay, Nuking {channel.name}...")
+                position = channel.position
+                await channel.delete()
+                newchannel = await channel.clone(reason=f"Nuked by {ctx.author}")
+                await message.delete()
+                newchannel.edit(position=position)
+                await ctx.send("Channel Nuked")
+            elif name.content == "no":
+                return await ctx.send("Okay then")
+            else:
+                return await ctx.send(
+                    "I was hoping for `yes` or `no` but you said something else :("
+                )
 
     @commands.command(
         aliases=["cln"],
         description="Clone a channel\nCreates a new channel with all the same properties (permissions, name, topic etc.) ",
     )
-    
+    @commands.has_permissions(manage_channels=True)
     async def clone(self, ctx, channel: discord.TextChannel = None):
         channel = channel or ctx.channel
         await ctx.send(
@@ -284,7 +283,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
                 )
 
     @commands.command(aliases=["lck", "lk"], description="Lock a channel")
-    
+    @commands.has_permissions(manage_channels=True)
     async def lock(self, ctx, *, role: discord.Role = None):
         role = (
             role or ctx.guild.default_role
@@ -299,7 +298,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
             return await ctx.send("I have no permissions to lock")
 
     @commands.command(aliases=["unlck", "ulk"], description=" Unlocks a channel")
-    
+    @commands.has_permissions(manage_channels=True)
     async def unlock(self, ctx, *, role: discord.Role = None):
         role = (
             role or ctx.guild.default_role
@@ -325,7 +324,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
             await ctx.send("No Permissions")
 
     @commands.command(description="Blocks a user from chatting in current channel.")
-    
+    @commands.has_permissions(manage_channels=True)
     async def block(self, ctx, user: discord.Member):
         try:
             await ctx.set_permissions(
@@ -335,7 +334,7 @@ async def nuke(self, ctx, channel: discord.TextChannel = None):
             await ctx.send("No permissions")
 
     @commands.command(description="Unblocks a user from current channel")
-    
+    @commands.has_permissions(manage_channels=True)
     async def unblock(self, ctx, user: discord.Member):
         try:
             await ctx.set_permissions(
