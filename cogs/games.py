@@ -30,14 +30,12 @@ class Games(commands.Cog):
             return
         # start_range, end_range = abs(start_range), abs(end_range)
         num = random.randint(start_range, end_range)
-        if not ctx.channel.overwrites_for(ctx.guild.default_role).send_messages:
+        perms = ctx.channel.overwrites_for(ctx.guild.default_role)
+        if not perms.send_messages
             try:
                 await ctx.channel.edit(
                 overwrites={
-                    ctx.guild.default_role: 
-                        discord.PermissionOverwrite(
-                            send_messages=True
-                        )
+                    ctx.guild.default_role: perms.send_messages=True
                 }
                 )
             except discord.Forbidden:
@@ -63,10 +61,7 @@ class Games(commands.Cog):
                         try:
                             await ctx.channel.edit(
                             overwrites={
-                                ctx.guild.default_role: 
-                                    discord.PermissionOverwrite(
-                                        send_messages=False
-                                    )
+                                ctx.guild.default_role: perms.send_messages=False
                             }
                             )
                         except discord.Forbidden:
