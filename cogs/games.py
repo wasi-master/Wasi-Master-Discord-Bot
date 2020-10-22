@@ -31,7 +31,7 @@ class Games(commands.Cog):
         # start_range, end_range = abs(start_range), abs(end_range)
         num = random.randint(start_range, end_range)
         perms = ctx.channel.overwrites_for(ctx.guild.default_role)
-        if not perms.send_messages
+        if not perms.send_messages:
             try:
                 await ctx.channel.edit(
                 overwrites={
