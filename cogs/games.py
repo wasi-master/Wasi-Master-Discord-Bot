@@ -17,7 +17,6 @@ class Games(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def guessthenumber(self, ctx, number_range: str):
         if len(number_range.split("-")) == 1 and number_range.isdigit():
-            
             start_range = 1
             end_range = int(number_range.strip())
         elif len(number_range.split("-")) == 2:
