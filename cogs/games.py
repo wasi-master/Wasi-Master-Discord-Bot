@@ -31,10 +31,11 @@ class Games(commands.Cog):
         num = random.randint(start_range, end_range)
         perms = ctx.channel.overwrites_for(ctx.guild.default_role)
         if not perms.send_messages:
+            perms.send_messages=True
             try:
                 await ctx.channel.edit(
                 overwrites={
-                    ctx.guild.default_role: perms.send_messages=True
+                    ctx.guild.default_role: perms
                 }
                 )
             except discord.Forbidden:
@@ -58,9 +59,10 @@ class Games(commands.Cog):
                         await msg.author.send(f"You sent {guess} which is lower than the smallest number possible (**{start_range}**)")
                     if guess == num:
                         try:
+                            perms.send_messages=False
                             await ctx.channel.edit(
                             overwrites={
-                                ctx.guild.default_role: perms.send_messages=False
+                                ctx.guild.default_role: perms
                             }
                             )
                         except discord.Forbidden:
