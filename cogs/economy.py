@@ -132,7 +132,7 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=["rob"])
     @commands.cooldown(1, 20, commands.BucketType.user)
-    async def steal(self, ctx, user: discord.User):
+    async def steal(self, ctx, *, user: discord.User):
         author_account = await self.get_account(ctx.author.id)
         user_account = await self.get_account(user.id)
         if user_account["wallet"] < 1:
@@ -163,6 +163,40 @@ class Economy(commands.Cog):
             wallet,
         )
         await ctx.send(f"You stole {amount} coins from {user.name}")
+
+    @commands.command()
+    @commands.cooldown(1, 20, commands.BucketType.user)
+    async def give(self, ctx, amount: int, *, user: discord.User):
+        user_account = await self.get_account(ctx.author.id)
+        author_account = await self.get_account(user.id)
+        if user_account["wallet"] < 1:
+            await ctx.send(f"You have no money to give")
+            return
+        if amount > user_account["wallet"]:
+            await ctx.send("You don't have enough money")
+            return
+        wallet = author_account["wallet"] + amount
+        await self.db.execute(
+                """
+                UPDATE economy
+                SET wallet = $2
+                WHERE user_id = $1;
+                """,
+            user.id,
+            wallet,
+        )
+        wallet = user_account["wallet"] - amount
+        await self.db.execute(
+                """
+                UPDATE economy
+                SET wallet = $2
+                WHERE user_id = $1;
+                """,
+            ctx.author.id,
+            wallet,
+        )
+        await ctx.send(f"You gave {amount} coins to {user.name}")
+
 
 def setup(bot):
     bot.add_cog(Economy(bot))
