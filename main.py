@@ -169,6 +169,7 @@ if __name__ == "__main__":
 
 @client.event
 async def on_message_delete(message):
+    if len(message.guild.members) > 500: return
     client.snipes[message.channel.id] = message
 
 
