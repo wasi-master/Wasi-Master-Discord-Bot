@@ -22,7 +22,7 @@ class Fun(commands.Cog):
         snipes = self.bot.snipes
         if snipes.get(channel.id):
             message = snipes[channel.id]
-            e = discord.Embed(title="Said:", description=message.content, timestamp=message.created_at)
+            e = discord.Embed(title="Said:", description=message.content, timestamp=message.created_at, color=discord.Colour.green())
             e.set_author(icon_url=message.author.avatar_url, name=str(message.author))
             e.set_thmbnail(url=message.author.avatar_url)
             await ctx.send(embed=e)
