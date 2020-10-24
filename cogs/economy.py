@@ -3,7 +3,7 @@ import random
 import json
 
 from  discord.ext import commands
-
+from  .utils.functions import get_random_color
 
 
 class Economy(commands.Cog):
@@ -48,7 +48,7 @@ class Economy(commands.Cog):
     async def balance(self, ctx, user: discord.User=None):
         user = user or ctx.author
         info = await self.get_account(user.id)
-        e = discord.Embed(title=user.name+ "'s balance")
+        e = discord.Embed(title=user.name+ "'s balance", color=get_random_color())
         e.add_field(name="Wallet", value=info["wallet"])
         e.add_field(name="Bank", value=info["bank"])
         await ctx.send(embed=e)

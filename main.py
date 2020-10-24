@@ -92,39 +92,7 @@ async def get_prefix(bot, message) -> str:
     return commands.when_mentioned_or(prefix_return)(client, message)
 
 
-def convert_sec_to_min(seconds):
-    """returns 1:30 if 90 is passed
 
-    Args:
-        seconds (int): the seconds to convert the data from
-
-    Returns:
-        str: the 1:30
-    """
-    minutes, sec = divmod(seconds, 60)
-    return "%02d:%02d" % (minutes, sec)
-
-
-def get_p(percent: int):
-    """Generates a progressbar
-
-    Args:
-        percent (int): Percentage
-
-    Returns:
-        str: a progressbar
-    """
-    total_percentage = 15
-    percent = percent * 0.15
-    right_now = round(percent / 4)
-    body = "☐" * total_percentage
-    percentage_list = list(body)
-
-    for i, _ in enumerate(percentage_list[:right_now]):
-        percentage_list[i] = "■"
-
-    result = "".join(percentage_list)
-    return f"{result}"
 
 
 intents = discord.Intents(
