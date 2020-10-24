@@ -65,7 +65,7 @@ class Economy(commands.Cog):
             except ValueError as e:
                 await ctx.send("Invalid amount")
                 return
-        if info["bank"] > amount:
+        if amount > info["bank"]:
             await ctx.send("Can't withdraw more than you have in your bank")
             return
         bank   = info["bank"]   - amount
@@ -95,7 +95,7 @@ class Economy(commands.Cog):
                 await ctx.send("Invalid amount")
                 return
 
-        if info["wallet"] > amount:
+        if amount > info["wallet"]:
             await ctx.send("Can't withdraw more than you have in your wallet")
             return
         bank   = info["bank"]   + amount
