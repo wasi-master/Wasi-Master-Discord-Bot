@@ -3,7 +3,7 @@ import random
 import json
 
 from  discord.ext import commands
-from  ..utils.functions import get_random_color
+from  utils.functions import get_random_color
 
 
 class Economy(commands.Cog):
