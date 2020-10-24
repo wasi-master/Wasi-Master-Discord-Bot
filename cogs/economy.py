@@ -17,7 +17,7 @@ class Economy(commands.Cog):
             self.celebs = json.load(f)
 
     async def get_account(self, user):
-        info = await self.db.fetch(
+        info = await self.db.fetchrow(
             """
             SELECT *
             FROM economy
@@ -27,14 +27,19 @@ class Economy(commands.Cog):
         )
         if info is None:
             await self.db.execute(
-            """
-                INSERT INTO economy (user_id, wallet, bank, inventory)
-                VALUES ($1, $2, $3, $4)
-            """,
-            user,
-            0,
-            0,
-            "{}",
+                """
+                    INSERT INTO economy (user_id, wallet, bank, inventory)
+                    VALUES ($1, $2, $3, $4)
+                """,
+                user, 0, 0, "{}",
+                )
+            return await self.db.fetchrow(
+                """
+                SELECT *
+                FROM economy
+                WHERE user_id=$1
+                """,
+                user,
             )
         else:
             return info
