@@ -162,9 +162,6 @@ client.emoji_list = []
 client.emoji_list_str = []
 client.snipes = {}
 
-if __name__ == "__main__":
-    for extension in initial_extensions:
-        client.load_extension(extension)
 
 
 @client.event
@@ -307,10 +304,10 @@ async def fake_on_ready():
     print("Bot is online")
     client.session = aiohttp.ClientSession()
     owner = client.get_user(538332632535007244)
-    try:
-        await owner.send("Bot Online")
-    except AttributeError:
-        pass
+    await owner.send("Bot Online")
+    for extension in initial_extensions:
+        client.load_extension(extension)
+    await owner.send("All cogs loaded")
     client.started_at = datetime.datetime.utcnow()
     update_server_count.start()
     client.load_extension("jishaku")
