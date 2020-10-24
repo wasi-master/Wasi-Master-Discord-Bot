@@ -15,7 +15,19 @@ class Fun(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
-
+    
+    @commands.command()
+    async def snipe(ctx, channel: discord.TextChannel = None):
+        channel = channel or ctx.channel
+        snipes = self.bot.snipes
+        if snipes.get(channel.id):
+            message = snipes[channel.id]
+            e = discord.Embed(title="Said", description=message.content, timestamp=message.created_at)
+            e.set_author(icon_url=message.author.avatar_url, name=message.author.url)
+            await ctx.send(embed=e)
+        else:
+            await ctx.send("No messages to snipe")
+    
     @commands.command(aliases=["bsm", "bsmap"])
     @commands.cooldown(1, 2, commands.BucketType.default)
     async def brawlstarsmap(self, ctx, *, provided_map: str):
