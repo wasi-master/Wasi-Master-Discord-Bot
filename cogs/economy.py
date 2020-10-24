@@ -50,7 +50,7 @@ class Economy(commands.Cog):
         info = await self.get_account(user.id)
         e = discord.Embed(title=user.name+ "'s balance")
         e.add_field(name="Wallet", value=info["wallet"])
-        e.add_field(name="Bank", balue=info["bank"])
+        e.add_field(name="Bank", value=info["bank"])
         await ctx.send(embed=e)
 
     @commands.command(aliases=["with"])
