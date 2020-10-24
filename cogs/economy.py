@@ -73,14 +73,14 @@ class Economy(commands.Cog):
             """
                 UPDATE economy
                 SET wallet = $2,
-                    bank = $3
+                    bank   = $3
                 WHERE user_id = $1;
                 """,
             ctx.author.id,
             wallet,
             bank,
         )
-        await ctx.send(f"{amount} withdrawn")
+        await ctx.send(f"{amount} coins withdrawn")
     
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount):
@@ -103,16 +103,17 @@ class Economy(commands.Cog):
             """
                 UPDATE economy
                 SET wallet = $2,
-                    bank = $3
+                    bank   = $3
                 WHERE user_id = $1;
                 """,
             ctx.author.id,
             wallet,
             bank,
         )
-        await ctx.send(f"{amount} deposited")
+        await ctx.send(f"{amount} coins deposited")
     
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def beg(self, ctx):
         amount = random.randint(1, 500)
         info = await self.get_account(ctx.author.id)
@@ -130,6 +131,7 @@ class Economy(commands.Cog):
         await ctx.send(f"{celeb} gave you {amount} coins")
 
     @commands.command(aliases=["rob"])
+    @commands.cooldown(1, 20, commands.BucketType.user)
     async def steal(self, ctx, user: discord.User):
         author_account = await self.get_account(ctx.author.id)
         user_account = await self.get_account(user.id)
@@ -150,7 +152,17 @@ class Economy(commands.Cog):
             ctx.author.id,
             wallet,
         )
-        await ctx.send(f"you stole {amount} coins from {user.name}")
+        wallet = user_account["wallet"] - amount
+        await self.db.execute(
+                """
+                UPDATE economy
+                SET wallet = $2
+                WHERE user_id = $1;
+                """,
+            user.id,
+            wallet,
+        )
+        await ctx.send(f"You stole {amount} coins from {user.name}")
 
 def setup(bot):
     bot.add_cog(Economy(bot))
