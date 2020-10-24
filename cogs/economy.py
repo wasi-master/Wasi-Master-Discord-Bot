@@ -56,6 +56,14 @@ class Economy(commands.Cog):
     @commands.command(aliases=["with"])
     async def withdraw(self, ctx, amount: int):
         info = await self.get_account(ctx.author.id)
+        if amount == "all":
+            amount = info["bank"]
+        else:
+            try:
+                amount = int(amount)
+            except ValueError as e:
+                await ctx.send("Invalid amount")
+                return
         if info["bank"] > amount:
             await ctx.send("Can't withdraw more than you have in your bank")
             return
@@ -75,8 +83,17 @@ class Economy(commands.Cog):
         await ctx.send(f"{amount} withdrawn")
     
     @commands.command(aliases=["dep"])
-    async def deposit(self, ctx, amount: int):
+    async def deposit(self, ctx, amount):
         info = await self.get_account(ctx.author.id)
+        if amount == "all":
+            amount = info["wallet"]
+        else:
+            try:
+                amount = int(amount)
+            except ValueError as e:
+                await ctx.send("Invalid amount")
+                return
+
         if info["wallet"] > amount:
             await ctx.send("Can't withdraw more than you have in your wallet")
             return
