@@ -5,6 +5,7 @@ import asyncio
 import datetime
 import os
 import secrets
+import time
 
 import aiogoogletrans as translator
 import aiohttp
@@ -269,13 +270,15 @@ async def fake_on_ready():
     """Fires when the bot goes online
     """
     await client.wait_until_ready()
+    start = time.time()
     print("Bot is online")
     client.session = aiohttp.ClientSession()
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
     for extension in initial_extensions:
         client.load_extension(extension)
-    await owner.send("All cogs loaded")
+        end = time.time()
+    await owner.send(f"All cogs loaded in `{end-start}`ms")
     client.started_at = datetime.datetime.utcnow()
     update_server_count.start()
     client.load_extension("jishaku")
