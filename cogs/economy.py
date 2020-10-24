@@ -65,7 +65,7 @@ class Economy(commands.Cog):
             """
                 UPDATE economy
                 SET wallet = $2,
-                SET bank = $3
+                    bank = $3
                 WHERE user_id = $1;
                 """,
             ctx.author.id,
