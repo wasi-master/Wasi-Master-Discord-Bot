@@ -17,7 +17,7 @@ class Fun(commands.Cog):
         self.bot = bot
     
     @commands.command()
-    async def snipe(ctx, channel: discord.TextChannel = None):
+    async def snipe(self, ctx, channel: discord.TextChannel = None):
         channel = channel or ctx.channel
         snipes = self.bot.snipes
         if snipes.get(channel.id):
