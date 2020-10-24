@@ -160,11 +160,16 @@ mystbin_client = mystbin.MystbinClient()
 
 client.emoji_list = []
 client.emoji_list_str = []
-
+client.snipes = {}
 
 if __name__ == "__main__":
     for extension in initial_extensions:
         client.load_extension(extension)
+
+
+@client.event
+async def on_message_delete(message):
+    client.snipes[message.channel.id] = message
 
 
 @client.event
