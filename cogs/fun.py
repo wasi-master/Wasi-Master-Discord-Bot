@@ -23,7 +23,7 @@ class Fun(commands.Cog):
         if snipes.get(channel.id):
             message = snipes[channel.id]
             e = discord.Embed(title="Said", description=message.content, timestamp=message.created_at)
-            e.set_author(icon_url=message.author.avatar_url, name=message.author.url)
+            e.set_author(icon_url=message.author.avatar_url, name=message.author.name)
             await ctx.send(embed=e)
         else:
             await ctx.send("No messages to snipe")
