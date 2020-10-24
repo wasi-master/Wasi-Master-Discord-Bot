@@ -1,0 +1,134 @@
+import discord
+import random
+import json
+
+from  discord.ext import commands
+
+
+
+class Economy(commands.Cog):
+    """Economy commands :^)
+    and yes I copied other economy bots just to test myself :)
+    """
+    def __init__(self, bot):
+        self.bot = bot
+        self.db = bot.db
+        with open("assets\celebs.json") as f:
+            self.celebs = json.load(f)
+
+    async def get_account(self, user):
+        info = await self.db.fetch(
+            """
+            SELECT *
+            FROM economy
+            WHERE user_id=$1
+            """,
+        user,
+        )
+        if info is None:
+            await self.db.execute(
+            """
+                INSERT INTO economy (user_id, wallet, bank, inventory)
+                VALUES ($1, $2, $3, $4)
+            """,
+            user,
+            0,
+            0,
+            "{}",
+            )
+        else:
+            return info
+
+    @commands.command(aliases=["bal"])
+    async def balance(self, ctx, user: discord.User=None):
+        user = user or ctx.author
+        info = await self.get_account(user.id)
+        e = discord.Embed(title=user.name+ "'s balance")
+        e.add_field(name="Wallet", value=info["wallet"])
+        e.add_field(name="Bank", balue=info["bank"])
+        await ctx.send(embed=e)
+
+    @commands.command(aliases=["with"])
+    async def withdraw(self, ctx, amount: int):
+        info = await self.get_account(ctx.author.id)
+        if info["bank"] > amount:
+            await ctx.send("Can't withdraw more than you have in your bank")
+            return
+        bank   = info["bank"]   - amount
+        wallet = info["wallet"] + amount
+        await self.db.execute(
+            """
+                UPDATE economy
+                SET wallet = $2,
+                SET bank = $3
+                WHERE user_id = $1;
+                """,
+            ctx.author.id,
+            wallet,
+            bank,
+        )
+        await ctx.send(f"{amount} withdrawn")
+    
+    @commands.command(aliases=["dep"])
+    async def deposit(self, ctx, amount: int):
+        info = await self.get_account(ctx.author.id)
+        if info["wallet"] > amount:
+            await ctx.send("Can't withdraw more than you have in your wallet")
+            return
+        bank   = info["bank"]   + amount
+        wallet = info["wallet"] - amount
+        await self.db.execute(
+            """
+                UPDATE economy
+                SET wallet = $2,
+                SET bank = $3
+                WHERE user_id = $1;
+                """,
+            ctx.author.id,
+            wallet,
+            bank,
+        )
+        await ctx.send(f"{amount} deposited")
+    
+    @commands.command()
+    async def beg(self, ctx):
+        amount = random.randint(1, 500)
+        info = await self.get_account(ctx.author.id)
+        wallet = info["wallet"] + amount
+        celeb = random.choice(self.celebs)
+        await self.db.execute(
+            """
+                UPDATE economy
+                SET wallet = $2
+                WHERE user_id = $1;
+                """,
+            ctx.author.id,
+            wallet,
+        )
+        await ctx.send(f"{celeb} gave you {amount} coins")
+
+    @commands.command(aliases=["rob"])
+    async def steal(self, ctx, user: discord.User):
+        author_account = await self.get_account(ctx.author.id)
+        user_account = await self.get_account(user.id)
+        if user_account["wallet"] < 1:
+            await ctx.send(f"Ah, {user.name} has no money, big rip")
+            return
+        if user_account["wallet"] < 1000:
+            amount = random.randint(1, user_account["wallet"])
+        else:
+            amount = random.randint(1, 1000)
+        wallet = author_account["wallet"] + amount
+        await self.db.execute(
+                """
+                UPDATE economy
+                SET wallet = $2
+                WHERE user_id = $1;
+                """,
+            ctx.author.id,
+            wallet,
+        )
+        await ctx.send(f"you stole {amount} coins from {user.name}")
+
+def setup(bot):
+    bot.add_cog(Economy(bot))
