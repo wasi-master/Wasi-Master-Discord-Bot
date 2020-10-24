@@ -51,6 +51,7 @@ class Economy(commands.Cog):
         e = discord.Embed(title=user.name+ "'s balance", color=get_random_color())
         e.add_field(name="Wallet", value=info["wallet"])
         e.add_field(name="Bank", value=info["bank"])
+        e.add_field(name="Total", value=info["bank"]+info["wallet"])
         await ctx.send(embed=e)
 
     @commands.command(aliases=["with"])
