@@ -13,7 +13,7 @@ class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = bot.db
-        with open("assets\celebs.json") as f:
+        with open("assets/celebs.json") as f:
             self.celebs = json.load(f)
 
     async def get_account(self, user):
