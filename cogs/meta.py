@@ -6,6 +6,7 @@ from tabulate import tabulate
 import random
 import time as timemodule
 from discord.ext import menus
+import os
 
 from discord.ext import commands
 from collections import Counter
@@ -365,11 +366,11 @@ class Meta(commands.Cog):
     @commands.command(aliases=["linecount"])
     @commands.cooldown(1, 60, commands.BucketType.channel)
     async def lines(self, ctx):
-        await ctx.send("Command Invoked")
+        m =  await ctx.send("Getting the files")
         for path, subdirs, files in os.walk("."):
             for name in files:
                 files += os.path.join(path, name)
-        await ctx.send("Files gotten")
+        await m.edit(content="Searching the files")
         cm = cr = fn = cl = ls = fc = 0
         for f in files:
             if not f.endswith(".py"):
@@ -387,7 +388,7 @@ class Meta(commands.Cog):
                     if '#' in l:
                         cm += 1
                     ls += 1
-        await ctx.send(
+        await m.edit(content= \
                    f"Files       :   {fc}\n"
                    f"Lines       :   {ls:,}\n"
                    f"Classes     :   {cl}\n"
