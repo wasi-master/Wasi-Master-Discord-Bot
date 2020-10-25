@@ -89,11 +89,13 @@ class Utility(commands.Cog):
 
     @commands.command()
     async def embed(self, ctx, embed_json):
-        embed_json = embed_json.lstrip("```json").lstrip("```").rstrip("```").strip()
+        embed_json = embed_json.lstrip("```").lstrip("json\n").rstrip("```").strip()
         try:
             embed_dict = json.loads(embed_json)
         except Exception as e:
-            await ctx.send("Invalid json: " + str(e))
+            embed = discord.Embed(title="Invalid JSON", color=0xff0000, description=f"```json\n{embed_json}```")
+            embed.set_footer(text=str(e))
+            await ctx.send(embed=embed)
             return
         emby = discord.Embed.from_dict(embed_dict)
         try:
