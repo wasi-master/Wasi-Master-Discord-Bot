@@ -1,5 +1,17 @@
 import discord
 import random
+import json
+from pprint import pformat
+
+def get_all_customs(obj, syntax_highlighting: bool = False) -> dict:
+    dicted = {}
+    for i in dir(obj):
+        if not str(i).startswith('__') and not str(getattr(obj, i)).startswith('<'):
+            dicted[i] = str(getattr(obj, i))
+    dicted = pformat(dicted, indent=4)
+    return "```python\n" if syntax_highlighting else "" + dicted
+
+
 
 def convert_sec_to_min(seconds):
     """returns 1:30 if 90 is passed
