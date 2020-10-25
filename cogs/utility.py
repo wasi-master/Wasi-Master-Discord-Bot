@@ -88,8 +88,8 @@ class Utility(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def embed(self, ctx, embed_json):
-        embed_json = embed_json.replace("```json\n", "").replace("```", "").strip()
+    async def embed(self, ctx, *, embed_json):
+        embed_json = embed_json.lstrip("```json\n").strip("```").strip()
         try:
             embed_dict = json.loads(embed_json)
         except Exception as e:
