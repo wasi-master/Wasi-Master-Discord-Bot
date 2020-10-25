@@ -365,11 +365,15 @@ class Meta(commands.Cog):
     @commands.command(aliases=["linecount"])
     @commands.cooldown(1, 60, commands.BucketType.channel)
     async def lines(ctx):
+        await ctx.send("Command Invoked")
         for path, subdirs, files in os.walk("."):
             for name in files:
                 files += os.path.join(path, name)
+        await ctx.send("Files gotten")
         cm = cr = fn = cl = ls = fc = 0
         for f in files:
+            if not f.endswith(".py"):
+                continue
             fc += 1
             with open(f) as of:
                 for l in of.readlines():
