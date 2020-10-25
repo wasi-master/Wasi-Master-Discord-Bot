@@ -19,7 +19,9 @@ import humanize
 import mystbin
 import vacefron
 import youtube_dl as ytdl
-from discord.ext import commands, tasks
+
+from  discord.ext import commands, tasks
+from  dotenv import load_dotenv
 
 
 
@@ -119,6 +121,7 @@ dblpy = dbl.DBLClient(
    "E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLa"
    "GSfAPs"),
 )
+load_dotenv()
 client.cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
 client.secureRandom = secrets.SystemRandom()
 client.alex_api = alexflipnote.Client()

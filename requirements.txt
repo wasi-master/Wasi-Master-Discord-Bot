@@ -1,7 +1,8 @@
-async_cse
 aiogoogletrans
 alexflipnote.py
 async_cleverbot
+async_cse
+async_dagpi
 async_mediawiki
 asyncpg
 bs4
@@ -20,6 +21,7 @@ mystbin.py
 numexpr
 psutil
 pyparsing
+python-dotenv
 randomcolor
 requests
 tabulate

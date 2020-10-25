@@ -60,7 +60,7 @@ class Anime(commands.Cog):
         except asyncio.TimeoutError:
             try:
                 return await message.clear_reactions()
-            except commands.MissingPermissions:
+            except discord.Forbidden:
                 return await message.remove_reaction("\u2764\ufe0f", ctx.guild.me)
         else:
             if str(reaction.emoji) == "\u2764\ufe0f":
@@ -69,8 +69,8 @@ class Anime(commands.Cog):
                 )
                 await message.edit(embed=embed)
                 return await ctx.send(
-                    f":couple_with_heart: {ctx.author.mention} is now married with \
-                    **{name.replace('&quot;', '')}** :couple_with_heart:"
+                    f":couple_with_heart: {ctx.author.mention} is now married with" \
+                    "**{name.replace('&quot;', '')}** :couple_with_heart:"
                 )
 
 
