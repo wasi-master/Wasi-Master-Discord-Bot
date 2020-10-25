@@ -364,7 +364,7 @@ class Meta(commands.Cog):
 
     @commands.command(aliases=["linecount"])
     @commands.cooldown(1, 60, commands.BucketType.channel)
-    async def lines(ctx):
+    async def lines(self, ctx):
         await ctx.send("Command Invoked")
         for path, subdirs, files in os.walk("."):
             for name in files:
