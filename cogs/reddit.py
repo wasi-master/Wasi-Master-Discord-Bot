@@ -48,7 +48,7 @@ class Reddit(commands.Cog):
             url = base + post["permalink"]
         )
         try:
-            embed.set_image(url=post["preview"]["images"][0]["source"]["url"])
+            embed.set_image(url=post["url_overridden_by_dest"])
         except Exception:
             pass
         await ctx.send(base + post["permalink"], embed=embed)
