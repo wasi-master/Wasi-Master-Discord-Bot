@@ -87,77 +87,26 @@ class Utility(commands.Cog):
 
         await ctx.send(embed=embed)
 
-
-    @commands.command(pass_context=True)
-    async def embed(self, ctx, *, embed = None):
-        """Builds an embed using json formatting.
-        Types:
-        
-        field
-        text
-        ----------------------------------
-        Limits      (All - owner only):
-        title_max   (256)
-        desc_max    (2048)
-        field_max   (25)
-        fname_max   (256)
-        fval_max    (1024)
-        foot_max    (2048)
-        auth_max    (256)
-        total_max   (6000)
-        ----------------------------------
-        
-        Options     (All):
-        pm_after    (int - fields, or pages)
-        pm_react    (str)
-        title       (str)
-        page_count  (bool)
-        url         (str)
-        description (str)
-        image       (str)
-        footer      (str or dict { text, icon_url })
-        thumbnail   (str)
-        author      (str, dict, or User/Member)
-        color       (user/member)
-        ----------------------------------
-        Options      (field only):
-        fields       (list of dicts { name (str), value (str), inline (bool) })
-        ----------------------------------
-        Options      (text only):
-        desc_head    (str)
-        desc_foot    (str)
-        max_pages    (int)
-        """
-
-        if embed == None:
-            return await ctx.send("Usage: `{}embed [type] [embed json]`".format(ctx.prefix))
-        embed_type = embed.split()[0].lower() if embed.split()[0].lower() in ["field","text"] else "field"
-        try:
-            embed_dict = json.loads(embed)
-        except Exception as e:
-            return await ctx.send(embed=discord.Embed(title="Something went wrong...", description=str(e)))
-        
-        embed_dict["title_max"] = 256
-        embed_dict["desc_max"] = 2048
-        embed_dict["field_max"] = 25
-        embed_dict["fname_max"] = 256
-        embed_dict["fval_max"] = 1024
-        embed_dict["foot_max"] = 2048
-        embed_dict["auth_max"] = 256
-        embed_dict["total_max"] = 6000
-        try:
-            if embed_type.lower() == "field":
-                await ctx.send(embed=discord.Embed(**embed_dict))
-            elif embed_type.lower() == "text":
-                await ctx.send(**embed_dict)
+    @commands.command()
+    async def embed(self, ctx, embed_json)
+    embed_json =embed_json.lstrip("```json").lstrip("```").rstrip("```").strip()
+    try:
+        embed_dict = json.loads(embed_json)
+    except Exception as e:
+        await ctx.send("Invalid json: " + str(e))
+    emby = discord.Embed.from_dict(embed_dict)
+    try:
+        await ctx.send(embed=emby)
+    except Exception as e:
+        if hasattr(e, "code"):
+            if e.code == 50006:
+                await ctx.send("Invalid embed")
+            elif e.code == 50035:
+                await ctx.send("Invalid Field: " + str(e))
             else:
-                await ctx.send(title="Something went wrong...", description="\"{}\" is not one of the available embed types...".format(embed_type))
-        except Exception as e:
-            try:
-                e = str(e)
-            except:
-                e = "An error occurred :("
-            await ctx.send(title="Something went wrong...", description=e)
+                await ctx.send("Error occured: " + str(e))
+        else:
+            await ctx.send("Error Occured, check if everything was right")
 
     @commands.command(
         aliases=["link", "message", "ml"],
