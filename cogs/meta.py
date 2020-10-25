@@ -362,6 +362,36 @@ class Meta(commands.Cog):
     ):
         await ctx.send("Hi im online :)")
 
+    @commands.command()
+    @commands.cooldown(1, 60, commands.BucketType.channel)
+    async def lines(ctx):
+        for path, subdirs, files in os.walk("."):
+            for name in files:
+                files += os.path.join(path, name)
+        cm = cr = fn = cl = ls = fc = 0
+        for f in files:
+            fc += 1
+            with f.open() as of:
+                for l in of.readlines():
+                    l = l.strip()
+                    if l.startswith('class'):
+                        cl += 1
+                    if l.startswith('def'):
+                        fn += 1
+                    if l.startswith('async def'):
+                        cr += 1
+                    if '#' in l:
+                        cm += 1
+                    ls += 1
+        await ctx.send(
+                   f"Files       :   {fc}\n"
+                   f"Lines       :   {ls:,}\n"
+                   f"Classes     :   {cl}\n"
+                   f"Functions   :   {fn}\n"
+                   f"Coroutines  :   {cr}\n"
+                   f"Comments    :   {cm:,}"
+            )
+
     @commands.command(aliases=["p"], description="Shows the bot's speed")
     async def ping(
         self,
