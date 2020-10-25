@@ -94,6 +94,7 @@ class Utility(commands.Cog):
             embed_dict = json.loads(embed_json)
         except Exception as e:
             await ctx.send("Invalid json: " + str(e))
+            return
         emby = discord.Embed.from_dict(embed_dict)
         try:
             if ctx.author.permissions_in(ctx.channel).manage_messages:
