@@ -9,19 +9,7 @@ import asyncio
 
 from  discord.ext import commands
 from  typing import Union
-def str_to_sec(text: str):
-    times = {
-        "s": lambda x: x,
-        "m": lambda x: x * 60,
-        "h": lambda x: x * 3600,
-        "d": lambda x: x * 3600 * 24,
-        "w": lambda x: x * 3600 * 24 * 7,
-    }  # map s/m/h/d/w to multiply time provided to seconds
-    regex = r"([0-9]+)(s|m|h|d|w)"
-    # time = '45m'
-    match = re.match(regex, text, flags=re.I)
-    return times[match[2]](int(match[1]))
-
+from .utils.converters import TimeConverter
 
 class Time(commands.Cog):
     """Commands releated to time
@@ -30,8 +18,8 @@ class Time(commands.Cog):
         self.bot = bot
 
     @commands.command(description="Reminds you something")
-    async def remind(self, ctx, time: str, *, text: str):
-        seconds = str_to_sec(time)
+    async def remind(self, ctx, time: TimeConverter, *, text: str):
+        seconds = time
         natural_time = humanize.naturaldelta(datetime.timedelta(seconds=int(seconds)))
         user = ctx.message.author
         texttosend = text

@@ -1,3 +1,4 @@
+
 class ShopItem():
     def __init__(self, name: str, beautiful_name: str, description: str, buy: int, sell: int, is_usable: bool):
         self.name = name
