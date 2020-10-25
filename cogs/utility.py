@@ -88,25 +88,28 @@ class Utility(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def embed(self, ctx, embed_json)
-    embed_json =embed_json.lstrip("```json").lstrip("```").rstrip("```").strip()
-    try:
-        embed_dict = json.loads(embed_json)
-    except Exception as e:
-        await ctx.send("Invalid json: " + str(e))
-    emby = discord.Embed.from_dict(embed_dict)
-    try:
-        await ctx.send(embed=emby)
-    except Exception as e:
-        if hasattr(e, "code"):
-            if e.code == 50006:
-                await ctx.send("Invalid embed")
-            elif e.code == 50035:
-                await ctx.send("Invalid Field: " + str(e))
+    async def embed(self, ctx, embed_json):
+        embed_json = embed_json.lstrip("```json").lstrip("```").rstrip("```").strip()
+        try:
+            embed_dict = json.loads(embed_json)
+        except Exception as e:
+            await ctx.send("Invalid json: " + str(e))
+        emby = discord.Embed.from_dict(embed_dict)
+        try:
+            if ctx.author.permissions_in(ctx.channel).manage_messages:
+                await ctx.send(embed=emby)
             else:
-                await ctx.send("Error occured: " + str(e))
-        else:
-            await ctx.send("Error Occured, check if everything was right")
+                await ctx.send(f"Sent by {ctx.author}", embed=emby)
+        except Exception as e:
+            if hasattr(e, "code"):
+                if e.code == 50006:
+                    await ctx.send("Invalid embed")
+                elif e.code == 50035:
+                    await ctx.send("Invalid Field: " + str(e))
+                else:
+                    await ctx.send("Error occured: " + str(e))
+            else:
+                await ctx.send("Error Occured, check if everything was right")
 
     @commands.command(
         aliases=["link", "message", "ml"],
