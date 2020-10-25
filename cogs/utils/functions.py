@@ -9,10 +9,9 @@ def get_all_customs(obj, syntax_highlighting: bool = False) -> dict:
         if not str(i).startswith('__') and not str(getattr(obj, i)).startswith('<'):
             dicted[i] = str(getattr(obj, i))
     dicted = pformat(dicted, indent=4)
-    f = "```python\n" if syntax_highlighting else ""
-    return f + dicted
+    return ("```python\n" if syntax_highlighting else "") + dicted + ("```" if syntax_highlighting else "")
 
-
+discord.Message.role_mentions
 
 def convert_sec_to_min(seconds):
     """returns 1:30 if 90 is passed
