@@ -7,7 +7,15 @@ def get_all_customs(obj, syntax_highlighting: bool = False) -> dict:
     dicted = {}
     for i in dir(obj):
         if not str(i).startswith('__') and not str(getattr(obj, i)).startswith('<'):
-            dicted[i] = str(getattr(obj, i))
+            attr = getattr(obj, i)
+            if attr.isdigit():
+                dicted[i] = int(attr)
+            elif attr is None:
+                dicted[i] = None
+            elif isinstance(attr, bool):
+                dicted[i] = attr
+            else:
+                dicted[i] =str(attr)
     dicted = pformat(dicted, indent=4, width=50)
     return ("```python\n" if syntax_highlighting else "") + dicted + ("```" if syntax_highlighting else "")
 
