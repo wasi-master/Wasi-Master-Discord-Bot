@@ -2,7 +2,7 @@ aiogoogletrans
 alexflipnote.py
 async_cleverbot
 async_cse
-async_dagpi
+# async_dagpi
 async_mediawiki
 asyncpg
 bs4
