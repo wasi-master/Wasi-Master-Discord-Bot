@@ -9,5 +9,5 @@ class ShopItem():
 
 class Embed(discord.Embed):
   def __init__(self, **kwargs):
-    self.colour = kwargs.get(color) or 0x36393E
+    self.colour = kwargs.get("color", kwargs.get("colour")) or 0x36393E
     super().__init__(kwargs)
