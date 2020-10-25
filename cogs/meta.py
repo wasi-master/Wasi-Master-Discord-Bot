@@ -356,6 +356,14 @@ class Meta(commands.Cog):
         bot.help_command = PaginatedHelpCommand()
         bot.help_command.cog = self
 
+
+    @commands.command(aliases=["cs"])
+    async def commandsearch(ctx, cmd):
+        """Search for a command in the bot"""
+        cmds = difflib.get_close_matches(cmd, [i.name for i in _bot.commands], cutoff=0.3)
+        await ctx.send(embed=discord.Embed(title="Search results for " + cmd, description="\n".join([f"**{index}.**  {command}" for index, command in enumerate(cmds, start=1)])))
+
+
     @commands.command(description="Used to test if bot is online")
     async def hello(
         self,
