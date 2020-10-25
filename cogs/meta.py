@@ -362,7 +362,7 @@ class Meta(commands.Cog):
     ):
         await ctx.send("Hi im online :)")
 
-    @commands.command()
+    @commands.command(aliases=["linecount"])
     @commands.cooldown(1, 60, commands.BucketType.channel)
     async def lines(ctx):
         for path, subdirs, files in os.walk("."):
@@ -371,7 +371,7 @@ class Meta(commands.Cog):
         cm = cr = fn = cl = ls = fc = 0
         for f in files:
             fc += 1
-            with f.open() as of:
+            with open(f) as of:
                 for l in of.readlines():
                     l = l.strip()
                     if l.startswith('class'):
