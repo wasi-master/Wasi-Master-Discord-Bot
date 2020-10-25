@@ -8,7 +8,7 @@ def get_all_customs(obj, syntax_highlighting: bool = False) -> dict:
     for i in dir(obj):
         if not str(i).startswith('__') and not str(getattr(obj, i)).startswith('<'):
             dicted[i] = str(getattr(obj, i))
-    dicted = pformat(dicted, indent=4)
+    dicted = pformat(dicted, indent=4, width=50)
     return ("```python\n" if syntax_highlighting else "") + dicted + ("```" if syntax_highlighting else "")
 
 discord.Message.role_mentions
