@@ -89,7 +89,7 @@ class Utility(commands.Cog):
 
     @commands.command()
     async def embed(self, ctx, embed_json):
-        embed_json = embed_json.lstrip("```").lstrip("json\n").rstrip("```").strip()
+        embed_json = embed_json.lstrip("```json\n").lstrip("```").rstrip("```")
         try:
             embed_dict = json.loads(embed_json)
         except Exception as e:
