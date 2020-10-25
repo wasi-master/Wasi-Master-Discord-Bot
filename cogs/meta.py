@@ -367,7 +367,7 @@ class Meta(commands.Cog):
     @commands.cooldown(1, 60, commands.BucketType.channel)
     async def lines(self, ctx):
         m =  await ctx.send("Getting the files")
-        for path, subdirs, files in os.walk("."):
+        for path, subdirs, files in os.walk("./cogs"):
             for name in files:
                 files += os.path.join(path, name)
         await m.edit(content="Searching the files")
@@ -389,6 +389,7 @@ class Meta(commands.Cog):
                         cm += 1
                     ls += 1
         await m.edit(content= \
+                   "**Code Satistics** (doesn\'t include the main file)\n\n"
                    f"Files       :   {fc}\n"
                    f"Lines       :   {ls:,}\n"
                    f"Classes     :   {cl}\n"
