@@ -36,10 +36,10 @@ class Utility(commands.Cog):
     
     
     @commands.command(aliases=["redirect", "unshort", "us"])
-    async def unshorten(ctx, url: str):
-        async with ctx.bot.session.get(url, allow_redirects=True) as cs:
+    async def unshorten(self, ctx, url: str):
+        async with self.bot.session.get(url, allow_redirects=True) as cs:
             if cs.url == url:
-                await ctx.send("The url didn't redirect me to any website")
+                await ctx.send("The url didn't redirect me to any website :(")
                 return
             result_url = cs.url
         embed = discord.Embed(
@@ -100,7 +100,9 @@ class Utility(commands.Cog):
         if (col := embed_dict.get("color", embed_dict.get("colour"))):
             if isinstance(col, str):
                 embed_dict["color"] = await commands.ColourConverter.convert(ctx, col)
-        emby = discord.Embed.from_dict(embed_dict)
+        try:
+            emby = discord.Embed.from_dict(embed_dict)
+        except
         try:
             if ctx.author.permissions_in(ctx.channel).manage_messages:
                 await ctx.send(embed=emby)
