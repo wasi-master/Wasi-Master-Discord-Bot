@@ -99,7 +99,7 @@ class Utility(commands.Cog):
             return
         if (col := embed_dict.get("color", embed_dict.get("colour"))):
             if isinstance(col, str):
-                embed_dict["color"] = await discord.ColourConverter.convert(ctx, col)
+                embed_dict["color"] = await commands.ColourConverter.convert(ctx, col)
         emby = discord.Embed.from_dict(embed_dict)
         try:
             if ctx.author.permissions_in(ctx.channel).manage_messages:
