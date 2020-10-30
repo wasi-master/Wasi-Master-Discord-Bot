@@ -34,7 +34,46 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    
+"""
+    @commands.command(aliases=["copyguild", "servercopy", "guildcopy"])
+    # @bot_has_permissions()
+    async def copyserver(self, ctx, copy_to: int):
+        if (guild := self.bot.get_guild(copy_to)):
+            if not ctx.author in guild.members:
+                return await ctx.send("You are not in that server")
+            if not ctx.author.id == guild.owner_id:
+                return await ctx.send("You are in that server but you do not own that server")
+            if not ctx.author.id == ctx.guild.owner_id:
+                return await ctx.send("You do own that server but do not own this server")
+            m = await ctx.send("Work Starting")
+            await asyncio.sleep(3)
+            await m.edit(content="Deleting all channels of that server")
+            for channel in guild.channels:
+                await channel.delete(reason=f"Copying From {ctx.guild.name} (ID: {ctx.guild.id})")
+            await m.edit(content="Creating all channels from this server to that server")
+            missed = {}
+            for channel in ctx.guild.channels:
+                if isinstance(channel, discord.TextChannel):
+                    try:
+                        if channel.categoryis None:
+                            await guild.create_text_channel(name=channel.name, overwrites=overwrites)
+                    except Exception, e:
+                        missed[channel] = str(e)
+                elif isinstance(channel, discord.VoiceChannel):
+                    try:
+                        # TODO: write code...
+                    except Exception, e:
+                        missed[chanel] = str(e)
+                elif isinstance(channel, discord.CategoryChannel):
+                    try:
+                        # TODO: write code...
+                    except Exception, e:
+                        missed[channel] = str(e)
+                else:
+                    missed[channel] = "Can't copy this type of channel"
+        else:
+            await ctx.send("The bot is not in that server")
+    """
     @commands.command(aliases=["redirect", "unshort", "us"])
     async def unshorten(self, ctx, url: str):
         async with self.bot.session.get(url, allow_redirects=True) as cs:
