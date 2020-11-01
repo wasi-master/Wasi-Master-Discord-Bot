@@ -141,7 +141,8 @@ class Utility(commands.Cog):
                 embed_dict["color"] = await commands.ColourConverter.convert(ctx, col)
         try:
             emby = discord.Embed.from_dict(embed_dict)
-        except
+        except Exception as e:
+            await ctx.send("Error occured: " + str(e))
         try:
             if ctx.author.permissions_in(ctx.channel).manage_messages:
                 await ctx.send(embed=emby)
