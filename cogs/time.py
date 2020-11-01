@@ -131,7 +131,7 @@ class Time(commands.Cog):
             )
             if not location is None:
                 location = location["timezone"]
-            if location is None:
+            else:
                 embed = discord.Embed(
                     title=f"{location.name} has not yet set his tinezone",
                     description='Set timezone with the timeset command (shortest alias "ts")',
