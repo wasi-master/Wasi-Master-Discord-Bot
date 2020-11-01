@@ -32,7 +32,7 @@ class Time(commands.Cog):
         aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"],
         description=" Set your time zone to be used in the timr command",
     )
-    async def timeset(self, ctx, timezone: str):
+    async def timeset(self, ctx, *, timezone: str):
         location = timezone
         continents = ["asia", "europe", "oceania", "australia", "africa"]
         if location.lower() in continents:
@@ -133,7 +133,7 @@ class Time(commands.Cog):
                 location = location["timezone"]
             else:
                 embed = discord.Embed(
-                    title=f"{location.name} has not yet set his tinezone",
+                    title=f"{location_or_user.name} has not yet set his tinezone",
                     description='Set timezone with the timeset command (shortest alias "ts")',
                     color=14885931,
                 )
