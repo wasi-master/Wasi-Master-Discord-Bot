@@ -359,7 +359,7 @@ class Meta(commands.Cog):
 
 
     @commands.command(aliases=["cs"])
-    async def commandsearch(ctx, cmd):
+    async def commandsearch(self, ctx, cmd):
         """Search for a command in the bot"""
         if len(cmd) > 15:
             return await ctx.send("Name length too long")
