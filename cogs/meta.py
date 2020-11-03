@@ -361,7 +361,9 @@ class Meta(commands.Cog):
     @commands.command(aliases=["cs"])
     async def commandsearch(ctx, cmd):
         """Search for a command in the bot"""
-        cmds = difflib.get_close_matches(cmd, [i.name for i in _bot.commands], cutoff=0.3)
+        if len(cmd) > 15:
+            return await ctx.send("Name length too long")
+        cmds = difflib.get_close_matches(cmd, [i.name for i in self.bot.commands], cutoff=0.3)
         await ctx.send(embed=discord.Embed(title="Search results for " + cmd, description="\n".join([f"**{index}.**  {command}" for index, command in enumerate(cmds, start=1)])))
 
 
