@@ -1,5 +1,6 @@
 import asyncio
 import discord
+import difflib
 import humanize
 import datetime
 from tabulate import tabulate
