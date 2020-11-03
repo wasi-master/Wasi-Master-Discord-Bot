@@ -139,11 +139,11 @@ class Utility(commands.Cog):
         if (col := embed_dict.get("color", embed_dict.get("colour"))):
             if isinstance(col, str):
                 converter = commands.ColourConverter()
-                embed_dict["color"] = await converter.convert(ctx, col).value
+                embed_dict["color"] = (await converter.convert(ctx, col)).value
         try:
             emby = discord.Embed.from_dict(embed_dict)
         except Exception as e:
-            await ctx.send("Error occured: " + str(e))
+            return await ctx.send("Error occured: " + str(e))
         try:
             if ctx.author.permissions_in(ctx.channel).manage_messages:
                 await ctx.send(embed=emby)
@@ -152,13 +152,13 @@ class Utility(commands.Cog):
         except Exception as e:
             if hasattr(e, "code"):
                 if e.code == 50006:
-                    await ctx.send("Invalid embed")
+                    return await ctx.send("Invalid embed")
                 elif e.code == 50035:
-                    await ctx.send("Invalid Field: " + str(e))
+                    return await ctx.send("Invalid Field: " + str(e))
                 else:
-                    await ctx.send("Error occured: " + str(e))
+                    return await ctx.send("Error occured: " + str(e))
             else:
-                await ctx.send("Error Occured, check if everything was right")
+                return await ctx.send("Error Occured, check if everything was right")
 
     @commands.command(
         aliases=["link", "message", "ml"],
