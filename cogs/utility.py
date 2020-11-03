@@ -139,7 +139,7 @@ class Utility(commands.Cog):
         if (col := embed_dict.get("color", embed_dict.get("colour"))):
             if isinstance(col, str):
                 converter = commands.ColourConverter()
-                embed_dict["color"] = await converter.convert(ctx, col)
+                embed_dict["color"] = await converter.convert(ctx, col).value
         try:
             emby = discord.Embed.from_dict(embed_dict)
         except Exception as e:
