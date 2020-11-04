@@ -201,7 +201,7 @@ class Data(commands.Cog):
             await ctx.send("Movie Not Found")
 
     @commands.command(name="gender", description="Get a gender by providing a name")
-    @commands.cooldown(1, 30, BucketType.user)
+    @commands.cooldown(1, 5, BucketType.user)
     async def gender(self, ctx, *, name: str):
 
         url = f"https://gender-api.com/get?name={name.replace(' ', '%20')}&key=tKYMESVFrAEhpCpuwz"
