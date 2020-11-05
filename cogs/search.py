@@ -342,7 +342,7 @@ class Search(commands.Cog):
         embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
         embed.add_field(name="Version", value=fj["version"])
         # embed.add_field(name="Summary", value=fj["summary"])
-        hp = "Github Repo" if re.match(r"https:\/\/(www\.)?github\.com\/\w{0,39}\/\w{0,100", fj["home_page"]) else "Home Page"
+        hp = "Github Repo" if re.match(r"https:\/\/(www\.)?github\.com\/.{0,39}\/.{0,100}", fj["home_page"]) else "Home Page"
         embed.add_field(
             name="Links",
             value=f"[{hp}]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})",
