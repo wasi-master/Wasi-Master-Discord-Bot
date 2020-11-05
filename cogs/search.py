@@ -4,6 +4,7 @@ import datetime
 import json, urllib, requests, asyncio
 from discord.ext import commands
 import wikipedia as wikimodule
+import re
 
 from discord.ext.commands import BucketType
 
@@ -341,9 +342,10 @@ class Search(commands.Cog):
         embed.add_field(name="Author", value=f"Name: {fj['author']}\nEmail: {email}")
         embed.add_field(name="Version", value=fj["version"])
         # embed.add_field(name="Summary", value=fj["summary"])
+        hp = "Github Repo" if re.match(r"https:\/\/(www\.)?github\.com\/\w{0,39}\/\w{0,100", fj["home_page"]) else "Home Page"
         embed.add_field(
             name="Links",
-            value=f"[Home Page]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})",
+            value=f"[{hp}]({fj['home_page']})\n[Project Link]({fj['project_url']})\n[Release Link]({fj['release_url']})",
         )
         if fj["license"] is None or len(fj["license"]) < 3:
             license = "Not Specified"
