@@ -210,7 +210,7 @@ class English(commands.Cog):
                             .replace("</b>", "**"),
                         )
                         if not term["image_url"] is None:
-                        embed.set_thumbnail(term["image_url"])
+                            embed.set_thumbnail(term["image_url"])
                         await message.edit(embed=embed)
                         try:
                             return await message.clear_reactions()
