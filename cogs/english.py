@@ -96,11 +96,9 @@ class English(commands.Cog):
             headers=heds
         ) as r:
             text = await r.text()
-            await ctx.send(f"```json\n{text}```")
+            # await ctx.send(f"```json\n{text}```")
         fj = json.loads(text)
-        pro = fj["pronunciation"]
-        fj = fj["definitions"]
-       
+        
         if len(fj) > 1:
             results = fj
             term = results[num]
@@ -117,9 +115,6 @@ class English(commands.Cog):
                     name="Example",
                     value=term["example"].replace("<b>", "**").replace("</b>", "**"),
                 )
-            if not term["image_url"] is None:
-                embed.set_thumbnail(term["image_url"])
-            embed.add_field(name="Pronounciation", value=pro, inline=False)
             embed.set_footer(text=f"Definition {num + 1}/{len(results)}")
             message = await ctx.send(embed=embed)
             await message.add_reaction("\u25c0\ufe0f")
@@ -170,8 +165,6 @@ class English(commands.Cog):
                                 .replace("<b>", "**")
                                 .replace("</b>", "**"),
                             )
-                        if not term["image_url"] is None:
-                            embed.set_thumbnail(term["image_url"])
                         embed.set_footer(text=f"Definition {num + 1}/{len(results)}")
                         await message.edit(embed=embed)
                     elif reaction.emoji == "\u25b6\ufe0f":
@@ -195,8 +188,6 @@ class English(commands.Cog):
                                 .replace("<b>", "**")
                                 .replace("</b>", "**"),
                             )
-                        if not term["image_url"] is None:
-                            embed.set_thumbnail(term["image_url"])
                         embed.set_footer(text=f"Definition {num + 1}/{len(results)}")
                         await message.edit(embed=embed)
                     elif reaction.emoji == "\u23f9\ufe0f":
@@ -210,8 +201,6 @@ class English(commands.Cog):
                             .replace("<b>", "**")
                             .replace("</b>", "**"),
                         )
-                        if not term["image_url"] is None:
-                            embed.set_thumbnail(term["image_url"])
                         await message.edit(embed=embed)
                         try:
                             return await message.clear_reactions()
@@ -234,7 +223,6 @@ class English(commands.Cog):
                 await ctx.send("Word not found")
                 return
             embed.add_field(name="Type", value=term["type"])
-            embed.add_field(name="Pronounciation", value=pro, inline=False)
             if not (term["example"] is None or len(term["example"]) == 0):
                 embed.add_field(
                     name="Example",
