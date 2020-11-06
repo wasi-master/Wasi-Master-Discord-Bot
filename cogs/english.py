@@ -96,6 +96,7 @@ class English(commands.Cog):
             headers=heds
         ) as r:
             text = await r.text()
+            await ctx.send(f"```json\n{text}```")
         fj = json.loads(text)
         pro = fj["pronunciation"]
         fj = fj["definitions"]
