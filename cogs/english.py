@@ -146,7 +146,7 @@ class English(commands.Cog):
                 else:
                     if reaction.emoji == "\u25c0\ufe0f":
                         try:
-                            message.remove_reaction("\u25c0\ufe0f", ctx.author)
+                            await message.remove_reaction("\u25c0\ufe0f", ctx.author)
                         except discord.Forbidden:
                             pass
                         num -= 1
