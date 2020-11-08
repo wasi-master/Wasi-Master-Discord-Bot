@@ -393,22 +393,22 @@ class Search(commands.Cog):
         else:
             embed = discord.Embed(title=fj["_id"], color=0x2F3136)
         author = fj["author"]
-        embed.add_field(name="Author", value=f"Name: ({author.get('name')})[{author.get('url', 'None')}]\nEmail: {author.get('email')}", inline=False)
+        embed.add_field(name="Author", value=f"Name: [{author.get('name')}]({author.get('url', 'None')})\nEmail: {author.get('email')}", inline=False)
         latest_ver = sorted(fj["versions"])[-1]
         embed.add_field(name="Version", value=latest_ver)
         main = ""
         for maintainer in fj["maintainers"]:
             author = maintainer
-            main += f"‌    Name: ({author.get('name')})[{author.get('url', 'None')}]\n‌    Email: {author.get('email')}\n"
+            main += f"‌    Name: [{author.get('name')}]({author.get('url', 'None')})\n‌    Email: {author.get('email')}\n"
         embed.add_field(name="Maintainers:",  value=main, inline=False)
         links = []
         if fj.get("homepage"):
-            links.append(f'(Home Page)[{fj["homepage"]}]')
+            links.append(f'[Home Page]({fj["homepage"]})')
         if fj.get("bugs"):
-            links.append(f'(Bug Tracker)[{fj["bugs"]["url"]}')
+            links.append(f'[Bug Tracker]({fj["bugs"]["url"]})')
         github = fj["repository"]["url"][4:-4]
-        links.append(f'(Github Repo)[{github}]')
-        links.append(f"(Package Link)[{'https://www.npmjs.com/package/'+fj['_id']}]")
+        links.append(f'[Github Repo]({github})')
+        links.append(f"[Package Link]({'https://www.npmjs.com/package/'+fj['_id']})")
         embed.add_field(name="Links", value="\n".join(links))
         if fj.get("license"):
             embed.add_field(name="License", value=fj["license"])
