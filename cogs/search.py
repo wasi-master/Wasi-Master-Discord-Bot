@@ -397,9 +397,9 @@ class Search(commands.Cog):
         latest_ver = sorted(fj["versions"])[-1]
         embed.add_field(name="Version", value=latest_ver)
         main = ""
-        for maintainer in fj["maintainers"]:
+        for num, maintainer in enumerate(fj["maintainers"]):
             author = maintainer
-            main += f"‌    Name: [{author.get('name')}]({author.get('url', 'None')})\n‌    Email: {author.get('email')}\n"
+            main += f"‌    **{num}.** Name: [{author.get('name')}]({author.get('url', 'None')})\n‌       Email: {author.get('email')}\n\n"
         embed.add_field(name="Maintainers:",  value=main, inline=False)
         links = []
         if fj.get("homepage"):
