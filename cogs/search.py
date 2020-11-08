@@ -399,7 +399,7 @@ class Search(commands.Cog):
         main = ""
         for maintainer in fj["maintainers"]:
             author = maintainer
-            main += f"‌    Name: ({author.get('name')})[{author.get('url', 'None')}]\nEmail: {author.get('email')}\n"
+            main += f"‌    Name: ({author.get('name')})[{author.get('url', 'None')}]\n‌    Email: {author.get('email')}\n"
         embed.add_field(name="Maintainers:",  value=main, inline=False)
         links = []
         if fj.get("homepage"):
