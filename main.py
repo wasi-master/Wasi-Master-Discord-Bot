@@ -279,8 +279,12 @@ async def fake_on_ready():
     owner = client.get_user(538332632535007244)
     await owner.send("Bot Online")
     for extension in initial_extensions:
-        client.load_extension(extension)
-        end = time.time()
+        try:
+           client.load_extension(extension)
+        except BaseException as e:
+            await owner.send(f"```py\n{e}```")
+            raise e
+    end = time.time()
     await owner.send(f"All cogs loaded in `{end-start}`ms")
     client.started_at = datetime.datetime.utcnow()
     update_server_count.start()
