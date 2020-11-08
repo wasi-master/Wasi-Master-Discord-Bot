@@ -393,7 +393,7 @@ class Search(commands.Cog):
         else:
             embed = discord.Embed(title=fj["_id"], color=0x2F3136)
         author = fj["author"]
-        embed.add_field(name="Author", value=f"Name: ({author.get('name')})[{author.get('url')]}]\nEmail: {author.get('email')}", inline=False)
+        embed.add_field(name="Author", value=f"Name: ({author.get('name')})[{author.get('url')}]\nEmail: {author.get('email')}", inline=False)
         latest_ver = sorted(fj["versions"])[-1]
         embed.add_field(name="Version", value=latest_ver)
         main = ""
