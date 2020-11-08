@@ -410,7 +410,7 @@ class Search(commands.Cog):
             links.append(f'(Github Repo)[{github}]')
         links.append(f"(Package Link)[{'https://www.npmjs.com/package/'+fj['_id']}]")
         embed.add_field(name="Links", value="\n".join(links))
-        if fj.get("license")
+        if fj.get("license"):
             embed.add_field(name="License", value=fj["license"])
         dependencies = list(fj["versions"][latest_ver]["dependencies"])
         if dependencies:
