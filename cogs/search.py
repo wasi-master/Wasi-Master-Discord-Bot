@@ -368,6 +368,62 @@ class Search(commands.Cog):
                 )
         await ctx.send(embed=embed)
 
+
+    @commands.command(
+        name="npm",
+        description="Searches npm for JavaScript packages",
+    )
+    async def nodepackagemanager(self, ctx, package_name: str):
+
+        url = f"https://registry.npmjs.org/{package_name}"
+        async with self.bot.session.get(url) as response:
+            if (
+                '{"error":"Not found"}'
+                in await response.text()
+            ):
+                return await ctx.send("Project not found")
+            else:
+                fj = json.loads(await response.text())
+        if not len(fj["description"]) == 0:
+            embed = discord.Embed(
+                title=fj["_id"],
+                description=fj["description"].replace("![", "[").replace("]", ""),
+                color=0x2F3136,
+            )
+        else:
+            embed = discord.Embed(title=fj["_id"], color=0x2F3136)
+        author = fj["author"]
+        embed.add_field(name="Author", value=f"Name: ({author.get('name')})[{author.get('url')]}]\nEmail: {author.get('email')}", inline=False)
+        latest_ver = sorted(fj["versions"])[-1]
+        embed.add_field(name="Version", value=latest_ver)
+        main = ""
+        for maintainer in fj["maintainers"]:
+            author = maintainer
+            main += f"    Name: ({author.get('name')})[{author.get('url')]}]\nEmail: {author.get('email')}\n"
+        embed.add_field(name="Maintainers",  value=main, inline=False)
+        links = []
+        if fj.get("homepage"):
+            links.append(f'(Home Page)[{fj["homepage"]}]')
+        if fj.get("bugs"):
+            links.append(f'(Bug Tracker)[{fj["bugs"]}')
+        if (github!:= re.find(r"https:\/\/(www\.)?github\.com\/.{0,39}\/.{0,100}", fj["repository"]["url"])):
+            links.append(f'(Github Repo)[{github}]')
+        links.append(f"(Package Link)[{'https://www.npmjs.com/package/'+fj['_id']}]")
+        embed.add_field(name="Links", value="\n".join(links))
+        if fj.get("license")
+            embed.add_field(name="License", value=fj["license"])
+        dependencies = list(fj["versions"][latest_ver]["dependencies"])
+        if dependencies:
+            if len(dependencies) > 15:
+                embed.add_field(name="Dependencies", value=len(dependencies), inline=False)
+            elif len(dependencies) > 7:
+                embed.add_field(name="Dependencies", value=", ".join(dependencies))
+            else:
+                embed.add_field(name="Dependencies", value="\n".join(dependencies))
+        await ctx.send(embed=embed)
+
+
+
     @commands.command(
         aliases=[
             "yti",
