@@ -406,7 +406,7 @@ class Search(commands.Cog):
             links.append(f'(Home Page)[{fj["homepage"]}]')
         if fj.get("bugs"):
             links.append(f'(Bug Tracker)[{fj["bugs"]}')
-        if (github!:= re.find(r"https:\/\/(www\.)?github\.com\/.{0,39}\/.{0,100}", fj["repository"]["url"])):
+        if (github := re.find(r"https:\/\/(www\.)?github\.com\/.{0,39}\/.{0,100}", fj["repository"]["url"])):
             links.append(f'(Github Repo)[{github}]')
         links.append(f"(Package Link)[{'https://www.npmjs.com/package/'+fj['_id']}]")
         embed.add_field(name="Links", value="\n".join(links))
