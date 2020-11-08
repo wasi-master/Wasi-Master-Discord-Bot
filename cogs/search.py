@@ -405,7 +405,7 @@ class Search(commands.Cog):
         if fj.get("homepage"):
             links.append(f'(Home Page)[{fj["homepage"]}]')
         if fj.get("bugs"):
-            links.append(f'(Bug Tracker)[{fj["bugs"]["url"}')
+            links.append(f'(Bug Tracker)[{fj["bugs"]["url"]}')
         github = fj["repository"]["url"][4:-4]
         links.append(f'(Github Repo)[{github}]')
         links.append(f"(Package Link)[{'https://www.npmjs.com/package/'+fj['_id']}]")
