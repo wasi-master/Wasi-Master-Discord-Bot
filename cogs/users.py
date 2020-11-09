@@ -307,9 +307,10 @@ class Users(commands.Cog):
                     embed.add_field(name="Album", value=activity.album)
                 except:
                     embed.add_field(name="Album", value="None")
-                embed.add_field(
-                    name="Song Duration", value=str(activity.duration)[2:-7]
-                )
+                if not len(str(activity.duration)[2:-7]) > 1:
+                    embed.add_field(
+                      name="Song Duration", value=str(activity.duration)[2:-7]
+                   )
                 embed.add_field(
                     name="Spotify Link",
                     value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})",
