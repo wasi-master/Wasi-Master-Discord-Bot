@@ -307,8 +307,13 @@ class Text(commands.Cog):
             elif word in list(string.ascii_letters):
                 list_.append(f":regional_indicator_{word.lower()}:")
         try:
-            await ctx.send(" ".join(list_))
-        except:
+            m = await ctx.send(" ".join(list_))
+            try:
+                await self.bot wait_for("message_delete", check=lambda m: m == ctx.message, timeout=60)
+                await m.delete()
+            except asyncio.TimeoutError:
+                pass
+        except discord.HTTPException:
             await ctx.send("Message too long")
 
     @commands.command(aliases=["uwu"], description="uwuifies a given text")
