@@ -41,7 +41,7 @@ class Miscellaneous(commands.Cog):
             pass
         else:
             await m.edit(
-                content=f"{text}\n\n    - sent by {ctx.author} but he deleted his message"
+                content=f"{text}\n\n    - sent by {ctx.author} but he deleted his message :unamused:"
             )
 
     @commands.command(aliases=["webping", "pingweb", "wp", "pw"])
