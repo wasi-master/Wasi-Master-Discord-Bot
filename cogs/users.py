@@ -292,7 +292,7 @@ class Users(commands.Cog):
                         return results[:max_results]
                     return results
                 """
-                videos = search()
+                #videos = search()
                 embed = discord.Embed(color=activity.color)
                 embed.set_thumbnail(
                     url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
