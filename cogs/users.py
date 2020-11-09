@@ -307,6 +307,7 @@ class Users(commands.Cog):
                     embed.add_field(name="Album", value=activity.album)
                 except:
                     embed.add_field(name="Album", value="None")
+                await ctx.send(f"Hey umm, the duration I got is {activity.duration} and I tried to make it {str(activity.duration)[2:7]}")
                 if not len(str(activity.duration)[2:-7]) > 1:
                     embed.add_field(
                       name="Song Duration", value=str(activity.duration)[2:-7]
