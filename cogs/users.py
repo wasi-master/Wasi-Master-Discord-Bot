@@ -235,7 +235,7 @@ class Users(commands.Cog):
                 success = True
                 search_terms = activity.artist + " - " + activity.title
                 max_results = 1
-
+                """
                 def parse_html(response):
                     results = []
                     start = (
@@ -291,7 +291,7 @@ class Users(commands.Cog):
                     if max_results is not None and len(results) > max_results:
                         return results[:max_results]
                     return results
-
+                """
                 videos = search()
                 embed = discord.Embed(color=activity.color)
                 embed.set_thumbnail(
@@ -314,10 +314,10 @@ class Users(commands.Cog):
                     name="Spotify Link",
                     value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})",
                 )
-                embed.add_field(
+                """embed.add_field(
                     name="Youtube Link",
                     value=f"[Click Here](https://www.youtube.com{videos[0]['url_suffix']})",
-                )
+                )"""
                 try:
                     embed.add_field(
                         name="Time",
