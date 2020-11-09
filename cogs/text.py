@@ -309,7 +309,7 @@ class Text(commands.Cog):
         try:
             m = await ctx.send(" ".join(list_))
             try:
-                await self.bot wait_for("message_delete", check=lambda m: m == ctx.message, timeout=60)
+                await self.bot.wait_for("message_delete", check=lambda m: m == ctx.message, timeout=60)
                 await m.delete()
             except asyncio.TimeoutError:
                 pass
