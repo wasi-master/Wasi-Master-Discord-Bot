@@ -142,6 +142,11 @@ async def on_message_delete(message):
     client.snipes[message.channel.id] = message
 
 
+@client.before_invoke
+async def before_invoke(ctx):
+    await ctx.channel.trigger_typing()
+
+
 @client.event
 async def on_command_completion(
     ctx,
