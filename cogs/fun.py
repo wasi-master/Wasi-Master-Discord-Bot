@@ -25,7 +25,7 @@ class Fun(commands.Cog):
             person = whotogiveup.display_name
         else:
             person = whotogiveup
-        gwp = """Never gonna give {0}. up
+        gwp = """Never gonna give {0} up
 Never gonna let {0} down
 Never gonna run around and desert {0} 
 Never gonna make {0} cry
