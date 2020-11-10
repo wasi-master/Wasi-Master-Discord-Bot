@@ -20,7 +20,7 @@ class Fun(commands.Cog):
     
     @commands.command(aliases=["giveyouup", "gyu", "nggyu", "giveup", "never_gonna_give_you_up"])
     @commands.cooldown(1, 10, commands.BucketType.channel)
-    async def nevergonnagiveyouup(ctx, whotogiveup: Union[discord.Member, str]):
+    async def nevergonnagiveyouup(self, ctx, whotogiveup: Union[discord.Member, str]):
         if isinstance(whotogiveup, discord.Member):
             person = whotogiveup.display_name
         else:
