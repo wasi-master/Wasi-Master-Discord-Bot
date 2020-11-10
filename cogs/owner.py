@@ -110,7 +110,7 @@ def progressbar(percent: int, empty: str = "☐", filled: str = "■"):
         percent (int): Percentage
 
     Returns:
-        str: a progressbar
+        empty (str): a progressbar
     """
     total_percentage = 15
     percent = percent * 0.15
@@ -130,6 +130,36 @@ class Owner(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+
+    @commands.is_owner()
+    @commands.group(invoke_without_command=False, aliases=["msg"])
+    async def message(ctx):
+        pass
+    
+    @message.command(name="delete", aliases=["d"])
+    @commands.is_owner()
+    async def message_delete(ctx, msg: discord.Message):
+        try:
+            await msg.delete()
+        except Exception as e:
+            await ctx.send(e)
+    @message.command(name="edit", aliases=["e"])
+    @commands.is_owner()
+    async def message_edit(ctx, msg: discord.Message, content: str):
+        try:
+            await msg.edit(content=content, embed=msg.embeds[0])
+        except Exception as e:
+            await ctx.send(e)
+    
+    @message.command(name="delete_embed", aliases=["de"])
+    @commands.is_owner()
+    async def message_delete_embed(ctx, msg: discord.Message):
+        try:
+            await msg.edit(content="‌"+msg.content, embed=None)
+        except Exception as e:
+            await ctx.send(e)
+
 
     @commands.command(description="The bot leaves the server (bot owner only)")
     async def leaveserver(
