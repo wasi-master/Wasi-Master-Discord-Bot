@@ -137,14 +137,14 @@ class Owner(commands.Cog):
     async def bot_message(ctx):
         pass
     
-    @message.command(name="delete", aliases=["d"])
+    @bot_message.command(name="delete", aliases=["d"])
     @commands.is_owner()
     async def message_delete(ctx, msg: discord.Message):
         try:
             await msg.delete()
         except Exception as e:
             await ctx.send(e)
-    @message.command(name="edit", aliases=["e"])
+    @bot_message.command(name="edit", aliases=["e"])
     @commands.is_owner()
     async def message_edit(ctx, msg: discord.Message, content: str):
         try:
@@ -152,7 +152,7 @@ class Owner(commands.Cog):
         except Exception as e:
             await ctx.send(e)
     
-    @message.command(name="delete_embed", aliases=["de"])
+    @bot_message.command(name="delete_embed", aliases=["de"])
     @commands.is_owner()
     async def message_delete_embed(ctx, msg: discord.Message):
         try:
