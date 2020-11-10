@@ -7,6 +7,7 @@ import json
 from discord.ext import commands
 import async_cleverbot as ac
 import json
+from typing import Union
 
 from urllib.parse import quote
 
@@ -15,6 +16,35 @@ class Fun(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
+    
+    
+    @commands.command(aliases=["giveyouup", "gyu", "nggyu", "giveup", "never_gonna_give_you_up"])
+    @commands.cooldown(1, 10, commands.BucketType.channel)
+    async def nevergonnagiveyouup(ctx, whotogiveup: Union[discord.Member, str]):
+        if isinstance(whotogiveup, discord.Member):
+            person = whotogiveup.display_name
+        else:
+            person = whotogiveup
+        gwp = """Never gonna give {0}. up
+Never gonna let {0} down
+Never gonna run around and desert {0} 
+Never gonna make {0} cry
+Never gonna say goodbye
+Never gonna tell a lie and hurt {0}
+Never gonna give {0} up
+Never gonna let {0} down
+Never gonna run around and desert {0}. 
+Never gonna make {0} cry
+Never gonna say goodbye
+Never gonna tell a lie and hurt {0}.
+Never gonna give {0} up
+Never gonna let {0} down
+Never gonna run around and desert {0} 
+Never gonna make {0} cry
+Never gonna say goodbye
+Never gonna tell a lie and hurt {0}""".format(person)
+    await ctx.send(gwp)
+    
     
     @commands.command()
     async def snipe(self, ctx, channel: discord.TextChannel = None):
