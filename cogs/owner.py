@@ -134,7 +134,7 @@ class Owner(commands.Cog):
 
     @commands.is_owner()
     @commands.group(invoke_without_command=False, aliases=["msg"])
-    async def message(ctx):
+    async def bot_message(ctx):
         pass
     
     @message.command(name="delete", aliases=["d"])
