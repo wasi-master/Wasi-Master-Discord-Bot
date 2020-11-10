@@ -43,7 +43,7 @@ Never gonna run around and desert {0}
 Never gonna make {0} cry
 Never gonna say goodbye
 Never gonna tell a lie and hurt {0}""".format(person)
-        gwp = discord.utuls.escape_markdown(gwp)
+        gwp = discord.utils.escape_markdown(gwp)
         await ctx.send(gwp, allowed_mentions=discord.AllowedMentions.none())
     
     
