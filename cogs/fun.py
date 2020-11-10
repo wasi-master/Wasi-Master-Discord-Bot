@@ -43,7 +43,7 @@ Never gonna run around and desert {0}
 Never gonna make {0} cry
 Never gonna say goodbye
 Never gonna tell a lie and hurt {0}""".format(person)
-    await ctx.send(gwp)
+        await ctx.send(gwp)
     
     
     @commands.command()
