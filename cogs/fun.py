@@ -25,6 +25,10 @@ class Fun(commands.Cog):
             person = whotogiveup.display_name
         else:
             person = whotogiveup
+        if "\n" in person:
+            person = person.split("\n")[0]
+        if person.count(" ") > 2:
+            return await ctx.send("Why so large name? not gonna do that")
         gwp = """Never gonna give {0} up
 Never gonna let {0} down
 Never gonna run around and desert {0} 
