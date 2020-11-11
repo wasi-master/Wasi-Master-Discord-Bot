@@ -226,7 +226,7 @@ class Search(commands.Cog):
                 else:
                     pass
 
-    @commands.command(aliases=["yt"], description="Search youtube for stuff")
+    """@commands.command(aliases=["yt"], description="Search youtube for stuff")
     @commands.cooldown(2, 15, BucketType.user)
     async def youtube(self, ctx, *, search_term: str):
         search_terms = search_term
@@ -285,7 +285,7 @@ class Search(commands.Cog):
         videos = search()
         text = f'**__{videos[0]["title"]}__**\n```bash\n"Channel" :  {videos[0]["channel"]}\n"Duration":  {videos[0]["duration"]}\n"Views"   :  {videos[0]["views"]}```'
         url = f"https://www.youtube.com{videos[0]['url_suffix']}"
-        await ctx.send(content=text + "\n" + url)
+        await ctx.send(content=text + "\n" + url)"""
 
     @commands.command(aliases=["tenor"], description="Search for a gif")
     async def gif(self, ctx, *, query: str):
