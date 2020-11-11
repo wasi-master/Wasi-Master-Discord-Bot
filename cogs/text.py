@@ -38,6 +38,13 @@ class Text(commands.Cog):
                 for i, word in enumerate(words))
         return zalgo
 
+
+    @commands.command()
+    async def randomcase(ctx, inp):
+        case = [str.upper, str.lower]
+        await ctx.send("".join(case[round(random.random())](s) for s in inp))
+
+
     @commands.command()
     @commands.cooldown(1, 15, BucketType.default)
     async def mystbin(self, ctx, *, text):
@@ -48,8 +55,9 @@ class Text(commands.Cog):
                 syntax = text.split("\n")[0].replace("```", "")
         paste = await ctx.bot.mystbin_client.post(text, syntax=syntax)
         embed = discord.Embed(
-            title="Paste Succesfull", 
-            description=paste.url)
+                title="Paste Succesfull", 
+                description=paste.url
+            )
     
     @commands.command()
     @commands.cooldown(1, 15, BucketType.default)
