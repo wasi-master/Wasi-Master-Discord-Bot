@@ -11,6 +11,18 @@ class Coding(commands.Cog):
         self.bot = bot
 
 
+    @commands.command(name="json")
+    async def _json(self, ctx, *, json_string):
+        json_string = json_string.lstrip("```").rstrip("```").lstrip("json")
+        try:
+            js = json.loads(json_string)
+        except:
+            await ctx.send(discord.Embed(title="Invalid JSON", description=json_string, color=0xff0000))
+        else:
+            js_pretty = json.dumps(js, indent=4)
+            await ctx.send(f"```json\n{js_pretty}```")
+
+
     @commands.command(
         name="pypi",
         description="Searches pypi for python packages",
