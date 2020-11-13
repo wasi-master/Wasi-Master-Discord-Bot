@@ -51,7 +51,7 @@ class Reddit(commands.Cog):
             url = base + post["permalink"]
         )
         try:
-            embed.set_image(url=post["url_overridden_by_dest"])
+            embed.set_image(url=post["url_overridden_by_dest"], color=0xFF5700)
         except Exception:
             pass
         await ctx.send(base + post["permalink"], embed=embed)
