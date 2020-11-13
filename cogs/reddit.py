@@ -39,6 +39,9 @@ class Reddit(commands.Cog):
         async with self.bot.session.get(url, allow_redirects=True) as cs:
             js = await cs.json()
         data = js["data"]["children"]
+        if ctx.channel:
+            if not ctx.channel.is_nsfw():
+                data = [i for i in data if not i["data"]["over_18"]]
         post = random.choice(data)["data"]
         # dv = round(post['ups']*(1-post['upvote_ratio']))
         embed = discord.Embed(
