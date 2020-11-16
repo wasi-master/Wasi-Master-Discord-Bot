@@ -17,7 +17,7 @@ class Coding(commands.Cog):
         try:
             js = json.loads(json_string)
         except:
-            await ctx.send(discord.Embed(title="Invalid JSON", description=json_string, color=0xff0000))
+            await ctx.send(embed=discord.Embed(title="Invalid JSON", description=discord.utils.escape_markdown(json_string), color=0xff0000))
         else:
             js_pretty = json.dumps(js, indent=4)
             await ctx.send(f"```json\n{js_pretty}```")
