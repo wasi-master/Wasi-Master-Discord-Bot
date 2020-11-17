@@ -16,7 +16,7 @@ class Coding(commands.Cog):
         """Matches text to the regex provided"""
         match = re.search(regex, text)
         if match:
-            await ctx.send(f"**Regex:** ```{regex}``` **Match:** ```{match}```")
+            await ctx.send(f"**Regex:** ```{regex}``` **Match:** ```{match.match}```")
         else:
             await ctx.send("No match")
 
