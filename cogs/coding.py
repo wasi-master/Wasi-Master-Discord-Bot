@@ -14,13 +14,9 @@ class Coding(commands.Cog):
     @commands.command(name="regex")
     async def _regex(self, ctx, regex, text):
         """Matches text to the regex provided"""
-        matches = re.findall(regex, text)
-        if matches:
-            messages = []
-            messages.append(f"**Regex:** ```{regex}```")
-            for num, match in enumerate(matches, start=1):
-                messages.append(f"__Match {num}__ ```{match}```")
-            await ctx.send("\n".join(("".join(i) if hasattr(i, "__iter__") else i for i in matches)))
+        match = re.search(regex, text)
+        if match:
+            await ctx.send(f"**Regex:** ```{regex}``` **Match:** ```{match}```")
         else:
             await ctx.send("No match")
 
