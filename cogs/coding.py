@@ -16,7 +16,7 @@ class Coding(commands.Cog):
         """Matches text to the regex provided"""
         matches = re.findall(regex, text)
         if matches:
-            messages = ()
+            messages = []
             messages.append(f"**Regex:** ```{regex}```")
             for num, match in enumerate(matches, start=1):
                 messages.append(f"__Match {num}__ ```{match}```")
