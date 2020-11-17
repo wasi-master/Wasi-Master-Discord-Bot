@@ -20,7 +20,7 @@ class Coding(commands.Cog):
             messages.append(f"**Regex:** ```{regex}```")
             for num, match in enumerate(matches, start=1):
                 messages.append(f"__Match {num}__ ```{match}```")
-            await ctx.send("\n".join(matches))
+            await ctx.send("\n".join(("".join(i) if hasattr(i, "__iter__") else i for i in matches)))
         else:
             await ctx.send("No match")
 
