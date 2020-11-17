@@ -11,6 +11,20 @@ class Coding(commands.Cog):
         self.bot = bot
 
 
+    @commands.command(name="regex")
+    async def _regex(self, ctx, regex, text):
+        """Matches text to the regex provided"""
+        matches = re.findall(regex, text)
+        if matches:
+            messages = ()
+            messages.append(f"**Regex:** ```{regex}```")
+            for num, match in enumerate(matches, start=1):
+                messages.append(f"__Match {num}__ ```{match}```")
+            await ctx.send("\n".join(matches))
+        else:
+            await ctx.send("No match")
+
+
     @commands.command(name="json")
     async def _json(self, ctx, *, json_string):
         json_string = json_string.lstrip("```").rstrip("```").lstrip("json")
