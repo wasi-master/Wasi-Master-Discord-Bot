@@ -72,7 +72,7 @@ class Text(commands.Cog):
         if not self.words:
             await ctx.send("Loading my words, this may take a moment")
             async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
-                self.words = (await cs.read()).splitlines()
+                self.words = (await cs.text()).splitlines()
         wordlength = random.randint(30,40)
         words = random.sample(self.words, wordlength)
         words = list(filter(lambda m: not profanity.contains_profanity(m), words))
@@ -100,7 +100,7 @@ class Text(commands.Cog):
                     continue
                 right_words += 1
             wpm = time/wordlength
-            fixed_wpm = float(str(right_words)+"."+str(random.randint(0,9)+str(random.randint(0,9))+str(random.randint(0,9))))
+            fixed_wpm = float(str(right_words)+"."+str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9)))
             acc = accuracy(message.content, original_text)
             if len(mistakes) < 5 and len(mistakes) < 0:
                 mistk = ", ".join(mistakes)
