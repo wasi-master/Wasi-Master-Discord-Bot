@@ -56,11 +56,11 @@ seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
         if opcode == 'equal':
             output.append(seqm.a[a0:a1])
         elif opcode == 'insert':
-            output.append("**++" + seqm.a[b0:b1] + "++**")
+            output.append(f"**( +`{seqm.a[b0:b1]}` )**")
         elif opcode == 'delete':
-            output.append("**??" + seqm.b[a0:a1] + "??**")
+            output.append(f"**( ?`{seqm.b[a0:a1]}` )**")
         elif opcode == 'replace':
-            output.append("**__" + seqm.a[a0:a1] + "__**")
+            output.append(f"**__( `{seqm.b[b0:b1]}` -> `{seqm.a[a0:a1]}` )__**")
         else:
             raise RuntimeError, "unexpected error"
     return ''.join(output)
