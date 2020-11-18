@@ -5,6 +5,7 @@ async_cse
 # async_dagpi
 async_mediawiki
 asyncpg
+better_profanity
 bs4
 dblpy
 discord-flags
