@@ -86,7 +86,7 @@ class Text(commands.Cog):
         try:
             while True:
                 message = await self.bot.wait_for("message", check=check, timeout=120)
-                if messagecontent == original_text and message.author.bot:
+                if message.content == original_text and message.author.bot:
                     return await ctx.send(f"NANI, the bot {message.author} just sent it, so the game ends :)")
                 else:
                     break
@@ -113,7 +113,7 @@ class Text(commands.Cog):
                     right_words += 1
                     continue
                 mistakes.append(b_word)
-            wpm = len(message.content)/5
+            wpm = (len(message.content)/5)/(time*60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
                 mistk = ", ".join(mistakes)
