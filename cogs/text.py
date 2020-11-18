@@ -78,7 +78,7 @@ class Text(commands.Cog):
         words = random.sample(self.words, wordlength)
         words = list(filter(lambda m: not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
-        send_text = "‌ ".join(words)
+        send_text = (random.choice(list(map(chr, range(8192,8208))))+" ").join(words)
         bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{send_text}```")
         start = bot_message.created_at
         try:
@@ -88,6 +88,8 @@ class Text(commands.Cog):
         else:
             end = message.created_at
             time = (end-start).total_seconds()
+            if any(i in message.content for i in list(map(chr, range(8192,8208)))):
+                return await ctx.send("Imagine cheating bruh")
             if time < 15:
                 return await ctx.send("Imagine cheating bruh")
             elif time > 15 and message.content == send_text:
