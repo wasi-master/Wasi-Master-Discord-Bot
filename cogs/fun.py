@@ -31,7 +31,7 @@ class Fun(commands.Cog):
         await m.edit(embed=discord.Embed(title="🍪 Grab the Cookie"))
         await m.add_reaction("🍪")
         try:
-            r,u = await _bot.wait_for("reaction_add", check=lambda r,u: str(r.emoji) == "🍪" and r.message == m and r.message.channel == ctx.channel and not u.bot, timeout=10)
+            r,u = await self.bot.wait_for("reaction_add", check=lambda r,u: str(r.emoji) == "🍪" and r.message == m and r.message.channel == ctx.channel and not u.bot, timeout=10)
         except asyncio.TimeoutError:
             await ctx.send("No one got the cookie :(")
         else:
