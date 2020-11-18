@@ -70,7 +70,7 @@ class Text(commands.Cog):
     @commands.command(aliases=["trc"])
     async def typeracer(self, ctx):
         def check(m):
-            return m.channel == ctx.channel
+            return m.channel == ctx.channel and not m.author.id == 707883141548736512
         if not self.words:
             m = await ctx.send("Loading my words, this may take a moment")
             async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
