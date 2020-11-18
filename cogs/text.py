@@ -111,9 +111,10 @@ class Text(commands.Cog):
                     h_mistakes.append(u_word)
                     h_correct.append(b_word)
                     continue
-                mistakes.append(b_word)
-                h_mistakes.append(f"**__{u_word}__**")
-                h_correct.append(f"**__{b_word}__**")
+                else:
+                    mistakes.append(b_word)
+                    h_mistakes.append(f"**__{u_word}__**")
+                    h_correct.append(f"**__{b_word}__**")
             wpm = (len(message.content)/5)/(time/60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
