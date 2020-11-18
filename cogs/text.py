@@ -69,6 +69,8 @@ class Text(commands.Cog):
 
     @commands.command(aliases=["trc"])
     async def typeracer(self, ctx):
+        def check(m):
+            return m.channel == ctx.channel
         if not self.words:
             m = await ctx.send("Loading my words, this may take a moment")
             async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
@@ -82,7 +84,12 @@ class Text(commands.Cog):
         bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{send_text}```")
         start = bot_message.created_at
         try:
-            message = await self.bot.wait_for("message", check=lambda m:m.author==ctx.author and m.channel == ctx.channel, timeout=120)
+            while True:
+                message = await self.bot.wait_for("message", check=check, timeout=120)
+                if messagecontent == original_text and message.author.bot:
+                    return await ctx.send(f"NANI, the bot {message.author} just sent it, so the game ends :)")
+                else:
+                    break
         except asyncio.TimeoutError:
             return await ctx.send(f"{ctx.author.mention} wow, you are slowest typer ever to be alive")
         else:
