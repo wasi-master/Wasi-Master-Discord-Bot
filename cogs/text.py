@@ -78,7 +78,8 @@ class Text(commands.Cog):
         words = random.sample(self.words, wordlength)
         words = list(filter(lambda m: not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
-        bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{original_text}```")
+        send_text = "‌ ".join(words)
+        bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{send_text}```")
         start = bot_message.created_at
         try:
             message = await self.bot.wait_for("message", check=lambda m:m.author==ctx.author and m.channel == ctx.channel, timeout=120)
@@ -87,9 +88,9 @@ class Text(commands.Cog):
         else:
             end = message.created_at
             time = (end-start).total_seconds()
-            if time < 8:
+            if time < 15:
                 return await ctx.send("Imagine cheating bruh")
-            elif time < 15 and message.content == original_text:
+            elif time > 15 and message.content == send_text:
                 return await ctx.send("Imagine cheating bruh")
             mistakes = []
             right_words = 0
@@ -103,10 +104,10 @@ class Text(commands.Cog):
             wpm = len(message.content)/5
             fixed_wpm = wpm-len(mistakes)
             acc = accuracy(message.content, original_text)
-            if len(mistakes) < 5 and len(mistakes) > 0:
+            if len(mistakes) < 8 and len(mistakes) > 0:
                 mistk = ", ".join(mistakes)
-            elif len(mistakes) > 5:
-                mistk = ", ".join(mistakes) + "..."
+            elif len(mistakes) > 8:
+                mistk = ", ".join(mistakes[:8]) + "..."
             else:
                 mistk = "None, wow"
             await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[TIME] {time} SECONDS\n[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
