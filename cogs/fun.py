@@ -8,6 +8,7 @@ from discord.ext import commands
 import async_cleverbot as ac
 import json
 from typing import Union
+import datetime
 
 from urllib.parse import quote
 
@@ -17,6 +18,24 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
+    @commands.command()
+    async def cookie(ctx):
+        m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
+        await asyncio.sleep(3)
+        await m.edit(embed=discord.Embed(title="🍪 Cookie is coming in **3**"))
+        await asyncio.sleep(1)
+        await m.edit(embed=discord.Embed(title="🍪 Cookie is coming in **2**"))
+        await asyncio.sleep(1)
+        await m.edit(embed=discord.Embed(title="🍪 Cookie is coming in **1**"))
+        await asyncio.sleep(1)
+        await m.edit(embed=discord.Embed(title="🍪 Grab the Cookie"))
+        await m.add_reaction("🍪")
+        try:
+            r,u = await _bot.wait_for("reaction_add", check=lambda r,u: str(r.emoji) == "🍪" and r.message == m and r.message.channel == ctx.channel and not u.bot, timeout=10)
+        except asyncio.TimeoutError:
+            await ctx.send("No one got the cookie :(")
+        else:
+            await m.edit(embed=discord.Embed(title=f"**{u}** got the cookie in **{round((datetime.datetime.utcnow()-m.edited_at).total_seconds(), 3)}** seconds"))`
     
     @commands.command(aliases=["giveyouup", "gyu", "nggyu", "giveup", "never_gonna_give_you_up"])
     @commands.cooldown(1, 10, commands.BucketType.channel)
