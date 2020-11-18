@@ -76,7 +76,7 @@ class Text(commands.Cog):
             await m.delete()
         wordlength = random.randint(30,40)
         words = random.sample(self.words, wordlength)
-        words = list(filter(lambda m: not profanity.contains_profanity(m), words))
+        words = list(filter(lambda m: len(m) > 2 and not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
         send_text = (random.choice(list(map(chr, range(8192,8208))))+" ").join(words)
         bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{send_text}```")
@@ -86,6 +86,9 @@ class Text(commands.Cog):
         except asyncio.TimeoutError:
             return await ctx.send(f"{ctx.author.mention} wow, you are slowest typer ever to be alive")
         else:
+            acc = accuracy(message.content, original_text)
+            if acc < 50:
+                await ctx.send("Invalid")
             end = message.created_at
             time = (end-start).total_seconds()
             if any(i in message.content for i in list(map(chr, range(8192,8208)))):
@@ -105,7 +108,6 @@ class Text(commands.Cog):
                 mistakes.append(b_word)
             wpm = len(message.content)/5
             fixed_wpm = wpm-len(mistakes)
-            acc = accuracy(message.content, original_text)
             if len(mistakes) < 8 and len(mistakes) > 0:
                 mistk = ", ".join(mistakes)
             elif len(mistakes) > 8:
