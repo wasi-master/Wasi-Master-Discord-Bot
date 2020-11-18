@@ -109,7 +109,7 @@ class Text(commands.Cog):
                 mistk = ", ".join(mistakes) + "..."
             else:
                 mistk = "None, wow"
-            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[TIME] {time} SECONDS\N[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
+            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[TIME] {time} SECONDS\n[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
 
     @commands.command()
     async def randomcase(ctx, inp):
