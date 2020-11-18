@@ -62,7 +62,7 @@ seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
         elif opcode == 'replace':
             output.append(f"**__( `{seqm.b[b0:b1]}` -> `{seqm.a[a0:a1]}` )__**")
         else:
-            raise RuntimeError, "unexpected error"
+            continue
     return ''.join(output)
 
 
