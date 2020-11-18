@@ -75,7 +75,7 @@ class Text(commands.Cog):
                 self.words = (await cs.read()).splitlines()
         wordlength = random.randint(30,40)
         words = random.sample(self.words, wordlength)
-        words = list(filter(lambda m: not contains_profanity(m), words))
+        words = list(filter(lambda m: not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
         bot_message = await ctx.send(f"```{original_text}```")
         start = bot_message.created_at
