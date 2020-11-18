@@ -74,7 +74,7 @@ class Text(commands.Cog):
             async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
                 self.words = (await cs.read()).splitlines()
         wordlength = random.randint(30,40)
-        words = random.sample(data, wordlength)
+        words = random.sample(self.words, wordlength)
         words = list(filter(lambda m: not contains_profanity(m), words))
         original_text = " ".join(words)
         bot_message = await ctx.send(f"```{original_text}```")
@@ -92,7 +92,8 @@ class Text(commands.Cog):
                 return await ctx.send("Imagine cheating bruh")
             mistakes = []
             right_words = 0
-            for u_word, b_word in zip(message.content.split(), words):
+            given_words = message.content.split()
+            for u_word, b_word in zip(given_words, words):
                 u_word, b_word = u_word.strip(), b_word.strip()
                 if u_word != b_word:
                     mistakes.append(b_word)
@@ -107,7 +108,7 @@ class Text(commands.Cog):
                 mistk = ", ".join(mistakes) + "..."
             else:
                 mistk = "None, wow"
-            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[ACCURACY] {acc}\n[MISTAKES] {mistk}```")
+            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[ACCURACY] {acc}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
 
     @commands.command()
     async def randomcase(ctx, inp):
