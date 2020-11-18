@@ -120,7 +120,7 @@ class Text(commands.Cog):
             mistakes = []
             right_words = 0
             given_words = message.content.split()
-            matcher = difflib.SequenceMatcher(None, message.content, original_text)
+            matcher = difflib.SequenceMatcher(None, message.content.split(" "), original_text.split(" "))
             ratio = matcher.ratio()
             right = []
             for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
