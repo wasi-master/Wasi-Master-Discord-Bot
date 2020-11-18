@@ -70,14 +70,15 @@ class Text(commands.Cog):
     @commands.command(aliases=["trc"])
     async def typeracer(self, ctx):
         if not self.words:
-            await ctx.send("Loading my words, this may take a moment")
+            m = await ctx.send("Loading my words, this may take a moment")
             async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
                 self.words = (await cs.text()).splitlines()
+            await m.delete()
         wordlength = random.randint(30,40)
         words = random.sample(self.words, wordlength)
         words = list(filter(lambda m: not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
-        bot_message = await ctx.send(f"```{original_text}```")
+        bot_message = await ctx.send(f"**Type the words given bellow** ```{original_text}```")
         start = bot_message.created_at
         try:
             message = await self.bot.wait_for("message", check=lambda m:m.author==ctx.author and m.channel == ctx.channel, timeout=120)
