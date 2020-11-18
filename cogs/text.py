@@ -87,6 +87,8 @@ class Text(commands.Cog):
             while True:
                 message = await self.bot.wait_for("message", check=check, timeout=120)
                 if message.content == original_text and message.author.bot:
+                    if message.author.id == 707883141548736512:
+                        continue
                     return await ctx.send(f"NANI, the bot {message.author} just sent it, so the game ends :)")
                 else:
                     break
