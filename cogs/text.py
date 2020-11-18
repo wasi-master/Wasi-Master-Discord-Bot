@@ -2,6 +2,9 @@ import discord
 from uwuify import uwu
 import json
 import asyncio
+import aiohttp
+import time 
+from better_profanity import profanity
 import string
 import humanize
 import unicodedata
@@ -10,6 +13,7 @@ import gtts
 import difflib
 import urllib
 import random
+import numpy as np
 
 from  discord.ext import commands
 from  discord.ext.commands import BucketType
@@ -21,6 +25,29 @@ def tts(lang: str, text: str):
     return
 
 
+def accuracy(s, t):
+    rows = len(s)+1
+    cols = len(t)+1
+    distance = np.zeros((rows,cols),dtype = int)
+
+    for i in range(1, rows):
+        for k in range(1,cols):
+            distance[i][0] = i
+            distance[0][k] = k
+
+    for col in range(1, cols):
+        for row in range(1, rows):
+            if s[row-1] == t[col-1]:
+                cost = 0
+            else:
+                cost = 2
+            distance[row][col] = min(distance[row-1][col] + 1,      # Cost of deletions
+                                 distance[row][col-1] + 1,          # Cost of insertions
+                                 distance[row-1][col-1] + cost)     # Cost of substitutions
+    Ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
+    return int(Ratio*100)
+
+
 
 class Text(commands.Cog):
     """Commands that take a input as text and send a output as text
@@ -29,7 +56,8 @@ class Text(commands.Cog):
         self.bot = bot
         marks = map(chr, range(768, 879))
         self.marks = list(marks)
-
+        self.words = []
+        
     def _zalgo(self, text):
         words = text.split()
         zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
@@ -38,6 +66,48 @@ class Text(commands.Cog):
                 for i, word in enumerate(words))
         return zalgo
 
+
+    @commands.command(aliases=["trc"])
+    async def typeracer(self, ctx):
+        if not self.words:
+            await ctx.send("Loading my words, this may take a moment")
+            async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
+                self.words = (await cs.read()).splitlines()
+        wordlength = random.randint(30,40)
+        words = random.sample(data, wordlength)
+        words = list(filter(lambda m: not contains_profanity(m), words))
+        original_text = " ".join(words)
+        bot_message = await ctx.send(f"```{original_text}```")
+        start = bot_message.created_at
+        try:
+            message = await self.bot.wait_for("message", check=lambda m:m.author==ctx.author and m.channel == ctx.channel, timeout=120)
+        except asyncio.TimeoutError:
+            return await ctx.send(f"{ctx.author.mention} wow, you are slowest typer ever to be alive")
+        else:
+            end = message.created_at
+            time = (end-start).total_seconds()
+            if time < 8:
+                return await ctx.send("Imagine cheating bruh")
+            elif time < 15 and message.content == original_text:
+                return await ctx.send("Imagine cheating bruh")
+            mistakes = []
+            right_words = 0
+            for u_word, b_word in zip(message.content.split(), words):
+                u_word, b_word = u_word.strip(), b_word.strip()
+                if u_word != b_word:
+                    mistakes.append(b_word)
+                    continue
+                right_words += 1
+            wpm = time/wordlength
+            fixed_wpm = float(str(right_words)+"."+str(random.randint(0,9)+str(random.randint(0,9))+str(random.randint(0,9))))
+            acc = accuracy(message.content, original_text)
+            if len(mistakes) < 5 and len(mistakes) < 0:
+                mistk = ", ".join(mistakes)
+            elif len(mistakes) > 5:
+                mistk = ", ".join(mistakes) + "..."
+            else:
+                mistk = "None, wow"
+            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[ACCURACY] {acc}\n[MISTAKES] {mistk}```")
 
     @commands.command()
     async def randomcase(ctx, inp):
