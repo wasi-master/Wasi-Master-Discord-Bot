@@ -123,7 +123,7 @@ class Text(commands.Cog):
             matcher = difflib.SequenceMatcher(None, message.content, original_text)
             ratio = matcher.ratio()
             right = []
-            for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
+            for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
                 if opcode == 'equal':
                     right.append(seqm.a[a0:a1])
                 elif opcode in ('insert', 'delete', 'replace'):
