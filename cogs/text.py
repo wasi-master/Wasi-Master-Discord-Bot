@@ -103,14 +103,17 @@ class Text(commands.Cog):
             right_words = 0
             given_words = message.content.split()
             h_mistakes = []
+            h_correct = []
             for u_word, b_word in zip(given_words, words):
                 u_word, b_word = u_word.strip(), b_word.strip()
                 if u_word == b_word:
                     right_words += 1
                     h_mistakes.append(u_word)
+                    h_correct.append(b_word)
                     continue
                 mistakes.append(b_word)
                 h_mistakes.append(f"**__{u_word}__**")
+                h_correct.append(f"**__{b_word}__**")
             wpm = (len(message.content)/5)/(time/60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
@@ -126,7 +129,7 @@ class Text(commands.Cog):
             except asyncio.TimeoutError:
                 await M.remove_reaction("🤔", ctx.me)
             else:
-                await ctx.send(f"{ctx.author.mention}, \n\n{' '.join(h_mistakes)}")
+                await ctx.send(f"{ctx.author.mention}, __You wrote:__\n\n{' '.join(h_mistakes)}\n\n__And I wrote:__\n\n{' '.join(h_correct)}")
 
 
     @commands.command()
