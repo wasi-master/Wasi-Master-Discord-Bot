@@ -96,20 +96,20 @@ class Text(commands.Cog):
             given_words = message.content.split()
             for u_word, b_word in zip(given_words, words):
                 u_word, b_word = u_word.strip(), b_word.strip()
-                if u_word != b_word:
-                    mistakes.append(b_word)
+                if u_word == b_word:
+                    right_words += 1
                     continue
-                right_words += 1
+                mistakes.append(b_word)
             wpm = len(message.content)/5
             fixed_wpm = wpm-len(mistakes)
             acc = accuracy(message.content, original_text)
-            if len(mistakes) < 5 and len(mistakes) < 0:
+            if len(mistakes) < 5 and len(mistakes) > 0:
                 mistk = ", ".join(mistakes)
             elif len(mistakes) > 5:
                 mistk = ", ".join(mistakes) + "..."
             else:
                 mistk = "None, wow"
-            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[TIME] {time}[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
+            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[TIME] {time} SECONDS\N[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
 
     @commands.command()
     async def randomcase(ctx, inp):
