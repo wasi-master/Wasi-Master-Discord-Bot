@@ -56,11 +56,11 @@ seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
         if opcode == 'equal':
             output.append(seqm.a[a0:a1])
         elif opcode == 'insert':
-            output.append("**++" + seqm.b[b0:b1] + "++**")
+            output.append("**++" + seqm.a[b0:b1] + "++**")
         elif opcode == 'delete':
-            output.append("**??" + seqm.a[a0:a1] + "??**")
+            output.append("**??" + seqm.b[a0:a1] + "??**")
         elif opcode == 'replace':
-            output.append("**__" + seqm[a0:a1] + "__**")
+            output.append("**__" + seqm.a[a0:a1] + "__**")
         else:
             raise RuntimeError, "unexpected error"
     return ''.join(output)
@@ -122,6 +122,12 @@ class Text(commands.Cog):
             given_words = message.content.split()
             matcher = difflib.SequenceMatcher(None, message.content, original_text)
             ratio = matcher.ratio()
+            right = []
+            for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
+                if opcode == 'equal':
+                    right.append(seqm.a[a0:a1])
+                elif opcode in ('insert', 'delete', 'replace'):
+                    mistakes.append(seqm.a[a0:a1])
             wpm = (len(message.content)/5)/(time/60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
