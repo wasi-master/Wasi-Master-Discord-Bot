@@ -81,7 +81,7 @@ class Text(commands.Cog):
         words = list(filter(lambda m: len(m) > 2 and not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
         send_text = (random.choice(list(map(chr, range(8192,8208))))+" ").join(words)
-        bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{send_text}```")
+        bot_message = await ctx.send(f"__**Type the words given below**__\n```{send_text}```")
         start = bot_message.created_at
         try:
             message = await self.bot.wait_for("message", check=check, timeout=120)
@@ -102,12 +102,15 @@ class Text(commands.Cog):
             mistakes = []
             right_words = 0
             given_words = message.content.split()
+            h_mistakes = []
             for u_word, b_word in zip(given_words, words):
                 u_word, b_word = u_word.strip(), b_word.strip()
                 if u_word == b_word:
                     right_words += 1
+                    h_mistakes.append(u_word)
                     continue
                 mistakes.append(b_word)
+                h_mistakes.append(f"**__{u_word}__**")
             wpm = (len(message.content)/5)/(time/60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
@@ -116,7 +119,15 @@ class Text(commands.Cog):
                 mistk = ", ".join(mistakes[:8]) + "..."
             else:
                 mistk = "None, wow"
-            await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {fixed_wpm}\n[TIME] {time} SECONDS\n[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```")
+            M = await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {round(fixed_wpm, 3)}\n[TIME] {time} SECONDS\n[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```\nReact with :thinking: to see where your mistakes are.")
+            await M.add_reaction("🤔")
+            try:
+                await self.bot.wait_for("reaction_add", check=lambda r,u:u.id==ctx.author.id and str(r.emoji)=="🤔" and r.message.id == M.id, timeout=10)
+            except asyncio.TimeoutError:
+                await M.remove_reaction("🤔", ctx.me)
+            else:
+                await ctx.send(f"{ctx.author.mention}, \n\n{' '.join(h_mistakes)}")
+
 
     @commands.command()
     async def randomcase(ctx, inp):
