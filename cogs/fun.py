@@ -19,7 +19,7 @@ class Fun(commands.Cog):
         self.bot = bot
     
     @commands.command()
-    async def cookie(ctx):
+    async def cookie(self, ctx):
         m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
         await m.edit(embed=discord.Embed(title="🍪 Cookie is coming in **3**"))
