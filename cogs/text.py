@@ -78,7 +78,7 @@ class Text(commands.Cog):
         words = random.sample(self.words, wordlength)
         words = list(filter(lambda m: not profanity.contains_profanity(m), words))
         original_text = " ".join(words)
-        bot_message = await ctx.send(f"**Type the words given bellow** ```{original_text}```")
+        bot_message = await ctx.send(f"__**Type the words given bellow**__\n```{original_text}```")
         start = bot_message.created_at
         try:
             message = await self.bot.wait_for("message", check=lambda m:m.author==ctx.author and m.channel == ctx.channel, timeout=120)
