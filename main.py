@@ -281,14 +281,17 @@ async def fake_on_ready():
     start = time.time()
     print("Bot is online")
     client.session = aiohttp.ClientSession()
+    saharaserver = client.get_guild(700022523500429402)
     owner = client.get_user(538332632535007244)
+    sahara = sahaserver.get_member(723234115746398219)
     await owner.send("Bot Online")
+    await sahara.send("Bot Online")
     for extension in initial_extensions:
         try:
            client.load_extension(extension)
         except BaseException as e:
             await owner.send(f"```py\n{e}```")
-            raise e
+            await sahara.send(f"```py\n{e}```")
     end = time.time()
     await owner.send(f"All cogs loaded in `{end-start}`ms")
     client.started_at = datetime.datetime.utcnow()
