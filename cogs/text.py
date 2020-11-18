@@ -48,6 +48,24 @@ def accuracy(s, t):
     return int(Ratio*100)
 
 
+def show_diff(seqm):
+    """Unify operations between two compared strings
+seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
+    output= []
+    for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
+        if opcode == 'equal':
+            output.append(seqm.a[a0:a1])
+        elif opcode == 'insert':
+            output.append("**++" + seqm.b[b0:b1] + "++**")
+        elif opcode == 'delete':
+            output.append("**??" + seqm.a[a0:a1] + "??**")
+        elif opcode == 'replace':
+            output.append("**__" + seqm[a0:a1] + "__**")
+        else:
+            raise RuntimeError, "unexpected error"
+    return ''.join(output)
+
+
 
 class Text(commands.Cog):
     """Commands that take a input as text and send a output as text
@@ -102,19 +120,8 @@ class Text(commands.Cog):
             mistakes = []
             right_words = 0
             given_words = message.content.split()
-            h_mistakes = []
-            h_correct = []
-            for u_word, b_word in zip(given_words, words):
-                u_word, b_word = u_word.strip(), b_word.strip()
-                if u_word == b_word:
-                    right_words += 1
-                    h_mistakes.append(u_word)
-                    h_correct.append(b_word)
-                    continue
-                else:
-                    mistakes.append(b_word)
-                    h_mistakes.append(f"**__{u_word}__**")
-                    h_correct.append(f"**__{b_word}__**")
+            matcher = difflib.SequenceMatcher(None, message.content, original_text)
+            ratio = matcher.ratio()
             wpm = (len(message.content)/5)/(time/60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
@@ -123,15 +130,14 @@ class Text(commands.Cog):
                 mistk = ", ".join(mistakes[:8]) + "..."
             else:
                 mistk = "None, wow"
-            M = await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {round(fixed_wpm, 3)}\n[TIME] {time} SECONDS\n[ACCURACY] {acc}\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```\nReact with :thinking: to see where your mistakes are.")
+            M = await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {round(fixed_wpm, 3)}\n[TIME] {time} SECONDS\n[ACCURACY] {round(ratio*100, 3)}%\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```\nReact with :thinking: to see where your mistakes are.")
             await M.add_reaction("🤔")
             try:
                 await self.bot.wait_for("reaction_add", check=lambda r,u:u.id==ctx.author.id and str(r.emoji)=="🤔" and r.message.id == M.id, timeout=10)
             except asyncio.TimeoutError:
                 await M.remove_reaction("🤔", ctx.me)
             else:
-                await ctx.send(f"{ctx.author.mention}, __You wrote:__\n\n{' '.join(h_mistakes)}\n\n__And I wrote:__\n\n{' '.join(h_correct)}")
-
+                await ctx.send(f"{ctx.author.mention},\n\n{show_diff(matcher)}")
 
     @commands.command()
     async def randomcase(ctx, inp):
