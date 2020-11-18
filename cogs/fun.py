@@ -18,7 +18,7 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command()
+    @commands.command() 
     async def cookie(self, ctx):
         m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
@@ -35,7 +35,7 @@ class Fun(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send("No one got the cookie :(")
         else:
-            await m.edit(embed=discord.Embed(title=f"**{u}** got the cookie in **{round((datetime.datetime.utcnow()-m.edited_at).total_seconds(), 3)}** seconds"))`
+            await m.edit(embed=discord.Embed(title=f"**{u}** got the cookie in **{round((datetime.datetime.utcnow()-m.edited_at).total_seconds(), 3)}** seconds"))
     
     @commands.command(aliases=["giveyouup", "gyu", "nggyu", "giveup", "never_gonna_give_you_up"])
     @commands.cooldown(1, 10, commands.BucketType.channel)
