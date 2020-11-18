@@ -88,7 +88,7 @@ class Text(commands.Cog):
         else:
             acc = accuracy(message.content, original_text)
             if acc < 50:
-                await ctx.send("Invalid")
+                return await ctx.send("Invalid")
             end = message.created_at
             time = (end-start).total_seconds()
             if any(i in message.content for i in list(map(chr, range(8192,8208)))):
