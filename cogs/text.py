@@ -130,7 +130,7 @@ class Text(commands.Cog):
                     if matcher.b[a0:a1]:
                         mistakes.append(matcher.b[a0:a1][0])
             wpm = (len(message.content)/5)/(time/60)
-            right_words = original_text.split()-len(mistakes)
+            right_words = len(original_text.split())-len(mistakes)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
                 mistk = ", ".join(mistakes)
