@@ -125,9 +125,9 @@ class Text(commands.Cog):
             right = []
             for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
                 if opcode == 'equal':
-                    right.append(matcher.a[a0:a1])
+                    right.append(matcher.a[a0:a1][0])
                 elif opcode in ('insert', 'delete', 'replace'):
-                    mistakes.append(matcher.a[a0:a1])
+                    mistakes.append(matcher.a[a0:a1][0])
             wpm = (len(message.content)/5)/(time/60)
             fixed_wpm = wpm-len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
