@@ -56,14 +56,14 @@ seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
         if opcode == 'equal':
             output.append(seqm.a[a0:a1][0])
         elif opcode == 'insert':
-            output.append(f"**( +`{seqm.a[b0:b1]}` )**")
+            output.append(f"**( +`{seqm.a[b0:b1][0]}` )**")
         elif opcode == 'delete':
-            output.append(f"**( ?`{seqm.b[a0:a1]}` )**")
+            output.append(f"**( ?`{seqm.b[a0:a1][0]}` )**")
         elif opcode == 'replace':
-            output.append(f"**__( `{seqm.b[b0:b1]}` -> `{seqm.a[a0:a1]}` )__**")
+            output.append(f"**__( `{seqm.b[b0:b1][0]}` -> `{seqm.a[a0:a1]}` )__**")
         else:
-            continue
-    return ''.join(output)
+            output.append(seqm.a[a0:a1][0])
+    return ' '.join(output)
 
 
 
