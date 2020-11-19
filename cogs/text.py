@@ -54,7 +54,7 @@ seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
     output= []
     for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
         if opcode == 'equal':
-            output.append(seqm.a[a0:a1])
+            output.append(seqm.a[a0:a1][0])
         elif opcode == 'insert':
             output.append(f"**( +`{seqm.a[b0:b1]}` )**")
         elif opcode == 'delete':
