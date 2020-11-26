@@ -245,11 +245,10 @@ class Utility(commands.Cog):
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0"
         }
         msg1 = await ctx.send(f"Searching <a:typing:597589448607399949>")
-        async with aiohttp.ClientSession() as session:
-            async with self.bot.session.get(
-                url, headers=headers, allow_redirects=True
-            ) as r:
-                q = await r.read()
+        async with self.bot.session.get(
+            url, headers=headers, allow_redirects=True
+        ) as r:
+            q = await r.read()
         await msg1.edit(content=f"Getting the result <a:typing:597589448607399949>")
         result = ""
         wrong = {
