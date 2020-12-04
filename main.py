@@ -112,6 +112,7 @@ client = WMBot(
     command_prefix=get_prefix,
     case_insensitive=True,
     intents=intents,
+    owner_ids=[723234115746398219, 538332632535007244]
 )
 dblpy = dbl.DBLClient(
     client,
