@@ -17,6 +17,8 @@ class Anime(commands.Cog):
         ctx,
     ):
 
+        if not ctx.channel.is_nsfw():
+            return await ctx.send("Shut up you horny kid, go to a nsfw channel")
         gender = "male"
         async with ctx.typing():
             while gender == "male":
