@@ -279,7 +279,7 @@ async def fake_on_ready():
     await client.wait_until_ready()
     start = time.time()
     print("Bot is online")
-    client.session = aiohttp.ClientSession()
+    client.session = aiohttp.ClientSession((connector=aiohttp.TCPConnector(verify_ssl=False)))
     sahara_server = client.get_guild(700022523500429402)
     owner = client.get_user(538332632535007244)
     sahara = sahara_server.get_member(723234115746398219)
