@@ -20,23 +20,22 @@ import mystbin
 import vacefron
 import youtube_dl as ytdl
 
-from  discord.ext import commands, tasks
-from  dotenv import load_dotenv
-
-
+from discord.ext import commands, tasks
+from dotenv import load_dotenv
 
 
 ytdl.utils.but_reports_message = lambda: ""
 
-initial_extensions = ["cogs." + file[:-3] for file in os.listdir("cogs/") if file.endswith(".py")]
+initial_extensions = [
+    "cogs." + file[:-3] for file in os.listdir("cogs/") if file.endswith(".py")
+]
 
 
 class BlackListed(commands.CheckFailure):
-    """Don't respond if the user is blocked from using the bot
-    """
+    """Don't respond if the user is blocked from using the bot"""
+
 
 class WMBotContext(commands.Context):
-
     @property
     def owner(self):
         _owner = self.bot.get_user(538332632535007244)
@@ -52,6 +51,7 @@ class WMBotContext(commands.Context):
                 text += f"\n- {intent[0].replace('dm', 'DM').title().replace('_', ' ')} -  {intent[1]}"
         text += "```"
         return text
+
 
 class WMBot(commands.Bot):
     def __init__(self, **kwargs):
@@ -95,9 +95,6 @@ async def get_prefix(bot, message) -> str:
     return commands.when_mentioned_or(prefix_return)(client, message)
 
 
-
-
-
 intents = discord.Intents(
     members=True,
     presences=True,
@@ -112,15 +109,17 @@ client = WMBot(
     command_prefix=get_prefix,
     case_insensitive=True,
     intents=intents,
-    owner_ids=[723234115746398219, 538332632535007244]
+    owner_ids=[723234115746398219, 538332632535007244],
 )
 dblpy = dbl.DBLClient(
     client,
-   ("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
-   "eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsIm"
-   "JvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ."
-   "E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLa"
-   "GSfAPs"),
+    (
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+        "eyJpZCI6IjcwNzg4MzE0MTU0ODczNjUxMiIsIm"
+        "JvdCI6dHJ1ZSwiaWF0IjoxNTk2NzM0ODg2fQ."
+        "E0VY8HAgvb8V2WcL9x2qBf5hcKBp-WV0BhLLa"
+        "GSfAPs"
+    ),
 )
 load_dotenv()
 client.cleverbot = ac.Cleverbot("G[zm^mG5oOVS[J.Y?^YV", context=ac.DictContext())
@@ -136,10 +135,10 @@ client.emoji_list_str = []
 client.snipes = {}
 
 
-
 @client.event
 async def on_message_delete(message):
-    if len(message.guild.members) > 500: return
+    if len(message.guild.members) > 500:
+        return
     client.snipes[message.channel.id] = message
 
 
@@ -232,6 +231,7 @@ async def on_command(
             usage,
         )
 
+
 @client.check
 async def bot_check(
     ctx,
@@ -261,23 +261,21 @@ async def bot_check(
 
 
 async def create_db_pool():
-    """Connects to the db and sets it as a variable
-    """
+    """Connects to the db and sets it as a variable"""
     client.db = await asyncpg.create_pool(
-     host="ec2-52-23-86-208.compute-1.amazonaws.com",
-     database="d5squd8cvojua1",
-     user="poladbevzydxyx",
-     password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8",
+        host="ec2-52-23-86-208.compute-1.amazonaws.com",
+        database="d5squd8cvojua1",
+        user="poladbevzydxyx",
+        password="5252b3d45b9dd322c3b67430609656173492b3c97cdfd5ce5d9b8371942bb6b8",
+        ssl=True,
     )
 
 
 client.loop.run_until_complete(create_db_pool())
 
 
-
 async def fake_on_ready():
-    """Fires when the bot goes online
-    """
+    """Fires when the bot goes online"""
     await client.wait_until_ready()
     start = time.time()
     print("Bot is online")
@@ -290,7 +288,7 @@ async def fake_on_ready():
         await sahara.send("Bot Online")
     for extension in initial_extensions:
         try:
-           client.load_extension(extension)
+            client.load_extension(extension)
         except BaseException as e:
             await owner.send(f"```py\n{e}```")
             if sahara.raw_status == "online":
@@ -307,8 +305,7 @@ client.loop.create_task(fake_on_ready())
 
 @tasks.loop(seconds=86400)
 async def update_server_count():
-    """updates the bot's status
-    """
+    """updates the bot's status"""
     memberlist = []
     serverlist = []
     for guild in client.guilds:
@@ -425,8 +422,9 @@ async def on_command_error(ctx, error):
     if hasattr(ctx.command, "on_error"):
         return
     error = getattr(error, "original", error)
-    if isinstance(error, (BlackListed, commands.CommandNotFound)) or \
-        "Cannot send messages to this user" in str(error):
+    if isinstance(
+        error, (BlackListed, commands.CommandNotFound)
+    ) or "Cannot send messages to this user" in str(error):
         return
     if isinstance(error, commands.CheckFailure):
         await ctx.send(f"You don't have the permission to use {ctx.command} command")
@@ -441,29 +439,36 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CommandOnCooldown):
         embed = discord.Embed(
             title="Slow Down!",
-            description=(f"The command `{ctx.command}` is on cooldown, "
-            f"please try again after **{round(error.retry_after, 2)}** seconds."
-            "\nPatience, patience."),
+            description=(
+                f"The command `{ctx.command}` is on cooldown, "
+                f"please try again after **{round(error.retry_after, 2)}** seconds."
+                "\nPatience, patience."
+            ),
             colour=16711680,
         )
         await ctx.send(embed=embed)
     else:
         botembed = discord.Embed(
-            description=(f"Welp, The command was unsuccessful for this reason:\n```{error}```\n"
-            "React with :white_check_mark: to report the error to the support server\n"
-            "If you can't understand why this happens, ask Wasi Master#4245"
-            " or join the bot support server (you can get the invite with the support command)")
+            description=(
+                f"Welp, The command was unsuccessful for this reason:\n```{error}```\n"
+                "React with :white_check_mark: to report the error to the support server\n"
+                "If you can't understand why this happens, ask Wasi Master#4245"
+                " or join the bot support server (you can get the invite with the support command)"
+            )
         )
         message = await ctx.send(embed=botembed)
         await message.add_reaction("\u2705")
 
-        def check(reaction, user):  # r = discord.Reaction, u = discord.Member or discord.User.
-            return user.id == ctx.author.id and reaction.message.channel.id == ctx.channel.id
+        def check(
+            reaction, user
+        ):  # r = discord.Reaction, u = discord.Member or discord.User.
+            return (
+                user.id == ctx.author.id
+                and reaction.message.channel.id == ctx.channel.id
+            )
 
         try:
-            reaction, _ = await client.wait_for(
-                "reaction_add", check=check, timeout=20
-            )
+            reaction, _ = await client.wait_for("reaction_add", check=check, timeout=20)
         except asyncio.TimeoutError:
             try:
                 botembed.set_footer(
@@ -500,7 +505,9 @@ async def on_command_error(ctx, error):
                     pass
                 embed.add_field(
                     name="Message Links",
-                    value=(f"[User Message]({ctx.message.jump_url})\n[Bot Message]({message.jump_url})")
+                    value=(
+                        f"[User Message]({ctx.message.jump_url})\n[Bot Message]({message.jump_url})"
+                    ),
                 )
                 await channel.send(embed=embed)
                 return
@@ -517,26 +524,30 @@ async def on_message(message):
     afk_people = []
     for user in message.mentions:
         is_afk = await client.db.fetchrow(
-                """
+            """
                 SELECT *
                 FROM afk
                 WHERE user_id=$1;
                 """,
-                user.id
-            )
+            user.id,
+        )
         afk_people.append(is_afk)
     if not afk_people:
         pass
     else:
         for record in afk_people:
             if not record is None:
-                await message.channel.send(f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}")
+                await message.channel.send(
+                    f"Hey {message.author.mention}, the person you mentioned: <@!{record['user_id']}> is currently afk for {humanize.naturaldelta(datetime.datetime.utcnow() - record['last_seen'])}\n\nreason: {record['reason']}"
+                )
     if not message.guild.me in message.mentions:
         return
     prefix = await client.command_prefix(client, message)
     prefix = "\n".join([x for x in prefix if not x == "<@!{}> ".format(client.user.id)])
-    await message.channel.send(f"Hello, I see that you mentioned me, my prefixes here are \n\n{prefix}")
- 
+    await message.channel.send(
+        f"Hello, I see that you mentioned me, my prefixes here are \n\n{prefix}"
+    )
+
 
 @client.event
 async def on_member_update(old, new):
@@ -583,7 +594,6 @@ async def on_member_update(old, new):
             new.id,
             time,
         )
-
 
 
 # @commands.command(
