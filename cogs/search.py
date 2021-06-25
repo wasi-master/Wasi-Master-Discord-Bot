@@ -1,21 +1,45 @@
-import discord
-import youtube_dl as ytdl
+import asyncio
 import datetime
-import json, urllib, requests, asyncio
-from discord.ext import commands
-import wikipedia as wikimodule
+import json
 import re
+import urllib
 
+import async_cse
+import discord
+import requests
+import wikipedia as wikimodule
+import youtube_dl
+import youtube_dl as ytdl
+from discord.ext import commands
 from discord.ext.commands import BucketType
+from pytube import YouTube
+from youtubesearchpython.__future__ import VideosSearch
+
+from utils.classes import NoAPIKey
+from utils.paginator import Paginator
+import humanize
+import functools
+
 
 def convert_sec_to_min(seconds):
     minutes, sec = divmod(seconds, 60)
     return "%02d:%02d" % (minutes, sec)
 
 
+def get_streams(yt: YouTube, *args, **kwargs):
+    return enumerate(
+        sorted(
+            yt.streams.filter(*args, **kwargs),
+            key=lambda s: s.filesize_approx,
+            reverse=True,
+        ),
+        1,
+    )
+
+
 class Search(commands.Cog):
-    """For searching for things in the world wide web
-    """
+    """For searching for things in the world wide web"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -23,113 +47,44 @@ class Search(commands.Cog):
     async def wikipedia(self, ctx, *, search_term):
         async with ctx.typing():
             result = wikimodule.summary(search_term)
-            if len(result) < 1997:
-                await ctx.send(result)
-            else:
-                await ctx.send(result[0:2000])
+            paginator = commands.Paginator(prefix="", suffix="", max_size=750)
+            embeds = []
+            for line in result.split("\n"):
+                paginator.add_line(line)
+            for page in paginator.pages:
+                embeds.add_field(discord.Embed(title=search_term, description=page))
+            menu = Paginator(embeds)
+            await menu.start(ctx)
 
     @commands.command(aliases=["search", "g"], description="Searches Google")
     @commands.cooldown(1, 5, BucketType.user)
     async def google(self, ctx, *, search_term: commands.clean_content):
-        num = 0
-        results = await ctx.bot.google_api.search(
-            search_term, safesearch=not ctx.channel.is_nsfw()
-        )
-        result = results[num]
-        embed = discord.Embed(
-            title=result.title,
-            description=result.description,
-            url=result.url,
-            color=0x2F3136,
-        )
-        embed.set_thumbnail(url=result.image_url)
-        embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-        message = await ctx.send(embed=embed)
-        await message.add_reaction("\u25c0\ufe0f")
-        await message.add_reaction("\u23f9\ufe0f")
-        await message.add_reaction("\u25b6\ufe0f")
-        while True:
-
-            def check(reaction, user):
-                return (
-                    user.id == ctx.author.id
-                    and reaction.message.channel.id == ctx.channel.id
+        try:
+            results = await ctx.bot.google_api.search(
+                search_term,
+                safesearch=not ctx.channel.is_nsfw() if ctx.guild else False,
+            )
+        except async_cse.search.NoResults:
+            return await ctx.send(
+                "No search results found. "
+                + (
+                    "Perhaps, the results were nsfw, go to a nsfw channel and use this command again and see"
+                    if (not ctx.channel.is_nsfw() if ctx.guild else False)
+                    else ""
                 )
-
-            try:
-                reaction, user = await self.bot.wait_for(
-                    "reaction_add", check=check, timeout=120
-                )
-            except asyncio.TimeoutError:
-                embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
-                await message.edit(embed=embed)
-                try:
-                    return await message.clear_reactions()
-                except:
-                    await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-                    await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-                    break
-                    return
-            else:
-                if reaction.emoji == "\u25c0\ufe0f":
-                    try:
-                        message.remove_reaction("\u25c0\ufe0f", ctx.author)
-                    except discord.Forbidden:
-                        pass
-                    num -= 1
-                    try:
-                        result = results[num]
-                    except IndexError:
-                        pass
-                    embed = discord.Embed(
-                        title=result.title,
-                        description=result.description,
-                        url=result.url,
-                        color=0x2F3136,
-                    )
-                    embed.set_thumbnail(url=result.image_url)
-                    embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-                    await message.edit(embed=embed)
-                elif reaction.emoji == "\u25b6\ufe0f":
-                    try:
-                        await message.remove_reaction("\u25b6\ufe0f", ctx.author)
-                    except discord.Forbidden:
-                        pass
-                    num += 1
-                    try:
-                        result = results[num]
-                    except IndexError:
-                        pass
-                    embed = discord.Embed(
-                        title=result.title,
-                        description=result.description,
-                        url=result.url,
-                        color=0x2F3136,
-                    )
-                    embed.set_thumbnail(url=result.image_url)
-                    embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-                    await message.edit(embed=embed)
-                elif reaction.emoji == "\u23f9\ufe0f":
-                    embed = discord.Embed(
-                        title=result.title,
-                        description=result.description,
-                        url=result.url,
-                        color=0x2F3136,
-                    )
-                    embed.set_thumbnail(url=result.image_url)
-                    #  embed.set_footer(text=f"Page {num+1}/{len(results)}")
-                    await message.edit(embed=embed)
-                    try:
-                        return await message.clear_reactions()
-                    except:
-                        await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                        await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-                        await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-                        break
-                        return
-                else:
-                    pass
+            )
+        embeds = []
+        for result in results:
+            embed = discord.Embed(
+                title=result.title,
+                description=result.description,
+                url=result.url,
+                color=0x2F3136,
+            )
+            embed.set_thumbnail(url=result.image_url)
+            embeds.append(embed)
+        menu = Paginator(embeds)
+        await menu.start(ctx)
 
     @commands.command(
         aliases=["imagesearch", "is", "i"],
@@ -137,159 +92,114 @@ class Search(commands.Cog):
     )
     @commands.cooldown(1, 5, BucketType.user)
     async def image(self, ctx, *, search_term: commands.clean_content):
-        num = 0
-        results = await ctx.bot.google_api.search(
-            search_term, safesearch=not ctx.channel.is_nsfw(), image_search=True
-        )
-        result = results[num]
-        embed = discord.Embed(title=result.title, url=result.url, color=0x2F3136)
-        embed.set_image(url=result.image_url)
-        embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-        message = await ctx.send(embed=embed)
-        await message.add_reaction("\u25c0\ufe0f")
-        await message.add_reaction("\u23f9\ufe0f")
-        await message.add_reaction("\u25b6\ufe0f")
-        while True:
-
-            def check(reaction, user):
-                return (
-                    user.id == ctx.author.id
-                    and reaction.message.channel.id == ctx.channel.id
-                )
-
-            try:
-                reaction, user = await self.bot.wait_for(
-                    "reaction_add", check=check, timeout=120
-                )
-            except asyncio.TimeoutError:
-                embed.set_footer(icon_url=str(ctx.author.avatar_url), text="Timed out")
-                await message.edit(embed=embed)
-                try:
-                    return await message.clear_reactions()
-                except:
-                    await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                    await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-                    await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-                    break
-                    return
-            else:
-                if reaction.emoji == "\u25c0\ufe0f":
-                    try:
-                        await message.remove_reaction("\u25c0\ufe0f", ctx.author)
-                    except discord.Forbidden:
-                        pass
-                    num -= 1
-                    try:
-                        result = results[num]
-                    except IndexError:
-                        pass
-                    embed = discord.Embed(
-                        title=result.title, url=result.url, color=0x2F3136
-                    )
-                    embed.set_image(url=result.image_url)
-                    embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-                    await message.edit(embed=embed)
-                elif reaction.emoji == "\u25b6\ufe0f":
-                    try:
-                        message.remove_reaction("\u25b6\ufe0f", ctx.author)
-                    except discord.Forbidden:
-                        pass
-                    num += 1
-                    try:
-                        result = results[num]
-                    except IndexError:
-                        pass
-                    embed = discord.Embed(
-                        title=result.title,
-                        description=result.description,
-                        url=result.url,
-                        color=0x2F3136,
-                    )
-                    embed.set_image(url=result.image_url)
-                    embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-                    await message.edit(embed=embed)
-                elif reaction.emoji == "\u23f9\ufe0f":
-                    embed = discord.Embed(
-                        title=result.title, url=result.url, color=0x2F3136
-                    )
-                    embed.set_image(url=result.image_url)
-                    #  embed.set_footer(text=f"Page {num+1}/{len(results)}")
-                    await message.edit(embed=embed)
-                    try:
-                        return await message.clear_reactions()
-                    except:
-                        await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-                        await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-                        await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-                        break
-                        return
-                else:
-                    pass
-
-    """@commands.command(aliases=["yt"], description="Search youtube for stuff")
-    @commands.cooldown(2, 15, BucketType.user)
-    async def youtube(self, ctx, *, search_term: str):
-        search_terms = search_term
-        max_results = 1
-
-        def parse_html(response):
-            results = []
-            start = (
-                response.index('window["ytInitialData"]')
-                + len('window["ytInitialData"]')
-                + 3
+        try:
+            results = await ctx.bot.google_api.search(
+                search_term,
+                safesearch=not ctx.channel.is_nsfw() if ctx.guild else False,
+                image_search=True,
             )
-            end = response.index("};", start) + 1
-            json_str = response[start:end]
-            data = json.loads(json_str)
+        except async_cse.search.NoResults:
+            return await ctx.send(
+                "No images found. "
+                + (
+                    "Perhaps, the results were nsfw, go to a nsfw channel and use this command again and see"
+                    if (not ctx.channel.is_nsfw() if ctx.guild else False)
+                    else ""
+                )
+            )
+        embeds = []
+        for result in results:
+            embed = discord.Embed(
+                title=result.title,
+                url=result.url,
+                color=0x2F3136,
+            )
+            embed.set_image(url=result.image_url)
+            embeds.append(embed)
+        menu = Paginator(embeds)
+        await menu.start(ctx)
 
-            videos = data["contents"]["twoColumnSearchResultsRenderer"][
-                "primaryContents"
-            ]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"]
+    # @commands.group(aliases=["dl"], invoke_without_command=False)
+    # @commands.cooldown(1, 15, BucketType.user)
+    # async def download(self, ctx):
+    #     pass
 
-            for video in videos:
-                res = {}
-                if "videoRenderer" in video.keys():
-                    video_data = video["videoRenderer"]
-                    res["id"] = video_data["videoId"]
-                    res["thumbnails"] = [
-                        thumb["url"] for thumb in video_data["thumbnail"]["thumbnails"]
-                    ]
-                    res["title"] = video_data["title"]["runs"][0]["text"]
-                    # res["long_desc"] = video_data["descriptionSnippet"]["runs"][0]["text"]
-                    res["channel"] = video_data["longBylineText"]["runs"][0]["text"]
-                    res["duration"] = video_data.get("lengthText", {}).get(
-                        "simpleText", 0
-                    )
-                    res["views"] = video_data.get("viewCountText", {}).get(
-                        "simpleText", 0
-                    )
-                    res["url_suffix"] = video_data["navigationEndpoint"][
-                        "commandMetadata"
-                    ]["webCommandMetadata"]["url"]
-                    results.append(res)
-            return results
+    # @download.command(name="mpeg4", aliases=["mp4"])
+    # @commands.cooldown(1, 15, BucketType.user)
+    # async def download_mpeg4(self, ctx, url):
+    #     yt = YouTube(url)
+    #     embed = discord.Embed()
+    #     desc = "__Found these formats, which one do you want to download? type the number__\n\n"
+    #     get_streams_func = functools.partial(get_streams, yt, file_extension="mp4")
+    #     streams = await self.bot.loop.run_in_executor(None, get_streams_func)
+    #     streamed_items = [i[1] for i in streams]
+    #     for num, stream in enumerate(streamed_items, 1):
+    #         if stream.type == "audio":
+    #             continue
+    #         desc += f"**{num}.**\nFile Extension: `.{stream.mime_type.replace('video/', '')}`\nResolution{stream.resolution}@{stream.fps}\nFile Size: {humanize.naturalsize(stream.filesize, False, True)}\n"
+    #     embed.description = desc
+    #     await ctx.send(embed=embed)
+    #     try:
+    #         msg = await self.bot.wait_for(
+    #             "message",
+    #             check=lambda msg: msg.author == ctx.author
+    #             and msg.channel == ctx.channel,
+    #             timeout=60,
+    #         )
+    #     except asyncio.TimeoutError:
+    #         return await ctx.reply("Welp, You didn't respond")
+    #     else:
+    #         if not msg.content.isnumeric():
+    #             return
+    #         try:
+    #             stream = streamed_items[int(msg.content) - 1]
+    #             filesize = stream.filesize
+    #             await ctx.send(
+    #                 embed=discord.Embed(
+    #                     title="Download Video",
+    #                     description=f"[Click Here]({stream.url}) to download the video. \n Note: the video is `{humanize.naturalsize(stream.filesize, False, True)}`",
+    #                 )
+    #             )
+    #         except IndexError:
+    #             return await msg.reply("That number wasn't in the list smh")
 
-        def search():
-            encoded_search = urllib.parse.quote(search_terms)
-            BASE_URL = "https://youtube.com"
-            url = f"{BASE_URL}/results?search_query={encoded_search}"
-            response = requests.get(url).text
-            while 'window["ytInitialData"]' not in response:
-                response = requests.get(url).text
-            results = parse_html(response)
-            if max_results is not None and len(results) > max_results:
-                return results[:max_results]
-            return results
-
-        videos = search()
-        text = f'**__{videos[0]["title"]}__**\n```bash\n"Channel" :  {videos[0]["channel"]}\n"Duration":  {videos[0]["duration"]}\n"Views"   :  {videos[0]["views"]}```'
-        url = f"https://www.youtube.com{videos[0]['url_suffix']}"
-        await ctx.send(content=text + "\n" + url)"""
+    @commands.command(aliases=["yt"])
+    async def youtube(self, ctx, *, text):
+        """Searches youtube"""
+        async with ctx.typing():
+            search = VideosSearch(text, limit=10)
+            results = (await search.next())["result"]
+            if len(results) == 0:
+                await ctx.message.reply("No Results")
+            embedlist = []
+            for video in results:
+                if not video["type"] == "video":
+                    continue
+                embed = discord.Embed(title=video["title"], description=video["link"])
+                embed.set_image(url=video["thumbnails"][0]["url"])
+                embed.set_author(
+                    name=video["channel"]["name"],
+                    url=video["channel"]["link"],
+                    icon_url=video["channel"]["thumbnails"][0]["url"],
+                )
+                embed.add_field(
+                    name="Published", value=video["publishedTime"], inline=False
+                )
+                embed.add_field(name="Duration", value=video["duration"], inline=False)
+                embed.add_field(
+                    name="Views",
+                    value=f'{video["viewCount"]["short"]}({video["viewCount"]["text"]})',
+                    inline=False,
+                )
+                embedlist.append(embed)
+            pag = Paginator(embedlist)
+            await pag.start(ctx)
 
     @commands.command(aliases=["tenor"], description="Search for a gif")
     async def gif(self, ctx, *, query: str):
-        apikey = "8ZQV38KW9TWP"
+        apikey = self.bot.api_keys.get("tenor")
+        if not apikey:
+            raise NoAPIKey
         lmt = 1
         search_term = query
 
@@ -307,9 +217,8 @@ class Search(commands.Cog):
             name="Link (click to see or long press to copy)",
             value=f"[click here]({gif})",
         )
-        embed.set_footer(text=f"Asked by {ctx.message.author}")
+        embed.set_footer(text=f"Asked by {ctx.author}")
         await ctx.send(embed=embed)
-
 
     @commands.command(
         aliases=[
@@ -367,4 +276,6 @@ class Search(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Search(bot))

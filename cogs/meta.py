@@ -1,17 +1,19 @@
 import asyncio
-import discord
-import difflib
-import humanize
 import datetime
-from tabulate import tabulate
+import difflib
+import inspect
+import os
+import pathlib
 import random
 import time as timemodule
-from discord.ext import menus
-import os
-
-from discord.ext import commands
 from collections import Counter
+
+import discord
+import humanize
+from discord.ext import commands, menus
 from discord.ext.commands import BucketType
+from tabulate import tabulate
+
 
 def get_status(status: str):
     if str(status) == "online":
@@ -26,6 +28,7 @@ def get_status(status: str):
         return "<:status_offline:596576752013279242>"
     else:
         return status
+
 
 async def _basic_cleanup_strategy(self, ctx, search):
     count = 0
@@ -43,7 +46,7 @@ async def _complex_cleanup_strategy(self, ctx, search):
             FROM guilds
             WHERE id=$1
             """,
-        ctx.message.guild.id,
+        ctx.guild.id,
     )
     prefix = str(prefix_for_this_guild["prefix"])
 
@@ -52,6 +55,7 @@ async def _complex_cleanup_strategy(self, ctx, search):
 
     deleted = await ctx.channel.purge(limit=search, check=check, before=ctx.message)
     return Counter(m.author.display_name for m in deleted)
+
 
 def get_random_color():
     colors = [
@@ -78,9 +82,10 @@ def get_random_color():
         discord.Colour.darker_gray(),
         discord.Colour.blurple(),
         discord.Colour.greyple(),
-        discord.Colour.dark_theme()
+        discord.Colour.dark_theme(),
     ]
     return random.choice(colors)
+
 
 class PaginationMaster(menus.MenuPages):
     def __init__(self, source):
@@ -95,16 +100,24 @@ class PaginationMaster(menus.MenuPages):
         except discord.HTTPException:
             pass
 
-    @menus.button('\N{INFORMATION SOURCE}\ufe0f', position=menus.Last(3))
+    @menus.button("\N{INFORMATION SOURCE}\ufe0f", position=menus.Last(3))
     async def show_help(self, payload):
         """shows this message"""
-        embed = discord.Embed(title='Paginator help', description='Hello! Welcome to the help page.')
+        embed = discord.Embed(
+            title="Paginator help", description="Hello! Welcome to the help page."
+        )
         messages = []
         for (emoji, button) in self.buttons.items():
-            messages.append(f'{emoji}: {button.action.__doc__}')
+            messages.append(f"{emoji}: {button.action.__doc__}")
 
-        embed.add_field(name='What are these reactions for?', value='\n'.join(messages), inline=False)
-        embed.set_footer(text=f'We were on page {self.current_page + 1} before this message.')
+        embed.add_field(
+            name="What are these reactions for?",
+            value="\n".join(messages),
+            inline=False,
+        )
+        embed.set_footer(
+            text=f"We were on page {self.current_page + 1} before this message."
+        )
         await self.message.edit(content=None, embed=embed)
 
         async def go_back_to_current_page():
@@ -113,23 +126,25 @@ class PaginationMaster(menus.MenuPages):
 
         self.bot.loop.create_task(go_back_to_current_page())
 
-    @menus.button('\N{INPUT SYMBOL FOR NUMBERS}', position=menus.Last(1.5))
+    @menus.button("\N{INPUT SYMBOL FOR NUMBERS}", position=menus.Last(1.5))
     async def numbered_page(self, payload):
         """lets you type a page number to go to"""
         channel = self.message.channel
         author_id = payload.user_id
         to_delete = []
-        to_delete.append(await channel.send('What page do you want to go to?'))
+        to_delete.append(await channel.send("What page do you want to go to?"))
 
         def message_check(m):
-            return m.author.id == author_id and \
-                   channel == m.channel and \
-                   m.content.isdigit()
+            return (
+                m.author.id == author_id
+                and channel == m.channel
+                and m.content.isdigit()
+            )
 
         try:
-            msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
+            msg = await self.bot.wait_for("message", check=message_check, timeout=30.0)
         except asyncio.TimeoutError:
-            to_delete.append(await channel.send('Took too long.'))
+            to_delete.append(await channel.send("Took too long."))
             await asyncio.sleep(5)
         else:
             page = int(msg.content)
@@ -140,11 +155,15 @@ class PaginationMaster(menus.MenuPages):
             await channel.delete_messages(to_delete)
         except Exception:
             pass
+
+
 class BotHelpPageSource(menus.ListPageSource):
     def __init__(self, help_command, commands):
         # entries = [(cog, len(sub)) for cog, sub in commands.items()]
         # entries.sort(key=lambda t: (t[0].qualified_name, t[1]), reverse=True)
-        super().__init__(entries=sorted(commands.keys(), key=lambda c: c.qualified_name), per_page=6)
+        super().__init__(
+            entries=sorted(commands.keys(), key=lambda c: c.qualified_name), per_page=6
+        )
         self.commands = commands
         self.help_command = help_command
         self.prefix = help_command.clean_prefix
@@ -155,18 +174,18 @@ class BotHelpPageSource(menus.ListPageSource):
         # However, we have 6 per page so I'll try cutting it off at around 800 instead
         # Since there's a 6000 character limit overall in the embed
         if cog.description:
-            short_doc = cog.description.split('\n', 1)[0] + '\n'
+            short_doc = cog.description.split("\n", 1)[0] + "\n"
         else:
-            short_doc = 'No help found...\n'
+            short_doc = "No help found...\n"
 
         current_count = len(short_doc)
-        ending_note = '+%d not shown'
+        ending_note = "+%d not shown"
         ending_length = len(ending_note)
 
         page = []
         for command in commands:
-            value = f'`{command.name}`'
-            count = len(value) + 1 # The space
+            value = f"`{command.name}`"
+            count = len(value) + 1  # The space
             if count + current_count < 800:
                 current_count += count
                 page.append(value)
@@ -181,19 +200,22 @@ class BotHelpPageSource(menus.ListPageSource):
 
         if len(page) == len(commands):
             # We're not hiding anything so just return it as-is
-            return short_doc + ' '.join(page)
+            return short_doc + " ".join(page)
 
         hidden = len(commands) - len(page)
-        return short_doc + ' '.join(page) + '\n' + (ending_note % hidden)
-
+        return short_doc + " ".join(page) + "\n" + (ending_note % hidden)
 
     async def format_page(self, menu, cogs):
         prefix = menu.ctx.prefix
-        description = f'Use "{prefix}help command" for more info on a command.\n' \
-                      f'Use "{prefix}help category" for more info on a category.\n' \
-                       'For more help, join the official bot support server: https://discord.gg/5jn3bQX'
+        description = (
+            f'Use "{prefix}help command" for more info on a command.\n'
+            f'Use "{prefix}help category" for more info on a category.\n'
+            "For more help, join the official bot support server: https://discord.gg/5jn3bQX"
+        )
 
-        embed = discord.Embed(title='Categories', description=description, colour=get_random_color())
+        embed = discord.Embed(
+            title="Categories", description=description, colour=get_random_color()
+        )
 
         for cog in cogs:
             commands = self.commands.get(cog)
@@ -202,58 +224,78 @@ class BotHelpPageSource(menus.ListPageSource):
                 embed.add_field(name=cog.qualified_name, value=value, inline=True)
 
         maximum = self.get_max_pages()
-        embed.set_footer(text=f'Page {menu.current_page + 1}/{maximum}')
+        embed.set_footer(text=f"Page {menu.current_page + 1}/{maximum}")
         return embed
+
 
 class GroupHelpPageSource(menus.ListPageSource):
     def __init__(self, group, commands, *, prefix):
         super().__init__(entries=commands, per_page=6)
         self.group = group
         self.prefix = prefix
-        self.title = f'{self.group.qualified_name} Commands'
+        self.title = f"{self.group.qualified_name} Commands"
         self.description = self.group.description
 
     async def format_page(self, menu, commands):
-        embed = discord.Embed(title=self.title, description=self.description, colour=get_random_color())
+        embed = discord.Embed(
+            title=self.title, description=self.description, colour=get_random_color()
+        )
 
         for command in commands:
-            signature = f'{command.qualified_name} {command.signature}'
-            embed.add_field(name=signature, value=command.short_doc or 'No help given...', inline=False)
+            signature = f"{command.qualified_name} {command.signature}"
+            embed.add_field(
+                name=signature,
+                value=command.short_doc or "No help given...",
+                inline=False,
+            )
 
         maximum = self.get_max_pages()
         if maximum > 1:
-            embed.set_author(name=f'Page {menu.current_page + 1}/{maximum} ({len(self.entries)} commands)')
+            embed.set_author(
+                name=f"Page {menu.current_page + 1}/{maximum} ({len(self.entries)} commands)"
+            )
 
-        embed.set_footer(text=f'Use "{self.prefix}help command" for more info on a command.')
+        embed.set_footer(
+            text=f'Use "{self.prefix}help command" for more info on a command.'
+        )
         return embed
+
 
 class HelpMenu(PaginationMaster):
     def __init__(self, source):
         super().__init__(source)
 
-    @menus.button('\N{WHITE QUESTION MARK ORNAMENT}', position=menus.Last(5))
+    @menus.button("\N{WHITE QUESTION MARK ORNAMENT}", position=menus.Last(5))
     async def show_bot_help(self, payload):
         """shows how to use the bot"""
 
-        embed = discord.Embed(title='Using the bot', colour=get_random_color())
-        embed.title = 'Using the bot'
-        embed.description = 'Hello! Welcome to the help page.'
+        embed = discord.Embed(title="Using the bot", colour=get_random_color())
+        embed.title = "Using the bot"
+        embed.description = "Hello! Welcome to the help page."
 
         entries = (
-            ('<argument>', 'This means the argument is __**required**__.'),
-            ('[argument]', 'This means the argument is __**optional**__.'),
-            ('[A|B]', 'This means that it can be __**either A or B**__.'),
-            ('[argument...]', 'This means you can have multiple arguments.\n' \
-                              'Now that you know the basics, it should be noted that...\n' \
-                              '__**You do not type in the brackets!**__')
+            ("<argument>", "This means the argument is __**required**__."),
+            ("[argument]", "This means the argument is __**optional**__."),
+            ("[A|B]", "This means that it can be __**either A or B**__."),
+            (
+                "[argument...]",
+                "This means you can have multiple arguments.\n"
+                "Now that you know the basics, it should be noted that...\n"
+                "__**You do not type in the brackets!**__",
+            ),
         )
 
-        embed.add_field(name='How do I use this bot?', value='Reading the bot signature is pretty simple.')
+        embed.add_field(
+            name="How do I use this bot?",
+            value="Reading the bot signature is pretty simple.",
+        )
 
         for name, value in entries:
             embed.add_field(name=name, value=value, inline=False)
 
-        embed.set_footer(text=f'We were on page {self.current_page + 1} before this message.')
+        embed.set_footer(
+            text=f"We were on page {self.current_page + 1} before this message."
+        )
         await self.message.edit(embed=embed)
 
         async def go_back_to_current_page():
@@ -262,29 +304,23 @@ class HelpMenu(PaginationMaster):
 
         self.bot.loop.create_task(go_back_to_current_page())
 
+
 class PaginatedHelpCommand(commands.HelpCommand):
     def __init__(self):
-        super().__init__(command_attrs={
-            'cooldown': commands.Cooldown(1, 3.0, commands.BucketType.member),
-            'help': 'Shows help about the bot, a command, or a category',
-            'aliases': ["h"]
-        })
+        super().__init__(
+            command_attrs={
+                "cooldown": commands.Cooldown(1, 3.0, commands.BucketType.member),
+                "help": "Shows help about the bot, a command, or a category",
+                "aliases": ["h"],
+            }
+        )
 
     async def on_help_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send(str(error.original))
 
     def get_command_signature(self, command):
-        parent = command.full_parent_name
-        if len(command.aliases) > 0:
-            aliases = '|'.join(command.aliases)
-            fmt = f'[{command.name}|{aliases}]'
-            if parent:
-                fmt = f'{parent} {fmt}'
-            alias = fmt
-        else:
-            alias = command.name if not parent else f'{parent} {command.name}'
-        return f'{alias} {command.signature}'
+        return f"```html\n{self.context.prefix}{command.qualified_name} {command.signature}```"
 
     async def send_bot_help(self, mapping):
         bot = self.context.bot
@@ -299,7 +335,6 @@ class PaginatedHelpCommand(commands.HelpCommand):
             except KeyError:
                 all_commands[command.cog] = [command]
 
-
         menu = HelpMenu(BotHelpPageSource(self, all_commands))
         await menu.start(self.context)
 
@@ -309,25 +344,42 @@ class PaginatedHelpCommand(commands.HelpCommand):
         await menu.start(self.context)
 
     async def common_command_formatting(self, embed_like, command):
-        embed_like.title = self.get_command_signature(command)
+        embed_like.title = command.qualified_name
+        try:
+            embed_like.set_footer(
+                text="<x> means the argument x is required\n[x] means the argument x is optional\n[x=y] means the argument x is optional and has a default value of y"
+            )
+        except:
+            pass
         if not isinstance(embed_like, GroupHelpPageSource):
             if command._buckets._cooldown:
-                embed_like.add_field(name="Cooldown", value=f"{command._buckets._cooldown.per} seconds per {command._buckets._cooldown.rate} command(s) per {str(command._buckets._cooldown.type).split('.')[1]}")
-            command_usage = await self.context.bot.db.fetchrow("""
+                embed_like.add_field(
+                    name="Cooldown",
+                    value=f"{round(command._buckets._cooldown.per)} seconds per {command._buckets._cooldown.rate} command{'s' if command._buckets._cooldown.rate > 1 else ''} per {str(command._buckets._cooldown.type).split('.')[1]}",
+                )
+            command_usage = await self.context.bot.db.fetchrow(
+                """
                         SELECT *
                         FROM usages
                         WHERE name = $1;
                         """,
-                        command.name,
+                command.name,
             )
             if not command_usage is None:
-                embed_like.add_field(name="Popularity", value=f"Used {command_usage['usage']} times")
+                embed_like.add_field(
+                    name="Popularity", value=f"Used {command_usage['usage']} times"
+                )
             else:
-                embed_like.add_field(name="Popularity", value="Command never used by anyone")
+                embed_like.add_field(
+                    name="Popularity", value="Command never used by anyone"
+                )
         if not command.help is None:
-            embed_like.description = f'{command.description}\n\n{command.help}'
+            embed_like.description = f"{command.description}\n\n{command.help}"
         else:
-            embed_like.description = command.description or 'No help found...'
+            embed_like.description = command.description or "No help found..."
+        embed_like.add_field(
+            name="Usage", value=self.get_command_signature(command), inline=False
+        )
 
     async def send_command_help(self, command):
         # No pagination necessary for a single command.
@@ -348,75 +400,87 @@ class PaginatedHelpCommand(commands.HelpCommand):
         await self.common_command_formatting(source, group)
         menu = HelpMenu(source)
         await menu.start(self.context)
+
+
 class Meta(commands.Cog):
-    """All the bot rleated commands
-    """
+    """All the bot rleated commands"""
+
     def __init__(self, bot):
         self.bot = bot
         self._original_help_command = bot.help_command
         bot.help_command = PaginatedHelpCommand()
         bot.help_command.cog = self
 
-
     @commands.command(aliases=["cs"])
     async def commandsearch(self, ctx, cmd):
         """Search for a command in the bot"""
-        if len(cmd) > 15:
+        if len(cmd) > 25:
             return await ctx.send("Name length too long")
-        cmds = difflib.get_close_matches(cmd, [i.name for i in self.bot.commands], cutoff=0.3)
-        await ctx.send(embed=discord.Embed(title="Search results for " + cmd, description="\n".join([f"**{index}.**  {command}" for index, command in enumerate(cmds, start=1)])))
-
+        commands = []
+        for command in self.bot.commands:
+            if command.aliases:
+                for alias in command.aliases:
+                    commands.append(alias)
+            commands.append(command.name)
+        cmds = difflib.get_close_matches(cmd, commands, cutoff=0.3)
+        await ctx.send(
+            embed=discord.Embed(
+                title="Search results for " + cmd,
+                description="\n".join(
+                    [
+                        f"**{index}.**  {command}"
+                        for index, command in enumerate(cmds, start=1)
+                    ]
+                ),
+            )
+        )
 
     @commands.command(description="Used to test if bot is online")
-    async def hello(
-        self,
-        ctx,
-    ):
+    async def hello(self, ctx):
         await ctx.send("Hi im online :)")
 
-    @commands.command(aliases=["linecount"])
+    @commands.command(aliases=["linecount", "lc"])
     @commands.cooldown(1, 60, commands.BucketType.channel)
     async def lines(self, ctx):
-        m =  await ctx.send("Getting the files")
-        for path, subdirs, files in os.walk("./cogs"):
-            for name in files:
-                files += os.path.join(path, name)
-        await m.edit(content="Searching the files")
-        cm = cr = fn = cl = ls = fc = 0
-        for f in files:
-            if not f.endswith(".py"):
+        p = pathlib.Path("./")
+        cm = cr = ch = fn = cl = ls = fc = im = 0
+        for f in p.rglob("*.py"):
+            if str(f).startswith("venv"):
                 continue
             fc += 1
-            with open(f) as of:
+            with f.open(encoding="utf-8") as of:
                 for l in of.readlines():
                     l = l.strip()
-                    if l.startswith('class'):
+                    if l.startswith("class"):
                         cl += 1
-                    if l.startswith('def'):
+                    elif l.startswith("def"):
                         fn += 1
-                    if l.startswith('async def'):
+                    elif l.startswith("async def"):
                         cr += 1
-                    if '#' in l:
+                    elif l.startswith("import"):
+                        im += 1
+                    if "#" in l:
                         cm += 1
                     ls += 1
-        await m.edit(content= \
-                   "**Code Satistics** (doesn\'t include the main file)\n\n"
-                   f"Files       :   {fc}\n"
-                   f"Lines       :   {ls:,}\n"
-                   f"Classes     :   {cl}\n"
-                   f"Functions   :   {fn}\n"
-                   f"Coroutines  :   {cr}\n"
-                   f"Comments    :   {cm:,}"
-            )
+                    for char in l:
+                        ch += 1
+        await ctx.send(
+            content="**Code Satistics** (doesn't include the main file)\n```yaml"
+            f"Files       :   {fc}\n"
+            f"Lines       :   {ls:,}\n"
+            f"Characters  :   {ls:,}\n"
+            f"Imports     :   {im}\n"
+            f"Classes     :   {cl}\n"
+            f"Functions   :   {fn}\n"
+            f"Coroutines  :   {cr}\n"
+            f"Comments    :   {cm:,}```"
+        )
 
     @commands.command(aliases=["p"], description="Shows the bot's speed")
-    async def ping(
-        self,
-        ctx,
-    ):
-        start = timemodule.perf_counter()
+    async def ping(self, ctx):
+        start = timemodule.time()
         embed = discord.Embed(
-            description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = Time it took mske this embed\n**Bot Latency** = Time needed to send/edit messages"
+            description="**Websocket Latency** = Time it takes to recive data from the discord API\n**Response Time** = How long it took to send my message after recieving yours\n**Bot Latency** = Time needed to send/edit messages"
         )
         embed.set_author(name="Ping")
         embed.set_footer(text=f"Asked by {ctx.author}")
@@ -424,45 +488,45 @@ class Meta(commands.Cog):
             name="Websocket Latency", value=f"{round(self.bot.latency * 1000)}ms"
         )
         message = await ctx.send(embed=embed)
-        end = timemodule.perf_counter()
+        end = timemodule.time()
         message_ping = (end - start) * 1000
         embed.set_author(name="Ping")
         embed.set_footer(text=f"Asked by {ctx.author}")
         embed.add_field(
             name="Response Time",
-            value=f"{round((message.created_at - ctx.message.created_at).total_seconds() / 1000, 4)}ms",
+            value=f"{round((message.created_at - ctx.message.created_at).total_seconds() * 1000)}ms",
         )
         embed.add_field(name="Bot Latency", value=f"{round(message_ping)}ms")
         await message.edit(embed=embed)
 
     @commands.command(description="Get a invite link to the bots support server")
-    async def support(
-        self,
-        ctx,
-    ):
-        await ctx.send("https://discord.gg/5jn3bQX")
-
+    async def support(self, ctx):
+        await ctx.send("https://discord.gg/jfjcANfcYp")
 
     @commands.command(aliases=["info"])
     async def botinfo(self, ctx):
         """Lists some general stats about the bot."""
         bot_member = self.bot.user if not ctx.guild else ctx.guild.me
-        color = bot_member.color if isinstance(bot_member,discord.Member) else 0x2F3136
-        message = await ctx.send(embed=discord.Embed(title="Gathering info...", color=color))
-        
+        color = bot_member.color if isinstance(bot_member, discord.Member) else 0x2F3136
+        message = await ctx.send(
+            embed=discord.Embed(title="Gathering info...", color=color)
+        )
+
         # Get guild count
         guild_count = "{:,}".format(len(self.bot.guilds))
-        
+
         # Try to do this more efficiently, and faster
         total_members = [x.id for x in self.bot.get_all_members()]
         unique_members = set(total_members)
         if len(total_members) == len(unique_members):
             member_count = "{:,}".format(len(total_members))
         else:
-            member_count = "{:,} ({:,} unique)".format(len(total_members), len(unique_members))
-            
+            member_count = "{:,} ({:,} unique)".format(
+                len(total_members), len(unique_members)
+            )
+
         # Get commands/cogs count
-        cog_amnt  = 0
+        cog_amnt = 0
         empty_cog = 0
         for cog in self.bot.cogs:
             visible = []
@@ -471,11 +535,11 @@ class Meta(commands.Cog):
                     continue
                 visible.append(c)
             if not len(visible):
-                empty_cog +=1
+                empty_cog += 1
                 # Skip empty cogs
                 continue
             cog_amnt += 1
-        
+
         cog_count = "{:,} cog".format(cog_amnt)
         # Easy way to append "s" if needed:
         if not len(self.bot.cogs) == 1:
@@ -488,58 +552,78 @@ class Meta(commands.Cog):
             if command.hidden:
                 continue
             visible.append(command)
-            
+
         command_count = "{:,}".format(len(visible))
-        
+
         # Get localized created time
 
         # Get the current prefix
         prefix = await self.bot.command_prefix(self.bot, ctx.message)
-        prefix = ", ".join([x for x in prefix if not x == "<@!{}> ".format(self.bot.user.id)])
+        prefix = ", ".join(
+            [x for x in prefix if not x == "<@!{}> ".format(self.bot.user.id)]
+        )
 
         # Get the owners
-        
-        
+
         owners = "Wasi Master#4245"
         # Get bot's avatar url
         avatar = bot_member.avatar_url
         if not len(avatar):
             avatar = bot_member.default_avatar_url
-        
+
         # Build the embed
         fields = [
-            {"name":"Members","value":member_count,"inline":True},
-            {"name":"Servers","value":guild_count,"inline":True},
-            {"name":"Commands","value":command_count + " (in {})".format(cog_count),"inline":True},
-            {"name":"Owners","value":owners,"inline":True},
-            {"name":"Prefixes","value":prefix,"inline":True},
-            {"name":"Shard Count","value":self.bot.shard_count,"inline":True}
+            {"name": "Members", "value": member_count, "inline": True},
+            {"name": "Servers", "value": guild_count, "inline": True},
+            {
+                "name": "Commands",
+                "value": command_count + " (in {})".format(cog_count),
+                "inline": True,
+            },
+            {"name": "Owners", "value": owners, "inline": True},
+            {"name": "Prefixes", "value": prefix, "inline": True},
+            {"name": "Shard Count", "value": self.bot.shard_count, "inline": True},
         ]
-        if isinstance(bot_member,discord.Member):
+        if isinstance(bot_member, discord.Member):
             # Get status
             status_text = get_status(str(bot_member.status))
-            fields.append({"name":"Status","value":status_text,"inline":True})
+            fields.append({"name": "Status", "value": status_text, "inline": True})
 
             if bot_member.activity and bot_member.activity.name:
-                play_list = [ "Playing", "Streaming", "Listening to", "Watching" ]
+                play_list = ["Playing", "Streaming", "Listening to", "Watching"]
                 try:
                     play_string = play_list[bot_member.activity.type]
                 except:
                     play_string = "Playing"
-                fields.append({"name":play_string,"value":str(bot_member.activity.name),"inline":True})
+                fields.append(
+                    {
+                        "name": play_string,
+                        "value": str(bot_member.activity.name),
+                        "inline": True,
+                    }
+                )
                 if bot_member.activity.type == 1:
                     # Add the URL too
-                    fields.append({"name":"Stream URL","value":"[Watch Now]({})".format(bot_member.activity.url),"inline":True})
+                    fields.append(
+                        {
+                            "name": "Stream URL",
+                            "value": "[Watch Now]({})".format(bot_member.activity.url),
+                            "inline": True,
+                        }
+                    )
         embed = discord.Embed(
             title=ctx.guild.me.display_name + " Info",
             color=color,
             description="Current Bot Information",
-            thumbnail=avatar
+            thumbnail=avatar,
         )
         for field in fields:
-            embed.add_field(name=field["name"], value=field["value"], inline=field["inline"])
+            embed.add_field(
+                name=field["name"], value=field["value"], inline=field["inline"]
+            )
         # Update the embed
         await message.edit(embed=embed)
+
     @commands.command(
         aliases=["sug", "suggestion", "rep", "report"],
         description="Suggest a thing to be added to the bot",
@@ -550,7 +634,7 @@ class Meta(commands.Cog):
         channel = guild.get_channel(740071107041689631)
         embed = discord.Embed(color=0x2F3136)
         embed.set_author(name="Suggestion Added")
-        embed.add_field(name="User", value=ctx.message.author)
+        embed.add_field(name="User", value=ctx.author)
         embed.add_field(name="Guild", value=ctx.guild.name)
         embed.add_field(name="Suggestion", value=f"```{str(suggestion)}```")
         message = await channel.send(embed=embed)
@@ -562,10 +646,7 @@ class Meta(commands.Cog):
         aliases=["chpfp", "cp"], description="Change the bots profile picture on random"
     )
     @commands.cooldown(2, 900, BucketType.default)
-    async def changepfp(
-        self,
-        ctx,
-    ):
+    async def changepfp(self, ctx):
         pfps = [
             "profile_pics/pink.png",
             "profile_pics/red.png",
@@ -583,7 +664,7 @@ class Meta(commands.Cog):
             avatar = f.read()
             await self.bot.user.edit(avatar=avatar)
             file = discord.File(pfp, filename="avatar.png")
-            await ctx.send("Changed Profile picture to:", file=file)
+            await ctx.send("Changed Profile picture to:".send(file=file))
             server = self.bot.get_guild(576016234152198155)
             channel = server.get_channel(741371556277518427)
             embed = discord.Embed(
@@ -592,14 +673,50 @@ class Meta(commands.Cog):
             await channel.send(embed=embed)
         f.close()
 
+    @commands.command(disabled=True)
+    async def source(self, ctx, *, command: str = None):
+        """Displays my full source code or for a specific command.
+        To display the source code of a subcommand you can separate it by
+        periods, e.g. tag.create for the create subcommand of the tag command
+        or by spaces.
+        """
+        source_url = "https://github.com/Rapptz/RoboDanny"
+        branch = "rewrite"
+        if command is None:
+            return await ctx.send(source_url)
+
+        if command == "help":
+            src = type(self.bot.help_command)
+            module = src.__module__
+            filename = inspect.getsourcefile(src)
+        else:
+            obj = self.bot.get_command(command.replace(".", " "))
+            if obj is None:
+                return await ctx.send("Could not find command.")
+
+            # since we found the command we're looking for, presumably anyway, let's
+            # try to access the code itself
+            src = obj.callback.__code__
+            module = obj.callback.__module__
+            filename = src.co_filename
+
+        lines, firstlineno = inspect.getsourcelines(src)
+        if not module.startswith("discord"):
+            # not a built-in command
+            location = os.path.relpath(filename).replace("\\", "/")
+        else:
+            location = module.replace(".", "/") + ".py"
+            source_url = "https://github.com/Rapptz/discord.py"
+            branch = "master"
+
+        final_url = f"<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>"
+        await ctx.send(final_url)
+
     @commands.command(
         aliases=["usr", "user"], description="Shows usage statistics about users"
     )
     @commands.cooldown(1, 10, BucketType.user)
-    async def users(
-        self,
-        ctx,
-    ):
+    async def users(self, ctx):
         command_usage = await self.bot.db.fetch(
             """
                     SELECT *
@@ -624,10 +741,7 @@ class Meta(commands.Cog):
         aliases=["usg", "usages"], description="Shows usage statistics about commands"
     )
     @commands.cooldown(1, 10, BucketType.user)
-    async def usage(
-        self,
-        ctx,
-    ):
+    async def usage(self, ctx):
         command_usage = await self.bot.db.fetch(
             """
                     SELECT *
@@ -648,10 +762,7 @@ class Meta(commands.Cog):
         )
 
     @commands.command(aliases=["upt"], description="Shows how long the bot was up for")
-    async def uptime(
-        self,
-        ctx,
-    ):
+    async def uptime(self, ctx):
         delta = datetime.datetime.utcnow() - ctx.bot.started_at
         precisedelta = humanize.precisedelta(delta, minimum_unit="seconds")
         naturalday = humanize.naturalday(ctx.bot.started_at)
@@ -696,28 +807,22 @@ class Meta(commands.Cog):
             spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
             messages.extend(f"- **{author}**: {count}" for author, count in spammers)
 
-        await ctx.send("\n".join(messages), delete_after=10)
+        await ctx.send("\n".join(messages, delete_after=10))
 
     @commands.command(
         aliases=["botinvite", "inv"], description="Sends the invite link for the bot"
     )
-    async def invite(
-        self,
-        ctx,
-    ):
+    async def invite(self, ctx):
         await ctx.send(
             embed=discord.Embed(
                 title="Invite",
-                description="[Invite](https://discordapp.com/oauth2/authorize?client_id=707883141548736512&scope=bot&permissions=109640)",
+                description="[Invite](https://discordapp.com/oauth2/authorize?client_id=847706412306268181&scope=bot&permissions=109640)",
                 color=0x2F3136,
             )
         )
 
     @commands.command(description="Shows information about the bots server")
-    async def servers(
-        self,
-        ctx,
-    ):
+    async def servers(self, ctx):
         serverlist = []
         memberlist = []
         for guild in self.bot.guilds:
@@ -733,4 +838,6 @@ class Meta(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Meta(bot))

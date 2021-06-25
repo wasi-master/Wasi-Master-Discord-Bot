@@ -1,24 +1,23 @@
-import discord
-from discord.ext import commands
 import ast
-from bs4 import BeautifulSoup
 import asyncio
+
+import discord
+from bs4 import BeautifulSoup
+from discord.ext import commands
 
 
 class Anime(commands.Cog):
-    """Anime commands
-    """
+    """Anime commands"""
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(description="Sends a waifu")
-    async def waifu(
-        self,
-        ctx,
-    ):
+    @commands.is_nsfw()
+    async def waifu(self, ctx):
+        """Sends [Waifu](https://www.dictionary.com/e/fictional-characters/waifu) pictures
+        Note: This command is nsfw only"""
 
-        if not ctx.channel.is_nsfw():
-            return await ctx.send("Shut up you horny kid, go to a nsfw channel")
         gender = "male"
         async with ctx.typing():
             while gender == "male":
@@ -71,10 +70,12 @@ class Anime(commands.Cog):
                 )
                 await message.edit(embed=embed)
                 return await ctx.send(
-                    f":couple_with_heart: {ctx.author.mention} is now married with" \
+                    f":couple_with_heart: {ctx.author.mention} is now married with"
                     "**{name.replace('&quot;', '')}** :couple_with_heart:"
                 )
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Anime(bot))

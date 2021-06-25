@@ -1,25 +1,31 @@
-import discord
 import json
+from io import BytesIO
+from typing import Optional, Union
+from urllib.parse import quote
 
+import discord
+from discord.ext import commands
+from discord.ext.commands import BucketType
 
-from  discord.ext import commands
-from  typing import Union, Optional
-from  discord.ext.commands import BucketType
-from  io import BytesIO
-from  urllib.parse import quote
 
 class Image(commands.Cog):
-    """Image releated commands
-    """
+    """Image releated commands"""
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(aliases=["dbf"])
-    async def distractedbf(self, ctx, girlfriend: Union[discord.Member, str], boyfriend: Union[discord.Member, str], another_girl: Union[discord.Member, str]):
+    async def distractedbf(
+        self,
+        ctx,
+        girlfriend: Union[discord.Member, str],
+        boyfriend: Union[discord.Member, str],
+        another_girl: Union[discord.Member, str],
+    ):
         """Makes a **distracted boyfriend** meme from the given arguments
-        parameters passed can be a user or a name 
-        
-        the meme basically is a boyfriend being distracted by another girl while his girlfriend is watching him 
+        parameters passed can be a user or a name
+
+        the meme basically is a boyfriend being distracted by another girl while his girlfriend is watching him
         can be used when someone is disregarding something and going for another thing
         """
         if isinstance(girlfriend, discord.Member):
@@ -28,28 +34,27 @@ class Image(commands.Cog):
             boyfriend_img = boyfriend.avatar_url
         if isinstance(another_girl, discord.Member):
             another_img = another_girl.avatar_url
-        
-        result = await self.bot.vacefron.distracted_bf(boyfriend_img, girlfriend_img,  another_img)
+
+        result = await self.bot.vacefron.distracted_bf(
+            boyfriend_img, girlfriend_img, another_img
+        )
         await ctx.send(
             f"{boyfriend} is distracted at {another_girl} while {girlfriend} is watching\n\nRendered by {ctx.author}",
             file=discord.File(
-                await result.read(bytesio=True),
-                filename="Distracted Boyfriend.png")
-                )
-
+                await result.read(bytesio=True), filename="Distracted Boyfriend.png"
+            ),
+        )
 
     @commands.command(aliases=["cmm"])
     async def changemymind(self, ctx, *, text):
-        """Makes a change my mind meme from the text
-        """
+        """Makes a change my mind meme from the text"""
         result = await self.bot.vacefron.change_my_mind(text)
         await ctx.send(
             f"Invoked by {ctx.author}",
             file=discord.File(
-                await result.read(bytesio=True),
-                filename="Change My Mind.png")
-                )
-
+                await result.read(bytesio=True), filename="Change My Mind.png"
+            ),
+        )
 
     @commands.command(aliases=["em"])
     async def emergency_meeting(self, ctx, *, text):
@@ -57,13 +62,18 @@ class Image(commands.Cog):
         await ctx.send(
             f"Invoked by {ctx.author}",
             file=discord.File(
-                await result.read(bytesio=True),
-                filename="Emergency Meeting.png")
-                )
-    
-    
+                await result.read(bytesio=True), filename="Emergency Meeting.png"
+            ),
+        )
+
     @commands.command(aliases=["eject", "ejection"])
-    async def ejected(self, ctx, person: Union[discord.User, str], color="random", imposter: str = None):
+    async def ejected(
+        self,
+        ctx,
+        person: Union[discord.User, str],
+        color="random",
+        imposter: str = None,
+    ):
         """Makes a image of ejecting the mentioned user or the name passed
         person can be a user (id, name, name#discriminatir, @mention) or a string
         you can provide a color for the crewmate, defaults to random
@@ -78,10 +88,27 @@ class Image(commands.Cog):
                 imposter = "false"
             else:
                 imposter = "true"
-        color = color.lower().replace("green", "darkgreen").replace("dark green", "darkgreen")
+        color = (
+            color.lower()
+            .replace("green", "darkgreen")
+            .replace("dark green", "darkgreen")
+        )
         if isinstance(person, discord.User):
             person = person.display_name
-        if not color in ["black", "blue", "brown", "cyan", "darkgreen", "lime", "orange", "pink", "purple", "red", "white", "yellow"]:
+        if not color in [
+            "black",
+            "blue",
+            "brown",
+            "cyan",
+            "darkgreen",
+            "lime",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "white",
+            "yellow",
+        ]:
             await ctx.send("Invalid color")
             return
         person = quote(person)
@@ -90,39 +117,27 @@ class Image(commands.Cog):
             r = await j.read()
         await ctx.send(
             f"{ctx.author} asked for this",
-            file=discord.File(
-                BytesIO(r),
-                filename="Ejected.png")
-                )
+            file=discord.File(BytesIO(r), filename="Ejected.png"),
+        )
 
     @commands.command(aliases=["waste"])
     async def wasted(self, ctx, wasted: discord.User):
         text = wasted.name + " Wasted"
-        url=f"https://some-random-api.ml/canvas/wasted?avatar={wasted.avatar_url}"
+        url = f"https://some-random-api.ml/canvas/wasted?avatar={wasted.avatar_url}"
         async with self.bot.session.get(url) as result:
             file = await result.read()
-        
-        await ctx.send(
-            text,
-            file=discord.File(
-                file,
-                filename="Comment.png")
-                )
+
+        await ctx.send(text, file=discord.File(file, filename="Comment.png"))
 
     @commands.command(aliases=["trigger"])
     async def triggered(self, ctx, to_trigger: discord.User):
         text = to_trigger.name + " is **Triggered**"
-        url=f"https://some-random-api.ml/canvas/triggered?avatar={to_trigger.avatar_url}"
+        url = f"https://some-random-api.ml/canvas/triggered?avatar={to_trigger.avatar_url}"
         async with self.bot.session.get(url) as result:
             file = await result.read()
-        
-        await ctx.send(
-            text,
-            file=discord.File(
-                file,
-                filename="Comment.png")
-                )
-    
+
+        await ctx.send(text, file=discord.File(file, filename="Comment.png"))
+
     @commands.command(aliases=["ytcmnt", "cmnt"])
     async def comment(self, ctx, commenter: Union[discord.User, str], comment):
         if isinstance(commenter, discord.User):
@@ -132,17 +147,17 @@ class Image(commands.Cog):
             commenter = str(commenter)
             avatar = "https://www.shit.jpg"
 
-        url = ("https://some-random-api.ml/canvas/youtube-comment"
-              f"?avatar={avatar}&username={name}&comment={comment}")
+        url = (
+            "https://some-random-api.ml/canvas/youtube-comment"
+            f"?avatar={avatar}&username={name}&comment={comment}"
+        )
         async with self.bot.session.get(url) as result:
             file = await result.read()
-        
+
         await ctx.send(
             f"{ctx.author} asked for this",
-            file=discord.File(
-                file,
-                filename="Comment.png")
-                )
+            file=discord.File(file, filename="Comment.png"),
+        )
 
     @commands.command(aliases=["ft"])
     async def firsttime(self, ctx, *, user: Union[discord.User, str] = None):
@@ -156,16 +171,12 @@ class Image(commands.Cog):
         r = await self.bot.vacefron.first_time(avatar)
         await ctx.send(
             f"{ctx.author} made this",
-            file=discord.File(
-                await r.read(bytesio=True),
-                filename="First Time.png")
-                )
+            file=discord.File(await r.read(bytesio=True), filename="First Time.png"),
+        )
 
     @commands.command(aliases=["milkyou", "canmilkyou", "milkable", "icmy"])
     async def icanmilkyou(
-        self, ctx, 
-        milker: Union[discord.User, str],
-        to_milk: Union[discord.User, str]
+        self, ctx, milker: Union[discord.User, str], to_milk: Union[discord.User, str]
     ):
         if isinstance(milker, discord.User):
             milker = str(milker.avatar_url)
@@ -173,12 +184,12 @@ class Image(commands.Cog):
             to_milk = str(to_milk.avatar_url)
         r = await self.bot.vacefron.i_can_milk_you(milker, to_milk)
         await ctx.send(
-            f"{ctx.author} asked for this", 
+            f"{ctx.author} asked for this",
             file=discord.File(
-                await r.read(bytesio=True),
-                filename="I can milk you.png")
-                )
-    
+                await r.read(bytesio=True), filename="I can milk you.png"
+            ),
+        )
+
     @commands.command(aliases=["ias"])
     async def iamspeed(self, ctx, whoisspeed: Union[discord.User, str]):
         if isinstance(whoisspeed, discord.User):
@@ -186,12 +197,9 @@ class Image(commands.Cog):
         r = await self.bot.vacefron.iam_speed(whoisspeed)
         await ctx.send(
             f"Command Invoked by {ctx.author}",
-            file=discord.File(
-                await r.read(bytesio=True),
-                filename="I am speed.png")
-                )
-    
-    
+            file=discord.File(await r.read(bytesio=True), filename="I am speed.png"),
+        )
+
     @commands.command(aliases=["wd"])
     async def wide(self, ctx, *, user: Union[discord.User, str] = None):
         if user is None:
@@ -206,11 +214,8 @@ class Image(commands.Cog):
         r = await self.bot.vacefron.wide(avatar)
         await ctx.send(
             f"{ctx.author} made this wide",
-            file=discord.File(
-                await r.read(bytesio=True),
-                filename="Wide.png")
-                )
-
+            file=discord.File(await r.read(bytesio=True), filename="Wide.png"),
+        )
 
     @commands.command(aliases=["stonk"])
     async def stonks(self, ctx, *, user: Union[discord.User, str] = None):
@@ -224,27 +229,25 @@ class Image(commands.Cog):
         r = await self.bot.vacefron.stonks(avatar)
         await ctx.send(
             f"{ctx.author} made me do this",
-            file=discord.File(
-                await r.read(bytesio=True),
-                filename="Stonks.png")
-                )
+            file=discord.File(await r.read(bytesio=True), filename="Stonks.png"),
+        )
 
     @commands.command(description="Invert your or another users profile picture")
     async def invert(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         url = f"https://api.alexflipnote.dev/filter/invert?image={member.avatar_url}"
         e = discord.Embed(color=0x2F3136)
         e.set_image(url=url)
-        e.set_footer(text=f"Asked by {ctx.message.author}")
+        e.set_footer(text=f"Asked by {ctx.author}")
         await ctx.send(embed=e)
 
     @commands.command(description="Blur your or another users profile picture")
     async def blur(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         url = f"https://api.alexflipnote.dev/filter/blur?image={member.avatar_url}"
         e = discord.Embed(color=0x2F3136)
         e.set_image(url=url)
-        e.set_footer(text=f"Asked by {ctx.message.author}")
+        e.set_footer(text=f"Asked by {ctx.author}")
         await ctx.send(embed=e)
 
     @commands.command(
@@ -252,36 +255,36 @@ class Image(commands.Cog):
         description="Convert to Black And White your or another users profile picture",
     )
     async def bw(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         url = f"https://api.alexflipnote.dev/filter/b&w?image={member.avatar_url}"
         e = discord.Embed(color=0x2F3136)
         e.set_image(url=url)
-        e.set_footer(text=f"Asked by {ctx.message.author}")
+        e.set_footer(text=f"Asked by {ctx.author}")
         await ctx.send(embed=e)
 
     @commands.command(description="Pixelate your or another users profile picture")
     async def pixelate(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         url = f"https://api.alexflipnote.dev/filter/pixelate?image={member.avatar_url}"
         e = discord.Embed(color=0x2F3136)
         e.set_image(url=url)
-        e.set_footer(text=f"Asked by {ctx.message.author}")
+        e.set_footer(text=f"Asked by {ctx.author}")
         await ctx.send(embed=e)
 
     @commands.command(
         description="See a gay version of your or another users profile picture"
     )
     async def gay(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         url = f"https://api.alexflipnote.dev/filter/gay?image={member.avatar_url}"
         e = discord.Embed(color=0x2F3136)
         e.set_image(url=url)
-        e.set_footer(text=f"Asked by {ctx.message.author}")
+        e.set_footer(text=f"Asked by {ctx.author}")
         await ctx.send(embed=e)
 
     @commands.command(description="Generates a minecraft style achievement image")
-    async def achievement(self, ctx, icon: Optional[int]=None, text: str = None):
-        if text == None:
+    async def achievement(self, ctx, icon: Optional[int] = None, text: str = None):
+        if text is None:
             text = "Dumb, didn't provide a text to go here"
         image = await (
             await self.bot.alex_api.achievement(text=text, icon=icon)
@@ -293,7 +296,7 @@ class Image(commands.Cog):
 
     @commands.command(description='Generates a "Worse than hitler" image')
     async def hitler(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
 
         headers = {
             "token": "VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB",
@@ -317,7 +320,7 @@ class Image(commands.Cog):
 
     @commands.command(description="Tweets a text")
     async def tweet(self, ctx, member: discord.Member = None, *, text):
-        member = member or ctx.message.author
+        member = member or ctx.author
         username = member.name
 
         headers = {
@@ -344,7 +347,7 @@ class Image(commands.Cog):
 
     @commands.command(description="Generates a wanted poster")
     async def wanted(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
 
         headers = {
             "token": "VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB",
@@ -377,7 +380,7 @@ class Image(commands.Cog):
         else:
             await ctx.send("Invalid Format")
 
-        message = await ctx.send("May take up to 15 seconds, Wait till then")
+        message = await ctx.send("May take up to 15 seconds.send( Wait till then")
         async with self.bot.session.post(
             url,
             data={
@@ -396,4 +399,6 @@ class Image(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Image(bot))

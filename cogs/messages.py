@@ -1,14 +1,15 @@
 import datetime
-import humanize
-import discord
-from discord.ext import commands
 import json
 
+import discord
+import humanize
+from discord.ext import commands
 from discord.ext.commands import BucketType
 
+
 class Messages(commands.Cog):
-    """Message releated commands
-    """
+    """Message releated commands"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -70,7 +71,7 @@ class Messages(commands.Cog):
         if limit > 5000:
             limit = 5000
         try:
-            channel = ctx.message.channel_mentions[0]
+            channel = ctx.channel_mentions[0]
         except IndexError:
             channel = ctx.channel
         try:
@@ -129,4 +130,6 @@ class Messages(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Messages(bot))

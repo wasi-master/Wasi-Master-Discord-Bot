@@ -1,10 +1,12 @@
-import discord
-from discord.ext import commands
 import random
 
+import discord
+from discord.ext import commands
+
+
 class Claptrap(commands.Cog):
-    """Absurd nonsensical talk
-    """
+    """Absurd nonsensical talk"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -520,10 +522,12 @@ class Claptrap(commands.Cog):
             "So, this one time, I went to a party, and there was a beautiful subatomic particle accelerator there. Our circuits locked across the room and... I don't remember what happened next. I mean, I can't. We coulda gotten married and had gadgets together, but now, I'll never know.",
             "I never got to play with guns when I was but a lad, but then ol' Jackie came along, and he was awful mad. 'I need a robot!' he declared, 'that can do my mighty deeds'. Then he saw me standing there, and a thought he did conceive. He told a way to make me rad, he gave me slots for guns, then he sent me on my way and wished me 'have some fun!' Now I'm here, a hired hand, amidst such death and chaos, waiting to be moved around, for my... I have no idea what rhymes with 'chaos'! I REGRET ALL OF THIS!",
             "Ahem, ahem. What's going on? Did I break something?",
-            "Ready to go on where you are, friend. Adiamo!"
+            "Ready to go on where you are, friend. Adiamo!",
         ]
         await ctx.send(random.choice(claptraps))
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Claptrap(bot))

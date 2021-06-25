@@ -1,9 +1,9 @@
-import discord
 import random
-
-from discord.ext import commands
 from collections import Counter
 from typing import Optional
+
+import discord
+from discord.ext import commands
 
 
 class plural:
@@ -20,8 +20,8 @@ class plural:
 
 
 class Random(commands.Cog):
-    """commands that have to do something with the word random (made, done, or happening without method or conscious decision.)
-    """
+    """commands that have to do something with the word random (made, done, or happening without method or conscious decision.)"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -103,6 +103,12 @@ class Random(commands.Cog):
         )
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["rcmd"])
+    async def randomcommand(self, ctx):
+        await ctx.send_help(random.choice(list(self.bot.commands)))
+
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Random(bot))

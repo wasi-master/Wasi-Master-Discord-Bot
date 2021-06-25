@@ -16,7 +16,7 @@ class TicTacToe(commands.Cog):
     @commands.max_concurrency(1, commands.cooldowns.BucketType.default)
     async def tictactoe(self, ctx, move=""):
         """ Tic Tac Toe """
-        await self.ttt_new(ctx.message.author, ctx.message.channel)
+        await self.ttt_new(ctx.author, ctx.channel)
 
     async def ttt_new(self, user, channel):
         self.ttt_games[user.id] = [" "] * 9
@@ -45,7 +45,9 @@ class TicTacToe(commands.Cog):
         check = self.tttDoChecks(self.ttt_games[uid])
         if check is not None:
             msgAppend = (
-                "**It's a draw!**" if check == "draw" else "**{0} wins!**".format(check[-1])
+                "**It's a draw!**"
+                if check == "draw"
+                else "**{0} wins!**".format(check[-1])
             )
             # print(msgAppend)
             await message.edit(
@@ -261,4 +263,6 @@ class TicTacToe(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(TicTacToe(bot))

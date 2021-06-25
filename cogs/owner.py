@@ -1,57 +1,19 @@
 import ast
 import asyncio
 import collections
+import io
+import textwrap
+import traceback
+import typing
+
 import discord
 import prettify_exceptions
-import traceback
+from discord.ext import commands, menus
 
-from discord.ext import commands
-from discord.ext import menus
+import utils
+from utils.converters import CodeblockConverter
+from utils.functions import split_by_slice
 
-
-Codeblock = collections.namedtuple('Codeblock', 'language content')
-
-def codeblock_converter(argument):
-    """
-    A converter that strips codeblock markdown if it exists.
-    Returns a namedtuple of (language, content).
-    :attr:`Codeblock.language` is an empty string if no language was given with this codeblock.
-    It is ``None`` if the input was not a complete codeblock.
-    """
-    if not argument.startswith('`'):
-        return Codeblock(None, argument)
-
-    # keep a small buffer of the last chars we've seen
-    last = collections.deque(maxlen=3)
-    backticks = 0
-    in_language = False
-    in_code = False
-    language = []
-    code = []
-
-    for char in argument:
-        if char == '`' and not in_code and not in_language:
-            backticks += 1  # to help keep track of closing backticks
-        if last and last[-1] == '`' and char != '`' or in_code and ''.join(last) != '`' * backticks:
-            in_code = True
-            code.append(char)
-        if char == '\n':  # \n delimits language and code
-            in_language = False
-            in_code = True
-        # we're not seeing a newline yet but we also passed the opening ```
-        elif ''.join(last) == '`' * 3 and char != '`':
-            in_language = True
-            language.append(char)
-        elif in_language:  # we're in the language after the first non-backtick character
-            if char != '\n':
-                language.append(char)
-
-        last.append(char)
-
-    if not code and not language:
-        code[:] = last
-
-    return Codeblock(''.join(language), ''.join(code[len(language):-backticks]))
 
 def insert_returns(body):
     # insert return stmt if the last expression is a expression statement
@@ -75,28 +37,16 @@ class Source(menus.GroupByPageSource):
         return f"** { entry.key } ** \n { joined } \n Page  { menu.current_page  +  1 } / { self.get_max_pages () } "
 
 
-def split_by_slice(inp: str, length: int) -> list:
-    size = length  # renaming the variable
-    result = []  # declaring a list
-
-    for index, item in enumerate(inp):  # looping through the string
-        if size == length:  # checking if we already reached the limit
-            size = 0  # we reset the limit
-            result.append(
-                inp[index : index + length]
-            )  # we cut the string based on the limit
-        size += 1  # we increase the size
-
-    return result  # we return the result
-
-
 def convert_sec_to_min(seconds):
     """returns 1:30 if 90 is passed
 
-    Args:
+
+    Parameters
+    ----------
         seconds (int): the seconds to convert the data from
 
-    Returns:
+    Returns
+    -------
         str: the 1:30
     """
     minutes, sec = divmod(seconds, 60)
@@ -106,10 +56,13 @@ def convert_sec_to_min(seconds):
 def progressbar(percent: int, empty: str = "☐", filled: str = "■"):
     """Generates a progressbar
 
-    Args:
+
+    Parameters
+    ----------
         percent (int): Percentage
 
-    Returns:
+    Returns
+    -------
         empty (str): a progressbar
     """
     total_percentage = 15
@@ -131,12 +84,11 @@ class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.is_owner()
     @commands.group(invoke_without_command=False, aliases=["msg"], name="bot_message")
     async def _bot_message(self, ctx):
         pass
-    
+
     @_bot_message.command(name="delete", aliases=["d"])
     @commands.is_owner()
     async def message_delete(self, ctx, msg: discord.Message):
@@ -144,6 +96,7 @@ class Owner(commands.Cog):
             await msg.delete()
         except Exception as e:
             await ctx.send(e)
+
     @_bot_message.command(name="edit", aliases=["e"])
     @commands.is_owner()
     async def message_edit(self, ctx, msg: discord.Message, content: str):
@@ -151,35 +104,28 @@ class Owner(commands.Cog):
             await msg.edit(content=content, embed=msg.embeds[0])
         except Exception as e:
             await ctx.send(e)
-    
+
     @_bot_message.command(name="delete_embed", aliases=["de"])
     @commands.is_owner()
     async def message_delete_embed(self, ctx, msg: discord.Message):
         try:
-            await msg.edit(content="‌"+msg.content, embed=None)
+            await msg.edit(content="‌" + msg.content, embed=None)
         except Exception as e:
             await ctx.send(e)
 
-
     @commands.command(description="The bot leaves the server (bot owner only)")
-    async def leaveserver(
-        self,
-        ctx,
-    ):
-        if ctx.message.author.id == 538332632535007244:
+    async def leaveserver(self, ctx):
+        if ctx.author.id == 723234115746398219:
             await ctx.send("Bye Bye")
-            ctx.message.guild.leave()
+            ctx.guild.leave()
         else:
             await ctx.send("You are not the owner :grin:")
 
     @commands.command(
         aliases=["shutup"], description="Stops the bot, only for the bot owner"
     )
-    async def shutdown(
-        self,
-        ctx,
-    ):
-        if ctx.message.author.id == 538332632535007244:
+    async def shutdown(self, ctx):
+        if ctx.author.id == 723234115746398219:
             exit()
         else:
             await ctx.send("You are not the bot owner :grin::grin::grin:")
@@ -188,21 +134,93 @@ class Owner(commands.Cog):
         aliases=["rs"], description="Stops the bot, only for the bot owner"
     )
 
-    async def restart(
-        self,
-        ctx,
-    ):
-        if ctx.message.author.id == 538332632535007244:
+    async def restart(self, ctx):
+        if ctx.author.id == 723234115746398219:
             await self.bot.close()
         else:
             await ctx.send("You are not the bot owner :grin::grin::grin:")
+
+    @commands.command()
+    async def sendmessagetoallguilds(self, ctx):
+        if not ctx.author.id == 723234115746398219:
+            return
+        wm_bot_2 = self.bot.get_user(847706412306268181)
+        embed = discord.Embed(
+            title="Hi everyone,",
+            description="I am this bot's owner. and I am sad to say that this bot is no longer maintained\n",
+            color=0xFF0000,
+        )
+        embed.set_author(
+            name="Wasi Master",
+            url="https://discord.com/users/723234115746398219",
+            icon_url="https://cdn.discordapp.com/attachments/847709022965465098/849539344166551552/Wasi_Master8082.png",
+        )
+        embed.set_thumbnail(
+            url="https://findicons.com/files/icons/1007/crystal_like/256/attention.png"
+        )
+        embed.add_field(
+            name="**Why**",
+            value="Because I lost my old account (due to 2FA) that I made this bot with, so\n"
+            "I will no longer be able to work on *this* bot.\n",
+            inline=False,
+        )
+        embed.add_field(
+            name="**But do not fear**\n",
+            value="I am working on the 2nd version of this bot. which is called WM Bot 2.0\n"
+            "The second version is not ready yet. I am still working on _it so it is in beta_, "
+            'You can still invite it [from here](https://discordapp.com/oauth2/authorize?client_id=847706412306268181&scope=bot&permissions=109640 "Invite link of the new bot") if you want to have this bot in your server\n'
+            "And help me fix the issues and stuff. The new bot runs on the same code as the old one but has some optimisations\n\n",
+            inline=False,
+        )
+        embed.add_field(
+            name="**So kick this bot from the server if you want and __*add the new bot*__**\n",
+            value="new bot invite link: https://discordapp.com/oauth2/authorize?client_id=847706412306268181&scope=bot&permissions=109640",
+            inline=False,
+        )
+        embed.set_footer(
+            text="If you are seeing this and you are not a moderator, please inform the moderator/admin of the server",
+            icon_url="https://icons-for-free.com/iconfiles/png/512/info-131964752893297302.png",
+        )
+        all_guilds = self.bot.guilds
+        for i, guild in enumerate(self.bot.guilds[20:], 1):
+            print("Seeing {} ({}/{})".format(guild.name, i, len(all_guilds)))
+            if wm_bot_2 in guild.members:
+                print(
+                    "Did not send message to {} becasue 2.0 is there".format(guild.name)
+                )
+                continue
+            print("Sending message to {}".format(guild.name))
+
+            for channel in guild.channels:
+                try:
+                    await channel.send(embed=embed)
+                    print(
+                        "Sent embed to {} channel of guild {}".format(
+                            channel.name, guild.name
+                        )
+                    )
+                    break
+                except Exception as e:
+                    print(
+                        "Could not send embed to the channel {} of the guild {}".format(
+                            channel.name, guild.name
+                        )
+                    )
+                    pass
+                else:
+                    print(
+                        "Sent embed to {} channel of guild {}".format(
+                            channel.name, guild.name
+                        )
+                    )
 
     @commands.command(
         aliases=["bfutb", "bfb", "blockfrombot"],
         description="Blocks a user from using the bot (Owner only)",
     )
     async def blockfromusingthebot(self, ctx, task: str, user: discord.User = None):
-        if ctx.author.id == 538332632535007244:
+        # TODO: Add Subcommands
+        if ctx.author.id == 723234115746398219:
             if task.lower() == "add" and user:
                 id_ = user.id
                 await self.bot.db.execute(
@@ -253,8 +271,29 @@ class Owner(commands.Cog):
         else:
             await ctx.send("It's for the bot owner only and ur not my owner :grin:")
 
+    @commands.command(aliases=["curl"])
+    async def get(self, ctx, url: str):
+        async with self.bot.session.get(url) as r:
+            resp = await r.text()
+        embed = discord.Embed(title="Response")
+        if len(resp) < 1023:
+            embed.add_field(
+                name="Raw Data",
+                value="```json\n" + resp + "\n```",
+                inline=False,
+            )
+            message = await ctx.send(embed=embed)
+        else:
+            message = await ctx.send(
+                embed=embed,
+                file=discord.File(
+                    io.StringIO(resp),
+                    filename="response.json",
+                ),
+            )
+
     @commands.command(name="eval", aliases=["e"])
-    async def eval_command(self, ctx, *, cmd: codeblock_converter):
+    async def eval_command(self, ctx, *, cmd: CodeblockConverter):
         """Evaluates input.
         Input is interpreted as newline seperated statements.
         If the last statement is an expression, that is the return value.
@@ -274,163 +313,115 @@ class Owner(commands.Cog):
         a
         ```
         """
-        if not ctx.author.id == 538332632535007244:
+        if not ctx.author.id == 723234115746398219:
             return await ctx.send(
                 "**Eval**uating **Python** code is only for the bot owner since we cannot gurantee that you will not use it for something bad"
             )
-        # fn_name = "_eval_expr"
-        # cmd = cmd.rstrip("```").lstrip("```").lstrip("py")
-        # cmd = cmd.replace(";", "\n").replace("; ", " \n")
-        # # add a layer of indentation
-        # cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
+        fn_name = "_eval_expr"
+        # add a layer of indentation
+        cmd = textwrap.indent(cmd.content, "    ")
 
-        # # wrap in async def body
-        # body = f"async def {fn_name}():\n{cmd}"
+        # wrap in async def body
+        body = f"async def {fn_name}():\n{cmd}"
 
-        # parsed = ast.parse(body)
-        # body = parsed.body[0].body
+        parsed = ast.parse(body)
+        body = parsed.body[0].body
 
-        # insert_returns(body)
+        insert_returns(body)
 
-        # env = {
-        #     "bot": ctx.bot,
-        #     "discord": discord,
-        #     "commands": commands,
-        #     "ctx": ctx,
-        #     "guild": ctx.guild,
-        #     "author": ctx.author,
-        #     "channel": ctx.channel,
-        #     "message": ctx.message,
-        #     "client": ctx.bot,
-        #     "__import__": __import__,
-        #     "progressbar": progressbar,
-        #     "split_by_slice": split_by_slice,
-        #     "convert_sec_to_min": convert_sec_to_min,
-        # }
-        # await ctx.message.add_reaction("\U0001f7e1")
+        env = {
+            "bot": ctx.bot,
+            "discord": discord,
+            "commands": commands,
+            "ctx": ctx,
+            "guild": ctx.guild,
+            "author": ctx.author,
+            "channel": ctx.channel,
+            "message": ctx.message,
+            "client": ctx.bot,
+            "__import__": __import__,
+            "utils": utils,
+        }
+        await ctx.message.add_reaction("\U0001f7e1")
 
-        # if not ctx.guild is None:
-        #     me = ctx.guild.me
-        # else:
-        #     me = self.bot.user
-        # try:
-        #     exec(compile(parsed, filename="<eval>", mode="exec"), env)
-        #     result = await eval(f"{fn_name}()", env)
-        # except BaseException as exc:
-        #     await ctx.message.remove_reaction("\U0001f7e1", me)
-        #     await ctx.message.add_reaction("\U0001f534")
-        #     tb = "".join(traceback.format_exc())
-        #     tb = tb.replace(
-        #         "/app/.heroku/python/lib/python3.9/site-packages",
-        #         "C:/Users/Wasi/AppData/Roaming/Python/Python38/site-packages",
-        #     ).replace(
-        #         "/app/", "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/"
-        #     ).replace('File "C:/Users/Wasi/Documents/Github/Wasi-Master-Discord-Bot/cogs/owner.py", line 240, in eval_command\nresult = await eval(f"{fn_name}()", env)\nFile "<eval>",', 'In')
-        #     if len(tb) < 1000:
-        #         embed = discord.Embed(title="Traceback", description=tb)
-        #         await ctx.send(embed=embed)
-        #         return
-        #     results = split_by_slice(tb, 2000)
-        #     num = 0
-        #     embed = discord.Embed(title="Traceback", description=results[num])
-        #     embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-        #     message = await ctx.send(embed=embed)
-        #     await message.add_reaction("\u25c0\ufe0f")
-        #     await message.add_reaction("\u23f9\ufe0f")
-        #     await message.add_reaction("\u25b6\ufe0f")
-        #     while True:
+        try:
+            exec(compile(parsed, filename="<eval>", mode="exec"), env)
+            result = await eval(f"{fn_name}()", env)
+        except BaseException as error:
+            await ctx.message.remove_reaction("\U0001f7e1", ctx.me)
+            await ctx.message.add_reaction("\U0001f534")
+            tb = "".join(
+                traceback.format_exception(type(error), error, error.__traceback__)
+            )
+            embed = discord.Embed(
+                title="Error", description="Code Evaluation raised a error:"
+            )
+            if len(tb) < 1023:
+                embed.add_field(
+                    name="Traceback",
+                    value="```python\n" + tb + "\n```",
+                    inline=False,
+                )
+                message = await ctx.send(embed=embed)
+            else:
+                message = await ctx.send(
+                    embed=embed,
+                    file=discord.File(
+                        io.StringIO(tb),
+                        filename="traceback.py",
+                    ),
+                )
+            return
+        else:
+            await ctx.message.add_reaction("\U0001f7e2")
+            await ctx.message.remove_reaction("\U0001f7e1", ctx.me)
+            parsed_result = None
+            if isinstance(result, str):
+                parsed_result = result.replace(self.bot.http.token, "**[TOKEN]**")
+            elif isinstance(result, (int, float, bool, list, dict)):
+                parsed_result = str(result)
+            elif isinstance(result, discord.File):
+                await ctx.send(file=result)
+            elif isinstance(result, discord.Embed):
+                await ctx.send(embed=result)
+            elif result is None:
+                parsed_result = "None"
+            else:
+                parsed_result = repr(result)
+            if parsed_result:
+                await ctx.send(parsed_result)
+        # jsk = self.bot.get_command("jishaku python")
+        # await jsk(ctx, argument=cmd)
 
-        #         def check(reaction, user):
-        #             return (
-        #                 user.id == ctx.author.id
-        #                 and reaction.message.channel.id == ctx.channel.id
-        #             )
+    @eval_command.error
+    async def on_eval_error(self, ctx, error):
+        await ctx.message.remove_reaction("\U0001f7e1", ctx.me)
+        await ctx.message.add_reaction("\U0001f534")
+        tb = "".join(
+            traceback.format_exception(type(error), error, error.__traceback__)
+        )
+        embed = discord.Embed(
+            title="Error", description="Code Evaluation raised a error:"
+        )
+        if len(tb) < 1023:
+            embed.add_field(
+                name="Traceback",
+                value="```python\n" + tb + "\n```",
+                inline=False,
+            )
+            message = await ctx.send(embed=embed)
+        else:
+            message = await ctx.send(
+                embed=embed,
+                file=discord.File(
+                    io.StringIO(tb),
+                    filename="traceback.py",
+                ),
+            )
+        return
 
-        #         try:
-        #             reaction, user = await self.bot.wait_for(
-        #                 "reaction_add", check=check, timeout=120
-        #             )
-        #         except asyncio.TimeoutError:
-        #             embed.set_footer(
-        #                 icon_url=str(ctx.author.avatar_url), text="Timed out"
-        #             )
-        #             await message.edit(embed=embed)
-        #             try:
-        #                 return await message.clear_reactions()
-        #             except:
-        #                 await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-        #                 await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-        #                 await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-        #                 break
-        #                 return
-        #         else:
-        #             if reaction.emoji == "\u25c0\ufe0f":
-        #                 try:
-        #                     message.remove_reaction("\u25c0\ufe0f", ctx.author)
-        #                 except discord.Forbidden:
-        #                     pass
-        #                 num -= 1
-        #                 try:
-        #                     result = results[num]
-        #                 except IndexError:
-        #                     pass
-        #                 embed = discord.Embed(
-        #                     title="Traceback", description=results[num]
-        #                 )
-        #                 embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-        #                 await message.edit(embed=embed)
-        #             elif reaction.emoji == "\u25b6\ufe0f":
-        #                 try:
-        #                     await message.remove_reaction("\u25b6\ufe0f", ctx.author)
-        #                 except discord.Forbidden:
-        #                     pass
-        #                 num += 1
-        #                 try:
-        #                     result = results[num]
-        #                 except IndexError:
-        #                     pass
-        #                 embed = discord.Embed(
-        #                     title="Traceback", description=results[num]
-        #                 )
-        #                 embed.set_footer(text=f"Page {num + 1}/{len(results)}")
-        #                 await message.edit(embed=embed)
-        #             elif reaction.emoji == "\u23f9\ufe0f":
-        #                 embed = discord.Embed(
-        #                     title="Traceback", description=results[num]
-        #                 )
-        #                 await message.edit(embed=embed)
-        #                 try:
-        #                     return await message.clear_reactions()
-        #                 except:
-        #                     await message.remove_reaction("\u25b6\ufe0f", ctx.guild.me)
-        #                     await message.remove_reaction("\u23f9\ufe0f", ctx.guild.me)
-        #                     await message.remove_reaction("\u25c0\ufe0f", ctx.guild.me)
-        #                     break
-        #                     return
-        #             else:
-        #                 pass
-
-        #     return
-        # else:
-        #     parsed_result = None
-        #     if isinstance(result, str):
-        #         parsed_result = result.replace(self.bot.http.token, "**[TOKEN]**")
-        #     elif isinstance(result, (int, float, bool, list, dict)):
-        #         parsed_result = str(result)
-        #     elif isinstance(result, discord.File):
-        #         await ctx.send(file=result)
-        #     elif isinstance(result, discord.Embed):
-        #         await ctx.send(embed=result)
-        #     elif result is None:
-        #         parsed_result = "None"
-        #     else:
-        #         parsed_result = repr(result)
-        #     if parsed_result:
-        #         await ctx.send(parsed_result)
-        #     await ctx.message.remove_reaction("\U0001f7e1", me)
-        #     await ctx.message.add_reaction("\U0001f7e2")
-        jsk = self.bot.get_command("jishaku python")
-        await jsk(ctx, argument=cmd)
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Owner(bot))

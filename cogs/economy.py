@@ -1,15 +1,17 @@
-import discord
-import random
 import json
+import random
 
-from  discord.ext import commands
-from  .utils.functions import get_random_color
+import discord
+from discord.ext import commands
+
+from utils.functions import get_random_color
 
 
 class Economy(commands.Cog):
     """Economy commands :^)
     and yes I copied other economy bots just to test myself :)
     """
+
     def __init__(self, bot):
         self.bot = bot
         self.db = bot.db
@@ -23,7 +25,7 @@ class Economy(commands.Cog):
             FROM economy
             WHERE user_id=$1
             """,
-        user,
+            user,
         )
         if info is None:
             await self.db.execute(
@@ -31,8 +33,11 @@ class Economy(commands.Cog):
                     INSERT INTO economy (user_id, wallet, bank, inventory)
                     VALUES ($1, $2, $3, $4)
                 """,
-                user, 0, 0, "{}",
-                )
+                user,
+                0,
+                0,
+                "{}",
+            )
             return await self.db.fetchrow(
                 """
                 SELECT *
@@ -45,13 +50,13 @@ class Economy(commands.Cog):
             return info
 
     @commands.command(aliases=["bal"])
-    async def balance(self, ctx, user: discord.User=None):
+    async def balance(self, ctx, user: discord.User = None):
         user = user or ctx.author
         info = await self.get_account(user.id)
-        e = discord.Embed(title=user.name+ "'s balance", color=get_random_color())
+        e = discord.Embed(title=user.name + "'s balance", color=get_random_color())
         e.add_field(name="Wallet", value=info["wallet"])
         e.add_field(name="Bank", value=info["bank"])
-        e.add_field(name="Total", value=info["bank"]+info["wallet"])
+        e.add_field(name="Total", value=info["bank"] + info["wallet"])
         await ctx.send(embed=e)
 
     @commands.command(aliases=["with"])
@@ -68,7 +73,7 @@ class Economy(commands.Cog):
         if amount > info["bank"]:
             await ctx.send("Can't withdraw more than you have in your bank")
             return
-        bank   = info["bank"]   - amount
+        bank = info["bank"] - amount
         wallet = info["wallet"] + amount
         await self.db.execute(
             """
@@ -82,7 +87,7 @@ class Economy(commands.Cog):
             bank,
         )
         await ctx.send(f"{amount} coins withdrawn")
-    
+
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount):
         info = await self.get_account(ctx.author.id)
@@ -98,7 +103,7 @@ class Economy(commands.Cog):
         if amount > info["wallet"]:
             await ctx.send("Can't withdraw more than you have in your wallet")
             return
-        bank   = info["bank"]   + amount
+        bank = info["bank"] + amount
         wallet = info["wallet"] - amount
         await self.db.execute(
             """
@@ -112,10 +117,14 @@ class Economy(commands.Cog):
             bank,
         )
         await ctx.send(f"{amount} coins deposited")
-    
+
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def beg(self, ctx):
+        if random.random() < 0.5:
+            return await ctx.send(
+                random.choice(self.celebs) + " said he doesn't want to give you money"
+            )
         amount = random.randint(1, 500)
         info = await self.get_account(ctx.author.id)
         wallet = info["wallet"] + amount
@@ -137,7 +146,7 @@ class Economy(commands.Cog):
         author_account = await self.get_account(ctx.author.id)
         user_account = await self.get_account(user.id)
         if user_account["wallet"] < 1:
-            await ctx.send(f"Ah, {user.name} has no money, big rip")
+            await ctx.send(f"Ah, {user.name} has no money.send(big rip")
             return
         if user_account["wallet"] < 1000:
             amount = random.randint(1, user_account["wallet"])
@@ -145,7 +154,7 @@ class Economy(commands.Cog):
             amount = random.randint(1, 1000)
         wallet = author_account["wallet"] + amount
         await self.db.execute(
-                """
+            """
                 UPDATE economy
                 SET wallet = $2
                 WHERE user_id = $1;
@@ -155,7 +164,7 @@ class Economy(commands.Cog):
         )
         wallet = user_account["wallet"] - amount
         await self.db.execute(
-                """
+            """
                 UPDATE economy
                 SET wallet = $2
                 WHERE user_id = $1;
@@ -178,7 +187,7 @@ class Economy(commands.Cog):
             return
         wallet = author_account["wallet"] + amount
         await self.db.execute(
-                """
+            """
                 UPDATE economy
                 SET wallet = $2
                 WHERE user_id = $1;
@@ -188,7 +197,7 @@ class Economy(commands.Cog):
         )
         wallet = user_account["wallet"] - amount
         await self.db.execute(
-                """
+            """
                 UPDATE economy
                 SET wallet = $2
                 WHERE user_id = $1;
@@ -200,4 +209,6 @@ class Economy(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Economy(bot))

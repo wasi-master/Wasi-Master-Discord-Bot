@@ -1,19 +1,22 @@
-import datetime
-import json
-import difflib
-import requests
-import discord
-import re
-import humanize
 import asyncio
+import datetime
+import difflib
+import json
+import re
+import typing
+from typing import Union
 
-from  discord.ext import commands
-from  typing import Union
-from .utils.converters import TimeConverter
+import discord
+import humanize
+import requests
+from discord.ext import commands
+
+from utils.converters import TimeConverter
+
 
 class Time(commands.Cog):
-    """Commands releated to time
-    """
+    """Commands releated to time"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -21,12 +24,12 @@ class Time(commands.Cog):
     async def remind(self, ctx, time: TimeConverter, *, text: str):
         seconds = time
         natural_time = humanize.naturaldelta(datetime.timedelta(seconds=int(seconds)))
-        user = ctx.message.author
+        user = ctx.author
         texttosend = text
         timetowait = natural_time
         await ctx.send(f"Gonna remind you `{texttosend}` in {timetowait}")
         await asyncio.sleep(seconds)
-        await user.send(texttosend)
+        await self.user.send(texttosend)
 
     @commands.command(
         aliases=["tzs", "timezoneset", "settimezone", "stz", "ts"],
@@ -180,4 +183,6 @@ class Time(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Time(bot))

@@ -1,0 +1,7 @@
+************* Module main
+main.py:31:21: W0621: Redefining name 'bot' from outer scope (line 82) (redefined-outer-name)
+main.py:269:15: W0703: Catching too general exception Exception (broad-except)
+
+------------------------------------------------------------------
+Your code has been rated at 9.80/10 (previous run: 9.80/10, +0.00)
+

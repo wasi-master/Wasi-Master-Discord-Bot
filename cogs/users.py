@@ -1,8 +1,14 @@
-import discord
-from discord.ext import commands
-import requests, asyncio, json, urllib, datetime, humanize
-
+import asyncio
+import datetime
+import json
+import urllib
 from io import BytesIO
+
+import discord
+import humanize
+import requests
+from discord.ext import commands
+
 
 def get_status(status: str):
     if str(status) == "online":
@@ -36,8 +42,10 @@ def get_flag(flag: str):
     elif flag == "bug_hunter_level_2":
         return "<:bughunt2:726775007908462653> | Bug Hunter Level 2"
     elif flag == "verified_bot_developer":
-        return ("<:verifiedbotdeveloper:740854331154235444> |"
-                "Early Verified Bot Developer")
+        return (
+            "<:verifiedbotdeveloper:740854331154235444> |"
+            "Early Verified Bot Developer"
+        )
     elif flag == "verified_bot":
         return "<:verifiedbot:740855315985072189> | Verified Bot"
     elif flag == "partner":
@@ -67,12 +75,14 @@ def convert_sec_to_min(seconds):
 
 
 class Users(commands.Cog):
-    """Details About Users
-    """    
+    """Details About Users"""
+
     def __init__(self, bot):
         self.bot = bot
-    
-    @commands.command(aliases=["nafk", "unafk", "rafk", "removeafk", "dafk", "disableafk"])
+
+    @commands.command(
+        aliases=["nafk", "unafk", "rafk", "removeafk", "dafk", "disableafk"]
+    )
     async def notawayfromkeyboard(self, ctx):
         is_afk = await self.bot.db.fetchrow(
             """
@@ -86,18 +96,19 @@ class Users(commands.Cog):
             await ctx.send("You are not afk")
         else:
             await self.bot.db.execute(
-            """
+                """
             DELETE FROM afk WHERE user_id=$1
             """,
-            ctx.author.id,
-        )
-            await ctx.send("Removed your afk")
+                ctx.author.id,
+            )
+            await ctx.send("Removed your afk status")
+
     @commands.command(aliases=["afk"])
-    async def awayfromkeyboard(self, ctx, *, reason: commands.clean_content =None):
+    async def awayfromkeyboard(self, ctx, *, reason: commands.clean_content = None):
         if reason:
-            await ctx.send(f"{ctx.author.mention}, You are now afk for {reason} :)")
+            await ctx.send(f"You are now afk for {reason} :)")
         else:
-            await ctx.send(f"{ctx.author.mention}, You are now afk :)")
+            await ctx.send(f"You are now afk :)")
         is_afk = await self.bot.db.fetchrow(
             """
                 SELECT *
@@ -119,38 +130,34 @@ class Users(commands.Cog):
             )
         else:
             await self.bot.db.execute(
-            """
+                """
                 UPDATE afk
                 SET last_seen = $1,
                 reason = $2
                 WHERE user_id = $3;
                 """,
-            time,
-            reason,
-            ctx.author.id,
-        )
-    
-    
+                time,
+                reason,
+                ctx.author.id,
+            )
+
     @commands.command(
         aliases=["pfp", "av", "profilepicture", "profile"],
         description="Sends your or another users avatar",
     )
-    async def avatar(
-        self,
-        ctx,
-        *,
-        user: discord.User = None,
-    ):
+    async def avatar(self, ctx, *, user: discord.User = None):
         user = user or ctx.author
-        ext = 'gif' if user.is_avatar_animated() else 'png'
-        await ctx.send(file=discord.File(BytesIO(await user.avatar_url.read()), f"{user}.{ext}")) 
+        ext = "gif" if user.is_avatar_animated() else "png"
+        await ctx.send(
+            file=discord.File(BytesIO(await user.avatar_url.read()), f"{user}.{ext}")
+        )
 
     @commands.command(
         aliases=["ui", "whois", "wi", "whoami", "me"],
         description="Shows info about a user",
     )
     async def userinfo(self, ctx, *, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         status = await self.bot.db.fetchrow(
             """
                 SELECT *
@@ -170,7 +177,7 @@ class Users(commands.Cog):
         embed.set_thumbnail(url=member.avatar_url)
         embed.set_author(name=f"{member}", icon_url=member.avatar_url)
         embed.set_footer(text=f"Requested by {ctx.author}")
-        if member.id == 538332632535007244:
+        if member.id == 723234115746398219:
             embed.add_field(
                 name="Fun Fact:",
                 value="He is the owner and the only person that developed this bot",
@@ -182,8 +189,12 @@ class Users(commands.Cog):
             sorted(ctx.guild.members, key=lambda member: member.joined_at).index(member)
             + 1
         )
+        if member.bot:
+            bots = list(filter(lambda member: member.bot, ctx.guild.members))
+            b = sorted(bots, key=lambda member: member.joined_at).index(member) + 1
+        x = f" ({b:3,}/{len(bots):3,} in bots)" if member.bot else ""
         embed.add_field(
-            name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}"
+            name="Join Position", value=f"{a:3,}/{len(ctx.guild.members):3,}" + x
         )
         if not len(flaglist) == 0:
             embed.add_field(name="Badges", value=flagstr, inline=False)
@@ -228,8 +239,8 @@ class Users(commands.Cog):
     )
     async def spotify(self, ctx, *, member: discord.Member = None):
         success = False
-        member = member or ctx.message.author
-        activity = ctx.message.guild.get_member(member.id)
+        member = member or ctx.author
+        activity = ctx.guild.get_member(member.id)
         for activity in activity.activities:
             if isinstance(activity, discord.Spotify):
                 success = True
@@ -292,7 +303,7 @@ class Users(commands.Cog):
                         return results[:max_results]
                     return results
                 """
-                #videos = search()
+                # videos = search()
                 embed = discord.Embed(color=activity.color)
                 embed.set_thumbnail(
                     url="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"
@@ -307,18 +318,18 @@ class Users(commands.Cog):
                     embed.add_field(name="Album", value=activity.album)
                 except:
                     embed.add_field(name="Album", value="None")
-                #await ctx.send(f"Hey umm, the duration I got is {activity.duration} and I tried to make it {str(activity.duration)[2:7]}")
+                # await ctx.send(f"Hey umm.send(the duration I got is {activity.duration} and I tried to make it {str(activity.duration)[2:7]}")
                 if len(str(activity.duration)[2:-7]) > 1:
                     embed.add_field(
-                      name="Song Duration", value=str(activity.duration)[2:-7]
-                   )
+                        name="Song Duration", value=str(activity.duration)[2:-7]
+                    )
                 embed.add_field(
                     name="Spotify Link",
                     value=f"[Click Here](https://open.spotify.com/track/{activity.track_id})",
                 )
                 """embed.add_field(
                     name="Youtube Link",
-                    value=f"[Click Here](https://www.youtube.com{videos[0]['url_suffix']})",
+                    value=f"[Click Here](https://www.youtube.com{videos[0]['url_suffix']})"
                 )"""
                 try:
                     embed.add_field(
@@ -336,4 +347,6 @@ class Users(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Users(bot))

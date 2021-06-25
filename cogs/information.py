@@ -1,16 +1,18 @@
-import discord
-import re
 import datetime
+import re
+from typing import Union
+
+import discord
+import humanize
 import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands
-import humanize
-from typing import Union
 from discord.ext.commands.cooldowns import BucketType
 
+
 class Information(commands.Cog):
-    """Information commands releated to discord
-    """
+    """Information commands releated to discord"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -125,4 +127,6 @@ class Information(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Information(bot))

@@ -1,24 +1,24 @@
-import discord
-import random
 import asyncio
-import unicodedata
+import datetime
 import html
 import json
-from discord.ext import commands
-import async_cleverbot as ac
-import json
+import random
+import unicodedata
 from typing import Union
-import datetime
-
 from urllib.parse import quote
 
+import async_cleverbot as ac
+import discord
+from discord.ext import commands
+
+
 class Fun(commands.Cog):
-    """Fun commands :)
-    """
+    """Fun commands :)"""
+
     def __init__(self, bot):
         self.bot = bot
-    
-    @commands.command(aliases=["co"]) 
+
+    @commands.command(aliases=["co"])
     async def cookie(self, ctx):
         m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
@@ -31,13 +31,26 @@ class Fun(commands.Cog):
         await m.edit(embed=discord.Embed(title="🍪 Grab the Cookie"))
         await m.add_reaction("🍪")
         try:
-            r,u = await self.bot.wait_for("reaction_add", check=lambda r,u: str(r.emoji) == "🍪" and r.message == m and r.message.channel == ctx.channel and not u.bot, timeout=10)
+            r, u = await self.bot.wait_for(
+                "reaction_add",
+                check=lambda r, u: str(r.emoji) == "🍪"
+                and r.message == m
+                and r.message.channel == ctx.channel
+                and not u.bot,
+                timeout=10,
+            )
         except asyncio.TimeoutError:
             await ctx.send("No one got the cookie :(")
         else:
-            await m.edit(embed=discord.Embed(title=f"**{u}** got the cookie in **{round((datetime.datetime.utcnow()-m.edited_at).total_seconds(), 3)}** seconds"))
-    
-    @commands.command(aliases=["giveyouup", "gyu", "nggyu", "giveup", "never_gonna_give_you_up"])
+            await m.edit(
+                embed=discord.Embed(
+                    title=f"**{u}** got the cookie in **{round((datetime.datetime.utcnow()-m.edited_at).total_seconds(), 3)}** seconds"
+                )
+            )
+
+    @commands.command(
+        aliases=["giveyouup", "gyu", "nggyu", "giveup", "never_gonna_give_you_up"]
+    )
     @commands.cooldown(1, 10, commands.BucketType.channel)
     async def nevergonnagiveyouup(self, ctx, whotogiveup: Union[discord.Member, str]):
         if isinstance(whotogiveup, discord.Member):
@@ -65,18 +78,24 @@ Never gonna let {0} down
 Never gonna run around and desert {0} 
 Never gonna make {0} cry
 Never gonna say goodbye
-Never gonna tell a lie and hurt {0}""".format(person)
+Never gonna tell a lie and hurt {0}""".format(
+            person
+        )
         gwp = discord.utils.escape_markdown(gwp)
         await ctx.send(gwp, allowed_mentions=discord.AllowedMentions.none())
-    
-    
+
     @commands.command()
     async def snipe(self, ctx, channel: discord.TextChannel = None):
         channel = channel or ctx.channel
         snipes = self.bot.snipes
         if snipes.get(channel.id):
             message = snipes[channel.id]
-            e = discord.Embed(title="Said:", description=message.content, timestamp=message.created_at, color=discord.Colour.green())
+            e = discord.Embed(
+                title="Said:",
+                description=message.content,
+                timestamp=message.created_at,
+                color=discord.Colour.green(),
+            )
             if message.author.display_name == message.author.name:
                 name = str(message.author)
             else:
@@ -86,8 +105,34 @@ Never gonna tell a lie and hurt {0}""".format(person)
             await ctx.send(embed=e)
         else:
             await ctx.send("No messages to snipe")
-    
-    @commands.command(aliases=["bsm", "bsmap"])
+
+    @commands.command()
+    async def imagine(self, ctx, *, thing):
+        await ctx.send(f"I can't even imagine {thing} bro")
+
+    @commands.command()
+    async def cakeday(self, ctx):
+        await ctx.send("")
+
+    @commands.command()
+    async def advice(self, ctx):
+        async with self.bot.session.get("https://api.adviceslip.com/advice") as r:
+            resp = json.loads(await r.text())
+            await ctx.send(
+                embed=discord.Embed(
+                    title="Advice", description=resp["slip"]["advice"], color=0x2F3136
+                )
+            )
+
+    @commands.command()
+    async def topic(self, ctx):
+        async with self.bot.session.get("https://dinosaur.ml/random/topic/") as r:
+            resp = await r.json()
+            await ctx.send(
+                discord.Embed(title="Topic", description=resp["topic"], color=0x2F3136)
+            )
+
+    @commands.command(aliases=["bsm", "bsmap", "map"])
     @commands.cooldown(1, 2, commands.BucketType.default)
     async def brawlstarsmap(self, ctx, *, provided_map: str):
         embed = discord.Embed()
@@ -105,10 +150,13 @@ Never gonna tell a lie and hurt {0}""".format(person)
         async with self.bot.session.get(url) as response:
             text = await response.text()
             if "Not Found" in text:
-                embed.add_field(name="Map not found", value=f"The map `{map.replace('-', ' ')}` is not found")
+                embed.add_field(
+                    name="Map not found",
+                    value=f"The map `{map.replace('-', ' ')}` is not found",
+                )
             else:
                 embed.set_image(url=url)
-        embed.title = map.replace('-', ' ')
+        embed.title = map.replace("-", " ")
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -128,22 +176,21 @@ Never gonna tell a lie and hurt {0}""".format(person)
         ]
         # Build our groots
         groot_max = 1
-        groot = " ".join([random.choice(groots) + (random.choice(punct)*random.randint(0, 5))])
+        groot = " ".join(
+            [random.choice(groots) + (random.choice(punct) * random.randint(0, 5))]
+        )
         await ctx.send(groot)
 
     @commands.command(
         aliases=["q", "triv", " trivia"], description="Sends a quiz for you to answer"
     )
-    async def quiz(
-        self,
-        ctx
-    ):
+    async def quiz(self, ctx):
         answered = False
 
         def check(message=discord.Message):
             if not message.author.bot:
                 return (
-                    message.author == ctx.message.author
+                    message.author == ctx.author
                     and message.channel.id == ctx.channel.id
                 )
 
@@ -306,13 +353,13 @@ Never gonna tell a lie and hurt {0}""".format(person)
             message = await self.bot.wait_for("message", timeout=20.0, check=check)
         except asyncio.TimeoutError:
             if not answered:
-                await ctx.message.channel.send(
+                await ctx.channel.send(
                     f"{ctx.author.mention}, You didn\’t answer in time"
                 )
         else:
             if not answered:
                 if str(message.content).strip().lower() == correct_answer:
-                    await ctx.message.channel.send("Correct you big brain")
+                    await ctx.channel.send("Correct you big brain")
                 else:
                     await ctx.send(
                         f"Poo Poo Brain xD, Correct answer was {correct_answer.upper()} ({ordlist[randomint - 1]} option)"
@@ -324,21 +371,18 @@ Never gonna tell a lie and hurt {0}""".format(person)
         description="Check how gay a person is (random)",
     )
     async def howgay(self, ctx, member: discord.Member = None):
-        member = member or ctx.message.author
+        member = member or ctx.author
         embed = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
         embed.set_author(name="Gay Telling Machine")
         embed.set_footer(text=f"Requested by {ctx.author}")
-        if ctx.message.author.id == 538332632535007244:
+        if ctx.author.id == 723234115746398219:
             gay = 0
         else:
             gay = ctx.bot.secureRandom.randint(0, 100)
         embed.add_field(name="How Gay?", value=f"{member.name} is {gay}% gay")
         await ctx.send(embed=embed)
 
-    @commands.command(
-        aliases=["mem"],
-        description="See a meme",
-    )
+    @commands.command(aliases=["mem"], description="See a meme")
     async def meme(self, ctx):
         async with self.bot.session.get("https://meme-api.herokuapp.com/gimme") as r:
             fj = json.loads(await r.text())
@@ -351,11 +395,13 @@ Never gonna tell a lie and hurt {0}""".format(person)
     )
     async def chatbot(self, ctx):
         """Talk to AI Chatbot"""
+
         def check(m):
-            return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+            return m.author == ctx.author and m.channel == ctx.channel
+
         e = discord.Embed(
             title="Session has started",
-            description=f"Say anything you like and chatbot will respond, may take up to 5 seconds for it to respond, say `{ctx.prefix}chatbot cancel` or `{ctx.prefix}cb cancel` to cancel"
+            description=f"Say anything you like and chatbot will respond, may take up to 5 seconds for it to respond, say `cancel` to cancel",
         )
         e.set_footer(text="Timeout in 60 secs")
         await ctx.send(embed=e)
@@ -363,27 +409,16 @@ Never gonna tell a lie and hurt {0}""".format(person)
             try:
                 msg = await self.bot.wait_for("message", timeout=60, check=check)
             except asyncio.TimeoutError:
-                await ctx.send(f"{ctx.author.mention}, what about the chatbot, you didn\'t respond")
+                await ctx.reply("What about the chatbot, you didn't respond")
                 return
-            if msg.content == f"{ctx.prefix}chatbot cancel" or msg.content == f"{ctx.prefix}cb cancel":
-                await ctx.send("Okay, stopped")
-                return
-            
-            base = "https://some-random-api.ml/chatbot"
-            content = quote(msg.content)
-            url = f"{base}?message={content}&key=kGZctCjadvtFTM0nBxhpSGCbr"
-            async with self.bot.session.get(url) as r:
-                try:
-                    js = json.loads(r)
-                except:
-                    await ctx.send("{ctx.author.mention}, Error")
-                    return
-            e = discord.Embed(
-            title="AI Responded",
-            description=js["response"]
-            )
+            if "cancel " in msg.content:
+                await msg.reply("Okay, stopped")
+                break
+
+            response = await self.bot.cleverbot.ask(msg.content, msg.author.id)
+            e = discord.Embed(title="AI Responded", description=response.text)
             e.set_footer(text="Timeout in 60 secs")
-            await ctx.send(ctx.author.mention, embed=e)
+            await msg.reply(embed=e)
 
     @commands.command(
         name="penis", aliases=["pp"], description="See someone's penis size (random)"
@@ -414,10 +449,7 @@ Never gonna tell a lie and hurt {0}""".format(person)
     @commands.command(
         description="Bot will send the name of every emoji reacted to the bot's message"
     )
-    async def emojiparty(
-        self,
-        ctx,
-    ):
+    async def emojiparty(self, ctx):
         message = await ctx.send("React to this message with any emoji")
         _list = []
 
@@ -430,7 +462,9 @@ Never gonna tell a lie and hurt {0}""".format(person)
                     "reaction_add", check=check, timeout=15
                 )
             except asyncio.TimeoutError:
-                await message.edit(content=message.content + "\n\nOkay I stopped now :)")
+                await message.edit(
+                    content=message.content + "\n\nOkay I stopped now :)"
+                )
                 return
             else:
                 if not isinstance(reaction.emoji, discord.Emoji):
@@ -449,10 +483,7 @@ Never gonna tell a lie and hurt {0}""".format(person)
                     await message.edit(content="\n".join(_list))
 
     @commands.command(aliases=["wtp"], description="You have to guess the pokemon")
-    async def whatsthispokemon(
-        self,
-        ctx,
-    ):
+    async def whatsthispokemon(self, ctx):
 
         headers = {
             "token": "VWTwUej1JzUQ1iAPjeZUNOavwlX3EIeOHtSfskjNDtIODoYugLxBNcHFEHMqiJtB"
@@ -495,9 +526,11 @@ Never gonna tell a lie and hurt {0}""".format(person)
                         name = "".join(name)
                         await ctx.send(f"The pokemon name is {name}")
                 else:
-                    await ctx.send(f"Wrong, you have {max_tries - counter} tries left")
+                    await ctx.send(
+                        f"Wrong.send( you have {max_tries - counter} tries left"
+                    )
                     if counter >= 1:
-                        await ctx.send(f"Wrong, you can try `hint` to get a hint")
+                        await ctx.send(f"Wrong.send( you can try `hint` to get a hint")
                     elif counter == max_tries:
                         embed = discord.Embed(
                             title="You lost",
@@ -507,9 +540,13 @@ Never gonna tell a lie and hurt {0}""".format(person)
                         await ctx.send(embed=embed)
                         return
             except asyncio.TimeoutError:
-                await ctx.send(f"{ctx.author.mention}, you didn't reply within time")
+                await ctx.send(
+                    f"{ctx.author.mention}.send( you didn't reply within time"
+                )
                 return
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Fun(bot))

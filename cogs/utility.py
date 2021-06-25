@@ -1,17 +1,19 @@
-import aiohttp
-import discord
-import os
-import shutil
-import humanize
-import random
 import asyncio
-import json
 import datetime
+import json
+import os
+import random
+import shutil
+from zipfile import ZipFile
 
-from   zipfile import ZipFile
-from   discord.ext import commands
-from   discord.ext.commands import BucketType
-from   bs4 import BeautifulSoup
+import discord
+import humanize
+from bs4 import BeautifulSoup
+from discord.ext import commands
+from discord.ext.commands import BucketType
+
+from utils.paginator import Paginator
+
 
 def get_p(percent: int):
     total = 15
@@ -27,13 +29,12 @@ def get_p(percent: int):
     return f"{ku}"
 
 
-
 class Utility(commands.Cog):
-    """General utilities
-    """
+    """General utilities"""
+
     def __init__(self, bot):
         self.bot = bot
-    
+
     """
     @commands.command(aliases=["copyguild", "servercopy", "guildcopy"])
     # @bot_has_permissions()
@@ -74,6 +75,7 @@ class Utility(commands.Cog):
         else:
             await ctx.send("The bot is not in that server")
     """
+
     @commands.command(aliases=["redirect", "unshort", "us"])
     async def unshorten(self, ctx, url: str):
         async with self.bot.session.get(url, allow_redirects=True) as cs:
@@ -84,45 +86,53 @@ class Utility(commands.Cog):
         embed = discord.Embed(
             title=f"{url} redirected me to",
             description=result_url,
-            color = discord.Colour.red()
-            )
+            color=discord.Colour.red(),
+        )
         embed.set_footer(
             icon_url=ctx.author.avatar_url,
-            text="Command executed by " + str(ctx.author)
+            text="Command executed by " + str(ctx.author),
         )
-        await ctx.send(embed=embed) 
-    
+        await ctx.send(embed=embed)
+
     @commands.command(name="id", aliases=["snowflake", "snf"])
-    async def snowflake(self, ctx, *, snowflake_id : str = None):
+    async def snowflake(self, ctx, *, snowflake_id: str = None):
         """Show the date a snowflake ID was created"""
 
         snowflake_id = int(snowflake_id)
-        timestamp = ((snowflake_id >> 22) + 1420070400000) / 1000 # python uses seconds not milliseconds
+        timestamp = (
+            (snowflake_id >> 22) + 1420070400000
+        ) / 1000  # python uses seconds not milliseconds
         cdate = datetime.datetime.utcfromtimestamp(timestamp)
-        msg = "ID created {}".format(cdate.strftime('%A, %B %d %Y at %H:%M:%S UTC'))
+        msg = "ID created {}".format(cdate.strftime("%A, %B %d %Y at %H:%M:%S UTC"))
         return await ctx.send(msg)
 
     @commands.command(aliases=["snowflakeinfo", "snfi", "idi"])
-    async def idinfo(self, ctx, *, snowflake_id : str = None):
+    async def idinfo(self, ctx, *, snowflake_id: str = None):
         """Show all available data about a snowflake ID"""
         snowflake_id = int(snowflake_id)
-        timestamp = ((snowflake_id >> 22) + 1420070400000) / 1000 # python uses seconds not milliseconds
+        timestamp = (
+            (snowflake_id >> 22) + 1420070400000
+        ) / 1000  # python uses seconds not milliseconds
         iwid = (snowflake_id & 0x3E0000) >> 17
         ipid = (snowflake_id & 0x1F000) >> 12
         icount = snowflake_id & 0xFFF
 
         cdate = datetime.datetime.utcfromtimestamp(timestamp)
-        fdate = cdate.strftime('%A, %B %d %Y at %H:%M:%S UTC')
+        fdate = cdate.strftime("%A, %B %d %Y at %H:%M:%S UTC")
 
-        embed = discord.Embed(title=snowflake_id, description='Discord snowflake ID')
+        embed = discord.Embed(title=snowflake_id, description="Discord snowflake ID")
         embed.add_field(name="Date created", value=fdate)
-        embed.add_field(name="Internal worker/process", value="{}/{}".format(iwid,ipid))
+        embed.add_field(
+            name="Internal worker/process", value="{}/{}".format(iwid, ipid)
+        )
         embed.add_field(name="Internal counter", value=icount)
         embed.add_field(name="As user ping", value="<@{}>".format(snowflake_id))
         embed.add_field(name="As channel ping", value="<#{}>".format(snowflake_id))
         embed.add_field(name="As role ping", value="<@&{}>".format(snowflake_id))
         embed.add_field(name="As custom emote", value="<:test:{}>".format(snowflake_id))
-        embed.add_field(name="As animated emote", value="<a:test:{}>".format(snowflake_id))
+        embed.add_field(
+            name="As animated emote", value="<a:test:{}>".format(snowflake_id)
+        )
 
         await ctx.send(embed=embed)
 
@@ -132,11 +142,15 @@ class Utility(commands.Cog):
         try:
             embed_dict = json.loads(embed_json)
         except Exception as e:
-            embed = discord.Embed(title="Invalid JSON", color=0xff0000, description=f"```json\n{embed_json}```")
+            embed = discord.Embed(
+                title="Invalid JSON",
+                color=0xFF0000,
+                description=f"```json\n{embed_json}```",
+            )
             embed.set_footer(text=str(e))
             await ctx.send(embed=embed)
             return
-        if (col := embed_dict.get("color", embed_dict.get("colour"))):
+        if (col := embed_dict.get("color", embed_dict.get("colour"))) :
             if isinstance(col, str):
                 converter = commands.ColourConverter()
                 embed_dict["color"] = (await converter.convert(ctx, col)).value
@@ -158,13 +172,17 @@ class Utility(commands.Cog):
                 else:
                     return await ctx.send("Error occured: " + str(e))
             else:
-                return await ctx.send("Error Occured, check if everything was right")
+                return await ctx.send(
+                    "Error Occured.send( check if everything was right"
+                )
 
     @commands.command(
         aliases=["link", "message", "ml"],
         description="Generates a link to a message (usefull in mobile)",
     )
-    async def messagelink(self, ctx, message: int = None, channel: discord.TextChannel = None):
+    async def messagelink(
+        self, ctx, message: int = None, channel: discord.TextChannel = None
+    ):
         channel = channel or ctx.channel
         if message:
             message = await channel.fetch_message(message)
@@ -174,24 +192,34 @@ class Utility(commands.Cog):
 
     @commands.command(description="Sends you stuff")
     async def dm(self, ctx, *, message_to_dm: str):
-        await ctx.message.author.send(message_to_dm)
+        await ctx.author.send(message_to_dm)
 
     @commands.command(aliases=["members"], description="Get who are in a certain role")
     async def getusers(self, ctx, *, role: discord.Role):
-        embed = discord.Embed(
-            color=0x2F3136 if str(role.colour) == "#000000" else role.colour
+        if not role.members:
+            return await ctx.send("No Members")
+        paginator = commands.Paginator(prefix="", suffix="")
+        embeds = []
+        for member in role.members:
+            paginator.add_line(
+                f"{member}{f'({member.display_name})' if member.nick else ''}"
+            )
+        for page in paginator.pages:
+            embeds.append(
+                discord.Embed(
+                    description=page,
+                    color=0x2F3136 if role.color == 0x000000 else role.color,
+                )
+            )
+        menu = Paginator(embeds)
+        menu.start(ctx)
+
+    @commands.command()
+    async def tos(self, ctx, *, term: str):
+        """Searches discord terms of service"""
+        await ctx.send(
+            f"Go to <https://discord.com/terms>. Press Ctrl+F and write {term}"
         )
-        embed.set_footer(text=f"Asked by {ctx.author}")
-        async with ctx.typing():
-            empty = True
-            for member in ctx.message.guild.members:
-                if role in member.roles:
-                    embed.add_field(name=member, value=member.mention)
-                    empty = False
-        if empty:
-            await ctx.send("Nobody has the role {}".format(role.mention))
-        else:
-            await ctx.send(embed=embed)
 
     @commands.command(
         description="Shows a `<name:id> for standard emojis and `<a:name:id>` for animated emojis`",
@@ -201,10 +229,7 @@ class Utility(commands.Cog):
         await ctx.send(f"```{emoji}```")
 
     @commands.command(description="Rolls a dice and gives you a number")
-    async def dice(
-        self,
-        ctx,
-    ):
+    async def dice(self, ctx):
         msg = await ctx.send(":game_die: Rolling Dice <a:typing:597589448607399949>")
 
         dice_emoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:"]
@@ -304,10 +329,7 @@ class Utility(commands.Cog):
         description="Saves all emojis to a zip file and sends the zip file",
     )
     @commands.max_concurrency(1, BucketType.channel, wait=True)
-    async def saveallemojis(
-        self,
-        ctx,
-    ):
+    async def saveallemojis(self, ctx):
         guild = ctx.guild
         gn = guild.name
         if os.path.isdir(gn):
@@ -374,9 +396,11 @@ class Utility(commands.Cog):
         embed.set_footer(
             text="Discord may show a different size since it stores some more metadata about the file in their database"
         )
-        await ctx.send(embed=embed, file=discord.File(filename))
+        await ctx.send(embed=embed.send(file=discord.File(filename)))
         shutil.rmtree(gn)
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Utility(bot))

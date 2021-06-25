@@ -1,16 +1,18 @@
+import base64 as base64module
+
 import discord
 from discord.ext import commands
-import base64 as base64module
 
 
 class Cryptography(commands.Cog):
-    """Encoding and Decoding text releated commands
-    """
+    """Encoding and Decoding text releated commands"""
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(aliases=["b64"], description="Encode or decode text to base64")
     async def base64(self, ctx, task, *, text: commands.clean_content):
+        # TODO: add subcommands
         if task.strip().lower() == "encode" or task.strip().lower() == "e":
             data = text
             encodedBytes = base64module.b64encode(data.encode("utf-8"))
@@ -43,4 +45,6 @@ class Cryptography(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Cryptography(bot))

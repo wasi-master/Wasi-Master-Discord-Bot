@@ -1,11 +1,13 @@
-import json, asyncio
+import asyncio
+import json
+
 import discord
 from discord.ext import commands
 
 
 class English(commands.Cog):
-    """Commands for the english language
-    """
+    """Commands for the english language"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -43,62 +45,56 @@ class English(commands.Cog):
         ],
         description="Searches The Urban Dictionary (nsfw only)",
     )
+    @commands.is_nsfw()
     async def urban(self, ctx, *, word):
-        if not ctx.channel.is_nsfw():
-            await ctx.send(
-                "You can use this only in nsfw channels because the results may include nsfw content"
-            )
-        else:
-            params = {"term": word}
-            headers = {
-                "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
-                "x-rapidapi-key": "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d",
-            }
-            num = 0
-            embed = discord.Embed(timestamp=ctx.message.created_at)
-            embed.set_footer(text="From Urban Dictionary")
+        params = {"term": word}
+        headers = {
+            "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
+            "x-rapidapi-key": "1cae29cc50msh4a78ebc8d0ba862p17824ejsn020a7c093c4d",
+        }
+        num = 0
+        embed = discord.Embed(timestamp=ctx.message.created_at)
+        embed.set_footer(text="From Urban Dictionary")
 
-            async with ctx.typing():
-                async with self.bot.session.get(
-                    "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
-                    params=params,
-                    headers=headers,
-                ) as response:
-                    parsed_json = json.loads(await response.text())
+        async with ctx.typing():
+            async with self.bot.session.get(
+                "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
+                params=params,
+                headers=headers,
+            ) as response:
+                parsed_json = json.loads(await response.text())
 
-                try:
-                    data = parsed_json.get("list")
-                    for i in data:
-                        num += 1
-                        if not len(i.get("definition")) > 1024:
-                            embed.add_field(
-                                name=f"Definition {num}",
-                                value=i.get("definition")
-                                .replace("[", "**")
-                                .replace("]", "**"),
-                            )
-                        else:
-                            embed.add_field(name=i.get("definition")[0:1024], value="‌")
-                except:
-                    embed.add_field(name="Error Occured", value="Command Aborted")
-                await ctx.send(embed=embed)
+            try:
+                data = parsed_json.get("list")
+                for i in data:
+                    num += 1
+                    if not len(i.get("definition")) > 1024:
+                        embed.add_field(
+                            name=f"Definition {num}",
+                            value=i.get("definition")
+                            .replace("[", "**")
+                            .replace("]", "**"),
+                        )
+                    else:
+                        embed.add_field(name=i.get("definition")[0:1024], value="‌")
+            except:
+                embed.add_field(name="Error Occured", value="Command Aborted")
+            await ctx.send(embed=embed)
 
     @commands.command(
         aliases=["def", "df"], description="Returns the defination of a word"
     )
     async def define(self, ctx, word: str):
         num = 0
-        heds = {
-            "Authorization": "Token 12a9f35dae06d79ae4554ba44f947cbcdb11bfae"
-        }
+        heds = {"Authorization": "Token 12a9f35dae06d79ae4554ba44f947cbcdb11bfae"}
         async with self.bot.session.get(
-            f"https://owlbot.info/api/v1/dictionary/{word}?format=json",
-            headers=heds
+            f"https://owlbot.info/api/v4/dictionary/{word}?format=json", headers=heds
         ) as r:
             text = await r.text()
             # await ctx.send(f"```json\n{text}```")
+            print(text)
         fj = json.loads(text)
-        
+
         if len(fj) > 1:
             results = fj
             term = results[num]
@@ -277,4 +273,6 @@ class English(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(English(bot))

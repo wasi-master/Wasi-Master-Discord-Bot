@@ -1,13 +1,17 @@
-import discord
 import asyncio
-from discord.ext import commands
 from collections import Counter
 from typing import Union
 
+import discord
+from discord.ext import commands
+
+from utils.functions import get_agreement
+from utils.paginator import Paginator
+
 
 class Moderation(commands.Cog):
-    """commands to help you moderate a server
-    """
+    """commands to help you moderate a server"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -31,6 +35,26 @@ class Moderation(commands.Cog):
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         await member.ban(reason=reason)
         await ctx.send(f"Banned {member.mention}")
+
+    @commands.command(aliases=["rb"])
+    async def recentbans(self, ctx):
+        embeds = []
+        async for entry in ctx.guild.audit_logs(action=discord.AuditLogAction.ban):
+            embed = discord.Embed(
+                title="Bans", timestamp=entry.created_at, color=0x2F3136
+            )
+            embed.add_field(
+                name="Banned user",
+                value=f"{entry.target} (ID: {entry.target.id})",
+                inline=False,
+            )
+            embed.add_field(
+                name="Author", value=f"{entry.user} (ID: {entry.user.id})", inline=False
+            )
+            embed.add_field(name="Reason", value=f"{entry.reason}", inline=False)
+            embeds.append(embed)
+        menu = Paginator(embeds)
+        await menu.start(ctx)
 
     @commands.command(
         description="Unbans a previously banned user with their name and discriminator "
@@ -71,10 +95,10 @@ class Moderation(commands.Cog):
 
             def reaction_check(r, u):
                 return (
-                    r.message.channel.id == ctx.channel.id and
-                    r.message.id == msg.id and
-                    u.permissions_in(ctx.channel).manage_messages and
-                    not u.bot
+                    r.message.channel.id == ctx.channel.id
+                    and r.message.id == msg.id
+                    and u.permissions_in(ctx.channel).manage_messages
+                    and not u.bot
                 )
 
             deleted = await ctx.channel.purge(limit=amount)
@@ -129,15 +153,13 @@ class Moderation(commands.Cog):
 
     @commands.command()
     async def mute(self, ctx, user: discord.Member, reason="No Reason Specified"):
-        role = discord.utils.get(
-            ctx.guild.roles, name="Muted"
-        )  
-        if not role:  
-            try:  
+        role = discord.utils.get(ctx.guild.roles, name="Muted")
+        if not role:
+            try:
                 muted = await ctx.guild.create_role(
                     name="Muted", reason="To use for muting"
                 )
-                for channel in ctx.guild.channels:  
+                for channel in ctx.guild.channels:
                     await channel.set_permissions(
                         muted,
                         send_messages=False,
@@ -145,13 +167,11 @@ class Moderation(commands.Cog):
                         read_messages=False,
                     )
             except discord.Forbidden:
-                return await ctx.send(
-                    "I have no permissions to make a muted role"
-                )  
-            await user.add_roles(muted)  
+                return await ctx.send("I have no permissions to make a muted role")
+            await user.add_roles(muted)
             await ctx.send(f"{user.mention} has been muted for {reason}")
         else:
-            await user.add_roles(role)  
+            await user.add_roles(role)
             await ctx.send(f"{user.mention} has been muted for {reason}")
 
     @commands.command(aliases=["sd"], description="Custom Slow Mode")
@@ -170,7 +190,7 @@ class Moderation(commands.Cog):
     )
     @commands.has_permissions(manage_roles=True)
     async def role(self, ctx, member: discord.Member, *, role: discord.Role):
-        if role in member.roles:  
+        if role in member.roles:
             await member.remove_roles(role)
             embed = discord.Embed(colour=16711680, timestamp=ctx.message.created_at)
             embed.set_author(name=f"Role Changed for {member}")
@@ -208,12 +228,11 @@ class Moderation(commands.Cog):
                 )
             else:
                 continue
-                
+
         embed = discord.Embed(
             title=f"{member}'s Permissions", description=permstr, color=0x2F3136
         )
         await ctx.send(embed=embed)
-
 
     @commands.command(
         aliases=["nk"],
@@ -225,30 +244,14 @@ class Moderation(commands.Cog):
         await ctx.send(
             "Are you sure you want to nuke this channel?\n type `yes` to confirm or `no` to decline"
         )
-
-        def check(m):  
-            return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
-
-        try:
-            name = await self.bot.wait_for("message", check=check, timeout=20)
-        except asyncio.TimeoutError:
-            await ctx.send(f"You didnt respond in 30 seconds :(\n{ctx.author.mention}!")
-            return
-        else:
-            if name.content == "yes":
-                message = await ctx.send(f"Okay, Nuking {channel.name}...")
-                position = channel.position
-                await channel.delete()
-                newchannel = await channel.clone(reason=f"Nuked by {ctx.author}")
-                await message.delete()
-                newchannel.edit(position=position)
-                await ctx.send("Channel Nuked")
-            elif name.content == "no":
-                return await ctx.send("Okay then")
-            else:
-                return await ctx.send(
-                    "I was hoping for `yes` or `no` but you said something else :("
-                )
+        if await get_agreement(ctx, "Do you really want to nuke the channel?"):
+            message = await ctx.send(f"Okay.send( Nuking {channel.name}...")
+            position = channel.position
+            await channel.delete()
+            newchannel = await channel.clone(reason=f"Nuked by {ctx.author}")
+            await message.delete()
+            newchannel.edit(position=position)
+            await ctx.send("Channel Nuked")
 
     @commands.command(
         aliases=["cln"],
@@ -261,7 +264,7 @@ class Moderation(commands.Cog):
             "Are you sure you want to clone this channel?\n type `yes` to confirm or `no` to decline"
         )
 
-        def check(m):  
+        def check(m):
             return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
 
         try:
@@ -271,7 +274,7 @@ class Moderation(commands.Cog):
             return
         else:
             if name.content == "yes":
-                message = await ctx.send(f"Okay, cloning {channel.name}...")
+                message = await ctx.send(f"Okay.send( cloning {channel.name}...")
                 await channel.clone(reason=f"Cloned by {ctx.author}")
                 await message.delete()
                 await ctx.send("Channel Cloned")
@@ -285,9 +288,7 @@ class Moderation(commands.Cog):
     @commands.command(aliases=["lck", "lk"], description="Lock a channel")
     @commands.has_permissions(manage_channels=True)
     async def lock(self, ctx, *, role: discord.Role = None):
-        role = (
-            role or ctx.guild.default_role
-        )  
+        role = role or ctx.guild.default_role
         channel = ctx.channel
         try:
             await channel.set_permissions(
@@ -300,9 +301,7 @@ class Moderation(commands.Cog):
     @commands.command(aliases=["unlck", "ulk"], description=" Unlocks a channel")
     @commands.has_permissions(manage_channels=True)
     async def unlock(self, ctx, *, role: discord.Role = None):
-        role = (
-            role or ctx.guild.default_role
-        )  
+        role = role or ctx.guild.default_role
         channel = ctx.channel
         try:
             await channel.set_permissions(
@@ -316,9 +315,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, user: discord.Member):
         try:
-            await user.remove_roles(
-                discord.utils.get(ctx.guild.roles, name="Muted")
-            )  
+            await user.remove_roles(discord.utils.get(ctx.guild.roles, name="Muted"))
             await ctx.send(f"{user.mention} has been unmuted")
         except discord.Forbidden:
             await ctx.send("No Permissions")
@@ -327,9 +324,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     async def block(self, ctx, user: discord.Member):
         try:
-            await ctx.set_permissions(
-                user, send_messages=False
-            )  
+            await ctx.set_permissions(user, send_messages=False)
         except discord.Forbidden:
             await ctx.send("No permissions")
 
@@ -337,12 +332,12 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     async def unblock(self, ctx, user: discord.Member):
         try:
-            await ctx.set_permissions(
-                user, send_messages=True
-            )  
+            await ctx.set_permissions(user, send_messages=True)
         except discord.Forbidden:
             await ctx.send("No permissions")
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Moderation(bot))

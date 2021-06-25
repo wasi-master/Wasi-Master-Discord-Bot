@@ -1,16 +1,19 @@
-import humanize
-import discord
-from collections import Counter
-from discord.ext import commands
-import json
-import difflib
 import datetime
+import difflib
+import json
+from collections import Counter
 
+import discord
+import humanize
+from discord.ext import commands
 from discord.ext.commands import BucketType
 
+from utils.paginator import Paginator
+
+
 class Server(commands.Cog):
-    """Server releated commands
-    """
+    """Server releated commands"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -34,11 +37,8 @@ class Server(commands.Cog):
     @commands.command(
         aliases=["guildinfo", "si", "gi"], description="See details of a server"
     )
-    async def serverinfo(
-        self,
-        ctx,
-    ):
-        guild = ctx.message.guild
+    async def serverinfo(self, ctx):
+        guild = ctx.guild
         owner = self.bot.get_user(guild.owner_id)
         features = ""
         for i in guild.features:
@@ -51,37 +51,111 @@ class Server(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(description="See all the boosters of this server")
-    async def boosters(
-        self,
-        ctx,
-    ):
-        peoples = []
-        for i in ctx.message.guild.premium_subscribers:
-            peoples.append(i.name)
-        await ctx.send("\n".join(peoples))
+    async def boosters(self, ctx):
+        peoples = commands.Paginator(max_size=500)
+        embeds = []
+        people_who_boosted = sorted(
+            ctx.guild.premium_subscribers, key=lambda member: member.joined_at
+        )
+        for i in people_who_boosted:
+            peoples.add_line(f"{i.name} (ID: {i.id})")
+        for page in peoples.pages:
+            embeds.append(
+                discord.Embed(
+                    title=f"{len(people_who_boosted)} Boosters", description=page
+                )
+            )
+        paginator = Paginator(embeds)
+        await paginator.start(ctx)
 
-    @commands.command(description="Check who got banned lately")
-    @commands.has_permissions(view_audit_log=True)
-    async def bans(self, ctx, limit: int = 10):
-        "Check who got banned"
+    @commands.command(
+        description="See all the members of this server first",
+        aliases=["memlist", "allmembers", "am", "servermembers", "sm", "memberslist"],
+    )
+    async def memberlist(self, ctx):
+        peoples = commands.Paginator(max_size=500)
+        embeds = []
+        people = sorted(
+            ctx.guild.members, key=lambda member: member.top_role, reverse=True
+        )
+        for n, i in enumerate(people, 1):
 
-        if limit > 20:
-            limit = 20
+            peoples.add_line(f"{n}. {i.name} (ID: {i.id} TOP_ROLE: {i.top_role.name})")
+        for page in peoples.pages:
+            embeds.append(
+                discord.Embed(title=f"{len(people)} Members", description=page)
+            )
+        paginator = Paginator(embeds)
+        await paginator.start(ctx)
 
-        bans = []
+    @commands.command(
+        description="See all the members of this server first",
+        aliases=["fj", "whojoinedfirst", "wjf", "firstmembers", "fmem", "oldmembers"],
+    )
+    async def firstjoins(self, ctx):
+        peoples = commands.Paginator(max_size=500)
+        embeds = []
+        people = sorted(ctx.guild.members, key=lambda member: member.joined_at)
+        for n, i in enumerate(people, 1):
+            peoples.add_line(f"{n}. {i.name} (ID: {i.id})")
+        for page in peoples.pages:
+            embeds.append(
+                discord.Embed(title=f"{len(people)} Members", description=page)
+            )
+        paginator = Paginator(embeds)
+        await paginator.start(ctx)
 
-        emb = discord.Embed(description="", colour=0x2F3136)
+    @commands.command(
+        description="See all the members of this server first",
+        aliases=["nj", "whojoinedlast", "wjl", "lastmembers", "lm", "newmembers"],
+    )
+    async def newjoins(self, ctx):
+        peoples = commands.Paginator(max_size=500)
+        embeds = []
+        people = sorted(
+            ctx.guild.members, key=lambda member: member.joined_at, reverse=True
+        )
+        for n, i in enumerate(people, 1):
+            peoples.add_line(f"{n}. {i.name} (ID: {i.id})")
+        for page in peoples.pages:
+            embeds.append(
+                discord.Embed(title=f"{len(people)} Members", description=page)
+            )
+        paginator = Paginator(embeds)
+        await paginator.start(ctx)
 
-        async for entry in ctx.guild.audit_logs(
-            action=discord.AuditLogAction.ban, limit=limit
-        ):
-            emb.description += f"[**{humanize.naturaltime(entry.created_at)}**] **{str(entry.user)}** banned **{str(entry.target)}**\n- {entry.reason}\n\n"
+    @commands.command(description="See all the members of this server first")
+    async def bots(self, ctx):
+        peoples = commands.Paginator(max_size=500)
+        embeds = []
+        people = filter(lambda member: member.bot, ctx.guild.members)
+        people = sorted(people, key=lambda member: member.joined_at)
+        for n, i in enumerate(people, 1):
+            peoples.add_line(f"{n}. {i.name} (ID: {i.id})")
+        for page in peoples.pages:
+            embeds.append(discord.Embed(title=f"{len(people)} Bots", description=page))
+        paginator = Paginator(embeds)
+        await paginator.start(ctx)
 
-        await ctx.send(embed=emb)
+    @commands.command(description="See all the members of this server first")
+    async def humans(self, ctx):
+        peoples = commands.Paginator(max_size=500)
+        embeds = []
+        people = filter(lambda member: not member.bot, ctx.guild.members)
+        people = sorted(people, key=lambda member: member.joined_at)
+        for n, i in enumerate(people, 1):
+            peoples.add_line(f"{n}. {i.name} (ID: {i.id})")
+        for page in peoples.pages:
+            embeds.append(
+                discord.Embed(title=f"{len(people)} Humans", description=page)
+            )
+        paginator = Paginator(embeds)
+        await paginator.start(ctx)
 
     @commands.command(description="Adds a emoji from https://emoji.gg to your server")
-    #  @commands.has_permissions(manage_emojis=True)
+    @commands.has_permissions(manage_emojis=True)
     async def emoji(self, ctx, task: str, emoji_name: str):
+        # TODO: Add subcommands
         if len(ctx.bot.emoji_list) == 0:
             msg1 = await ctx.send(f"Loading emojis <a:typing:597589448607399949>")
 
@@ -116,7 +190,7 @@ class Server(commands.Cog):
                         color=0x2F3136,
                     )
                     embed.add_field(name="Author", value=emoji_from_api["submitted_by"])
-                    # await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com", "emoji.gg")}```""")
+                    # await ctx.send(f"""```{emoji_from_api['image']].replace("discordemoji.com".send("emoji.gg")}```""")
                     embed.set_thumbnail(
                         url=emoji_from_api["image"].replace(
                             "discordemoji.com", "emoji.gg"
@@ -149,7 +223,7 @@ class Server(commands.Cog):
                                 "Unable to add emoji, check my permissions and try again"
                             )
         else:
-            return await ctx.send("Invalid Task, task should be add or view")
+            return await ctx.send("Invalid Task.send( task should be add or view")
 
     @commands.command(
         aliases=["il", "it", "invitelogger"], description="Tracks Invites"
@@ -188,4 +262,6 @@ class Server(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Server(bot))

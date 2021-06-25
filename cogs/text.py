@@ -1,22 +1,24 @@
-import discord
-from uwuify import uwu
-import json
 import asyncio
-import aiohttp
-import time 
-from better_profanity import profanity
-import string
-import humanize
-import unicodedata
-import os
-import gtts
 import difflib
-import urllib
+import json
+import os
 import random
-import numpy as np
+import re
+import string
+import time
+import typing
+import unicodedata
+import urllib
 
-from  discord.ext import commands
-from  discord.ext.commands import BucketType
+import aiohttp
+import discord
+import gtts
+import humanize
+import numpy as np
+from better_profanity import profanity
+from discord.ext import commands
+from discord.ext.commands import BucketType
+from uwuify import uwu
 
 
 def tts(lang: str, text: str):
@@ -25,133 +27,171 @@ def tts(lang: str, text: str):
     return
 
 
+class Font(commands.Converter):
+    async def convert(self, ctx, argument):
+        try:
+            if "--" in argument:
+                return re.findall(r"--.+\s", argument)[0].strip()
+        except Exception as exc:
+            raise commands.BadArgument("Invalid Font")
+        else:
+            raise commands.BadArgument("No Font")
+
+
 def accuracy(s, t):
-    rows = len(s)+1
-    cols = len(t)+1
-    distance = np.zeros((rows,cols),dtype = int)
+    rows = len(s) + 1
+    cols = len(t) + 1
+    distance = np.zeros((rows, cols), dtype=int)
 
     for i in range(1, rows):
-        for k in range(1,cols):
+        for k in range(1, cols):
             distance[i][0] = i
             distance[0][k] = k
 
     for col in range(1, cols):
         for row in range(1, rows):
-            if s[row-1] == t[col-1]:
+            if s[row - 1] == t[col - 1]:
                 cost = 0
             else:
                 cost = 2
-            distance[row][col] = min(distance[row-1][col] + 1,      # Cost of deletions
-                                 distance[row][col-1] + 1,          # Cost of insertions
-                                 distance[row-1][col-1] + cost)     # Cost of substitutions
-    Ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
-    return int(Ratio*100)
+            distance[row][col] = min(
+                distance[row - 1][col] + 1,  # Cost of deletions
+                distance[row][col - 1] + 1,  # Cost of insertions
+                distance[row - 1][col - 1] + cost,
+            )  # Cost of substitutions
+    Ratio = ((len(s) + len(t)) - distance[row][col]) / (len(s) + len(t))
+    return int(Ratio * 100)
 
 
 def show_diff(seqm):
     """Unify operations between two compared strings
-seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
-    output= []
+    seqm is a difflib.SequenceMatcher instance whose a & b are strings"""
+    output = []
     for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
-        if opcode == 'equal':
+        if opcode == "equal":
             output.append(seqm.a[a0:a1][0])
-        elif opcode == 'insert':
+        elif opcode == "insert":
             output.append(f"**( +`{seqm.a[b0:b1][0]}` )**")
-        elif opcode == 'delete':
+        elif opcode == "delete":
             output.append(f"**( ?`{seqm.b[a0:a1][0]}` )**")
-        elif opcode == 'replace':
-            output.append(f"**__( `{seqm.b[b0:b1][0]}` -> `{seqm.a[a0:a1]}` )__**")
+        elif opcode == "replace":
+            output.append(f"**__( `{seqm.b[b0:b1][0]}` -> `{seqm.a[a0:a1][0]}` )__**")
         else:
             output.append(seqm.a[a0:a1][0])
-    return ' '.join(output)
-
+    return " ".join(output)
 
 
 class Text(commands.Cog):
-    """Commands that take a input as text and send a output as text
-    """
+    """Commands that take a input as text and send a output as text"""
+
     def __init__(self, bot):
         self.bot = bot
         marks = map(chr, range(768, 879))
         self.marks = list(marks)
         self.words = []
-        
+
     def _zalgo(self, text):
         words = text.split()
-        zalgo = ' '.join(''.join(c + ''.join(random.choice(self.marks)
-                for _ in range(i // 2 + 1)) * c.isalnum()
-                for c in word)
-                for i, word in enumerate(words))
+        zalgo = " ".join(
+            "".join(
+                c
+                + "".join(random.choice(self.marks) for _ in range(i // 2 + 1))
+                * c.isalnum()
+                for c in word
+            )
+            for i, word in enumerate(words)
+        )
         return zalgo
-
 
     @commands.command(aliases=["trc"])
     async def typeracer(self, ctx):
         def check(m):
             return m.channel == ctx.channel and m.author == ctx.author
+
         if not self.words:
-            m = await ctx.send("Loading my words, this may take a moment")
-            async with self.bot.session.get("https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt") as cs:
+            m = await ctx.send("Loading my words.send( this may take a moment")
+            async with self.bot.session.get(
+                "https://raw.githubusercontent.com/derekchuank/high-frequency-vocabulary/master/10k.txt"
+            ) as cs:
                 self.words = (await cs.text()).splitlines()
             await m.delete()
-        wordlength = random.randint(30,40)
+        wordlength = random.randint(30, 40)
         words = random.sample(self.words, wordlength)
-        words = list(filter(lambda m: len(m) > 2 and not profanity.contains_profanity(m), words))
+        words = list(
+            filter(lambda m: len(m) > 2 and not profanity.contains_profanity(m), words)
+        )
         original_text = " ".join(words)
-        send_text = (random.choice(list(map(chr, range(8192,8208))))+" ").join(words)
-        bot_message = await ctx.send(f"__**Type the words given below**__\n```{send_text}```")
+        send_text = ""
+        for word in words:
+            send_text += word + (random.choice(list(map(chr, range(8192, 8208)))) + " ")
+        bot_message = await ctx.send(
+            f"__**Type the words given below**__\n```{send_text}```"
+        )
         start = bot_message.created_at
         try:
             message = await self.bot.wait_for("message", check=check, timeout=120)
         except asyncio.TimeoutError:
-            return await ctx.send(f"{ctx.author.mention} wow, you are slowest typer ever to be alive")
+            return await ctx.send(
+                f"{ctx.author.mention} wow.send( you are slowest typer ever to be alive"
+            )
         else:
             acc = accuracy(message.content, original_text)
             if acc < 50:
-                return await ctx.send("Invalid")
+                return await ctx.send(
+                    "why didn't you write the thing bro? If you can't write why did you use the command typeracer bro?"
+                )
             end = message.created_at
-            time = (end-start).total_seconds()
-            if any(i in message.content for i in list(map(chr, range(8192,8208)))):
+            time = (end - start).total_seconds()
+            if any(i in message.content for i in list(map(chr, range(8192, 8208)))):
                 return await ctx.send("Imagine cheating bruh")
             if time < 15:
                 return await ctx.send("Imagine cheating bruh")
-            elif time > 15 and message.content == send_text:
+            if time > 15 and message.content == send_text:
                 return await ctx.send("Imagine cheating bruh")
             mistakes = []
-            
+
             given_words = message.content.split()
-            matcher = difflib.SequenceMatcher(None, message.content.split(" "), original_text.split(" "))
+            matcher = difflib.SequenceMatcher(
+                None, message.content.split(" "), original_text.split(" ")
+            )
             ratio = matcher.ratio()
             right = []
             for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
-                if opcode == 'equal':
+                if opcode == "equal":
                     right.append(matcher.a[a0:a1][0])
-                elif opcode in ('delete', 'replace'):
+                elif opcode in ("delete", "replace"):
                     if matcher.b[a0:a1]:
                         mistakes.append(matcher.b[a0:a1][0])
-            wpm = (len(message.content)/5)/(time/60)
-            right_words = len(original_text.split())-len(mistakes)
-            fixed_wpm = wpm-len(mistakes)
+            wpm = (len(message.content) / 5) / (time / 60)
+            right_words = len(original_text.split()) - len(mistakes)
+            fixed_wpm = wpm - len(mistakes)
             if len(mistakes) < 8 and len(mistakes) > 0:
                 mistk = ", ".join(mistakes)
             elif len(mistakes) > 8:
                 mistk = ", ".join(mistakes[:8]) + "..."
             else:
                 mistk = "None, wow"
-            M = await ctx.send(f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {round(fixed_wpm, 3)}\n[TIME] {time} SECONDS\n[ACCURACY] {round(ratio*100, 3)}%\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```\nReact with :thinking: to see where your mistakes are.")
+            M = await ctx.send(
+                f"```ini\n[WPM] {round(wpm, 3)}\n[FIXED WPM] {round(fixed_wpm, 3)}\n[TIME] {time} SECONDS\n[ACCURACY] {round(ratio*100, 3)}%\n[CORRECT WORDS] {right_words}\n[MISTAKES] {mistk}\n[WORDS GIVEN] {len(words)}\n[WORDS FROM {ctx.author.display_name.upper()}] {len(given_words)}\n[CHARACTERS GIVEN] {len(original_text)}\n[CHARACTERS FROM {ctx.author.display_name.upper()}] {len(message.content)}```\nReact with :thinking: to see where your mistakes are."
+            )
             await M.add_reaction("🤔")
             try:
-                await self.bot.wait_for("reaction_add", check=lambda r,u:u.id==ctx.author.id and str(r.emoji)=="🤔" and r.message.id == M.id, timeout=10)
+                await self.bot.wait_for(
+                    "reaction_add",
+                    check=lambda r, u: u.id == ctx.author.id
+                    and str(r.emoji) == "🤔"
+                    and r.message.id == M.id,
+                    timeout=10,
+                )
             except asyncio.TimeoutError:
                 await M.remove_reaction("🤔", ctx.me)
             else:
-                await ctx.send(f"{ctx.author.mention},\n\n{show_diff(matcher)}")
+                await ctx.send(f"{ctx.author.mention}\n\n{show_diff(matcher)}")
 
     @commands.command()
-    async def randomcase(ctx, inp):
+    async def randomcase(self, ctx, inp):
         case = [str.upper, str.lower]
         await ctx.send("".join(case[round(random.random())](s) for s in inp))
-
 
     @commands.command()
     @commands.cooldown(1, 15, BucketType.default)
@@ -162,23 +202,20 @@ class Text(commands.Cog):
             else:
                 syntax = text.split("\n")[0].replace("```", "")
         paste = await ctx.bot.mystbin_client.post(text, syntax=syntax)
-        embed = discord.Embed(
-                title="Paste Succesfull", 
-                description=paste.url
-            )
-    
+        embed = discord.Embed(title="Paste Succesfull", description=paste.url)
+
     @commands.command()
     @commands.cooldown(1, 15, BucketType.default)
     async def hastebin(self, data):
-        data = bytes(data, 'utf-8')
-        async with self.bot.session.post('https://hastebin.com/documents', data = data) as r:
+        data = bytes(data, "utf-8")
+        async with self.bot.session.post(
+            "https://hastebin.com/documents", data=data
+        ) as r:
             res = await r.json()
             key = res["key"]
             url = "https://hastebin.com/{key}"
-        embed = discord.Embed(
-                title="Paste Succesfull", 
-                description=url)
-    
+        embed = discord.Embed(title="Paste Succesfull", description=url)
+
     @commands.command(description="Spoilers a text letter by letter")
     @commands.cooldown(1, 15, BucketType.channel)
     async def spoiler(self, ctx, *, text: str):
@@ -199,7 +236,7 @@ class Text(commands.Cog):
             title="Reverse",
             description=f"**Original**:\n{string}\n**Reversed**:\n{result}",
         )
-        await ctx.send(result, embed=embed)
+        await ctx.send(result.send(embed=embed))
 
     @commands.command(
         aliases=["bsr"], description="Box shaped spoilers and repeats a text"
@@ -425,7 +462,9 @@ class Text(commands.Cog):
         try:
             m = await ctx.send(" ".join(list_))
             try:
-                await self.bot.wait_for("message_delete", check=lambda m: m == ctx.message, timeout=60)
+                await self.bot.wait_for(
+                    "message_delete", check=lambda m: m == ctx.message, timeout=60
+                )
                 await m.delete()
             except asyncio.TimeoutError:
                 pass
@@ -437,14 +476,18 @@ class Text(commands.Cog):
         await ctx.send(uwu(text))
 
     @commands.command(pass_context=True, no_pm=True)
-    async def ascii(self, ctx, *, text : str = None):
-        if text == None:
-            await ctx.channel.send('Usage: `{}ascii [font (optional)] [text]`\n(font list at http://artii.herokuapp.com/fonts_list)'.format(ctx.prefix))
+    async def ascii(self, ctx, *, text: str = None):
+        if text is None:
+            await ctx.channel.send(
+                "Usage: `{}ascii [font (optional)] [text]`\n(font list at http://artii.herokuapp.com/fonts_list)".format(
+                    ctx.prefix
+                )
+            )
             return
 
         # Get list of fonts
         fonturl = "http://artii.herokuapp.com/fonts_list"
-        async with bot.session.get(fonturl) as r:
+        async with self.bot.session.get(fonturl) as r:
             response = await r.text()
         fonts = response.split()
 
@@ -456,36 +499,43 @@ class Text(commands.Cog):
             if parts[0] in fonts:
                 # We got a font!
                 font = parts[0]
-                text = ' '.join(parts[1:])
-    
-        url = "http://artii.herokuapp.com/make?{}".format(urllib.parse.urlencode({'text':text}))
+                text = " ".join(parts[1:])
+
+        url = "http://artii.herokuapp.com/make?{}".format(
+            urllib.parse.urlencode({"text": text})
+        )
         if font:
-            url += '&font={}'.format(font)
-        async with bot.session.get(url) as r:
+            url += "&font={}".format(font)
+        async with self.bot.session.get(url) as r:
             response = await r.text()
         await ctx.channel.send("```Markup\n{}```".format(response))
+
     @commands.command()
     async def zalgo(self, ctx, *, message):
         """Ỉ s̰hͨo̹u̳lͪd͆ r͈͍e͓̬a͓͜lͨ̈l̘̇y̡͟ h͚͆a̵͢v͐͑eͦ̓ i͋̍̕n̵̰ͤs͖̟̟t͔ͤ̉ǎ͓͐ḻ̪ͨl̦͒̂ḙ͕͉d͏̖̏ ṡ̢ͬö̹͗m̬͔̌e̵̤͕ a̸̫͓͗n̹ͥ̓͋t̴͍͊̍i̝̿̾̕v̪̈̈͜i̷̞̋̄r̦̅́͡u͓̎̀̿s̖̜̉͌..."""
         words = message.split()
         try:
-            iterations = len(words)-1
+            iterations = len(words) - 1
             words = words[:-1]
         except IndexError:
             iterations = 1
-            
+
         if iterations > 100:
             iterations = 100
         if iterations < 1:
             iterations = 1
-            
+
         zalgo = " ".join(words)
         for i in range(iterations):
             if len(zalgo) > 2000:
                 break
             zalgo = self._zalgo(zalgo)
-        
+
         zalgo = zalgo[:2000]
         await ctx.send(zalgo)
+
+
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Text(bot))

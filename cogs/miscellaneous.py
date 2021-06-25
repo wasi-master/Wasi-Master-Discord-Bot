@@ -1,14 +1,15 @@
-import discord
-from discord.ext import commands
-import datetime
 import asyncio
+import datetime
 import re
-
 from typing import Optional
 
+import discord
+from discord.ext import commands
+
+
 class Miscellaneous(commands.Cog):
-    """For commands that don\'t fit in any other category
-    """
+    """For commands that don\'t fit in any other category"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -110,4 +111,6 @@ class Miscellaneous(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Miscellaneous(bot))

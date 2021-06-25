@@ -1,12 +1,13 @@
-import randomcolor
 import json
+
 import discord
+import randomcolor
 from discord.ext import commands
 
 
 class Colors(commands.Cog):
-    """Color releated commands
-    """
+    """Color releated commands"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -52,10 +53,7 @@ class Colors(commands.Cog):
         aliases=["randcolor", "randomcol", "randcol", "randomcolor", "rc"],
         description="Generates a random color",
     )
-    async def randomcolour(
-        self,
-        ctx,
-    ):
+    async def randomcolour(self, ctx):
 
         async with ctx.typing():
             rand_color = randomcolor.RandomColor()
@@ -86,4 +84,6 @@ class Colors(commands.Cog):
 
 
 def setup(bot):
+    """Adds the cog to the bot"""
+
     bot.add_cog(Colors(bot))
