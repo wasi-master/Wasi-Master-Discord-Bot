@@ -13,6 +13,7 @@ from discord.ext import commands
 from discord.ext.commands import BucketType
 
 from utils.paginator import Paginator
+import base64
 
 
 def get_p(percent: int):
@@ -132,6 +133,32 @@ class Utility(commands.Cog):
         embed.add_field(name="As custom emote", value="<:test:{}>".format(snowflake_id))
         embed.add_field(
             name="As animated emote", value="<a:test:{}>".format(snowflake_id)
+        )
+
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["pt"])
+    async def parsetoken(self, ctx, token):
+        user, time, _ = token.split(".")
+        user_id = base64.b64decode(user).decode("utf-8")
+        time = datetime.datetime(1970, 1, 1) + datetime.timedelta(
+            seconds=int.from_bytes(base64.standard_b64decode(time + "b=="), "big")
+            + 1293840000
+            - 33349320000
+        )
+        user = await self.bot.fetch_user(user_id)
+        embed = discord.Embed(title=(user), description=f"ID: `{user.id}`")
+        embed.set_thumbnail(url=str(user.avatar_url))
+        embed.add_field(name="Type", value="Bot Token" if user.bot else "Account Token")
+        embed.add_field(
+            name="Token Creation",
+            value=f'{time.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - time)})',
+            inline=False,
+        )
+        embed.add_field(
+            name="Account Creation",
+            value=f'{user.created_at.strftime("%a, %d %B %Y, %H:%M:%S")}  ({humanize.precisedelta(datetime.datetime.utcnow() - user.created_at)})',
+            inline=False,
         )
 
         await ctx.send(embed=embed)

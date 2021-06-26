@@ -390,6 +390,58 @@ Never gonna tell a lie and hurt {0}""".format(
         embed.set_image(url=fj["url"])
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["rps"])
+    async def rockpaperscissors(self, ctx):
+        await ctx.send("Type `rock` or `paper` or `scissors`")
+
+        def check(message):
+            return (
+                message.author == ctx.author
+                and message.channel == ctx.channel
+                and message.content in ["rock", "paper", "scissors"]
+            )
+
+        try:
+            msg = await self.bot.wait_for("message", check=check, timeout=15)
+        except asyncio.TimeoutError:
+            return await ctx.reply(
+                "Didn't respond with neither `rock`, `paper` or `scissors`"
+            )
+        else:
+            user_action = msg.content.lower()
+            computer_action = random.choice(["rock", "paper", "scissors"])
+            if user_action == computer_action:
+                await msg.reply(
+                    f"I picked {computer_action}, Both players selected `{user_action}`. It's a tie!"
+                )
+            elif user_action == "rock":
+                if computer_action == "scissors":
+                    await msg.reply(
+                        f"I picked {computer_action}, Rock smashes scissors! You win!"
+                    )
+                else:
+                    await msg.reply(
+                        f"I picked {computer_action}, Paper covers rock! You lose."
+                    )
+            elif user_action == "paper":
+                if computer_action == "rock":
+                    await msg.reply(
+                        f"I picked {computer_action}, Paper covers rock! You win!"
+                    )
+                else:
+                    await msg.reply(
+                        f"I picked {computer_action}, Scissors cuts paper! You lose."
+                    )
+            elif user_action == "scissors":
+                if computer_action == "paper":
+                    await msg.reply(
+                        f"I picked {computer_action}, Scissors cuts paper! You win!"
+                    )
+                else:
+                    await msg.reply(
+                        f"I picked {computer_action}, Rock smashes scissors! You lose."
+                    )
+
     @commands.command(
         name="chatbot", aliases=["cb"], description=" Talk with a chat bot"
     )

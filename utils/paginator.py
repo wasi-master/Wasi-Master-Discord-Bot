@@ -22,7 +22,7 @@ class Paginator(menus.Menu):
     def check_skip(self):
         return len(self.embeds) < 2
 
-    @menus.button("\u23ee\ufe0f", skip_if=check_skip)
+    @menus.button("<:first:858224506383237140>", skip_if=check_skip)
     async def on_first_page(self, payload):
         if self.current_page == 0:
             return
@@ -33,7 +33,7 @@ class Paginator(menus.Menu):
             )
         )
 
-    @menus.button("\u2b05\ufe0f")
+    @menus.button("<:previous:858225417281077279>")
     async def on_previous_page(self, payload):
         if self.current_page == 0:
             return
@@ -44,17 +44,17 @@ class Paginator(menus.Menu):
             )
         )
 
-    @menus.button("\u23f8\ufe0f")
+    @menus.button("<:done:858226620737650698>")
     async def on_pause(self, payload):
         self.stop()
         await self.message.clear_reactions()
 
-    @menus.button("\u23f9\ufe0f")
+    @menus.button("<:stop:858227464680767558>")
     async def on_stop(self, payload):
         self.stop()
         await self.message.delete()
 
-    @menus.button("\u27a1\ufe0f")
+    @menus.button("<:next:858225468657762334>")
     async def on_next_page(self, payload):
         if self.current_page == len(self.embeds):
             return
@@ -65,7 +65,7 @@ class Paginator(menus.Menu):
             )
         )
 
-    @menus.button("\u23ed\ufe0f", skip_if=check_skip)
+    @menus.button("<:last:858224544342212618>", skip_if=check_skip)
     async def on_last_page(self, payload):
         if self.current_page == len(self.embeds) - 1:
             return
@@ -76,7 +76,7 @@ class Paginator(menus.Menu):
             )
         )
 
-    @menus.button("\U0001f522")
+    @menus.button("<:custom_page:858224647467171880>")
     async def numbered_page(self, payload):
         channel = self.message.channel
         to_delete = []

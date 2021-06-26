@@ -10,7 +10,7 @@ from collections import Counter
 
 import discord
 import humanize
-from discord.ext import commands, menus
+from discord.ext import commands
 from discord.ext.commands import BucketType
 from tabulate import tabulate
 
@@ -57,359 +57,11 @@ async def _complex_cleanup_strategy(self, ctx, search):
     return Counter(m.author.display_name for m in deleted)
 
 
-def get_random_color():
-    colors = [
-        discord.Colour.default(),
-        discord.Colour.teal(),
-        discord.Colour.dark_teal(),
-        discord.Colour.green(),
-        discord.Colour.dark_green(),
-        discord.Colour.blue(),
-        discord.Colour.dark_blue(),
-        discord.Colour.purple(),
-        discord.Colour.dark_purple(),
-        discord.Colour.magenta(),
-        discord.Colour.dark_magenta(),
-        discord.Colour.gold(),
-        discord.Colour.dark_gold(),
-        discord.Colour.orange(),
-        discord.Colour.dark_orange(),
-        discord.Colour.red(),
-        discord.Colour.dark_red(),
-        discord.Colour.light_gray(),
-        discord.Colour.lighter_gray(),
-        discord.Colour.dark_gray(),
-        discord.Colour.darker_gray(),
-        discord.Colour.blurple(),
-        discord.Colour.greyple(),
-        discord.Colour.dark_theme(),
-    ]
-    return random.choice(colors)
-
-
-class PaginationMaster(menus.MenuPages):
-    def __init__(self, source):
-        super().__init__(source=source, check_embeds=True)
-
-    async def finalize(self, timed_out):
-        try:
-            if timed_out:
-                await self.message.clear_reactions()
-            else:
-                await self.message.delete()
-        except discord.HTTPException:
-            pass
-
-    @menus.button("\N{INFORMATION SOURCE}\ufe0f", position=menus.Last(3))
-    async def show_help(self, payload):
-        """shows this message"""
-        embed = discord.Embed(
-            title="Paginator help", description="Hello! Welcome to the help page."
-        )
-        messages = []
-        for (emoji, button) in self.buttons.items():
-            messages.append(f"{emoji}: {button.action.__doc__}")
-
-        embed.add_field(
-            name="What are these reactions for?",
-            value="\n".join(messages),
-            inline=False,
-        )
-        embed.set_footer(
-            text=f"We were on page {self.current_page + 1} before this message."
-        )
-        await self.message.edit(content=None, embed=embed)
-
-        async def go_back_to_current_page():
-            await asyncio.sleep(30.0)
-            await self.show_page(self.current_page)
-
-        self.bot.loop.create_task(go_back_to_current_page())
-
-    @menus.button("\N{INPUT SYMBOL FOR NUMBERS}", position=menus.Last(1.5))
-    async def numbered_page(self, payload):
-        """lets you type a page number to go to"""
-        channel = self.message.channel
-        author_id = payload.user_id
-        to_delete = []
-        to_delete.append(await channel.send("What page do you want to go to?"))
-
-        def message_check(m):
-            return (
-                m.author.id == author_id
-                and channel == m.channel
-                and m.content.isdigit()
-            )
-
-        try:
-            msg = await self.bot.wait_for("message", check=message_check, timeout=30.0)
-        except asyncio.TimeoutError:
-            to_delete.append(await channel.send("Took too long."))
-            await asyncio.sleep(5)
-        else:
-            page = int(msg.content)
-            to_delete.append(msg)
-            await self.show_checked_page(page - 1)
-
-        try:
-            await channel.delete_messages(to_delete)
-        except Exception:
-            pass
-
-
-class BotHelpPageSource(menus.ListPageSource):
-    def __init__(self, help_command, commands):
-        # entries = [(cog, len(sub)) for cog, sub in commands.items()]
-        # entries.sort(key=lambda t: (t[0].qualified_name, t[1]), reverse=True)
-        super().__init__(
-            entries=sorted(commands.keys(), key=lambda c: c.qualified_name), per_page=6
-        )
-        self.commands = commands
-        self.help_command = help_command
-        self.prefix = help_command.clean_prefix
-
-    def format_commands(self, cog, commands):
-        # A field can only have 1024 characters so we need to paginate a bit
-        # just in case it doesn't fit perfectly
-        # However, we have 6 per page so I'll try cutting it off at around 800 instead
-        # Since there's a 6000 character limit overall in the embed
-        if cog.description:
-            short_doc = cog.description.split("\n", 1)[0] + "\n"
-        else:
-            short_doc = "No help found...\n"
-
-        current_count = len(short_doc)
-        ending_note = "+%d not shown"
-        ending_length = len(ending_note)
-
-        page = []
-        for command in commands:
-            value = f"`{command.name}`"
-            count = len(value) + 1  # The space
-            if count + current_count < 800:
-                current_count += count
-                page.append(value)
-            else:
-                # If we're maxed out then see if we can add the ending note
-                if current_count + ending_length + 1 > 800:
-                    # If we are, pop out the last element to make room
-                    page.pop()
-
-                # Done paginating so just exit
-                break
-
-        if len(page) == len(commands):
-            # We're not hiding anything so just return it as-is
-            return short_doc + " ".join(page)
-
-        hidden = len(commands) - len(page)
-        return short_doc + " ".join(page) + "\n" + (ending_note % hidden)
-
-    async def format_page(self, menu, cogs):
-        prefix = menu.ctx.prefix
-        description = (
-            f'Use "{prefix}help command" for more info on a command.\n'
-            f'Use "{prefix}help category" for more info on a category.\n'
-            "For more help, join the official bot support server: https://discord.gg/5jn3bQX"
-        )
-
-        embed = discord.Embed(
-            title="Categories", description=description, colour=get_random_color()
-        )
-
-        for cog in cogs:
-            commands = self.commands.get(cog)
-            if commands:
-                value = self.format_commands(cog, commands)
-                embed.add_field(name=cog.qualified_name, value=value, inline=True)
-
-        maximum = self.get_max_pages()
-        embed.set_footer(text=f"Page {menu.current_page + 1}/{maximum}")
-        return embed
-
-
-class GroupHelpPageSource(menus.ListPageSource):
-    def __init__(self, group, commands, *, prefix):
-        super().__init__(entries=commands, per_page=6)
-        self.group = group
-        self.prefix = prefix
-        self.title = f"{self.group.qualified_name} Commands"
-        self.description = self.group.description
-
-    async def format_page(self, menu, commands):
-        embed = discord.Embed(
-            title=self.title, description=self.description, colour=get_random_color()
-        )
-
-        for command in commands:
-            signature = f"{command.qualified_name} {command.signature}"
-            embed.add_field(
-                name=signature,
-                value=command.short_doc or "No help given...",
-                inline=False,
-            )
-
-        maximum = self.get_max_pages()
-        if maximum > 1:
-            embed.set_author(
-                name=f"Page {menu.current_page + 1}/{maximum} ({len(self.entries)} commands)"
-            )
-
-        embed.set_footer(
-            text=f'Use "{self.prefix}help command" for more info on a command.'
-        )
-        return embed
-
-
-class HelpMenu(PaginationMaster):
-    def __init__(self, source):
-        super().__init__(source)
-
-    @menus.button("\N{WHITE QUESTION MARK ORNAMENT}", position=menus.Last(5))
-    async def show_bot_help(self, payload):
-        """shows how to use the bot"""
-
-        embed = discord.Embed(title="Using the bot", colour=get_random_color())
-        embed.title = "Using the bot"
-        embed.description = "Hello! Welcome to the help page."
-
-        entries = (
-            ("<argument>", "This means the argument is __**required**__."),
-            ("[argument]", "This means the argument is __**optional**__."),
-            ("[A|B]", "This means that it can be __**either A or B**__."),
-            (
-                "[argument...]",
-                "This means you can have multiple arguments.\n"
-                "Now that you know the basics, it should be noted that...\n"
-                "__**You do not type in the brackets!**__",
-            ),
-        )
-
-        embed.add_field(
-            name="How do I use this bot?",
-            value="Reading the bot signature is pretty simple.",
-        )
-
-        for name, value in entries:
-            embed.add_field(name=name, value=value, inline=False)
-
-        embed.set_footer(
-            text=f"We were on page {self.current_page + 1} before this message."
-        )
-        await self.message.edit(embed=embed)
-
-        async def go_back_to_current_page():
-            await asyncio.sleep(30.0)
-            await self.show_page(self.current_page)
-
-        self.bot.loop.create_task(go_back_to_current_page())
-
-
-class PaginatedHelpCommand(commands.HelpCommand):
-    def __init__(self):
-        super().__init__(
-            command_attrs={
-                "cooldown": commands.Cooldown(1, 3.0, commands.BucketType.member),
-                "help": "Shows help about the bot, a command, or a category",
-                "aliases": ["h"],
-            }
-        )
-
-    async def on_help_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandInvokeError):
-            await ctx.send(str(error.original))
-
-    def get_command_signature(self, command):
-        return f"```html\n{self.context.prefix}{command.qualified_name} {command.signature}```"
-
-    async def send_bot_help(self, mapping):
-        bot = self.context.bot
-        entries = await self.filter_commands(bot.commands, sort=True)
-
-        all_commands = {}
-        for command in entries:
-            if command.cog is None:
-                continue
-            try:
-                all_commands[command.cog].append(command)
-            except KeyError:
-                all_commands[command.cog] = [command]
-
-        menu = HelpMenu(BotHelpPageSource(self, all_commands))
-        await menu.start(self.context)
-
-    async def send_cog_help(self, cog):
-        entries = await self.filter_commands(cog.get_commands(), sort=True)
-        menu = HelpMenu(GroupHelpPageSource(cog, entries, prefix=self.clean_prefix))
-        await menu.start(self.context)
-
-    async def common_command_formatting(self, embed_like, command):
-        embed_like.title = command.qualified_name
-        try:
-            embed_like.set_footer(
-                text="<x> means the argument x is required\n[x] means the argument x is optional\n[x=y] means the argument x is optional and has a default value of y"
-            )
-        except:
-            pass
-        if not isinstance(embed_like, GroupHelpPageSource):
-            if command._buckets._cooldown:
-                embed_like.add_field(
-                    name="Cooldown",
-                    value=f"{round(command._buckets._cooldown.per)} seconds per {command._buckets._cooldown.rate} command{'s' if command._buckets._cooldown.rate > 1 else ''} per {str(command._buckets._cooldown.type).split('.')[1]}",
-                )
-            command_usage = await self.context.bot.db.fetchrow(
-                """
-                        SELECT *
-                        FROM usages
-                        WHERE name = $1;
-                        """,
-                command.name,
-            )
-            if not command_usage is None:
-                embed_like.add_field(
-                    name="Popularity", value=f"Used {command_usage['usage']} times"
-                )
-            else:
-                embed_like.add_field(
-                    name="Popularity", value="Command never used by anyone"
-                )
-        if not command.help is None:
-            embed_like.description = f"{command.description}\n\n{command.help}"
-        else:
-            embed_like.description = command.description or "No help found..."
-        embed_like.add_field(
-            name="Usage", value=self.get_command_signature(command), inline=False
-        )
-
-    async def send_command_help(self, command):
-        # No pagination necessary for a single command.
-        embed = discord.Embed(colour=get_random_color())
-        await self.common_command_formatting(embed, command)
-        await self.context.send(embed=embed)
-
-    async def send_group_help(self, group):
-        subcommands = group.commands
-        if len(subcommands) == 0:
-            return await self.send_command_help(group)
-
-        entries = await self.filter_commands(subcommands, sort=True)
-        if len(entries) == 0:
-            return await self.send_command_help(group)
-
-        source = GroupHelpPageSource(group, entries, prefix=self.clean_prefix)
-        await self.common_command_formatting(source, group)
-        menu = HelpMenu(source)
-        await menu.start(self.context)
-
-
 class Meta(commands.Cog):
     """All the bot rleated commands"""
 
     def __init__(self, bot):
         self.bot = bot
-        self._original_help_command = bot.help_command
-        bot.help_command = PaginatedHelpCommand()
-        bot.help_command.cog = self
 
     @commands.command(aliases=["cs"])
     async def commandsearch(self, ctx, cmd):
@@ -442,38 +94,42 @@ class Meta(commands.Cog):
     @commands.command(aliases=["linecount", "lc"])
     @commands.cooldown(1, 60, commands.BucketType.channel)
     async def lines(self, ctx):
-        p = pathlib.Path("./")
-        cm = cr = ch = fn = cl = ls = fc = im = 0
-        for f in p.rglob("*.py"):
-            if str(f).startswith("venv"):
+        """Shows the amount of lines and some other information about the bot's code"""
+        path = pathlib.Path("./")
+        comments = (
+            coroutines
+        ) = characters = functions = classes = lines = filecount = imports = 0
+        for file in path.rglob("*.py"):
+            if str(file).startswith("venv"):
                 continue
-            fc += 1
-            with f.open(encoding="utf-8") as of:
-                for l in of.readlines():
-                    l = l.strip()
-                    if l.startswith("class"):
-                        cl += 1
-                    elif l.startswith("def"):
-                        fn += 1
-                    elif l.startswith("async def"):
-                        cr += 1
-                    elif l.startswith("import"):
-                        im += 1
-                    if "#" in l:
-                        cm += 1
-                    ls += 1
-                    for char in l:
-                        ch += 1
+            filecount += 1
+            with file.open(encoding="utf-8") as of:
+                for line in of.readlines():
+                    line = line.strip()
+                    if line.startswith("class"):
+                        classes += 1
+                    elif line.startswith("def"):
+                        functions += 1
+                    elif line.startswith("async def"):
+                        coroutines += 1
+                    elif line.startswith("import"):
+                        imports += 1
+                    if "#" in line:
+                        comments += 1
+                    lines += 1
+                    characters += len(line)
         await ctx.send(
-            content="**Code Satistics** (doesn't include the main file)\n```yaml"
-            f"Files       :   {fc}\n"
-            f"Lines       :   {ls:,}\n"
-            f"Characters  :   {ls:,}\n"
-            f"Imports     :   {im}\n"
-            f"Classes     :   {cl}\n"
-            f"Functions   :   {fn}\n"
-            f"Coroutines  :   {cr}\n"
-            f"Comments    :   {cm:,}```"
+            content="**Code Satistics** (doesn't include the main file)"
+            "\n```yaml\n"
+            f"Files      :   {filecount}\n"
+            f"Lines      :   {lines:,}\n"
+            f"Characters :   {characters:,}\n"
+            f"Imports    :   {imports}\n"
+            f"Classes    :   {classes}\n"
+            f"Functions  :   {functions}\n"
+            f"Coroutines :   {coroutines}\n"
+            f"Comments   :   {comments:,}"
+            "```"
         )
 
     @commands.command(aliases=["p"], description="Shows the bot's speed")
