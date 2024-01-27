@@ -1,6 +1,6 @@
 # WM Bot
 
-Do you need more help? Visit my server here: **[click here](https://discord.gg/DpxkY3x)** 🍺
+This is a old version, the latest one can be found at https://github.com/wasi-master/wm_bot
 
 ## Requirements
 
